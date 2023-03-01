@@ -31,7 +31,6 @@ export const cssBaseLayoutStyle = css`
     .ant-layout-sider-children {
       text-align: center;
       background: ${COMMON_COLOR.FONT2};
-
       .logo {
         height: 64px;
         width: auto;
