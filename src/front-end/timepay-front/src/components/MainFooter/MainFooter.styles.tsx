@@ -17,7 +17,7 @@ export const cssMainFooterStyle = css`
   justify-content: space-evenly;
   align-items: center;
   gap: 30px;
-  border-top: 1px solid #cdcdcd;
+  box-shadow: 0px -3px 10px rgba(0, 0, 0, 0.05);
 
   span {
     font-size: 30px;
