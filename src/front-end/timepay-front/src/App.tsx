@@ -12,6 +12,9 @@ function App() {
     <RecoilRoot>
       <ConfigProvider theme={customTheme}>
         <Routes>
+          <Route path={PATH.LOGIN} element={<PageRoutes.LoginPage />} />
+          <Route path={PATH.JOIN} element={<PageRoutes.JoinPage />} />
+
           <Route element={<BaseLayout />}>
             <Route path={PATH.HOME} element={<PageRoutes.HomePage />} />
             <Route path={PATH.SEARCH} element={<PageRoutes.SearchPage />} />
