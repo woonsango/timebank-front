@@ -13,6 +13,7 @@ function App() {
       <ConfigProvider theme={customTheme}>
         <Routes>
           <Route path={PATH.LOGIN} element={<PageRoutes.LoginPage />} />
+
           <Route path={PATH.JOIN} element={<PageRoutes.JoinPage />} />
 
           <Route element={<BaseLayout />}>
