@@ -12,6 +12,6 @@ public class HomeController {
     @ResponseBody
     public String index()
     {
-        return "index";
+        return "good";
     }
 }
