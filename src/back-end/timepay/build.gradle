@@ -28,7 +28,8 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	runtimeOnly 'com.mysql:mysql-connector-j'
 
-	implementation group: 'io.springfox', name: 'springfox-boot-starter', version: '3.0.0'
+	implementation group: 'io.springfox', name: 'springfox-boot-starter', version: '3.0.0'  // swagger
+	implementation 'org.springframework.security:spring-security-crypto:5.6.1'  // security
 }
 
 tasks.named('test') {
