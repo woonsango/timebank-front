@@ -14,11 +14,11 @@ const MainFooter = () => {
   const items: MenuProps['items'] = [
     {
       key: '/post/help-request',
-      label: <Link to="/post/help-request">도움요청</Link>,
+      label: <Link to="/post/help-request">도움받기</Link>,
     },
     {
       key: '/post/help-serve',
-      label: <Link to="/post/help-serve">도움제공</Link>,
+      label: <Link to="/post/help-serve">도움주기</Link>,
     },
     {
       key: '/post/free',

@@ -17,6 +17,14 @@ function App() {
             <Route path={PATH.SEARCH} element={<PageRoutes.SearchPage />} />
             <Route path={PATH.MY_PAGE} element={<PageRoutes.MyPage />} />
           </Route>
+          <Route>
+            <Route
+              path={PATH.POST_HR}
+              element={<PageRoutes.PostRequestPage />}
+            />
+            <Route path={PATH.POST_HS} element={<PageRoutes.PostServePage />} />
+            <Route path={PATH.POST_F} element={<PageRoutes.PostFreePage />} />
+          </Route>
         </Routes>
       </ConfigProvider>
     </RecoilRoot>

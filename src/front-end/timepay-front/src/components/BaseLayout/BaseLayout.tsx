@@ -5,6 +5,7 @@ import { headerTitleState } from '../../states/uiState';
 import MainFooter from '../MainFooter';
 import MainHeader from '../MainHeader';
 import { cssBaseLayoutStyle } from './BaseLayout.styles';
+
 const BaseLayout = () => {
   const headerTitle = useRecoilValue(headerTitleState);
 
