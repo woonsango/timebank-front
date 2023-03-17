@@ -1,6 +1,5 @@
 package com.capstone.timepay.service.admin.dto;
 
-import com.capstone.timepay.DataNotFoundException;
 import com.capstone.timepay.domain.admin.Admin;
 import com.capstone.timepay.domain.admin.AdminRepository;
 import lombok.RequiredArgsConstructor;
@@ -15,15 +14,6 @@ public class AdminService {
 
     public List<Admin> getList() {
         return this.adminRepository.findAll();
-    }
-
-    public Admin getAdmin(Long id) {
-        Optional<Admin> admin = this.adminRepository.findById(id);
-        if (admin.isPresent()) {
-            return admin.get();
-        } else {
-            throw new DataNotFoundException("Admin is not found");
-        }
     }
 
     public boolean create(Admin admin) {
@@ -47,4 +37,5 @@ public class AdminService {
 
         return resultMap;
     }
+
 }

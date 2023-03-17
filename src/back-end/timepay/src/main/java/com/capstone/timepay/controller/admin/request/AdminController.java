@@ -17,12 +17,14 @@ public class AdminController {
 
     private final AdminService adminService;
 
+    // 어드민 리스트 반환
     @GetMapping("")
-    public ResponseEntity<List<Admin>> getAdminList() {
+    public ResponseEntity<List<Admin>> getAdmins() {
         List<Admin> adminList = this.adminService.getList();
         return new ResponseEntity<>(adminList, HttpStatus.OK);
     }
 
+    // 어드민 생성, 성공 여부 반환
     @PostMapping("")
     public ResponseEntity<Boolean> createAdmin(@RequestBody Admin admin) {
         boolean success = this.adminService.create(admin);
@@ -30,6 +32,7 @@ public class AdminController {
         return new ResponseEntity<>(success, HttpStatus.OK);
     }
 
+    // 어드민 삭제
     @DeleteMapping("/{adminId}")
     public ResponseEntity<Map<String, Object>> deleteAdmin(@PathVariable Long adminId) {
         Map<String, Object> result = adminService.delete(adminId);
