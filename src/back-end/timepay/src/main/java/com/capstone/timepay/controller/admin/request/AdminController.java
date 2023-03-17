@@ -11,18 +11,11 @@ import java.util.List;
 import java.util.Map;
 
 @RequiredArgsConstructor
-@RestController
+@RestController("request.AdminController")
 @RequestMapping("/api/admins")
 public class AdminController {
 
     private final AdminService adminService;
-
-    // 어드민 리스트 반환
-    @GetMapping("")
-    public ResponseEntity<List<Admin>> getAdmins() {
-        List<Admin> adminList = this.adminService.getList();
-        return new ResponseEntity<>(adminList, HttpStatus.OK);
-    }
 
     // 어드민 생성, 성공 여부 반환
     @PostMapping("")
@@ -32,7 +25,7 @@ public class AdminController {
         return new ResponseEntity<>(success, HttpStatus.OK);
     }
 
-    // 어드민 삭제
+    // 어드민 삭제, 성공 여부 반환
     @DeleteMapping("/{adminId}")
     public ResponseEntity<Map<String, Object>> deleteAdmin(@PathVariable Long adminId) {
         Map<String, Object> result = adminService.delete(adminId);

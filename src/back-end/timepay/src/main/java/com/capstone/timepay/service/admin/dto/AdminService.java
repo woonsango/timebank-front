@@ -10,6 +10,7 @@ import java.util.*;
 @RequiredArgsConstructor
 @Service
 public class AdminService {
+
     private final AdminRepository adminRepository;
 
     public List<Admin> getList() {
@@ -37,5 +38,6 @@ public class AdminService {
 
         return resultMap;
     }
-
+    
+    //TODO: 로그인 기능 추가
 }
