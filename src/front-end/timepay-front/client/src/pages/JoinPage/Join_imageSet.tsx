@@ -1,6 +1,7 @@
-import { JoinStyleImage } from '../../../components/Join/Join.styles';
+import { JoinStyleImage } from '../../components/Join/Join.styles';
 import { useState, useRef } from 'react';
 import { Avatar } from 'antd';
+import './index.css';
 
 const Join_imageSet = () => {
   const [image, setImage]: any = useState(

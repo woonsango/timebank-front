@@ -8,7 +8,7 @@ import KAKAO_AUTH_URL from './Authorization_kakao';
 import kakao_login_logo from '../../assets/images/icons/kakao_login_medium_wide.png';
 
 const LoginPage = () => {
-  const navigate = useNavigate();
+  const navigate = useNavigate(); //history
 
   const handleOnClickLinkBtn = useCallback(
     (path: string) => {
@@ -36,8 +36,3 @@ const LoginPage = () => {
 };
 
 export default LoginPage;
-
-/*
-<button onClick={() => KAKAO_AUTH_URL}>
-          <img src={kakao_login_logo}></img>
-        </button>*/

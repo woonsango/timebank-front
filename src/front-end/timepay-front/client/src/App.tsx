@@ -1,6 +1,5 @@
 import BaseLayout from './components/BaseLayout';
 import { Route, Routes } from 'react-router-dom';
-import React from 'react';
 import { ConfigProvider } from 'antd';
 import { customTheme } from './styles/constants/customTheme';
 import PageRoutes from './pages';
@@ -13,7 +12,10 @@ function App() {
       <ConfigProvider theme={customTheme}>
         <Routes>
           <Route path={PATH.LOGIN} element={<PageRoutes.LoginPage />} />
-
+          <Route
+            path={PATH.REDIRECT}
+            element={<PageRoutes.kakaoRedirectHandler />}
+          />
           <Route path={PATH.JOIN} element={<PageRoutes.JoinPage />} />
 
           <Route element={<BaseLayout />}>
