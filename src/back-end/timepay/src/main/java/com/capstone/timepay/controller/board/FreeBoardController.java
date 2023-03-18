@@ -21,7 +21,7 @@ public class FreeBoardController {
     {
         List<FreeBoardDTO> freeBoardDTOList = freeBoardService.freeBoardFindAll();
         model.addAttribute("freeBoardList", freeBoardDTOList);
-        return "freeBoardList";
+        return "/freeBoardList";
     }
 
     @GetMapping("/free/save")
@@ -46,5 +46,28 @@ public class FreeBoardController {
         FreeBoardDTO boardDTO = freeBoardService.findById(id);
         model.addAttribute("freeBoard", boardDTO);
         return "freeBoardDetail";
+    }
+
+    @GetMapping("/free/update/{id}")
+    public String updateForm(@PathVariable Long id, Model model)
+    {
+        FreeBoardDTO boardDTO = freeBoardService.findById(id);
+        model.addAttribute("freeBoardUpdate", boardDTO);
+        return "freeBoardUpdate";
+    }
+
+    @PostMapping("/free/update")
+    public String update(@ModelAttribute FreeBoardDTO freeBoardDTO, Model model)
+    {
+        FreeBoardDTO board = freeBoardService.update(freeBoardDTO);
+        model.addAttribute("freeBoard", board);
+        return "freeBoardDetail";
+    }
+
+    @GetMapping("/free/delete/{id}")
+    public String delete(@PathVariable Long id)
+    {
+        freeBoardService.delete(id);
+        return "redirect:/board/free";
     }
 }

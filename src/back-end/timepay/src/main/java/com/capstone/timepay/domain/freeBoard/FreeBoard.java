@@ -66,4 +66,16 @@ public class FreeBoard extends BaseTimeEntity {
         freeBoardEntity.setFreeBoardHits(0);
         return freeBoardEntity;
     }
+
+    public static FreeBoard toUpdateFreeEntity(FreeBoardDTO boardDTO)
+    {
+        FreeBoard boardEntity = new FreeBoard();
+        boardEntity.setId(boardDTO.getId()); // 중요
+        boardEntity.setFreeWriter(boardDTO.getFreeWriter());
+        boardEntity.setFreeTitle(boardDTO.getFreeTitle());
+        boardEntity.setFreeContent(boardDTO.getFreeContent());
+        boardEntity.setFreeCategory(boardDTO.getFreeCategory());
+        boardEntity.setFreeBoardHits(boardEntity.getFreeBoardHits());
+        return boardEntity;
+    }
 }

@@ -55,4 +55,16 @@ public class FreeBoardService {
             return null;
         }
     }
+
+    public FreeBoardDTO update(FreeBoardDTO freeBoardDTO)
+    {
+        FreeBoard freeBoard = FreeBoard.toUpdateFreeEntity(freeBoardDTO);
+        freeBoardRepository.save(freeBoard);
+        return findById(freeBoardDTO.getId());
+    }
+
+    public void delete(Long id)
+    {
+        freeBoardRepository.deleteById(id);
+    }
 }
