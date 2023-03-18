@@ -1,7 +1,7 @@
 import { css } from '@emotion/react';
-import { TagColorProps } from './PostStatusTag';
+import { PostStatusTagColorProps } from './PostStatusTag';
 
-export const cssPostStatusTagStyle = (props: TagColorProps) => css`
+export const cssPostStatusTagStyle = (props: PostStatusTagColorProps) => css`
   margin: 0;
   padding: 0 5px;
   color: ${props.pointColor};

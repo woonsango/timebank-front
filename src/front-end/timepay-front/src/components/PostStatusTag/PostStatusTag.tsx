@@ -4,12 +4,12 @@ import { IPostState } from '../../api/interfaces/IPost';
 import { COMMON_COLOR } from '../../styles/constants/colors';
 import { cssPostStatusTagStyle } from './PostStatusTag.styles';
 
-export interface TagColorProps {
+export interface PostStatusTagColorProps {
   pointColor: string;
   backgroundColor?: string;
 }
 const PostStatusTag = ({ status }: { status?: IPostState }) => {
-  const statusColor: TagColorProps = useMemo(() => {
+  const statusColor: PostStatusTagColorProps = useMemo(() => {
     switch (status) {
       case '매칭중':
         return {
