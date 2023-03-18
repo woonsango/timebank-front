@@ -15,7 +15,7 @@
   </tr>
   <tr th:each="board: ${freeBoardList}">
     <td th:text="${board.id}"></td>
-    <td><a th:href="@{|/board/${board.id}|}" th:text="${board.freeTitle}"></a></td>
+    <td><a th:href="@{|/board/free/${board.id}|}" th:text="${board.freeTitle}"></a></td>
     <td th:text="${board.freeWriter}"></td>
     <td th:text="*{#temporals.format(board.freeCreatedAt, 'yyyy-MM-dd HH:mm:ss')}"></td>
     <td th:text="${board.freeBoardHits}"></td>

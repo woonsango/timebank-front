@@ -5,10 +5,7 @@ import com.capstone.timepay.service.board.service.FreeBoardService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -40,5 +37,14 @@ public class FreeBoardController {
         freeBoardService.save(freeBoardDTO);
         System.out.println("freeBoardDTO = " + freeBoardDTO);
         return "redirect:/board/free";
+    }
+
+    @GetMapping("/free/{id}")
+    public String freeBoardFindById(@PathVariable Long id, Model model)
+    {
+        freeBoardService.updateHits(id);
+        FreeBoardDTO boardDTO = freeBoardService.findById(id);
+        model.addAttribute("freeBoard", boardDTO);
+        return "freeBoardDetail";
     }
 }
