@@ -2,7 +2,7 @@ import { IUser } from './IUser';
 
 export interface IPost {
   postId: number; // 게시글 번호
-  type: string; // 게시글 유형
+  type: IPostType; // 게시글 유형
   createdAt: string; // 작성 날짜
   updatedAt?: string; // 수정 날짜
   title: string; // 제목
@@ -24,3 +24,5 @@ export type IPostState =
   | '활동완료'
   | '활동취소'
   | '활동지연';
+
+export type IPostType = '도움요청' | '도움주기' | '자유' | '후기';
