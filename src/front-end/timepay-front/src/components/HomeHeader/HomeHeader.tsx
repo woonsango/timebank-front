@@ -3,6 +3,7 @@ import { Badge, Dropdown, MenuProps } from 'antd';
 import { useMemo } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import {
+  cssHomeHeaderMenuItemStyle,
   cssHomeHeaderMenuStyle,
   cssHomeHeaderNotificationStyle,
   cssHomeHeaderStyle,
@@ -30,6 +31,7 @@ const HomeHeader = () => {
       {
         label: (
           <div
+            css={cssHomeHeaderMenuItemStyle}
             onClick={() =>
               navigate({ pathname: PATH.HOME, search: '?type=전체' })
             }
@@ -43,6 +45,7 @@ const HomeHeader = () => {
       {
         label: (
           <div
+            css={cssHomeHeaderMenuItemStyle}
             onClick={() =>
               navigate({ pathname: PATH.HOME, search: '?type=도움요청' })
             }
@@ -56,6 +59,7 @@ const HomeHeader = () => {
       {
         label: (
           <div
+            css={cssHomeHeaderMenuItemStyle}
             onClick={() =>
               navigate({ pathname: PATH.HOME, search: '?type=도움제공' })
             }
@@ -69,6 +73,7 @@ const HomeHeader = () => {
       {
         label: (
           <div
+            css={cssHomeHeaderMenuItemStyle}
             onClick={() =>
               navigate({ pathname: PATH.HOME, search: '?type=자유' })
             }
@@ -82,6 +87,7 @@ const HomeHeader = () => {
       {
         label: (
           <div
+            css={cssHomeHeaderMenuItemStyle}
             onClick={() =>
               navigate({ pathname: PATH.HOME, search: '?type=후기' })
             }

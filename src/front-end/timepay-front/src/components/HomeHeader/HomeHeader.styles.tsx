@@ -37,3 +37,10 @@ export const cssHomeHeaderNotificationStyle = css`
     background: ${COMMON_COLOR.MAIN1};
   }
 `;
+
+export const cssHomeHeaderMenuItemStyle = css`
+  font-style: normal;
+  font-weight: 700;
+  font-size: 13px;
+  line-height: 30px;
+`;
