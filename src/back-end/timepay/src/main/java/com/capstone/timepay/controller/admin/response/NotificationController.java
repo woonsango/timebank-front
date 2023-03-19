@@ -2,6 +2,7 @@ package com.capstone.timepay.controller.admin.response;
 
 import com.capstone.timepay.domain.notification.Notification;
 import com.capstone.timepay.service.admin.dto.NotificationService;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,8 +19,8 @@ public class NotificationController {
 
     private final NotificationService notificationService;
 
-    // 공지사항 리스트 반환
     @GetMapping("")
+    @ApiOperation("전체 공지사항 리스트 조회")
     public ResponseEntity<List<Notification>> getNotifications() {
         List<Notification> notificationList = this.notificationService.getList();
         return new ResponseEntity<>(notificationList, HttpStatus.OK);

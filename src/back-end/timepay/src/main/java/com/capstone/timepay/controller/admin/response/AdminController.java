@@ -3,6 +3,7 @@ package com.capstone.timepay.controller.admin.response;
 
 import com.capstone.timepay.domain.admin.Admin;
 import com.capstone.timepay.service.admin.dto.AdminService;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +22,7 @@ public class AdminController {
 
     // 어드민 리스트 반환
     @GetMapping("")
+    @ApiOperation("전체 어드민 리스트 조회")
     public ResponseEntity<List<Admin>> getAdmins() {
         List<Admin> adminList = this.adminService.getList();
         return new ResponseEntity<>(adminList, HttpStatus.OK);
