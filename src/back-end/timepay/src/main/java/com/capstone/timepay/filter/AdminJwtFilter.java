@@ -1,7 +1,6 @@
 package com.capstone.timepay.filter;
 
-import com.capstone.timepay.service.admin.dto.AdminDetailService;
-import com.capstone.timepay.service.admin.dto.AdminService;
+import com.capstone.timepay.service.admin.AdminDetailService;
 import com.capstone.timepay.utility.JwtUtils;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;

@@ -2,7 +2,7 @@ package com.capstone.timepay.controller.admin.request;
 
 import com.capstone.timepay.model.AuthenticationRequest;
 import com.capstone.timepay.model.AuthenticationResponse;
-import com.capstone.timepay.service.admin.dto.AdminDetailService;
+import com.capstone.timepay.service.admin.AdminDetailService;
 import com.capstone.timepay.utility.JwtUtils;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;

@@ -1,4 +1,4 @@
-package com.capstone.timepay.service.admin.dto;
+package com.capstone.timepay.service.admin;
 
 import com.capstone.timepay.domain.admin.Admin;
 import com.capstone.timepay.domain.admin.AdminRepository;
@@ -11,7 +11,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Optional;
 
 @RequiredArgsConstructor

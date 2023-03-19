@@ -1,20 +1,18 @@
 package com.capstone.timepay.service.admin.dto;
 
 import com.capstone.timepay.domain.admin.Admin;
-import com.capstone.timepay.domain.admin.AdminRepository;
+import com.capstone.timepay.service.admin.AdminService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 class AdminServiceTest {
 
-    @Autowired AdminService adminService;
+    @Autowired
+    AdminService adminService;
 
     @Test
     void getList() {

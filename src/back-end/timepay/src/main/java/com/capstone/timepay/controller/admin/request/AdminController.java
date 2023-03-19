@@ -1,14 +1,14 @@
 package com.capstone.timepay.controller.admin.request;
 
 import com.capstone.timepay.domain.admin.Admin;
-import com.capstone.timepay.service.admin.dto.AdminService;
+import com.capstone.timepay.service.admin.AdminService;
+import com.capstone.timepay.service.admin.dto.PostAdminDTO;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Map;
 
 @RequiredArgsConstructor
@@ -20,8 +20,8 @@ public class AdminController {
 
     @PostMapping("")
     @ApiOperation(value = "어드민 생성")
-    public ResponseEntity<Map<String, Object>> createAdmin(@RequestBody Admin admin) {
-        Map<String, Object> result = this.adminService.create(admin);
+    public ResponseEntity<Map<String, Object>> createAdmin(@RequestBody PostAdminDTO dto) {
+        Map<String, Object> result = this.adminService.create(dto);
 
         if ((Boolean) result.get("success")) {
             return new ResponseEntity<>(result, HttpStatus.OK);
