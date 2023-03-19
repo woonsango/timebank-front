@@ -1,11 +1,25 @@
 import { Button, Table } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
-import { useMemo } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { IPost, IPostState, IPostType } from '../../api/interfaces/IPost';
 import dayjs from 'dayjs';
 import { cssPostTableStyle } from './PostTable.styles';
+import PostDetailModal from '../PostDetailModal';
 
 const PostTable = () => {
+  const [isOpen, setIsOpen] = useState(false);
+  const [currentPost, setCurrentPost] = useState<IPost>();
+
+  const handleOnShowDetailPost = useCallback((post: IPost) => {
+    setCurrentPost(post);
+    setIsOpen(true);
+  }, []);
+
+  const handleOnCloseDetailPost = useCallback(() => {
+    setCurrentPost(undefined);
+    setIsOpen(false);
+  }, []);
+
   const postTypes: IPostType[] = ['도움요청', '도움주기', '자유', '후기'];
   const postStatus: IPostState[] = [
     '매칭중',
@@ -44,6 +58,8 @@ const PostTable = () => {
       content: `게시글 내용 ${i}`,
       region: '정릉3동',
       originPostId: i % 20 === 0 ? i : undefined,
+      attachment:
+        'https://newsimg.hankookilbo.com/2018/02/05/201802051120876500_1.jpg',
     });
   }
   const rowSelection = {
@@ -114,7 +130,11 @@ const PostTable = () => {
         dataIndex: 'tag',
         width: 120,
         align: 'center',
-        render: (_: string) => <Button type="link">더보기</Button>,
+        render: (_: string, record: IPost) => (
+          <Button type="link" onClick={() => handleOnShowDetailPost(record)}>
+            더보기
+          </Button>
+        ),
       },
       {
         title: '작성자 이름',
@@ -179,7 +199,11 @@ const PostTable = () => {
         width: 150,
         align: 'center',
 
-        render: (_: string) => <Button type="link">더보기</Button>,
+        render: (_: string, record: IPost) => (
+          <Button type="link" onClick={() => handleOnShowDetailPost(record)}>
+            더보기
+          </Button>
+        ),
       },
       {
         title: '본문 내용',
@@ -187,7 +211,11 @@ const PostTable = () => {
         dataIndex: 'content',
         width: 150,
         align: 'center',
-        render: (_: string) => <Button type="link">더보기</Button>,
+        render: (_: string, record: IPost) => (
+          <Button type="link" onClick={() => handleOnShowDetailPost(record)}>
+            더보기
+          </Button>
+        ),
       },
       {
         title: '본문 첨부사진',
@@ -195,7 +223,11 @@ const PostTable = () => {
         dataIndex: 'attachment',
         width: 100,
         align: 'center',
-        render: (_: string) => <Button type="link">더보기</Button>,
+        render: (_: string, record: IPost) => (
+          <Button type="link" onClick={() => handleOnShowDetailPost(record)}>
+            더보기
+          </Button>
+        ),
       },
       {
         title: '원본 게시글 번호',
@@ -206,16 +238,24 @@ const PostTable = () => {
           (b.originPostId || 0) - (a.originPostId || 0),
       },
     ];
-  }, []);
+  }, [handleOnShowDetailPost]);
+
   return (
-    <Table
-      css={cssPostTableStyle}
-      rowSelection={rowSelection}
-      columns={columns}
-      scroll={{ x: 1500 }}
-      dataSource={dummyDataSource}
-      rowKey="postId"
-    />
+    <>
+      <Table
+        css={cssPostTableStyle}
+        rowSelection={rowSelection}
+        columns={columns}
+        scroll={{ x: 1500 }}
+        dataSource={dummyDataSource}
+        rowKey="postId"
+      />
+      <PostDetailModal
+        isOpen={isOpen}
+        onCancel={handleOnCloseDetailPost}
+        post={currentPost}
+      />
+    </>
   );
 };
 
