@@ -2,7 +2,7 @@ export const PATH = {
   HOME: '/',
   SEARCH: '/search',
   MY_PAGE: '/my',
-  POST_HR: '/post/help-request',
-  POST_HS: '/post/help-serve',
-  POST_F: '/post/free',
+  Register_HR: '/register/help-request',
+  Register_HS: '/register/help-serve',
+  Register_F: '/register/free',
 };

@@ -11,16 +11,16 @@ import {
   cssPostContentInputStyle,
   cssPostBtnStyle,
   cssPostFooterStyle,
-} from './PostFreePage.style';
+} from './RegisterFreePage.style';
 
-import ImageUpload from '../../components/Post/ImageUpload';
+import ImageUpload from '../../components/register/ImageUpload';
 
 const { Header, Content, Footer } = Layout;
 const { TextArea } = Input;
 
-const PostFreePage = () => {
-  const [title, setTitle] = useState('');
-  const [content, setContent] = useState('');
+const RegisterFreePage = () => {
+  const [title, setTitle] = useState<string>('');
+  const [content, setContent] = useState<string>('');
 
   const navigate = useNavigate();
 
@@ -88,4 +88,4 @@ const PostFreePage = () => {
   );
 };
 
-export default PostFreePage;
+export default RegisterFreePage;

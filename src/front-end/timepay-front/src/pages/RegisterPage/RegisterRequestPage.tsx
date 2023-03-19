@@ -10,7 +10,7 @@ import {
   cssPostContentInputStyle,
   cssPostBtnStyle,
   cssPostFooterStyle,
-} from './PostFreePage.style';
+} from './RegisterFreePage.style';
 
 import { CameraFilled, FlagFilled } from '@ant-design/icons';
 import { Modal, Upload, TimePicker, Tag } from 'antd';
@@ -43,7 +43,7 @@ const tagsData = [
   '도움이필요해요',
 ];
 
-const PostFreePage = () => {
+const RegisterRequestPage = () => {
   const timepay = 500;
   const [starttime, setStarttime] = useState();
   const [endtime, setEndtime] = useState();
@@ -222,4 +222,4 @@ const PostFreePage = () => {
   );
 };
 
-export default PostFreePage;
+export default RegisterRequestPage;

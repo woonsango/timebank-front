@@ -1,11 +1,8 @@
-import { useState } from 'react';
-
 import 'dayjs/locale/ko';
 import { Dayjs } from 'dayjs';
 import dayjsGenerateConfig from 'rc-picker/lib/generate/dayjs';
 import generatePicker from 'antd/es/date-picker/generatePicker';
 import locale from 'antd/es/date-picker/locale/ko_KR';
-import { useSetRecoilState } from 'recoil';
 
 const DatePicker = generatePicker<Dayjs>(dayjsGenerateConfig);
 const { RangePicker } = DatePicker;
@@ -24,6 +21,7 @@ export function KoDatePicker(props: Props) {
     if (dateStrings[0] && dateStrings[1]) {
       onChange([new Date(dateStrings[0]), new Date(dateStrings[1])]);
     }
+    console.log(`selected ${dateStrings}`);
   };
 
   return (

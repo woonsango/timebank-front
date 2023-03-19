@@ -19,11 +19,17 @@ function App() {
           </Route>
           <Route>
             <Route
-              path={PATH.POST_HR}
-              element={<PageRoutes.PostRequestPage />}
+              path={PATH.Register_HR}
+              element={<PageRoutes.RegisterRequestPage />}
             />
-            <Route path={PATH.POST_HS} element={<PageRoutes.PostServePage />} />
-            <Route path={PATH.POST_F} element={<PageRoutes.PostFreePage />} />
+            <Route
+              path={PATH.Register_HS}
+              element={<PageRoutes.RegisterServePage />}
+            />
+            <Route
+              path={PATH.Register_F}
+              element={<PageRoutes.RegisterFreePage />}
+            />
           </Route>
         </Routes>
       </ConfigProvider>

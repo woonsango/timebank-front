@@ -1,30 +1,23 @@
 import { useState } from 'react';
+import { useRecoilState } from 'recoil';
 import { Tag, Space } from 'antd';
+import { selectedTagsState } from '../../states/register';
 
 const { CheckableTag } = Tag;
 
-const tagsData = [
-  '생활',
-  '건강',
-  '산책',
-  '봉사',
-  '교육',
-  '학교',
-  '몰라',
-  '도움이필요해요',
-];
+const tagsData = ['생활', '건강', '산책', '봉사', '교육', '친목', '도와주세요'];
 
 export default function TagSelect() {
-  // 태크
-  const [selectedTags, setSelectedTags] = useState<string[]>(['']);
+  // Recoil state
+  const [selectedTags, setSelectedTags] = useRecoilState(selectedTagsState);
 
   const handleTagChange = (tag: string, checked: boolean) => {
     const nextSelectedTags = checked
       ? [...selectedTags, tag]
       : selectedTags.filter((t) => t !== tag);
-    console.log('You are interested in: ', nextSelectedTags);
     setSelectedTags(nextSelectedTags);
   };
+
   return (
     <Space size={[0, 8]} wrap>
       {tagsData.map((tag) => (
@@ -39,8 +32,9 @@ export default function TagSelect() {
             paddingBottom: '5px',
             paddingLeft: '10px',
             paddingRight: '10px',
-            borderRadius: '10px',
+            borderRadius: '20px',
             fontSize: '16px',
+            fontWeight: '600',
             border: '1px solid #ffc700',
           }}
         >

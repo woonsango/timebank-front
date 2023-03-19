@@ -1,17 +1,17 @@
 import HomePage from './HomePage';
 import MyPage from './MyPage';
 import SearchPage from './SearchPage';
-import PostRequestPage from './PostPage/PostRequestPage';
-import PostServePage from './PostPage/PostServePage';
-import PostFreePage from './PostPage/PostFreePage';
+import RegisterFreePage from './RegisterPage/RegisterFreePage';
+import RegisterRequestPage from './RegisterPage/RegisterRequestPage';
+import RegisterServePage from './RegisterPage/RegisterServePage';
 
 const PageRoutes = {
   HomePage,
   MyPage,
   SearchPage,
-  PostRequestPage,
-  PostServePage,
-  PostFreePage,
+  RegisterFreePage,
+  RegisterRequestPage,
+  RegisterServePage,
 };
 
 export default PageRoutes;

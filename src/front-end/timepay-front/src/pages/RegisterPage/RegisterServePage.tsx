@@ -1,6 +1,7 @@
-import { Layout, Input, Space, Button } from 'antd';
-import { useNavigate } from 'react-router-dom';
+import { Layout, Input, Button } from 'antd';
 import { useCallback, useState } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
+import { PATH } from '../../utils/paths';
 import { ReactComponent as BackArrow } from '../../assets/images/icons/header-back-arrow.svg';
 import { cssMainHeaderStyle } from '../../components/MainHeader/MainHeader.styles';
 import {
@@ -10,27 +11,31 @@ import {
   cssPostContentInputStyle,
   cssPostBtnStyle,
   cssPostFooterStyle,
-} from './PostFreePage.style';
+} from './RegisterFreePage.style';
 import { FlagFilled } from '@ant-design/icons';
 import dayjs from 'dayjs';
 
-import TagSelect from '../../components/Post/TagSelect';
-import TimeSelct from '../../components/Post/TimeSelect';
-import ImageUpload from '../../components/Post/ImageUpload';
-import { KoDatePicker, DateRange } from '../../components/Post/KoDatePicker';
+import TagSelect from '../../components/register/TagSelect';
+import {
+  KoDatePicker,
+  DateRange,
+} from '../../components/register/KoDatePicker';
+import TimeSelct from '../../components/register/TimeSelect';
+import ImageUpload from '../../components/register/ImageUpload';
+import { useRecoilState } from 'recoil';
+import { selectedTagsState } from '../../states/register';
 
 const { Header, Content, Footer } = Layout;
 const { TextArea } = Input;
 
-const PostServePage = () => {
+const RegisterServePage = () => {
   const timepay = 500;
   const [starttime, setStarttime] = useState('');
   const [endtime, setEndtime] = useState('');
 
-  const [title, setTitle] = useState('');
-
-  const [place, setPlace] = useState('');
-  const [content, setContent] = useState('');
+  const [title, setTitle] = useState<string>('');
+  const [place, setPlace] = useState<string>('');
+  const [content, setContent] = useState<string>('');
 
   /*
   const scrollRef = useRef<HTMLTextAreaElement>(null);
@@ -46,14 +51,18 @@ const PostServePage = () => {
     navigate(-1);
   }, [navigate]);
 
+  //태그
+  const [selectedTags, setSelectedTags] = useRecoilState(selectedTagsState);
+
   // 날짜
   const [dates, setDates] = useState<DateRange>([null, null]);
   const handleDatesChange = (value: DateRange) => {
     setDates(value);
   };
 
-  // 버튼 활성화 관련 변수
-  const isDisabled = !title || !content || !place || !dates[0] || !dates[1];
+  // 버튼 활성화 관련
+  const isDisabled =
+    !title || !content || !place || !dates[0] || !dates[1] || !selectedTags[0];
 
   const handleTitleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setTitle(event.target.value);
@@ -120,16 +129,18 @@ const PostServePage = () => {
         </Content>
       </div>
       <Footer css={cssPostFooterStyle}>
-        <Button
-          css={cssPostBtnStyle}
-          onClick={handleSubmit}
-          disabled={isDisabled}
-        >
-          작성완료
-        </Button>
+        <Link to={PATH.HOME}>
+          <Button
+            css={cssPostBtnStyle}
+            onClick={handleSubmit}
+            disabled={isDisabled}
+          >
+            작성완료
+          </Button>
+        </Link>
       </Footer>
     </Layout>
   );
 };
 
-export default PostServePage;
+export default RegisterServePage;
