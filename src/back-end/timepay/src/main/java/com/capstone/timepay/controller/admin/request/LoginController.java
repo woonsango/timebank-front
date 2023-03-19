@@ -48,6 +48,21 @@ public class LoginController {
         return ResponseEntity.ok(new AuthenticationResponse(token));
     }
 
+    @PostMapping("/logout")
+    @ApiOperation(value = "로그아웃 API")
+    public ResponseEntity<?> logout(HttpServletRequest request, HttpServletResponse response) {
+        // 현재 인증된 사용자의 인증 토큰을 가져온다.
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        // 인증 토큰이 존재하면 로그아웃 처리를 한다.
+        if (authentication != null) {
+            new SecurityContextLogoutHandler().logout(request, response, authentication);
+        }
+
+        return ResponseEntity.ok("로그아웃되었습니다.");
+    }
+
+
     private void authenticate(String username, String password) throws Exception {
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
@@ -57,7 +72,4 @@ public class LoginController {
             throw new Exception("INVALID_CREDENTIALS", e);
         }
     }
-
-
-    //TODO: login 시도 시 NullException 처리
 }
