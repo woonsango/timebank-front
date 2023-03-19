@@ -6,7 +6,15 @@ import dayjs from 'dayjs';
 import { cssPostTableStyle } from './PostTable.styles';
 import PostDetailModal from '../PostDetailModal';
 
-const PostTable = () => {
+interface PostTableProps {
+  setSelectedPostIds: (args?: React.Key[]) => void;
+  setSelectedPosts: (args?: IPost[]) => void;
+}
+
+const PostTable = ({
+  setSelectedPostIds,
+  setSelectedPosts,
+}: PostTableProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [currentPost, setCurrentPost] = useState<IPost>();
 
@@ -69,6 +77,8 @@ const PostTable = () => {
         'selectedRows: ',
         selectedRows,
       );
+      setSelectedPostIds(selectedRowKeys);
+      setSelectedPosts(selectedRows);
     },
   };
 
