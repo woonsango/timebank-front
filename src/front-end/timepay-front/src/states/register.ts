@@ -1,7 +1,28 @@
 import { atom } from 'recoil';
 
-// selectedTags와 setSelectedTags 변수 반환
-export const selectedTagsState = atom<string[]>({
-  key: 'selectedTagsState',
+// timeSelect
+export const startTime = atom({
+  key: 'startTime',
+  default: '09:00',
+});
+export const endTime = atom({
+  key: 'endTime',
+  default: '18:00',
+});
+
+// selectedTags, setSelectedTags
+export const selectedTagsServeState = atom<string[]>({
+  key: 'selectedTagsServeState',
   default: [],
 });
+export const selectedTagsRequestState = atom<string[]>({
+  key: 'selectedTagsRequestState',
+  default: [],
+});
+
+// dateRange
+export type DateRange = [Date | null, Date | null];
+export interface DateRangeProps {
+  value: DateRange;
+  onChange: (value: DateRange) => void;
+}

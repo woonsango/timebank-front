@@ -12,7 +12,6 @@ import {
   cssPostBtnStyle,
   cssPostFooterStyle,
 } from './RegisterFreePage.style';
-
 import ImageUpload from '../../components/register/ImageUpload';
 
 const { Header, Content, Footer } = Layout;
@@ -23,7 +22,7 @@ const RegisterFreePage = () => {
   const [content, setContent] = useState<string>('');
 
   const navigate = useNavigate();
-
+  // 뒤로 가기
   const handleClickBack = useCallback(() => {
     navigate(-1);
   }, [navigate]);
@@ -42,6 +41,7 @@ const RegisterFreePage = () => {
 
   const handleSubmit = () => {
     // 게시글 작성 완료 처리
+    console.log('자유게시글 등록');
   };
 
   return (

@@ -1,7 +1,17 @@
 import { Select, Space } from 'antd';
+import { useRecoilState } from 'recoil';
+import { endTime, startTime } from '../../states/register';
 
 export default function TimeSelct() {
-  const handleChange = (value: string) => {
+  const [starttime, setStarttime] = useRecoilState(startTime);
+  const [endtime, setEndtime] = useRecoilState(endTime);
+
+  const handleStarttimeChange = (value: any) => {
+    setStarttime(value);
+    console.log(`selected ${value}`);
+  };
+  const handleEndtimeChange = (value: any) => {
+    setEndtime(value);
     console.log(`selected ${value}`);
   };
 
@@ -11,7 +21,7 @@ export default function TimeSelct() {
         defaultValue="09:00"
         size={'large'}
         style={{ marginLeft: '20px', width: '120px', float: 'left' }}
-        onChange={handleChange}
+        onChange={handleStarttimeChange}
         options={[
           { value: '00:00', label: '00:00' },
           { value: '00:30', label: '00:30' },
@@ -68,7 +78,7 @@ export default function TimeSelct() {
         defaultValue="18:00"
         size={'large'}
         style={{ width: '120px', float: 'left' }}
-        onChange={handleChange}
+        onChange={handleEndtimeChange}
         options={[
           { value: '00:00', label: '00:00' },
           { value: '00:30', label: '00:30' },

@@ -1,6 +1,7 @@
-import { Layout, Input, DatePicker, Space } from 'antd';
-import { useNavigate } from 'react-router-dom';
-import { useCallback, useRef, useState, useEffect } from 'react';
+import { Layout, Input, Button } from 'antd';
+import { useCallback, useState } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
+import { PATH } from '../../utils/paths';
 import { ReactComponent as BackArrow } from '../../assets/images/icons/header-back-arrow.svg';
 import { cssMainHeaderStyle } from '../../components/MainHeader/MainHeader.styles';
 import {
@@ -11,110 +12,77 @@ import {
   cssPostBtnStyle,
   cssPostFooterStyle,
 } from './RegisterFreePage.style';
-
-import { CameraFilled, FlagFilled } from '@ant-design/icons';
-import { Modal, Upload, TimePicker, Tag } from 'antd';
-import type { RcFile, UploadProps } from 'antd/es/upload';
-import type { UploadFile } from 'antd/es/upload/interface';
-import dayjs from 'dayjs';
-
-const getBase64 = (file: RcFile): Promise<string> =>
-  new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = () => resolve(reader.result as string);
-    reader.onerror = (error) => reject(error);
-  });
+import { FlagFilled } from '@ant-design/icons';
+import { TagRequestSelect } from '../../components/register/TagSelect';
+import { KoDatePicker } from '../../components/register/KoDatePicker';
+import TimeSelct from '../../components/register/TimeSelect';
+import ImageUpload from '../../components/register/ImageUpload';
+import { useRecoilState } from 'recoil';
+import {
+  selectedTagsRequestState,
+  DateRange,
+  startTime,
+  endTime,
+} from '../../states/register';
 
 const { Header, Content, Footer } = Layout;
 const { TextArea } = Input;
-const { RangePicker } = DatePicker;
-const { CheckableTag } = Tag;
-
-const format = 'HH:mm';
-const tagsData = [
-  '생활',
-  '건강',
-  '산책',
-  '봉사',
-  '교육',
-  '학교',
-  '몰라',
-  '도움이필요해요',
-];
 
 const RegisterRequestPage = () => {
-  const timepay = 500;
-  const [starttime, setStarttime] = useState();
-  const [endtime, setEndtime] = useState();
+  const timepay = 1000;
+  const [title, setTitle] = useState<string>('');
+  const [place, setPlace] = useState<string>('');
+  const [content, setContent] = useState<string>('');
+  // 태그
+  const [selectedTags, setSelectedTags] = useRecoilState(
+    selectedTagsRequestState,
+  );
+  // 날짜
+  const [dates, setDates] = useState<DateRange>([null, null]);
+  const handleDatesChange = (value: DateRange) => {
+    setDates(value);
+  };
+  // 시간에 따른 타임페이 환산
+  const [starttime, setStarttime] = useRecoilState(startTime);
+  const [endtime, setEndtime] = useRecoilState(endTime);
 
-  const navigate = useNavigate();
-
-  // textarea 관련
-  const textareaRef = useRef<HTMLTextAreaElement | null>(null);
-
-  const [value, setValue] = useState<String>();
-
-  useEffect(() => {
-    if (textareaRef && textareaRef.current) {
-      textareaRef.current.style.height = '0px';
-      const scrollHeight = textareaRef.current.scrollHeight;
-      textareaRef.current.style.height = scrollHeight + 'px';
-    }
-  }, [value]);
-
-  /*
-  const scrollRef = useRef<HTMLTextAreaElement>(null);
-
-  useEffect(() => {
-    scrollRef.current?.scrollTo(0, scrollRef.current.scrollHeight);
-  });
-  */
+  const minusHours: any =
+    0 <= Number(endtime.slice(0, 2)) - Number(starttime.slice(0, 2))
+      ? Number(endtime.slice(0, 2)) - Number(starttime.slice(0, 2))
+      : 0;
+  const minusMinutes: any =
+    0 !== Number(endtime.slice(3, 5)) - Number(starttime.slice(3, 5))
+      ? Number(endtime.slice(3, 5)) + Number(starttime.slice(3, 5))
+      : 0;
+  const exchangeTime: number = minusHours * 60 + minusMinutes;
+  // 보유 타임페이보다 지급 타임페이가 큰 경우의 로직 나중에.. 구현
 
   // 뒤로가기
+  const navigate = useNavigate();
   const handleClickBack = useCallback(() => {
     navigate(-1);
   }, [navigate]);
 
-  // 이미지 업로드
-  const [previewOpen, setPreviewOpen] = useState(false);
-  const [previewImage, setPreviewImage] = useState('');
-  const [previewTitle, setPreviewTitle] = useState('');
-  const [fileList, setFileList] = useState<UploadFile[]>([]);
-  const handleCancel = () => setPreviewOpen(false);
-
-  const handlePreview = async (file: UploadFile) => {
-    if (!file.url && !file.preview) {
-      file.preview = await getBase64(file.originFileObj as RcFile);
-    }
-
-    setPreviewImage(file.url || (file.preview as string));
-    setPreviewOpen(true);
-    setPreviewTitle(
-      file.name || file.url!.substring(file.url!.lastIndexOf('/') + 1),
-    );
+  // 버튼 활성화 관련
+  const isDisabled =
+    !title || !content || !place || !dates[0] || !dates[1] || !selectedTags[0];
+  const handleTitleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setTitle(event.target.value);
+  };
+  const handlePlaceChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setPlace(event.target.value);
+  };
+  const handleContentChange = (
+    event: React.ChangeEvent<HTMLTextAreaElement>,
+  ) => {
+    setContent(event.target.value);
+  };
+  const handleSubmit = () => {
+    // 게시글 작성 완료 처리
+    console.log('도움받기게시글 등록');
   };
 
-  const handleChange: UploadProps['onChange'] = ({ fileList: newFileList }) =>
-    setFileList(newFileList);
-
-  const uploadButton = (
-    <div>
-      <CameraFilled />
-      <div style={{ marginTop: 8 }}>이미지 업로드</div>
-    </div>
-  );
-
-  // 태크
-  const [selectedTags, setSelectedTags] = useState<string[]>(['Books']);
-
-  const handleTagChange = (tag: string, checked: boolean) => {
-    const nextSelectedTags = checked
-      ? [...selectedTags, tag]
-      : selectedTags.filter((t) => t !== tag);
-    console.log('You are interested in: ', nextSelectedTags);
-    setSelectedTags(nextSelectedTags);
-  };
+  //
 
   return (
     <Layout css={cssPostPageStyle}>
@@ -128,62 +96,27 @@ const RegisterRequestPage = () => {
             css={cssPostTitleInputStyle}
             placeholder="제목을 입력하세요"
             maxLength={25}
+            value={title}
+            onChange={handleTitleChange}
           />
           <div css={cssLineStyle} />
-          <h6>관련 카테고리 설정</h6>
-          <Space size={[0, 8]} wrap>
-            {tagsData.map((tag) => (
-              <CheckableTag
-                key={tag}
-                checked={selectedTags.includes(tag)}
-                onChange={(checked) => handleTagChange(tag, checked)}
-                style={{
-                  marginTop: '5px',
-                  marginLeft: '20px',
-                  paddingTop: '5px',
-                  paddingBottom: '5px',
-                  paddingLeft: '10px',
-                  paddingRight: '10px',
-                  borderRadius: '10px',
-                  fontSize: '16px',
-                  backgroundColor: '#E8E8E8',
-                }}
-              >
-                {tag}
-              </CheckableTag>
-            ))}
-          </Space>
+          <h6>카테고리 설정</h6>
+          <TagRequestSelect />
           <div css={cssLineStyle} />
           <h6>날짜</h6>
-          <RangePicker
-            size={'large'}
-            style={{ marginLeft: '20px' }}
-            placeholder={['시작일', '종료일']}
-          />
+          <KoDatePicker value={dates} onChange={handleDatesChange} />
           <h6>시간</h6>
-          <TimePicker
-            value={starttime}
-            format={format}
-            size={'large'}
-            style={{ marginLeft: '20px' }}
-            placeholder={'시작 00:00'}
-          />
-          <TimePicker
-            value={endtime}
-            format={format}
-            size={'large'}
-            style={{ marginLeft: '20px' }}
-            placeholder={'종료 23:59'}
-          />
-          <p>보유하고 있는 타임페이 : {timepay}</p>
-          <p>소모 타임페이 : {timepay}</p>
+          <TimeSelct />
+          <p>내 타임페이 : {timepay}</p>
+          <p>지급해야할 타임페이 : {exchangeTime}</p>
           <div css={cssLineStyle} />
           <h6>장소</h6>
           <Input
             size="large"
-            placeholder="도움받기를 희망하는 장소를 입력하세요 :)"
-            style={{ marginLeft: '20px', paddingLeft: '15px', width: '400px' }}
+            placeholder="희망하는 장소를 입력하세요 :)"
+            style={{ marginLeft: '20px', paddingLeft: '15px', width: '280px' }}
             prefix={<FlagFilled style={{ marginRight: '5px' }} />}
+            onChange={handlePlaceChange}
           />
           <div css={cssLineStyle} />
           <TextArea
@@ -192,31 +125,23 @@ const RegisterRequestPage = () => {
             style={{ resize: 'none' }}
             css={cssPostContentInputStyle}
             placeholder="내용을 입력하세요"
+            value={content}
+            onChange={handleContentChange}
           />
           <div css={cssLineStyle} />
-          <h5>사진 ({fileList.length}/5)</h5>
-          <Upload
-            className="upload"
-            action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
-            listType="picture-card"
-            fileList={fileList}
-            onPreview={handlePreview}
-            onChange={handleChange}
-          >
-            {fileList.length >= 5 ? null : uploadButton}
-          </Upload>
-          <Modal
-            open={previewOpen}
-            title={previewTitle}
-            footer={null}
-            onCancel={handleCancel}
-          >
-            <img alt="example" style={{ width: '100%' }} src={previewImage} />
-          </Modal>
+          <ImageUpload />
         </Content>
       </div>
       <Footer css={cssPostFooterStyle}>
-        <button css={cssPostBtnStyle}>작성완료</button>
+        <Link to={PATH.HOME}>
+          <Button
+            css={cssPostBtnStyle}
+            onClick={handleSubmit}
+            disabled={isDisabled}
+          >
+            작성완료
+          </Button>
+        </Link>
       </Footer>
     </Layout>
   );

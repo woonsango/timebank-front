@@ -13,57 +13,59 @@ import {
   cssPostFooterStyle,
 } from './RegisterFreePage.style';
 import { FlagFilled } from '@ant-design/icons';
-import dayjs from 'dayjs';
-
-import TagSelect from '../../components/register/TagSelect';
-import {
-  KoDatePicker,
-  DateRange,
-} from '../../components/register/KoDatePicker';
+import { TagServeSelect } from '../../components/register/TagSelect';
+import { KoDatePicker } from '../../components/register/KoDatePicker';
 import TimeSelct from '../../components/register/TimeSelect';
 import ImageUpload from '../../components/register/ImageUpload';
 import { useRecoilState } from 'recoil';
-import { selectedTagsState } from '../../states/register';
+import {
+  selectedTagsServeState,
+  DateRange,
+  startTime,
+  endTime,
+} from '../../states/register';
 
 const { Header, Content, Footer } = Layout;
 const { TextArea } = Input;
 
 const RegisterServePage = () => {
-  const timepay = 500;
-  const [starttime, setStarttime] = useState('');
-  const [endtime, setEndtime] = useState('');
-
+  const timepay = 1000;
   const [title, setTitle] = useState<string>('');
   const [place, setPlace] = useState<string>('');
   const [content, setContent] = useState<string>('');
-
-  /*
-  const scrollRef = useRef<HTMLTextAreaElement>(null);
-
-  useEffect(() => {
-    scrollRef.current?.scrollTo(0, scrollRef.current.scrollHeight);
-  });
-  */
-
-  const navigate = useNavigate();
-  // 뒤로가기
-  const handleClickBack = useCallback(() => {
-    navigate(-1);
-  }, [navigate]);
-
-  //태그
-  const [selectedTags, setSelectedTags] = useRecoilState(selectedTagsState);
-
+  // 태그
+  const [selectedTags, setSelectedTags] = useRecoilState(
+    selectedTagsServeState,
+  );
   // 날짜
   const [dates, setDates] = useState<DateRange>([null, null]);
   const handleDatesChange = (value: DateRange) => {
     setDates(value);
   };
+  // 시간에 따른 타임페이 환산
+  const [starttime, setStarttime] = useRecoilState(startTime);
+  const [endtime, setEndtime] = useRecoilState(endTime);
+
+  const minusHours: any =
+    0 <= Number(endtime.slice(0, 2)) - Number(starttime.slice(0, 2))
+      ? Number(endtime.slice(0, 2)) - Number(starttime.slice(0, 2))
+      : 0;
+  const minusMinutes: any =
+    0 !== Number(endtime.slice(3, 5)) - Number(starttime.slice(3, 5))
+      ? Number(endtime.slice(3, 5)) + Number(starttime.slice(3, 5))
+      : 0;
+  const exchangeTime: number = minusHours * 60 + minusMinutes;
+  // 보유 타임페이보다 지급 타임페이가 큰 경우의 로직 나중에.. 구현
+
+  // 뒤로가기
+  const navigate = useNavigate();
+  const handleClickBack = useCallback(() => {
+    navigate(-1);
+  }, [navigate]);
 
   // 버튼 활성화 관련
   const isDisabled =
     !title || !content || !place || !dates[0] || !dates[1] || !selectedTags[0];
-
   const handleTitleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setTitle(event.target.value);
   };
@@ -75,10 +77,12 @@ const RegisterServePage = () => {
   ) => {
     setContent(event.target.value);
   };
-
   const handleSubmit = () => {
     // 게시글 작성 완료 처리
+    console.log('도움주기게시글 등록');
   };
+
+  //
 
   return (
     <Layout css={cssPostPageStyle}>
@@ -97,14 +101,14 @@ const RegisterServePage = () => {
           />
           <div css={cssLineStyle} />
           <h6>카테고리 설정</h6>
-          <TagSelect />
+          <TagServeSelect />
           <div css={cssLineStyle} />
           <h6>날짜</h6>
           <KoDatePicker value={dates} onChange={handleDatesChange} />
           <h6>시간</h6>
           <TimeSelct />
-          <p>보유하고 있는 타임페이 : {timepay}</p>
-          <p>지급 타임페이 : {timepay}</p>
+          <p>내 타임페이 : {timepay}</p>
+          <p>받아야 할 타임페이 : {exchangeTime}</p>
           <div css={cssLineStyle} />
           <h6>장소</h6>
           <Input
