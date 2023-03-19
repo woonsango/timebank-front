@@ -11,9 +11,6 @@ export const cssPostManagementPageStyle = css`
       flex-direction: row;
       justify-content: flex-end;
       gap: 10px;
-      .change-status-btn {
-        background-color: #cdcdcd;
-      }
     }
   }
 `;

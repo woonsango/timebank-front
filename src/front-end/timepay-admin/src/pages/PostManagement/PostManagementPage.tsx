@@ -32,7 +32,6 @@ const PostManagementPage = () => {
           숨김
         </Button>
         <Button
-          className="change-status-btn"
           onClick={() => {
             setIsOpenChangeStatusModal(true);
           }}
