@@ -104,7 +104,8 @@ const PostTable = ({
           { text: '자유', value: '자유' },
           { text: '후기', value: '후기' },
         ],
-        onFilter: (value: string, record) => record.type.indexOf(value) === 0,
+        onFilter: (value: string, record: IPost) =>
+          record.type.indexOf(value) === 0,
       },
       {
         title: '상태',
@@ -120,7 +121,8 @@ const PostTable = ({
           { text: '활동취소', value: '활동취소' },
           { text: '활동지연', value: '활동지연' },
         ],
-        onFilter: (value: string, record) => record.status.indexOf(value) === 0,
+        onFilter: (value: string, record: IPost) =>
+          record.status.indexOf(value) === 0,
       },
       {
         title: '카테고리',
