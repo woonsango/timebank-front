@@ -4,6 +4,7 @@ import com.capstone.timepay.domain.admin.Admin;
 import com.capstone.timepay.domain.admin.AdminRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -13,7 +14,7 @@ import java.util.*;
 public class AdminService {
 
     private final AdminRepository adminRepository;
-    private final BCryptPasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
 
     public List<Admin> getList() {
         return this.adminRepository.findAll();
