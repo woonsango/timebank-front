@@ -41,6 +41,7 @@ const PostManagementPage = () => {
         </Button>
       </div>
       <PostTable
+        selectedPostIds={selectedPostIds}
         setSelectedPostIds={setSelectedPostIds}
         setSelectedPosts={setSelectedPosts}
       />

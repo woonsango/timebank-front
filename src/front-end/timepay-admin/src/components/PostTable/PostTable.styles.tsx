@@ -14,3 +14,7 @@ export const cssPostTableStyle = css`
     }
   }
 `;
+
+export const cssPostTableRowCountStyle = css`
+  text-align: right;
+`;

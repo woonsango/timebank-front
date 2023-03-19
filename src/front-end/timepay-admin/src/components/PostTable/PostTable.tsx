@@ -3,15 +3,20 @@ import type { ColumnsType } from 'antd/es/table';
 import { useCallback, useMemo, useState } from 'react';
 import { IPost, IPostState, IPostType } from '../../api/interfaces/IPost';
 import dayjs from 'dayjs';
-import { cssPostTableStyle } from './PostTable.styles';
+import {
+  cssPostTableRowCountStyle,
+  cssPostTableStyle,
+} from './PostTable.styles';
 import PostDetailModal from '../PostDetailModal';
 
 interface PostTableProps {
+  selectedPostIds?: React.Key[];
   setSelectedPostIds: (args?: React.Key[]) => void;
   setSelectedPosts: (args?: IPost[]) => void;
 }
 
 const PostTable = ({
+  selectedPostIds,
   setSelectedPostIds,
   setSelectedPosts,
 }: PostTableProps) => {
@@ -254,6 +259,12 @@ const PostTable = ({
 
   return (
     <>
+      <div css={cssPostTableRowCountStyle}>
+        {selectedPostIds && selectedPostIds.length > 0
+          ? `${selectedPostIds.length} 개 선택 / `
+          : ''}
+        총 {dummyDataSource.length} 개
+      </div>
       <Table
         css={cssPostTableStyle}
         rowSelection={rowSelection}
