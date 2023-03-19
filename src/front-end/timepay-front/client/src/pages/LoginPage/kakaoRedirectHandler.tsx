@@ -1,7 +1,7 @@
 //리다이렉트될 화면
 //kakaoRedirectHandler.tsx
 
-import React, { useCallback, useEffect } from 'react';
+import { useCallback, useEffect } from 'react';
 import axios from 'axios';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -28,7 +28,7 @@ const KakaoRedirectHandler = () => {
   const fetchAuthorizationCode = async () => {
     axios({
       method: 'post',
-      url: 'http://localhost:5000/authorization',
+      url: 'http://192.168.219.156:5000/authorization',
       data: authorizationCode,
     })
       .then((res) => {

@@ -1,7 +1,9 @@
 import Join_imageSet from './Join_imageSet';
-import './index.css';
-import { useState, useEffect } from 'react';
+import './Join.css';
+import { useState, useEffect, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Join_selectTown from './Join_selectTown';
+import { PATH } from '../../utils/paths';
 
 const JoinPage = () => {
   //이름, 닉네임, 지역, 전화번호(필)
@@ -17,6 +19,16 @@ const JoinPage = () => {
     setText(e.target.value);
   };
 
+  //가입 완료 버튼 누르면, 서버에 사용자 정보 보내고, 홈 화면으로 이동
+  const navigate = useNavigate(); //history
+
+  const handlePageMove = useCallback(
+    (path: string) => {
+      navigate(path);
+    },
+    [navigate],
+  );
+
   useEffect(() => {});
 
   return (
@@ -25,37 +37,46 @@ const JoinPage = () => {
 
       <div className="contentWrap">
         <Join_imageSet />
-        <div className="inputTitle">이름</div>
-        <div className="errorMessageWrap">반드시 입력해주세요.</div>
-        <div className="inputWrap">
-          <input className="input" />
-        </div>
-
-        <div style={{ marginTop: '20px' }} className="inputTitle">
-          닉네임
-        </div>
-        <div className="errorMessageWrap">반드시 입력해주세요.</div>
-        <div className="inputWrap">
-          <input className="input" />
-        </div>
-        <div className="">
-          <div style={{ marginTop: '20px' }} className="inputTitle">
-            동네
+        <div className="elementWrap">
+          <div className="inputTitle">이름</div>
+          <div style={{ marginLeft: '10px' }} className="errorMessageWrap">
+            * 반드시 입력해주세요.
           </div>
-          <div className="errorMessageWrap">반드시 입력해주세요.</div>
-          <Join_selectTown></Join_selectTown>
         </div>
-
-        <div style={{ marginTop: '20px' }} className="inputTitle">
-          핸드폰 번호
-        </div>
-        <div className="errorMessageWrap">반드시 입력해주세요.</div>
         <div className="inputWrap">
           <input className="input" />
         </div>
 
-        <div style={{ marginTop: '20px' }} className="inputTitle">
-          소개
+        <div className="elementWrap">
+          <div className="inputTitle">닉네임</div>
+          <div style={{ marginLeft: '10px' }} className="errorMessageWrap">
+            * 반드시 입력해주세요.
+          </div>
+        </div>
+        <div className="inputWrap">
+          <input className="input" />
+        </div>
+
+        <div className="elementWrap">
+          <div className="inputTitle">지역</div>
+          <div style={{ marginLeft: '10px' }} className="errorMessageWrap">
+            * 반드시 입력해주세요.
+          </div>
+        </div>
+        <Join_selectTown></Join_selectTown>
+
+        <div className="elementWrap">
+          <div className="inputTitle">핸드폰 번호</div>
+          <div style={{ marginLeft: '10px' }} className="errorMessageWrap">
+            * 반드시 입력해주세요.
+          </div>
+        </div>
+        <div className="inputWrap">
+          <input className="input" />
+        </div>
+
+        <div style={{ marginTop: '30px' }} className="inputTitle">
+          자신을 소개해 주세요
         </div>
         <div className="inputWrap">
           <input className="input" />
@@ -63,7 +84,12 @@ const JoinPage = () => {
       </div>
 
       <div>
-        <button className="bottomButton">가입 완료</button>
+        <button
+          className="bottomButton"
+          onClick={() => handlePageMove(PATH.HOME)}
+        >
+          가입 완료
+        </button>
       </div>
     </div> //join
   );
