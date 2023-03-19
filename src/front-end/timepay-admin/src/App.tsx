@@ -22,6 +22,10 @@ function App() {
               path={PATH.USER_MANAGEMENT}
               element={<PageRoutes.UserManagementPage />}
             />
+            <Route
+              path={PATH.ADMIN_MANAGEMENT}
+              element={<PageRoutes.AdminManagementPage />}
+            />
           </Route>
         </Routes>
       </ConfigProvider>
