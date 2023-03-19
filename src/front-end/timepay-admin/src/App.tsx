@@ -22,6 +22,10 @@ function App() {
               path={PATH.USER_MANAGEMENT}
               element={<PageRoutes.UserManagementPage />}
             />
+            <Route
+              path={PATH.CATEGORY_MANAGEMENT}
+              element={<PageRoutes.CategoryManagementPage />}
+            />
           </Route>
         </Routes>
       </ConfigProvider>
