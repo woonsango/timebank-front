@@ -15,16 +15,20 @@ export const cssPostSearchFormStyle = css`
     gap: 10px;
   }
   .ant-select {
-    width: 120px;
+    width: 100%;
+    max-width: 120px;
   }
   .ant-input {
-    width: 250px;
+    width: 100%;
+    max-width: 250px;
   }
   .ant-input-number {
-    width: 150px;
+    width: 100%;
+    max-width: 150px;
   }
   .ant-btn {
-    width: 100px;
+    width: 100%;
+    max-width: 100px;
     background-color: #858585;
   }
 `;
