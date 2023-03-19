@@ -51,7 +51,7 @@ public class AdminSecurityConfig {
                 .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED))
                 .and()
                 .logout()
-                .logoutUrl("/logout")
+                .logoutUrl("/api/admins/logout")
                 .invalidateHttpSession(true)
                 .deleteCookies("JSESSIONID")
                 .logoutSuccessHandler(this::logoutSuccessHandler)
