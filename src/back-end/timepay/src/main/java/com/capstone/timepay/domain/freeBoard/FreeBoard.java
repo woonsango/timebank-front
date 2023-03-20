@@ -21,7 +21,7 @@ import java.util.List;
 @Getter
 @Setter
 @Entity
-public class FreeBoard // extends BaseTimeEntity
+public class FreeBoard extends BaseTimeEntity
 {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

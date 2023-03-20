@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -47,6 +48,8 @@ public class FreeBoardService
         freeBoard.setTitle(freeBoardDTO.getTitle());
         freeBoard.setContent(freeBoardDTO.getContent());
         freeBoard.setCategory(freeBoardDTO.getCategory());
+        freeBoard.setCreatedAt(LocalDateTime.now());
+        freeBoard.setUpdatedAt(LocalDateTime.now());
         freeBoardRepository.save(freeBoard);
         return FreeBoardDTO.toFreeBoardDTO(freeBoard);
     }
@@ -61,6 +64,7 @@ public class FreeBoardService
         freeBoard.setTitle(freeBoardDTO.getTitle());
         freeBoard.setContent(freeBoardDTO.getContent());
         freeBoard.setCategory(freeBoardDTO.getCategory());
+        freeBoard.setUpdatedAt(LocalDateTime.now());
         return FreeBoardDTO.toFreeBoardDTO(freeBoard);
     }
 

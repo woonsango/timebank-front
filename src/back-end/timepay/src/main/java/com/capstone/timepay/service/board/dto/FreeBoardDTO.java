@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -16,6 +18,8 @@ public class FreeBoardDTO
     private String title;
     private String content;
     private String category;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 
     public static FreeBoardDTO toFreeBoardDTO(FreeBoard freeBoard)
     {
@@ -23,7 +27,9 @@ public class FreeBoardDTO
                 freeBoard.getId(),
                 freeBoard.getTitle(),
                 freeBoard.getContent(),
-                freeBoard.getCategory()
+                freeBoard.getCategory(),
+                freeBoard.getCreatedAt(),
+                freeBoard.getUpdatedAt()
                 // TODO : 나중에 유저도 넣어줘야함
         );
     }
