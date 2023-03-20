@@ -1,6 +1,6 @@
 package com.capstone.timepay.controller.admin;
 
-import com.capstone.timepay.controller.admin.request.UserInfoUpdateRequest;
+import com.capstone.timepay.controller.admin.request.userManage.UserInfoUpdateRequest;
 import com.capstone.timepay.controller.admin.response.userManage.MainResponse;
 import com.capstone.timepay.controller.admin.response.userManage.UserProfileResponse;
 import com.capstone.timepay.service.admin.UserManageService;

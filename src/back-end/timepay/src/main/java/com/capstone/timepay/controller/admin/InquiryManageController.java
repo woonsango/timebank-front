@@ -1,14 +1,14 @@
 package com.capstone.timepay.controller.admin;
 
+import com.capstone.timepay.controller.admin.request.inquiry.InquiryAnswerRequest;
+import com.capstone.timepay.controller.admin.response.inquiry.InquiryDetailResponse;
 import com.capstone.timepay.controller.admin.response.inquiry.InquiryResponse;
 import com.capstone.timepay.service.admin.InquiryManagerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -35,6 +35,20 @@ public class InquiryManageController {
         return ResponseEntity.ok(responses);
     }
 
+    @GetMapping("/detail")
+    public ResponseEntity<?> showInquiryDetail(@RequestParam Long inquiryId){
 
+        InquiryDetailResponse response = inquiryManagerService.showInquiryDetail(inquiryId);
+
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/answer")
+    public ResponseEntity<?> answerInquiry(@Valid @RequestBody InquiryAnswerRequest request){
+
+        inquiryManagerService.saveInquiryAnswer(request.toServiceDto());
+
+        return ResponseEntity.ok("답변이 등록되었습니다.");
+    }
 
 }

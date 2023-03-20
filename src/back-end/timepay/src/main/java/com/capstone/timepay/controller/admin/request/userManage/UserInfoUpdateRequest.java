@@ -1,4 +1,4 @@
-package com.capstone.timepay.controller.admin.request;
+package com.capstone.timepay.controller.admin.request.userManage;
 
 import com.capstone.timepay.service.admin.dto.UserUpdateDto;
 import com.sun.istack.NotNull;

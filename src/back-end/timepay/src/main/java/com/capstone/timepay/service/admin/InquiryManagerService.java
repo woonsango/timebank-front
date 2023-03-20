@@ -1,8 +1,15 @@
 package com.capstone.timepay.service.admin;
 
+import com.capstone.timepay.controller.admin.response.inquiry.AdminAnswerResponse;
+import com.capstone.timepay.controller.admin.response.inquiry.InquiryDetailResponse;
 import com.capstone.timepay.controller.admin.response.inquiry.InquiryResponse;
+import com.capstone.timepay.domain.admin.Admin;
+import com.capstone.timepay.domain.admin.AdminRepository;
 import com.capstone.timepay.domain.inquiry.Inquiry;
 import com.capstone.timepay.domain.inquiry.InquiryRepository;
+import com.capstone.timepay.domain.inquiryAnswer.InquiryAnswer;
+import com.capstone.timepay.domain.inquiryAnswer.InquiryAnswerRepository;
+import com.capstone.timepay.service.admin.dto.InquiryAnswerDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -18,12 +25,16 @@ import java.util.stream.Collectors;
 public class InquiryManagerService {
 
     private final InquiryRepository inquiryRepository;
+    private final AdminRepository adminRepository;
+    private final InquiryAnswerRepository inquiryAnswerRepository;
+
 
     public List<InquiryResponse> showAllInquiries() {
         List<Inquiry> inquiries = inquiryRepository.findAll();
 
         return inquiries.stream()
                         .map(inquiry -> InquiryResponse.builder()
+                                .inquiryId(inquiry.getInquiryId())
                                 .state(inquiry.getState())
                                 .category(inquiry.getCategory())
                                 .createdAt(inquiry.getCreatedAt())
@@ -53,6 +64,7 @@ public class InquiryManagerService {
 
         return inquiries.stream()
                         .map(inquiry -> InquiryResponse.builder()
+                                .inquiryId(inquiry.getInquiryId())
                                 .title(inquiry.getTitle())
                                 .category(inquiry.getCategory())
                                 .writer(inquiry.getUser().getName())
@@ -66,21 +78,40 @@ public class InquiryManagerService {
     }
 
 
+    public void saveInquiryAnswer(InquiryAnswerDto answer) {
 
+        Inquiry inquiry = inquiryRepository.findById(answer.getInquiryId()).orElseThrow(()->new IllegalArgumentException("존재하지 않는 문의입니다."));
+        Admin admin = adminRepository.findById(answer.getAdminId()).orElseThrow(()->new IllegalArgumentException("존재하지 않는 관리자입니다."));
 
+        InquiryAnswer inquiryAnswer = InquiryAnswer.getNewInstance(answer, inquiry, admin);
 
+        inquiryAnswerRepository.save(inquiryAnswer);
+    }
 
+    public InquiryDetailResponse showInquiryDetail(Long inquiryId) {
 
+        Inquiry inquiry = inquiryRepository.findById(inquiryId).orElseThrow(()->new IllegalArgumentException("존재하지 않는 문의입니다."));
+        List<InquiryAnswer> inquiryAnswers = inquiryAnswerRepository.findAllByInquiry(inquiry).orElseThrow(()->new IllegalArgumentException("존재하지 않는 문의 답변입니다."));
 
+        InquiryResponse inquiryResponse =
+                InquiryResponse.builder()
+                                .inquiryId(inquiry.getInquiryId())
+                                .state(inquiry.getState())
+                                .category(inquiry.getCategory())
+                                .createdAt(inquiry.getCreatedAt())
+                                .writer(inquiry.getUser().getName())
+                                .title(inquiry.getTitle())
+                                .build();
+        List<AdminAnswerResponse> adminAnswerResponses =
+                inquiryAnswers.stream()
+                                .map(inquiryAnswer -> AdminAnswerResponse.builder()
+                                        .content(inquiryAnswer.getContent())
+                                        .adminName(inquiryAnswer.getAdmin().getAdminName())
+                                        .createdAt(inquiryAnswer.getCreatedAt())
+                                        .build())
+                                .collect(Collectors.toList());
 
+        return new InquiryDetailResponse(inquiryResponse,adminAnswerResponses);
 
-
-
-
-
-
-
-
-
-
+    }
 }
