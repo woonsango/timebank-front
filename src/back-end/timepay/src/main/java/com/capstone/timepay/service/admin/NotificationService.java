@@ -5,6 +5,10 @@ import com.capstone.timepay.domain.notification.Notification;
 import com.capstone.timepay.domain.notification.NotificationRepository;
 import com.capstone.timepay.service.admin.dto.PostNotificationDTO;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -18,8 +22,14 @@ public class NotificationService {
 
     private final NotificationRepository notificationRepository;
 
-    public List<Notification> getList() {
-        return this.notificationRepository.findAll();
+    public Page<Notification> getList(int pagingIndex, int pagingSize) {
+        Pageable pageable = PageRequest.of(pagingIndex, pagingSize, Sort.by("createdAt").descending());
+        return this.notificationRepository.findAll(pageable);
+    }
+
+    public Page<Notification> search(int pagingIndex, int pagingSize, String title) {
+        Pageable pageable = PageRequest.of(pagingIndex, pagingSize, Sort.by("createdAt").descending());
+        return this.notificationRepository.findByTitleContaining(title, pageable);
     }
 
     public Optional<Notification> getOne(Long id) {

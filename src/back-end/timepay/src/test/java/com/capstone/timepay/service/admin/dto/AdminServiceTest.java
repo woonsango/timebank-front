@@ -1,7 +1,9 @@
 package com.capstone.timepay.service.admin.dto;
 
 import com.capstone.timepay.domain.admin.Admin;
+import com.capstone.timepay.domain.notification.Notification;
 import com.capstone.timepay.service.admin.AdminService;
+import com.capstone.timepay.service.admin.NotificationService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -14,24 +16,19 @@ class AdminServiceTest {
     @Autowired
     AdminService adminService;
 
+    @Autowired
+    NotificationService notificationService;
+
     @Test
-    void getList() {
-        //given
-        Admin admin = Admin.builder()
-                .adminName("admin1")
-                .password("1234")
-                .authority("super")
-                .name("jun")
-                .email("test@asdf.com")
-                .phone("123-4567-890")
-                .build();
+    void testJpa() {
+        for (int i = 1; i <= 300; i++) {
+            Admin admin = adminService.getOne(6l).get();
+            PostNotificationDTO notification = new PostNotificationDTO();
+            notification.setTitle(String.format("테스트 데이터입니다:[%03d]", i));
+            notification.setContent("내용무");
 
-        adminService.create(admin);
-        //when
-        List<Admin> adminList = adminService.getList();
-
-        //then
-        System.out.println(adminList);
+            this.notificationService.create(notification, admin);
+        }
     }
 
     @Test
