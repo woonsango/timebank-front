@@ -1,5 +1,6 @@
 package com.capstone.timepay.controller.admin;
 
+import com.capstone.timepay.controller.admin.request.UserInfoUpdateRequest;
 import com.capstone.timepay.controller.admin.response.MainResponse;
 import com.capstone.timepay.service.admin.AdminUserManageService;
 import lombok.RequiredArgsConstructor;
@@ -8,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import javax.validation.Valid;
 
 @RestController
 @RequiredArgsConstructor
@@ -49,9 +51,11 @@ public class AdminUserManageController {
     }
 
     @PatchMapping("/update")
-    public ResponseEntity<?> updateUserInfo(){
+    public ResponseEntity<?> updateUserInfo(@Valid @RequestBody UserInfoUpdateRequest request){
 
-        return ResponseEntity.ok("");
+        adminUserManageService.updateUserInfo(request.toServiceDto());
+
+        return ResponseEntity.ok("수정되었습니다.");
     }
 
     @DeleteMapping("/delete")

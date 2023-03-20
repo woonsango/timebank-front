@@ -4,6 +4,7 @@ import com.capstone.timepay.controller.admin.response.MainResponse;
 import com.capstone.timepay.domain.user.User;
 import com.capstone.timepay.domain.user.UserRepository;
 import com.capstone.timepay.domain.userProfile.UserProfileRepository;
+import com.capstone.timepay.service.admin.dto.UserUpdateDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -141,5 +142,17 @@ public class AdminUserManageService {
                         .build())
                 .sorted(Comparator.comparing(MainResponse::getUserId))
                 .collect(Collectors.toList());
+    }
+
+    public void updateUserInfo(UserUpdateDto userInfo) {
+
+        User user = userRepository.findById(userInfo.getUserId()).orElseThrow(()->new IllegalArgumentException("존재하지 않는 회원입니다."));
+        user.updateNickname(userInfo.getNickname());
+        user.updateBirth(userInfo.getBirth());
+        user.updateName(userInfo.getName());
+        user.updateLocation(userInfo.getRegion());
+
+        userRepository.save(user);
+
     }
 }
