@@ -27,12 +27,19 @@ import java.util.List;
 public class FreeBoard extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long f_boardId;
+    private Long freeBoardId;
 
-    @Column
+    @Column(nullable = false, length = 100)
     private String title;
+
+    @Column(nullable = false)
     private String content;
     private String category;
+
+    /*
+        TODO: 게시글 유형, 상태, 지급 타임페이, 장소 보낼필요있음
+        유저 정보도 보내야하는것 아닌가?
+     */
 
     @OneToMany(mappedBy = "freeBoard", orphanRemoval = true)
     private List<FreeBoardComment> freeBoardComments = new ArrayList<>();
