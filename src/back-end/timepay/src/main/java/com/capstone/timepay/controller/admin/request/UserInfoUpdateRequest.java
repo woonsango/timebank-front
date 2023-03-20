@@ -20,6 +20,7 @@ public class UserInfoUpdateRequest {
     private LocalDateTime birth;
     private String region;
 
+
     public UserUpdateDto toServiceDto() {
         return UserUpdateDto.of(userId, nickname, name, birth, region);
     }

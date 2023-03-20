@@ -85,4 +85,5 @@ public class User extends BaseTimeEntity {
         this.location = region;
     }
 
+
 }
