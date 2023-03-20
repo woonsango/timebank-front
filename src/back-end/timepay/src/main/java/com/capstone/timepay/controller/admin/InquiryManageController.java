@@ -4,6 +4,7 @@ import com.capstone.timepay.controller.admin.request.inquiry.InquiryAnswerReques
 import com.capstone.timepay.controller.admin.response.inquiry.InquiryDetailResponse;
 import com.capstone.timepay.controller.admin.response.inquiry.InquiryResponse;
 import com.capstone.timepay.service.admin.InquiryManagerService;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,6 +19,7 @@ public class InquiryManageController {
 
     private final InquiryManagerService inquiryManagerService;
 
+    @ApiOperation(value = "전체 문의 리스트 조회")
     @GetMapping("/main")
     public ResponseEntity<?> main(){
 
@@ -26,6 +28,7 @@ public class InquiryManageController {
         return ResponseEntity.ok(responses);
     }
 
+    @ApiOperation(value = "쿼리를 통한 문의 필터링 : 넘겨줄 쿼리가 없으면 all을 넘겨줄 것")
     @GetMapping("/search")
     public ResponseEntity<?> searchInquiries(@RequestParam String state, @RequestParam String category, @RequestParam String writer, @RequestParam String title){
 
@@ -35,6 +38,7 @@ public class InquiryManageController {
         return ResponseEntity.ok(responses);
     }
 
+    @ApiOperation(value = "세부 문의 정보 조회")
     @GetMapping("/detail")
     public ResponseEntity<?> showInquiryDetail(@RequestParam Long inquiryId){
 
@@ -42,7 +46,7 @@ public class InquiryManageController {
 
         return ResponseEntity.ok(response);
     }
-
+    @ApiOperation(value = "관리자 문의 답변 등록")
     @PostMapping("/answer")
     public ResponseEntity<?> answerInquiry(@Valid @RequestBody InquiryAnswerRequest request){
 

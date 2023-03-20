@@ -4,6 +4,7 @@ import com.capstone.timepay.controller.admin.request.userManage.UserInfoUpdateRe
 import com.capstone.timepay.controller.admin.response.userManage.MainResponse;
 import com.capstone.timepay.controller.admin.response.userManage.UserProfileResponse;
 import com.capstone.timepay.service.admin.UserManageService;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,6 +20,7 @@ public class UserManageController {
 
     private final UserManageService userManageService;
 
+    @ApiOperation(value = "전체 유저 정보 리스트 조회")
     @GetMapping("/main")
     public ResponseEntity<?> main(){
 
@@ -27,6 +29,7 @@ public class UserManageController {
         return ResponseEntity.ok(responses);
     }
 
+    @ApiOperation(value = "쿼리를 통한 유저 필터링 : 쿼리 ( name / email / nickname )")
     @GetMapping("/search")
     public ResponseEntity<?> search(@RequestParam Long userId, @RequestParam String query){
 
@@ -39,12 +42,14 @@ public class UserManageController {
         return ResponseEntity.ok(responses);
     }
 
+    @ApiOperation(value = "유저 활동 목록 조회")
     @GetMapping("/activity-list")
     public ResponseEntity<?> showActivityList(){
 
         return ResponseEntity.ok("");
     }
 
+    @ApiOperation(value = "유저 프로필 이미지 조회")
     @GetMapping("/profile")
     public ResponseEntity<?> showUserProfile(@RequestParam Long userId){
 
@@ -53,6 +58,7 @@ public class UserManageController {
         return ResponseEntity.ok(response);
     }
 
+    @ApiOperation(value = "유저 정보 수정")
     @PatchMapping("/update")
     public ResponseEntity<?> updateUserInfo(@Valid @RequestBody UserInfoUpdateRequest request){
 
@@ -61,12 +67,14 @@ public class UserManageController {
         return ResponseEntity.ok("수정되었습니다.");
     }
 
+    @ApiOperation(value = "유저 정보 삭제")
     @DeleteMapping("/delete")
     public ResponseEntity<?> deleteUser(){
 
         return ResponseEntity.ok("");
     }
 
+    @ApiOperation(value = "유저 블랙리스트 등록")
     @PostMapping("/blacklist")
     public ResponseEntity<?> registerBlacklist(){
 
