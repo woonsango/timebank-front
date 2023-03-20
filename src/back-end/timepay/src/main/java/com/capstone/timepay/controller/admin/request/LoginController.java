@@ -1,5 +1,6 @@
 package com.capstone.timepay.controller.admin.request;
 
+import com.capstone.timepay.domain.admin.Admin;
 import com.capstone.timepay.model.AuthenticationRequest;
 import com.capstone.timepay.model.AuthenticationResponse;
 import com.capstone.timepay.service.admin.AdminDetailService;
@@ -42,10 +43,12 @@ public class LoginController {
     public ResponseEntity<?> createAuthenticationToken(
             @RequestBody AuthenticationRequest authenticationRequest) throws Exception {
 
-        authenticate(authenticationRequest.getAdminName(), authenticationRequest.getPassword());
-        final UserDetails userDetails = adminDetailService.loadUserByUsername(authenticationRequest.getAdminName());
+        String adminName = authenticationRequest.getAdminName();
+        authenticate(adminName, authenticationRequest.getPassword());
+        final UserDetails userDetails = adminDetailService.loadUserByUsername(adminName);
         final String token = jwtUtils.generateToken(userDetails);
-        return ResponseEntity.ok(new AuthenticationResponse(token));
+        final Admin admin = adminDetailService.getAdmin(adminName);
+        return ResponseEntity.ok(new AuthenticationResponse(token, admin));
     }
 
     @PostMapping("/logout")

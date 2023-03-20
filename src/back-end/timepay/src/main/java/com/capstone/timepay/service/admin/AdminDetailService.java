@@ -31,4 +31,8 @@ public class AdminDetailService implements UserDetailsService {
                 admin.get().getAdminName(), admin.get().getPassword(),
                 new ArrayList<>());
     }
+
+    public Admin getAdmin(String adminName) {
+        return adminRepository.findByAdminName(adminName).get();
+    }
 }
