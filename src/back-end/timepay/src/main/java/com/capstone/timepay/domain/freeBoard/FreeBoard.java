@@ -9,25 +9,23 @@ import com.capstone.timepay.domain.freeAttatchment.FreeAttatchment;
 import com.capstone.timepay.domain.freeBoardComment.FreeBoardComment;
 import com.capstone.timepay.domain.freeBoardReport.FreeBoardReport;
 import com.capstone.timepay.domain.freeRegister.FreeRegister;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
+@Setter
 @Entity
-public class FreeBoard extends BaseTimeEntity {
+public class FreeBoard // extends BaseTimeEntity
+{
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long freeBoardId;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     @Column(nullable = false, length = 100)
     private String title;
