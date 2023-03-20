@@ -7,7 +7,7 @@ export const cssMainHeaderStyle = css`
 
   background: ${COMMON_COLOR.WHITE};
   width: 100%;
-  height: 60px;
+  height: 70px;
 
   padding: 25px 0 25px 20px;
 
