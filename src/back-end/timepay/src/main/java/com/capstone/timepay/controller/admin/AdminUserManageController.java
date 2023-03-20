@@ -2,6 +2,7 @@ package com.capstone.timepay.controller.admin;
 
 import com.capstone.timepay.controller.admin.request.UserInfoUpdateRequest;
 import com.capstone.timepay.controller.admin.response.MainResponse;
+import com.capstone.timepay.controller.admin.response.UserProfileResponse;
 import com.capstone.timepay.service.admin.AdminUserManageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -45,9 +46,11 @@ public class AdminUserManageController {
     }
 
     @GetMapping("/profile")
-    public ResponseEntity<?> showUserProfile(){
+    public ResponseEntity<?> showUserProfile(@RequestParam Long userId){
 
-        return ResponseEntity.ok("");
+        UserProfileResponse response = adminUserManageService.showUserProfile(userId);
+
+        return ResponseEntity.ok(response);
     }
 
     @PatchMapping("/update")

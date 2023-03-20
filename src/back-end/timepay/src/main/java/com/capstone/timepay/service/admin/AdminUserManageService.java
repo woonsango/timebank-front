@@ -1,6 +1,7 @@
 package com.capstone.timepay.service.admin;
 
 import com.capstone.timepay.controller.admin.response.MainResponse;
+import com.capstone.timepay.controller.admin.response.UserProfileResponse;
 import com.capstone.timepay.domain.user.User;
 import com.capstone.timepay.domain.user.UserRepository;
 import com.capstone.timepay.domain.userProfile.UserProfileRepository;
@@ -156,4 +157,11 @@ public class AdminUserManageService {
 
     }
 
+    public UserProfileResponse showUserProfile(Long userId) {
+
+        User user = userRepository.findById(userId).orElseThrow(()->new IllegalArgumentException("존재하지 않는 회원입니다."));
+
+        return new UserProfileResponse(user.getUserProfile().getImageUrl());
+
+    }
 }
