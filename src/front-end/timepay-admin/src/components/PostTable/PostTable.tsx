@@ -50,7 +50,6 @@ const PostTable = ({
       type: postTypes[i % 4],
       status: postStatus[i % 6],
       category: '카텍',
-      tag: ['i:', i.toString()],
       user: {
         userPk: i * 1000 + 1,
         name: `사용자 ${i}`,
@@ -140,18 +139,6 @@ const PostTable = ({
         //     { text: '생활', value: '생활' },
         //   ],
         //   onFilter: (value: string, record) => record.category.indexOf(value) === 0,
-      },
-      {
-        title: '태그',
-        key: 'tag',
-        dataIndex: 'tag',
-        width: 120,
-        align: 'center',
-        render: (_: string, record: IPost) => (
-          <Button type="link" onClick={() => handleOnShowDetailPost(record)}>
-            더보기
-          </Button>
-        ),
       },
       {
         title: '작성자 이름',

@@ -39,7 +39,6 @@ const PostSearchForm = () => {
           <Form.Item name="postMetaSearchKeyword" initialValue="title">
             <Select style={{ width: 100 }}>
               <Select.Option value="title">제목</Select.Option>
-              <Select.Option value="tag">태그</Select.Option>
               <Select.Option value="category">카테고리</Select.Option>
             </Select>
           </Form.Item>

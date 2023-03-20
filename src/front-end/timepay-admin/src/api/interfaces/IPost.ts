@@ -8,7 +8,6 @@ export interface IPost {
   title: string; // 제목
   status: IPostState; // 게시글 상태
   category: string; // 게시글 카테고리
-  tag: string[];
   pay: number; // 타임페이 교환량
   startTime: string; //활동 시작 시간
   endTime: string; // 종료 시간

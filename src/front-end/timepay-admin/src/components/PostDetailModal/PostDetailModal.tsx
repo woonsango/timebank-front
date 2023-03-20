@@ -41,10 +41,6 @@ const PostDetailModal = ({ post, isOpen, onCancel }: PostDetailModalProps) => {
           <img src={post?.attachment} alt="첨부사진" />
         </div>
       </div>
-      <div className="post-detail-container">
-        <span className="title">태그</span>
-        <div className="post-detail-inner-container">{post?.tag}</div>
-      </div>
     </Modal>
   );
 };
