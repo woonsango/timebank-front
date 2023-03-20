@@ -5,12 +5,10 @@ import com.capstone.timepay.domain.admin.Admin;
 import com.capstone.timepay.service.admin.AdminService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -23,9 +21,16 @@ public class AdminController {
 
     @GetMapping("")
     @ApiOperation("전체 어드민 리스트 조회")
-    public ResponseEntity<List<Admin>> getAdmins() {
-        List<Admin> adminList = this.adminService.getList();
-        return new ResponseEntity<>(adminList, HttpStatus.OK);
+    public ResponseEntity<Page<Admin>> getAdmins(
+            @RequestParam(value = "pagingIndex", defaultValue = "0") int pagingIndex,
+            @RequestParam(value = "pagingSize", defaultValue = "50") int pagingSize) {
+
+        Page<Admin> paging = this.adminService.getList(pagingIndex, pagingSize);
+        if (paging.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+
+        return new ResponseEntity<>(paging, HttpStatus.OK);
     }
 
     @GetMapping("/{adminId}")

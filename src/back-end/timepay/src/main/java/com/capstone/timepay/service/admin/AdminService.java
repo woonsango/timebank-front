@@ -4,6 +4,9 @@ import com.capstone.timepay.domain.admin.Admin;
 import com.capstone.timepay.domain.admin.AdminRepository;
 import com.capstone.timepay.service.admin.dto.PostAdminDTO;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -16,8 +19,9 @@ public class AdminService {
     private final AdminRepository adminRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public List<Admin> getList() {
-        return this.adminRepository.findAll();
+    public Page<Admin> getList(int pagingIndex, int pagingSize) {
+        Pageable pageable = PageRequest.of(pagingIndex, pagingSize);
+        return this.adminRepository.findAll(pageable);
     }
 
     public Optional<Admin> getOne(Long adminId) {
