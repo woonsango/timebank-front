@@ -8,4 +8,8 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ReceivedReportDto {
+
+    private Long reportId;
+
+
 }

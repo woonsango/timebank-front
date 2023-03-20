@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -19,6 +20,18 @@ public class AdminUserManageController {
     public ResponseEntity<?> main(){
 
         List<MainResponse> responses = adminUserManageService.showAllUserList();
+
+        return ResponseEntity.ok(responses);
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<?> search(@RequestParam Long userId, @RequestParam String query){
+
+        List<MainResponse> responses = new ArrayList<>();
+        if(query.equals("name")) responses = adminUserManageService.showAllUserListByName(userId, query);
+        else if(query.equals("email")) responses = adminUserManageService.showAllUserListByEmail(userId, query);
+        else if(query.equals("nickname")) responses = adminUserManageService.showAllUserListByNickname(userId, query);
+        else throw new IllegalArgumentException("잘못된 요청입니다.");
 
         return ResponseEntity.ok(responses);
     }
