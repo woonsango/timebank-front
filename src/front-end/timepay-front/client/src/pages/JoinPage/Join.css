@@ -1,39 +1,42 @@
-.page {
-  /*Join, My page 적용*/
+.JoinPage {
   position: absolute;
-  top: 0;
-  bottom: 0;
-  width: 90%;
-  height: 90%;
-  max-width: 320px;
-  padding: 0px 20px;
-
-  left: 50%;
-  transform: translate(-50%, 0);
-
-  margin-top: 70px; /*header(70px만큼) 아래로 내리기*/
+  width: 100%;
+  height: 100%;
 
   /*background-color: rgb(238, 238, 177);*/
 }
 
 .titleWrap {
   /*회원가입(text)*/
-  margin-top: 20px;
+  margin-top: 30px;
+  margin-left: 30px;
+
   font-size: 25px;
   font-weight: 700;
   color: #262626;
 }
 
 .contentWrap {
-  /*전체 요소 감싸는 틀*/
+  /*전체 input 요소 감싸는 틀*/
   margin-top: 170px;
-  flex: 1;
+}
+
+.block {
+  /*수평 가운데 정렬*/
+  display: flex;
+  justify-content: center;
+
+  /*border: 1px solid #e0009d;*/
 }
 
 .elementWrap {
   /*필수 입력 값들의 Title Text + 안내 메세지 틀*/
   display: flex;
+
   margin-top: 30px;
+  width: 80%;
+
+  /*border: 1px solid #019286;*/
 }
 
 .inputTitle {
@@ -43,13 +46,12 @@
   color: #262626;
 }
 
-.inputWrap {
-  /*input box 틀*/
-  display: flex;
-  margin-top: 8px;
-  border-radius: 8px;
-  padding: 10px;
-  border: 1px solid #e2e0e0;
+.errorMessageWrap {
+  /*안내 메시지*/
+  margin-top: 4px;
+
+  font-size: 12px;
+  color: #ef0000;
 }
 
 .inputWrap:focus-within {
@@ -57,12 +59,26 @@
   border: 1px solid #f1af23;
 }
 
+.inputWrap {
+  /*input box 틀*/
+  display: block;
+  text-align: center;
+
+  margin-top: 8px;
+
+  border-radius: 8px;
+  padding: 5px;
+
+  /*border: 1px solid #f1af23;*/
+}
+
 .input {
-  width: 60%;
+  width: 80%;
+
   outline: none;
-  border: none;
-  height: 15px;
-  font-size: 15px;
+  border: 1px solid #f1af23;
+
+  font-size: 17px;
   font-weight: 400;
 }
 
@@ -73,15 +89,20 @@
 .bottomButton {
   /*가입 완료 버튼*/
   margin-top: 35px;
-  width: 100%;
-  height: 48px;
+  margin-bottom: 30px;
+
+  width: 80%;
+  height: 45px;
+
   border: none;
+  border-radius: 64px;
+
   font-weight: bold;
   font-size: 16px;
-  border-radius: 64px;
+
   background-color: #f1af23;
   color: white;
-  margin-bottom: 30px;
+
   cursor: pointer;
 }
 
@@ -90,48 +111,48 @@
   color: white;
 }
 
-.errorMessageWrap {
-  /*안내 메시지*/
-  margin-top: 4px;
-  color: #ef0000;
-  font-size: 12px;
-}
-
 .selectWrap {
   /*select box 전체 틀*/
-  margin-top: 8px;
   text-align: center;
+  margin-top: 8px;
 }
 
 .selectBox {
-  height: 50px;
-  width: 25%;
-  border-radius: 8px;
-  background-color: white;
-  border: 1px solid #e2e0e0;
-  text-align: center;
   font-size: 13px;
+
+  text-align: center;
+
+  height: 50px;
+  width: 21%;
+
+  border: 1px solid #f1af23;
+  border-radius: 8px;
+
+  background-color: white;
 }
 
 .selectWrap .selectBox option {
   /*select option design*/
-  /*background: #f1af23;*/
   padding: 3px 0;
 
-  font-size: 17px;
   height: 30px;
+
+  font-size: 17px;
 }
 
 .profileImage {
   /*프로필 이미지(원형)*/
   position: absolute;
+
   width: 100px;
   height: 100px;
+
   top: 130px;
   left: 50%;
+
   transform: translate(-50%, -50%);
 
-  border-radius: 70%;
+  border-radius: 50%;
 }
 
 .profileImageWrap input[type='file'] {

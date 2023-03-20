@@ -1,13 +1,39 @@
+.EditPage {
+  position: absolute;
+
+  width: 100%;
+  height: 100%;
+
+  /* background-color: rgb(238, 238, 177); */
+}
+
+.EditBlock {
+  display: flex;
+  justify-content: center;
+
+  /* border: 1px solid #ff00b3; */
+}
+
+.EditContentWrap {
+  margin-top: 25px;
+}
 .EditImageWrap {
   text-align: center;
-  margin-top: 10%;
+
+  width: 80px;
+  height: 80px;
+
+  /* border: 1px solid #6d6a6aa2; */
 }
 
 .EditProfileImage {
   /*프로필 이미지(원형)*/
   width: 80px;
   height: 80px;
+
   border-radius: 70%;
+
+  /* border: 1px solid #6d6a6aa2; */
 }
 
 .EditProfileImageWrap input[type='file'] {
@@ -29,31 +55,40 @@
   width: 150px;
 
   left: 50%;
-  margin-top: 5%;
+  margin-top: 20px;
   transform: translate(-50%, -50%);
   text-align: center;
 
   font-size: 13px;
+
+  /* border: 1px solid #6d6a6aa2; */
 }
 
 .EditContentBox {
   display: flex;
-  margin-top: 10%;
+  margin-top: 50px;
+
+  /* border: 1px solid #6d6a6aa2; */
 }
 
 .EditLeftBox {
   display: inline-block;
-  width: 30%;
-  margin-top: 2%;
+  width: 20%;
+
+  /* border: 1px solid #6d6a6aa2; */
 }
 
 .EditRightBox {
   display: inline-block;
-  width: 70%; /*100-30*/
+  width: 80%; /*100-left box*/
   margin-left: 3%;
+
+  /* border: 1px solid #6d6a6aa2; */
 }
 
 .EditLeft {
+  display: block;
+  text-align: right;
 }
 
 .EditRight {
@@ -63,20 +98,21 @@
   font-size: 15px;
   font-weight: 600;
   color: rgb(75, 75, 75);
-  margin-top: 10px;
-  height: 20px;
+  margin-top: 10px; /*fixed*/
+  height: 35px; /*fixed*/
 
-  /*border: 1px solid #6d6a6aa2;
-  border-radius: 8px;*/
+  text-align: center;
+
+  padding-top: 10px;
+
+  /* border: 1px solid #6d6a6aa2; */
 }
 
 .EditInputWrap {
-  width: 80%;
-  margin-top: 10px;
-  height: 20px;
+  margin-top: 10px; /*fixed*/
+  height: 35px; /*fixed*/
 
-  /*border: 1px solid #6d6a6aa2;
-  border-radius: 8px;*/
+  /* border: 1px solid #6d6a6aa2; */
 }
 
 .EditInput {
@@ -85,20 +121,22 @@
   font-size: 15px;
   font-weight: 400;
   width: 100%; /*부모 꽉 채워서*/
-
-  /*벗어난 텍스트 처리*/
-  text-overflow: ellipsis;
-  overflow: hidden;
+  height: 100%;
 }
 
 .EditBtnWrap {
-  margin-top: 10%;
+  display: flex;
+  justify-content: center;
+
+  /* border: 1px solid #ff00b3; */
+
+  margin-top: 30px;
 }
 
 .EditBottomButton {
   /*가입 완료 버튼*/
-  width: 100%;
-  height: 48px;
+  width: 50%;
+  height: 40px;
 
   border: none;
   border-radius: 64px;
@@ -108,4 +146,32 @@
 
   background-color: #f1af23;
   color: white;
+}
+
+.EditselectWrap {
+  /*select box 전체 틀*/
+  /* text-align: center; */
+}
+
+.EditselectBox {
+  font-size: 13px;
+
+  text-align: center;
+
+  height: 35px;
+  width: 25%;
+
+  border: 1px solid gray;
+  border-radius: 8px;
+
+  background-color: white;
+}
+
+.EditselectWrap .selectBox option {
+  /*select option design*/
+  padding: 3px 0;
+
+  height: 30px;
+
+  font-size: 17px;
 }

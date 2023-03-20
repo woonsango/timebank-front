@@ -28,7 +28,7 @@ const KakaoRedirectHandler = () => {
   const fetchAuthorizationCode = async () => {
     axios({
       method: 'post',
-      url: 'http://localhost:5000/authorization',
+      url: 'http://192.168.219.114:5000/authorization',
       data: authorizationCode,
     })
       .then((res) => {

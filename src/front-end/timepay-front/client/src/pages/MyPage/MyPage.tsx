@@ -1,11 +1,11 @@
 import { useCallback, useEffect, useState } from 'react';
+import { useNavigate } from 'react-router';
 import { useSetRecoilState } from 'recoil';
-import { headerTitleState } from '../../states/uiState';
 
+import { headerTitleState } from '../../states/uiState';
+import { PATH } from '../../utils/paths';
 import './My.css';
 import user from './dummy.json';
-import { useNavigate } from 'react-router';
-import { PATH } from '../../utils/paths';
 
 const MyPage = () => {
   const userInfo = user.user1[0];
@@ -15,8 +15,6 @@ const MyPage = () => {
   const [introduction, setIntroduction]: any = useState();
   const [personalNum, setPersonalNum]: any = useState();
   const [timePay, setTimePay]: any = useState();
-  //const [realName, setRealName]: any = useState();
-  //const [phoneNum, setPhoneNum]: any = useState();
 
   const navigate = useNavigate(); //history
 
@@ -44,56 +42,61 @@ const MyPage = () => {
     setIntroduction(userInfo.introduction);
     setPersonalNum(userInfo.personalNum);
     setTimePay(userInfo.timepay);
-    //setRealName(userInfo.realName);
-    //setPhoneNum(userInfo.phone);
   }, []);
 
   return (
-    <div className="page">
+    <div className="MyPage">
       <div className="MyContentWrap">
         <div className="MyEdit">
           <button className="Edit" onClick={() => handlePageMove(PATH.MY_EDIT)}>
             프로필 수정
           </button>
         </div>
-        <div className="MyTopBox">
-          <div className="MyImageWrap">
-            <img src={image} className="MyProfileImage" />
-          </div>
 
-          <div className="MyNameWrap">
-            <div className="MyName">{nickName}</div>
-          </div>
-          <div className="MyPersonalNum"> {'#' + personalNum}</div>
-        </div>
+        <div className="MyBlock">
+          {' '}
+          <div className="MyTopBox">
+            <div className="MyImageWrap">
+              <img src={image} className="MyProfileImage" />
+            </div>
+            <div className="space"></div>
 
-        <div className="MyTotalBox">
-          <div className="MyLeftBox">
-            <div className="MyLeft">
-              <div className="MyTitleText">나의 타임페이</div>
-            </div>
-            <div className="MyLeft">
-              <div className="MyTitleText">나의 동네</div>
-            </div>
-            <div className="MyLeft">
-              <div className="MyTitleText">나의 소개</div>
-            </div>
-          </div>
-
-          <div className="MyRightBox">
-            <div className="MyRight">
-              <div className="MyContentText">{timePay}</div>
-            </div>
-            <div className="MyRight">
-              <div className="MyContentText">{town}</div>
-            </div>
-            <div className="MyRight">
-              <div className="MyContentText">{introduction}</div>
+            <div className="MyNameWrap">
+              <div className="MyName">{nickName}</div>
+              <div className="MyPersonalNum"> {'#' + personalNum}</div>
             </div>
           </div>
         </div>
 
-        <div className="MyPageMove">
+        <div className="MyBlock">
+          <div className="MyTotalBox">
+            <div className="MyLeftBox">
+              <div className="MyLeft">
+                <div className="MyTitleText">나의 타임페이</div>
+              </div>
+              <div className="MyLeft">
+                <div className="MyTitleText">나의 동네</div>
+              </div>
+              <div className="MyLeft">
+                <div className="MyTitleText">나의 소개</div>
+              </div>
+            </div>
+
+            <div className="MyRightBox">
+              <div className="MyRight">
+                <div className="MyContentText">{timePay}</div>
+              </div>
+              <div className="MyRight">
+                <div className="MyContentText">{town}</div>
+              </div>
+              <div className="MyRight">
+                <div className="MyContentText">{introduction}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="MyBlock">
           <div className="MyPageMoveBox">
             <button
               className="MyPageText"
@@ -102,6 +105,9 @@ const MyPage = () => {
               활동 기록 {'>'}
             </button>
           </div>
+        </div>
+
+        <div className="MyBlock">
           <div className="MyPageMoveBox">
             <button
               className="MyPageText"
@@ -110,6 +116,9 @@ const MyPage = () => {
               신고 기록 {'>'}
             </button>
           </div>
+        </div>
+
+        <div className="MyBlock">
           <div className="MyPageMoveBox">
             <button
               className="MyPageText"
@@ -118,6 +127,9 @@ const MyPage = () => {
               문의하기 {'>'}
             </button>
           </div>
+        </div>
+
+        <div className="MyBlock">
           <div className="MyPageMoveBox">
             <button
               className="MyPageText"
@@ -133,5 +145,3 @@ const MyPage = () => {
 };
 
 export default MyPage;
-
-//{user.user1[0].nickName}

@@ -1,14 +1,17 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useSetRecoilState } from 'recoil';
-import { headerTitleState } from '../../states/uiState';
+import { useNavigate } from 'react-router';
+import { Input, Radio } from 'antd';
 
+import { headerTitleState } from '../../states/uiState';
+import { PATH } from '../../utils/paths';
+
+import MyEdit_imageSet from './MyEdit_imageSet';
+import MyEdit_selectTown from './MyEdit_selectTown';
 import './MyEdit.css';
 import user from './dummy.json';
-import { useNavigate } from 'react-router';
-import { PATH } from '../../utils/paths';
-import MyEdit_imageSet from './MyEdit_imageSet';
 
-const MyEditPage = () => {
+const MyEditPage: React.FC = () => {
   const userInfo = user.user1[0];
   const [image, setImage]: any = useState();
   const [nickName, setNickName]: any = useState();
@@ -17,7 +20,6 @@ const MyEditPage = () => {
   const [age, setAge]: any = useState();
   const [town, setTown]: any = useState();
   const [introduction, setIntroduction]: any = useState();
-  //const [personalNum, setPersonalNum]: any = useState();
 
   const navigate = useNavigate(); //history
 
@@ -46,14 +48,15 @@ const MyEditPage = () => {
     setAge(userInfo.age);
     setTown(userInfo.town);
     setIntroduction(userInfo.introduction);
-    //setPersonalNum(userInfo.personalNum);
   }, []);
 
   return (
-    <div className="page">
+    <div className="EditPage">
       <div className="EditContentWrap">
-        <div className="EditImageWrap">
-          <MyEdit_imageSet />
+        <div className="EditBlock">
+          <div className="EditImageWrap">
+            <MyEdit_imageSet />
+          </div>
         </div>
 
         <div className="EditContentBox">
@@ -81,32 +84,35 @@ const MyEditPage = () => {
           <div className="EditRightBox">
             <div className="EditRight">
               <div className="EditInputWrap">
-                <input placeholder={nickName} className="EditInput" />
+                <Input placeholder={nickName} className="EditInput" />
               </div>
             </div>
             <div className="EditRight">
               <div className="EditInputWrap">
-                <input placeholder={realName} className="EditInput" />
+                <Input placeholder={realName} className="EditInput" />
               </div>
             </div>
             <div className="EditRight">
               <div className="EditInputWrap">
-                <input placeholder={gender} className="EditInput" />
+                <Radio.Group defaultValue="a" buttonStyle="solid">
+                  <Radio.Button value="a">남성</Radio.Button>
+                  <Radio.Button value="b">여성</Radio.Button>
+                </Radio.Group>
               </div>
             </div>
             <div className="EditRight">
               <div className="EditInputWrap">
-                <input placeholder={age} className="EditInput" />
+                <Input placeholder={age} className="EditInput" />
               </div>
             </div>
             <div className="EditRight">
               <div className="EditInputWrap">
-                <input placeholder={town} className="EditInput" />
+                <MyEdit_selectTown />
               </div>
             </div>
             <div className="EditRight">
               <div className="EditInputWrap">
-                <input placeholder={nickName} className="EditInput" />
+                <Input placeholder={introduction} className="EditInput" />
               </div>
             </div>
           </div>

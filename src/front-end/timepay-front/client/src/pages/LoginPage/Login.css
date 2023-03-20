@@ -1,18 +1,9 @@
 .LoginWrap {
   position: absolute;
-  top: 0;
-  bottom: 0;
-  width: 80%;
-  height: 80%;
-  max-width: 320px;
-  padding: 20px 20px;
-
-  left: 50%;
-  transform: translate(-50%, 0);
+  width: 100%;
+  height: 100%;
 
   /*background-color: rgb(238, 238, 177);*/
-}
-.designWrap {
 }
 
 .MainSentence1 {
@@ -22,7 +13,7 @@
 
   text-align: center;
 
-  margin-top: 10%;
+  margin-top: 20%;
 }
 
 .MainSentence2 {
@@ -51,23 +42,29 @@
 .LoginWrap {
 }
 
-.BtnWrap {
-  text-align: center;
-}
-
 .kakao:focus-within {
   /*input box가 touch 되었을 때*/
   border: 1px solid white;
 }
+
+.BtnWrap {
+  display: block;
+  width: 100%;
+  text-align: center;
+
+  /*background-color: rgb(224, 224, 19);*/
+}
+
 .kakao {
-  margin-right: 85%;
   margin-top: 15%;
+  width: 100%;
 }
-.nonKakao {
-}
+
 .kakaoBtn {
+  width: 100%;
   border: none;
 }
 
-.nonLoginBt {
+.nonKakao {
+  margin-top: 15px;
 }
