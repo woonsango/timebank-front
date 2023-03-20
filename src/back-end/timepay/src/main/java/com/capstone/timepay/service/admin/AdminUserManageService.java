@@ -35,7 +35,7 @@ public class AdminUserManageService {
                         .sex(user.getSex())
                         .birth(user.getBirthday())
                         .region(user.getLocation())
-                        .timepay(0) // 수정 필요
+                        .timepay(user.getUserProfile().getTimepay()) // 확인 필요
                         .build())
                     .sorted(Comparator.comparing(MainResponse::getUserId))
                     .collect(Collectors.toList());
@@ -70,7 +70,7 @@ public class AdminUserManageService {
                         .sex(user.getSex())
                         .birth(user.getBirthday())
                         .region(user.getLocation())
-                        .timepay(0) // 수정 필요
+                        .timepay(user.getUserProfile().getTimepay()) // 확인 필요
                         .build())
                 .sorted(Comparator.comparing(MainResponse::getUserId))
                 .collect(Collectors.toList());
@@ -104,7 +104,7 @@ public class AdminUserManageService {
                         .sex(user.getSex())
                         .birth(user.getBirthday())
                         .region(user.getLocation())
-                        .timepay(0) // 수정 필요
+                        .timepay(user.getUserProfile().getTimepay()) // 확인 필요
                         .build())
                 .sorted(Comparator.comparing(MainResponse::getUserId))
                 .collect(Collectors.toList());
@@ -138,7 +138,7 @@ public class AdminUserManageService {
                         .sex(user.getSex())
                         .birth(user.getBirthday())
                         .region(user.getLocation())
-                        .timepay(0) // 수정 필요
+                        .timepay(user.getUserProfile().getTimepay()) // 확인 필요
                         .build())
                 .sorted(Comparator.comparing(MainResponse::getUserId))
                 .collect(Collectors.toList());
@@ -155,5 +155,5 @@ public class AdminUserManageService {
         userRepository.save(user);
 
     }
-    
+
 }
