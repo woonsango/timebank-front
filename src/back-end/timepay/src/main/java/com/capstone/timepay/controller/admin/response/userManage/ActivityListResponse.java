@@ -1,4 +1,4 @@
-package com.capstone.timepay.controller.admin.response;
+package com.capstone.timepay.controller.admin.response.userManage;
 
 import lombok.*;
 
@@ -11,7 +11,7 @@ public class ActivityListResponse {
 
     private BoardActivityDto boardActivity;
     private CommentActivityDto commentActivity;
-    private  ReceivedReportDto receivedReport;
-    private  ReportDto report;
+    private ReceivedReportDto receivedReport;
+    private ReportDto report;
 
 }

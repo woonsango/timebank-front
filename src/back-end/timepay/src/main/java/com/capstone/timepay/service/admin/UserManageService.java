@@ -1,7 +1,7 @@
 package com.capstone.timepay.service.admin;
 
-import com.capstone.timepay.controller.admin.response.MainResponse;
-import com.capstone.timepay.controller.admin.response.UserProfileResponse;
+import com.capstone.timepay.controller.admin.response.userManage.MainResponse;
+import com.capstone.timepay.controller.admin.response.userManage.UserProfileResponse;
 import com.capstone.timepay.domain.user.User;
 import com.capstone.timepay.domain.user.UserRepository;
 import com.capstone.timepay.domain.userProfile.UserProfileRepository;
@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class AdminUserManageService {
+public class UserManageService {
 
     private final UserRepository userRepository;
     private final UserProfileRepository userProfileRepository;

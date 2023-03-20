@@ -1,4 +1,4 @@
-package com.capstone.timepay.controller.admin.response;
+package com.capstone.timepay.controller.admin.response.userManage;
 
 import lombok.*;
 
