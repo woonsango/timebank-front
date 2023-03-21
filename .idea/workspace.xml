@@ -32,7 +32,7 @@
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "WebServerToolWindowFactoryState": "false",
-    "last_opened_file_path": "D:/dev/spring/capstone/capstone-2023-09",
+    "last_opened_file_path": "D:/dev/spring/capstone/dev/timepay",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -40,6 +40,13 @@
     "nodejs_package_manager_path": "npm",
     "settings.editor.selected.configurable": "vcs.Git",
     "vue.rearranger.settings.migration": "true"
+  },
+  "keyToStringList": {
+    "GitStage.ChangesTree.GroupingKeys": [
+      "directory",
+      "module",
+      "repository"
+    ]
   }
 }]]></component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
@@ -55,8 +62,16 @@
       <workItem from="1678867412076" duration="1613000" />
       <workItem from="1679135782389" duration="2103000" />
       <workItem from="1679194405171" duration="145000" />
-      <workItem from="1679316132352" duration="190000" />
+      <workItem from="1679316132352" duration="1482000" />
     </task>
+    <task id="LOCAL-00001" summary="Feat: gson gradle 추가, 카카오 로그인 기능 추가(서버 버그로 인해 테스트X)">
+      <created>1679318459203</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1679318459203</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -72,5 +87,9 @@
         </entry>
       </map>
     </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Feat: gson gradle 추가, 카카오 로그인 기능 추가(서버 버그로 인해 테스트X)" />
+    <option name="LAST_COMMIT_MESSAGE" value="Feat: gson gradle 추가, 카카오 로그인 기능 추가(서버 버그로 인해 테스트X)" />
   </component>
 </project>
