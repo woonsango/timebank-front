@@ -6,4 +6,5 @@ export const PATH = {
   REPORT_MANAGEMENT: '/report-management',
   PUSH_MANAGEMENT: '/push-management',
   ADMIN_MANAGEMENT: '/admin-management',
+  CATEGORY_MANAGEMENT: 'category-management',
 };
