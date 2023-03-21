@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,7 +26,8 @@ public class FreeBoardCommentService {
     public FreeBoardCommentDTO writeComment(Long boardId, FreeBoardCommentDTO freeBoardCommentDTO, TestUser testUser)
     {
         FreeBoardComment freeBoardComment = new FreeBoardComment();
-        freeBoardComment.setContent(freeBoardComment.getContent());
+        freeBoardComment.setContent(freeBoardCommentDTO.getContent());
+        freeBoardComment.setCreatedAt(LocalDateTime.now());
 
         FreeBoard freeBoard = freeBoardRepository.findById(boardId).orElseThrow(() -> {
             return new IllegalArgumentException("게시판을 찾을 수 없습니다.");
