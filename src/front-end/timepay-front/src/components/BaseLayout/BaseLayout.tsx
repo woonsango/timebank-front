@@ -7,10 +7,8 @@ import HomeHeader from '../HomeHeader';
 import MainFooter from '../MainFooter';
 import MainHeader from '../MainHeader';
 import { cssBaseLayoutStyle } from './BaseLayout.styles';
-import { PATH } from '../../utils/paths';
 
 const BaseLayout = () => {
-  const location = useLocation();
   const headerTitle = useRecoilValue(headerTitleState);
   const location = useLocation();
 
@@ -19,16 +17,12 @@ const BaseLayout = () => {
     location.pathname === PATH.Register_HR ||
     location.pathname === PATH.Register_HS;
 
-  const isHome = useMemo(() => {
-    return location.pathname === PATH.HOME;
-  }, [location]);
-
   return (
     <Layout css={cssBaseLayoutStyle}>
-      {isHome ? <HomeHeader /> : headerTitle ? <MainHeader /> : null}
+      {headerTitle && <MainHeader />}
       <Layout.Content
         className={`main-section-container ${
-          isHome || headerTitle ? 'show-header' : 'no-header'
+          headerTitle ? 'show-header' : 'no-header'
         }`}
       >
         <Outlet />
