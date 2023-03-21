@@ -2,13 +2,11 @@ import React, { useState } from 'react';
 import { Button, Modal, Form, Input, InputNumber } from 'antd';
 import { cssAdminAdd, cssBox } from './AdminAdd.style';
 
-//form
 const layout = {
   labelCol: { span: 6 },
   wrapperCol: { span: 16 },
 };
 
-/* eslint-disable no-template-curly-in-string */
 const validateMessages = {
   types: {
     email: '${label} is not a valid email!',

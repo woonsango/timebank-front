@@ -238,7 +238,7 @@ const AdminMainTable = () => {
             >
               Save
             </Typography.Link>
-            <Popconfirm title="Sure to cancel?" onConfirm={cancel}>
+            <Popconfirm title="취소하시겠습니까?" onConfirm={cancel}>
               <a>Cancel</a>
             </Popconfirm>
           </span>
@@ -259,7 +259,7 @@ const AdminMainTable = () => {
       render: (_: any, record: { key: number }) =>
         originData.length >= 1 ? (
           <Popconfirm
-            title="Sure to delete?"
+            title="삭제하시겠습니까?"
             onConfirm={() => handleDelete(record.key)}
           >
             <a>Delete</a>
