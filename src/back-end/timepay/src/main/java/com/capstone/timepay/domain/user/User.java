@@ -11,10 +11,7 @@ import com.capstone.timepay.domain.freeRegister.FreeRegister;
 import com.capstone.timepay.domain.inquiry.Inquiry;
 import com.capstone.timepay.domain.userProfile.UserProfile;
 import com.capstone.timepay.domain.userToken.UserToken;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.Cache;
 
 import javax.persistence.*;
@@ -26,6 +23,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
+@Setter
 @Entity
 public class User extends BaseTimeEntity {
 
@@ -36,7 +34,7 @@ public class User extends BaseTimeEntity {
     @Column
     private String name;
     private String sex;
-    private LocalDateTime birthday;
+    private String birthday; // 카카오 API에서 String으로 제공함
     private String location;
     private String phone;
     private String nickname;
@@ -71,6 +69,4 @@ public class User extends BaseTimeEntity {
     @OneToOne
     @JoinColumn(name = "token_id")
     private UserToken userToken;
-
-
 }
