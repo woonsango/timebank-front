@@ -72,5 +72,18 @@ public class User extends BaseTimeEntity {
     @JoinColumn(name = "token_id")
     private UserToken userToken;
 
+    public void updateName(String name) {
+        this.name = name;
+    }
+    public void updateBirth(LocalDateTime birth) {
+        this.birthday = birth;
+    }
+    public void updateNickname(String nickname) {
+        this.nickname = nickname;
+    }
+    public void updateLocation(String region) {
+        this.location = region;
+    }
+
 
 }
