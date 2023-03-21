@@ -11,10 +11,10 @@ const BaseLayout = () => {
   const headerTitle = useRecoilValue(headerTitleState);
   const location = useLocation();
 
-  const isFooterVisible =
-    location.pathname === PATH.HOME ||
-    location.pathname === PATH.SEARCH ||
-    location.pathname === PATH.MY_PAGE;
+  const isnoFooter =
+    location.pathname === PATH.Register_F ||
+    location.pathname === PATH.Register_HR ||
+    location.pathname === PATH.Register_HS;
 
   return (
     <Layout css={cssBaseLayoutStyle}>
@@ -26,7 +26,7 @@ const BaseLayout = () => {
       >
         <Outlet />
       </Layout.Content>
-      {isFooterVisible && <MainFooter />}
+      {isnoFooter ? null : <MainFooter />}
     </Layout>
   );
 };
