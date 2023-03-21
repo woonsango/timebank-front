@@ -4,10 +4,9 @@ import com.capstone.timepay.domain.BaseTimeEntity;
 import com.capstone.timepay.domain.freeBoard.FreeBoard;
 import com.capstone.timepay.domain.freeCommentReport.FreeCommentReport;
 import com.capstone.timepay.domain.user.User;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -17,24 +16,26 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
+@Setter
 @Entity
 public class FreeBoardComment extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long f_commentId;
+    private Long freeBoardCommentId;
 
-    @Column
+    @Column // (nullable = false)
     private String content;
 
     @OneToMany(mappedBy = "freeBoardComment", orphanRemoval = true)
     private List<FreeCommentReport> freeCommentReports = new ArrayList<>();
 
-    @ManyToOne
-    @JoinColumn(name="f_board_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="free_board_id")
     private FreeBoard freeBoard;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="user_id")
+    @OnDelete(action = OnDeleteAction.CASCADE) // 연관된 유저가 삭제되면 같이 삭제
     private User user;
 }
