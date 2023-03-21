@@ -1,7 +1,11 @@
 package com.capstone.timepay.service.user;
 
+import com.capstone.timepay.domain.user.User;
+import com.capstone.timepay.domain.user.UserRepository;
+import com.capstone.timepay.service.user.dto.KakaoLoginDto;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonElement;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
@@ -10,24 +14,25 @@ import java.net.URL;
 import java.util.HashMap;
 
 @Service
-
+@RequiredArgsConstructor
 public class KakaoLoginService {
+    private final UserRepository userRepository;
 
-    /* velog 대부분 참고 */
-    public static String getKaKaoAccessToken(String code){
+
+
+    public String getKaKaoAccessToken(String code){
         String access_Token="";
         String refresh_Token ="";
+        String line = "";
+        String result = "";
         String reqURL = "https://kauth.kakao.com/oauth/token";
-
         try{
             URL url = new URL(reqURL);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 
-            //POST 요청을 위해 기본값이 false인 setDoOutput을 true로
             conn.setRequestMethod("POST");
             conn.setDoOutput(true);
 
-            //POST 요청에 필요로 요구하는 파라미터 스트림을 통해 전송
             BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(conn.getOutputStream()));
             StringBuilder sb = new StringBuilder();
             sb.append("grant_type=authorization_code");
@@ -37,20 +42,16 @@ public class KakaoLoginService {
             bw.write(sb.toString());
             bw.flush();
 
-            //결과 코드가 200이라면 성공
             int responseCode = conn.getResponseCode();
             System.out.println("responseCode : " + responseCode);
-            //요청을 통해 얻은 JSON타입의 Response 메세지 읽어오기
+
             BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-            String line = "";
-            String result = "";
 
             while ((line = br.readLine()) != null) {
                 result += line;
             }
             System.out.println("response body : " + result);
 
-            //Gson 라이브러리에 포함된 클래스로 JSON파싱 객체 생성
             JsonParser parser = new JsonParser();
             JsonElement element = parser.parse(result);
 
@@ -69,9 +70,7 @@ public class KakaoLoginService {
         return access_Token;
     }
 
-    public static void createKakaoUser(String token)  { // throws BaseException 오류나와서 보류
-        HashMap<String, Object> userInfo = new HashMap<String, Object>();
-
+    public void createKakaoUser(String token) { // throws BaseException 오류나와서 보류
         String reqURL = "https://kapi.kakao.com/v2/user/me";
         String email = null;
         String sex = null;
@@ -110,32 +109,49 @@ public class KakaoLoginService {
             boolean hasEmail = element.getAsJsonObject().get("kakao_account").getAsJsonObject().get("has_email").getAsBoolean();
             if (hasEmail) {
                 email = element.getAsJsonObject().get("kakao_account").getAsJsonObject().get("email").getAsString();
+
+            } else {
+                email = "이메일 동의하지 않음";
             }
 
             /* 성별 제공 여부 확인 및 성별 가져오기 */
             boolean hasSex = element.getAsJsonObject().get("kakao_account").getAsJsonObject().get("has_gender").getAsBoolean();
             if (hasSex) {
                 sex = element.getAsJsonObject().get("kakao_account").getAsJsonObject().get("gender").getAsString();
+            } else {
+                sex = "성별 동의하지 않음";
             }
 
             /* 생일 제공 여부 확인 및 생일 가져오기 */
             boolean hasBirthday = element.getAsJsonObject().get("kakao_account").getAsJsonObject().get("has_birthday").getAsBoolean();
             if (hasBirthday) {
                 birthday = element.getAsJsonObject().get("kakao_account").getAsJsonObject().get("birthday").getAsString();
+            } else {
+                birthday = "생일 동의하지 않음";
             }
 
             System.out.println("id : " + id);
             System.out.println("email : " + email);
             System.out.println("gender : " + sex);
             System.out.println("birthday : " + birthday);
-
-            /* 데이터베이스 추가 작업 */
-            // userInfo.put(); 데이터베이스에 추가하기 위한 밑작업 도중 커밋 & 푸쉬
+            createKakaoUsers(id, email, sex, birthday);
 
             br.close();
 
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    /* 데이터베이스 추가 작업 */
+    public KakaoLoginDto createKakaoUsers(Long id, String email, String sex, String birthday){
+        User user = new User();
+        user.setUserId(id);
+        user.setEmail(email);
+        user.setSex(sex);
+        user.setBirthday(birthday);
+        userRepository.save(user);
+
+        return KakaoLoginDto.toKaKaoLoginDto(user);
     }
 }
