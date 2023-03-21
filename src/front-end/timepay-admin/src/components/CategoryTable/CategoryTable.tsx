@@ -1,66 +1,19 @@
 import React, { useState } from 'react';
 import { Form, Input, InputNumber, Popconfirm, Table, Typography } from 'antd';
 import { cssCategoryTable } from './CategoryTable.style';
-
-interface Item {
-  key: number;
-  name: string;
-  parentCategory: string;
-}
+import { Item } from '../../interfaces/CategoryItem';
+import { EditableCell } from '../EditableCell/CategoryEditableCell';
 
 const originData: Item[] = [];
 for (let i = 0; i < 100; i++) {
   originData.push({
-    key: i,
+    key: i + 1,
     name: `카테고리 ${i}`,
-    parentCategory: (i === 0 ? '-' : i - 1).toString(),
+    parentCategory: (i === 0 ? '-' : i).toString(),
   });
 }
-interface EditableCellProps extends React.HTMLAttributes<HTMLElement> {
-  editing: boolean;
-  dataIndex: string;
-  title: any;
-  inputType: 'number' | 'text';
-  record: Item;
-  index: number;
-  children: React.ReactNode;
-}
 
-const EditableCell: React.FC<EditableCellProps> = ({
-  editing,
-  dataIndex,
-  title,
-  inputType,
-  record,
-  index,
-  children,
-  ...restProps
-}) => {
-  const inputNode = inputType === 'number' ? <InputNumber /> : <Input />;
-
-  return (
-    <td {...restProps}>
-      {editing ? (
-        <Form.Item
-          name={dataIndex}
-          style={{ margin: 0 }}
-          rules={[
-            {
-              required: true,
-              message: `Please Input ${title}!`,
-            },
-          ]}
-        >
-          {inputNode}
-        </Form.Item>
-      ) : (
-        children
-      )}
-    </td>
-  );
-};
-
-const AdminMainTable = () => {
+const CategoryTable = () => {
   const [form] = Form.useForm();
   const [data, setData] = useState(originData);
   const [editingKey, setEditingKey] = useState<number>();
@@ -109,7 +62,6 @@ const AdminMainTable = () => {
   };
 
   const columns = [
-    //카테고리 번호, 카테고리 이름, 상위 카테고리, 수정, 삭제
     {
       title: '카테고리 번호',
       dataIndex: 'key',
@@ -142,7 +94,7 @@ const AdminMainTable = () => {
             >
               Save
             </Typography.Link>
-            <Popconfirm title="Sure to cancel?" onConfirm={cancel}>
+            <Popconfirm title="취소하시겠습니까?" onConfirm={cancel}>
               <a>Cancel</a>
             </Popconfirm>
           </span>
@@ -163,7 +115,7 @@ const AdminMainTable = () => {
       render: (_: any, record: { key: number }) =>
         originData.length >= 1 ? (
           <Popconfirm
-            title="Sure to delete?"
+            title="삭제하시겠습니까?"
             onConfirm={() => handleDelete(record.key)}
           >
             <a>Delete</a>
@@ -211,4 +163,4 @@ const AdminMainTable = () => {
   );
 };
 
-export default AdminMainTable;
+export default CategoryTable;
