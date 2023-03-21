@@ -39,6 +39,7 @@ public class User extends BaseTimeEntity {
     private String phone;
     private String nickname;
     private String email;
+    private Long uid;
     private boolean isBanned;
 
     @OneToMany(mappedBy = "user", orphanRemoval = true)

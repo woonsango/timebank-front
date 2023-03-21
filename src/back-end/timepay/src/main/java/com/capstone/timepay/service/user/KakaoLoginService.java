@@ -11,7 +11,8 @@ import org.springframework.stereotype.Service;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.HashMap;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @Service
 @RequiredArgsConstructor
@@ -19,8 +20,7 @@ public class KakaoLoginService {
     private final UserRepository userRepository;
 
 
-
-    public String getKaKaoAccessToken(String code){
+    public  String getKaKaoAccessToken(String code){
         String access_Token="";
         String refresh_Token ="";
         String line = "";
@@ -70,7 +70,7 @@ public class KakaoLoginService {
         return access_Token;
     }
 
-    public void createKakaoUser(String token) { // throws BaseException 오류나와서 보류
+    public  void createKakaoUser(String token) { // throws BaseException 오류나와서 보류
         String reqURL = "https://kapi.kakao.com/v2/user/me";
         String email = null;
         String sex = null;
@@ -130,12 +130,16 @@ public class KakaoLoginService {
                 birthday = "생일 동의하지 않음";
             }
 
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-dd");
+            LocalDateTime dateTime = LocalDateTime.parse(birthday, formatter);
+            System.out.println("\n" + dateTime + "\n");
+
             System.out.println("id : " + id);
             System.out.println("email : " + email);
             System.out.println("gender : " + sex);
             System.out.println("birthday : " + birthday);
+            /* uid값 비교하여 중복된 데이터는 데이터베이스에 저장X */
             createKakaoUsers(id, email, sex, birthday);
-
             br.close();
 
         } catch (IOException e) {
@@ -146,10 +150,10 @@ public class KakaoLoginService {
     /* 데이터베이스 추가 작업 */
     public KakaoLoginDto createKakaoUsers(Long id, String email, String sex, String birthday){
         User user = new User();
-        user.setUserId(id);
+        user.setUid(id);
         user.setEmail(email);
         user.setSex(sex);
-        user.setBirthday(birthday);
+        //user.setBirthday(birthday);
         userRepository.save(user);
 
         return KakaoLoginDto.toKaKaoLoginDto(user);
