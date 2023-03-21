@@ -11,8 +11,6 @@ import org.springframework.stereotype.Service;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
 @Service
 @RequiredArgsConstructor
@@ -130,16 +128,19 @@ public class KakaoLoginService {
                 birthday = "생일 동의하지 않음";
             }
 
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-dd");
-            LocalDateTime dateTime = LocalDateTime.parse(birthday, formatter);
-            System.out.println("\n" + dateTime + "\n");
-
             System.out.println("id : " + id);
             System.out.println("email : " + email);
             System.out.println("gender : " + sex);
             System.out.println("birthday : " + birthday);
+
             /* uid값 비교하여 중복된 데이터는 데이터베이스에 저장X */
-            createKakaoUsers(id, email, sex, birthday);
+            if(userRepository.findByuid(id) == null)
+            {
+                createKakaoUsers(id, email, sex, birthday);
+            } else {
+                System.out.println("\n이미 저장된 데이터래요~\n");
+            }
+
             br.close();
 
         } catch (IOException e) {
