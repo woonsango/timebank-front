@@ -8,6 +8,7 @@ import {
   NotificationOutlined,
   TeamOutlined,
   UserSwitchOutlined,
+  OrderedListOutlined,
 } from '@ant-design/icons';
 import { Layout, Menu, MenuProps } from 'antd';
 import { useMemo, useState } from 'react';
@@ -81,6 +82,15 @@ const BaseLayout = () => {
         icon: (
           <Link to={PATH.ADMIN_MANAGEMENT}>
             <UserSwitchOutlined />
+          </Link>
+        ),
+      },
+      {
+        key: PATH.CATEGORY_MANAGEMENT,
+        label: '카테고리 관리',
+        icon: (
+          <Link to={PATH.CATEGORY_MANAGEMENT}>
+            <OrderedListOutlined />
           </Link>
         ),
       },

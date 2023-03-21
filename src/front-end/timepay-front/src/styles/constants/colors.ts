@@ -6,4 +6,8 @@ export const COMMON_COLOR = {
   MAIN3: '#FFC700',
   FONT1: '#E5E5E5',
   FONT2: '#787878',
+  FONT3: '#858585',
+  BLUE_GRAY: '#84ABD8',
+  CORAL: '#FF9574',
+  NEON_GREEN: '#AFD939',
 };
