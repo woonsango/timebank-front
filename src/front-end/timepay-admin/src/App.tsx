@@ -23,6 +23,11 @@ function App() {
               element={<PageRoutes.UserManagementPage />}
             />
             <Route
+              path={PATH.POST_MANAGEMENT}
+              element={<PageRoutes.PostManagementPage />}
+            />
+          </Route>
+          <Route
               path={PATH.CATEGORY_MANAGEMENT}
               element={<PageRoutes.CategoryManagementPage />}
             />
