@@ -13,16 +13,16 @@ const MainFooter = () => {
 
   const items: MenuProps['items'] = [
     {
-      key: '/post/help-request',
-      label: <Link to="/post/help-request">도움요청</Link>,
+      key: '/register/help-request',
+      label: <Link to="/register/help-request">도움받기</Link>,
     },
     {
-      key: '/post/help-serve',
-      label: <Link to="/post/help-serve">도움제공</Link>,
+      key: '/register/help-serve',
+      label: <Link to="/register/help-serve">도움주기</Link>,
     },
     {
-      key: '/post/free',
-      label: <Link to="/post/free">자유</Link>,
+      key: '/register/free',
+      label: <Link to="/register/free">자유</Link>,
     },
   ];
 
