@@ -134,11 +134,6 @@ const PostTable = ({
         dataIndex: 'category',
         align: 'center',
         width: 120,
-        // 카테고리 범위 정의 후 필터 추가
-        // filters: [
-        //     { text: '생활', value: '생활' },
-        //   ],
-        //   onFilter: (value: string, record) => record.category.indexOf(value) === 0,
       },
       {
         title: '작성자 이름',
