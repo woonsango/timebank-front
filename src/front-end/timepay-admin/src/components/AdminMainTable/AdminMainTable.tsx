@@ -15,15 +15,8 @@ import type { ColumnType } from 'antd/es/table';
 import type { FilterConfirmProps } from 'antd/es/table/interface';
 import Highlighter from 'react-highlight-words';
 import { cssAdminMainTable } from './AdminMainTable.style';
-
-interface Item {
-  key: number;
-  name: string;
-  email: string;
-  id: string;
-  password: string;
-  passwordEdit: 'Y' | 'N';
-}
+import { Item } from '../../interfaces/AdminItem';
+import { EditableCell } from '../EditableCell/AdminEditableCell';
 
 type DataIndex = keyof Item;
 
@@ -38,49 +31,6 @@ for (let i = 0; i < 100; i++) {
     passwordEdit: 'Y',
   });
 }
-interface EditableCellProps extends React.HTMLAttributes<HTMLElement> {
-  editing: boolean;
-  dataIndex: string;
-  title: any;
-  inputType: 'number' | 'text';
-  record: Item;
-  index: number;
-  children: React.ReactNode;
-}
-
-const EditableCell: React.FC<EditableCellProps> = ({
-  editing,
-  dataIndex,
-  title,
-  inputType,
-  record,
-  index,
-  children,
-  ...restProps
-}) => {
-  const inputNode = inputType === 'number' ? <InputNumber /> : <Input />;
-
-  return (
-    <td {...restProps}>
-      {editing ? (
-        <Form.Item
-          name={dataIndex}
-          style={{ margin: 0 }}
-          rules={[
-            {
-              required: true,
-              message: `Please Input ${title}!`,
-            },
-          ]}
-        >
-          {inputNode}
-        </Form.Item>
-      ) : (
-        children
-      )}
-    </td>
-  );
-};
 
 const AdminMainTable = () => {
   const [form] = Form.useForm();

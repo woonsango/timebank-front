@@ -14,71 +14,54 @@ const validateMessages = {
     email: '${label} is not a valid email!',
   },
 };
-/* eslint-enable no-template-curly-in-string */
 
 const onFinish = (values: any) => {
   console.log(values);
 };
 
-/////////////////////////////////////////////////////////////
-
 const AdminAdd = () => {
-  //관리자추가
-  const [modal2Open, setModal2Open] = useState(false);
-  /////form
-  //관리자 번호 , 이름, 이메일, 아이디, 초기 비밀번호
+  const [isOpenModal, setIsOpenModal] = useState(false);
   const content = (
     <Form
-      name="nest-messages"
       {...layout}
       onFinish={onFinish}
       style={{ maxWidth: 600 }}
       validateMessages={validateMessages}
     >
-      <Form.Item
-        name={['user', 'key']}
-        label="관리자 번호"
-        rules={[{ type: 'number' }]}
-      >
+      <Form.Item name={['user', 'key']} label="관리자 번호">
         <Input />
       </Form.Item>
       <Form.Item name={['user', 'name']} label="이름">
         <Input />
       </Form.Item>
-      <Form.Item
-        name={['user', 'email']}
-        label="이메일"
-        rules={[{ type: 'email' }]}
-      >
+      <Form.Item name={['email']} label="이메일" rules={[{ type: 'email' }]}>
         <Input />
       </Form.Item>
-      <Form.Item name={['user', 'ID']} label="아이디">
+      <Form.Item name={['ID']} label="아이디">
         <Input />
       </Form.Item>
 
-      <Form.Item name={['user', 'password']} label="초기비밀번호">
+      <Form.Item name={['password']} label="초기비밀번호">
         <Input />
       </Form.Item>
     </Form>
   );
-
-  ////////////////////////////////////////////////////
 
   return (
     <div css={cssBox}>
       <Button
         css={cssAdminAdd}
         type="primary"
-        onClick={() => setModal2Open(true)}
+        onClick={() => setIsOpenModal(true)}
       >
         관리자 추가
       </Button>
       <Modal
         title="관리자 추가"
         centered
-        open={modal2Open}
-        onCancel={() => setModal2Open(false)}
-        onOk={() => setModal2Open(false)}
+        open={isOpenModal}
+        onCancel={() => setIsOpenModal(false)}
+        onOk={() => setIsOpenModal(false)}
       >
         {content}
       </Modal>
