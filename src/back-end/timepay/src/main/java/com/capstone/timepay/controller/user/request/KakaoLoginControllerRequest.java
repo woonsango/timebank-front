@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 
 @RestController
-public class KaKaoLoginController {
+public class KakaoLoginControllerRequest {
 
     @GetMapping("/login")
     public void kakaoCallback(@RequestParam String code)  {

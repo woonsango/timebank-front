@@ -128,6 +128,8 @@ public class KakaoLoginService {
             System.out.println("email : " + email);
             System.out.println("gender : " + sex);
             System.out.println("birthday : " + birthday);
+
+            /* 데이터베이스 추가 작업 */
             // userInfo.put(); 데이터베이스에 추가하기 위한 밑작업 도중 커밋 & 푸쉬
 
             br.close();
