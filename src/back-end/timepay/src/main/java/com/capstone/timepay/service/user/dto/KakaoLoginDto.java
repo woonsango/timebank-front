@@ -14,15 +14,15 @@ public class KakaoLoginDto {
     private Long id;
     private String email; // 카카오 이메일
     private String sex; // 성별
-    private String birthday; // 생일
+    //private String birthday; // 생일
 
 
     public static KakaoLoginDto toKaKaoLoginDto(User user){
         return new KakaoLoginDto(
                 user.getUserId(),
                 user.getEmail(),
-                user.getSex(),
-                user.getBirthday()
+                user.getSex()
+                //user.getBirthday()
         );
     }
 }
