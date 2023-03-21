@@ -4,6 +4,7 @@ import com.capstone.timepay.domain.freeBoard.FreeBoard;
 import com.capstone.timepay.domain.freeBoard.FreeBoardRepository;
 import com.capstone.timepay.domain.freeBoardComment.FreeBoardComment;
 import com.capstone.timepay.domain.freeBoardComment.FreeBoardCommentRepository;
+import com.capstone.timepay.domain.user.TestUser;
 import com.capstone.timepay.domain.user.User;
 import com.capstone.timepay.service.board.dto.FreeBoardCommentDTO;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +22,7 @@ public class FreeBoardCommentService {
 
     // 댓글 작성
     @Transactional
-    public FreeBoardCommentDTO writeComment(Long boardId, FreeBoardCommentDTO freeBoardCommentDTO, User user)
+    public FreeBoardCommentDTO writeComment(Long boardId, FreeBoardCommentDTO freeBoardCommentDTO, TestUser testUser)
     {
         FreeBoardComment freeBoardComment = new FreeBoardComment();
         freeBoardComment.setContent(freeBoardComment.getContent());
@@ -30,7 +31,7 @@ public class FreeBoardCommentService {
             return new IllegalArgumentException("게시판을 찾을 수 없습니다.");
         });
 
-        freeBoardComment.setUser(user);
+        freeBoardComment.setTestUser(testUser);
         freeBoardComment.setFreeBoard(freeBoard);
         freeBoardCommentRepository.save(freeBoardComment);
 

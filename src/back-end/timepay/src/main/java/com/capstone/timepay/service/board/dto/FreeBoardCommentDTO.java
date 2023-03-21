@@ -21,7 +21,7 @@ public class FreeBoardCommentDTO {
         return new FreeBoardCommentDTO(
                 freeBoardComment.getFreeBoardCommentId(),
                 freeBoardComment.getContent(),
-                freeBoardComment.getUser().getNickname(),
+                freeBoardComment.getTestUser().getName(),
                 freeBoardComment.getCreatedAt()
         );
     }

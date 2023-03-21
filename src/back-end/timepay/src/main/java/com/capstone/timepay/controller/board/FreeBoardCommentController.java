@@ -1,6 +1,8 @@
 package com.capstone.timepay.controller.board;
 
 import com.capstone.timepay.domain.annotation.Response;
+import com.capstone.timepay.domain.user.TestUser;
+import com.capstone.timepay.domain.user.TestUserRepository;
 import com.capstone.timepay.domain.user.User;
 import com.capstone.timepay.domain.user.UserRepository;
 import com.capstone.timepay.service.board.dto.FreeBoardCommentDTO;
@@ -15,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 public class FreeBoardCommentController {
 
     private final FreeBoardCommentService freeBoardCommentService;
-    private final UserRepository userRepository;
+    private final TestUserRepository testUserRepository;
 
     // 댓글 작성
     @ResponseStatus(HttpStatus.OK)
@@ -23,8 +25,8 @@ public class FreeBoardCommentController {
     public Response writeComment(@PathVariable("boardId") Long boardId, @RequestBody FreeBoardCommentDTO freeBoardCommentDTO)
     {
         // TODO: 추후 User 정보는 세션을 통해 주고받도록 수정
-        User user = userRepository.findById(Long.valueOf(1)).get();
-        return new Response("SUCCESS", "댓글 작성", freeBoardCommentService.writeComment(boardId, freeBoardCommentDTO, user));
+        TestUser testUser = testUserRepository.findById(Long.valueOf(1)).get();
+        return new Response("SUCCESS", "댓글 작성", freeBoardCommentService.writeComment(boardId, freeBoardCommentDTO, testUser));
     }
 
     @ResponseStatus(HttpStatus.OK)

@@ -11,10 +11,8 @@ import com.capstone.timepay.domain.freeRegister.FreeRegister;
 import com.capstone.timepay.domain.inquiry.Inquiry;
 import com.capstone.timepay.domain.userProfile.UserProfile;
 import com.capstone.timepay.domain.userToken.UserToken;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.*;
 import org.hibernate.annotations.Cache;
 
 import javax.persistence.*;
@@ -26,6 +24,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
+@Setter
 @Entity
 public class User extends BaseTimeEntity {
 
@@ -58,8 +57,8 @@ public class User extends BaseTimeEntity {
     @OneToMany(mappedBy = "user", orphanRemoval = true)
     private List<FreeBoardReport> freeBoardReports = new ArrayList<>();
 
-    @OneToMany(mappedBy = "user", orphanRemoval = true)
-    private List<FreeBoardComment> freeBoardComments = new ArrayList<>();
+//    @OneToMany(mappedBy = "user", orphanRemoval = true)
+//    private List<FreeBoardComment> freeBoardComments = new ArrayList<>();
 
     @OneToMany(mappedBy = "user", orphanRemoval = true)
     private List<FreeRegister> freeRegisters = new ArrayList<>();
@@ -71,6 +70,7 @@ public class User extends BaseTimeEntity {
     @OneToOne
     @JoinColumn(name = "token_id")
     private UserToken userToken;
+
 
 
 }
