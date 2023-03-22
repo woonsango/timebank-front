@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/freeBoard")
+@RequestMapping("/freeBoard")
 public class FreeBoardCommentController {
 
     private final FreeBoardCommentService freeBoardCommentService;
