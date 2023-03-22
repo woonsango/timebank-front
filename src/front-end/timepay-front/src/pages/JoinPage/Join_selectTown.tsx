@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
-import hangjungdong from '../../utils/hangjungdong';
 import './Join.css';
+import hangjungdong from '../../utils/hangjungdong';
 
-const Join_selectTown = () => {
+import { Select, Space } from 'antd';
+
+const Join_selectTown: React.FC = () => {
   const [selectedSido, setSelectedSido] = useState<String>();
   const [selectedSigungu, setSelectedSigungu] = useState<String>();
   const [selectedEupmyeondong, setSelectedEupmyeondong] = useState<String>();
@@ -81,5 +83,3 @@ const Join_selectTown = () => {
 };
 
 export default Join_selectTown;
-
-// <h1>{`${selectedSido} ${selectedSigungu} ${selectedEupmyeondong}`}</h1>

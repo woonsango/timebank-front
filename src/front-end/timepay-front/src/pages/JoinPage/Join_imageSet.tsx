@@ -1,15 +1,16 @@
-import { useState, useRef } from 'react';
-import { Avatar } from 'antd';
+import React, { useState, useRef } from 'react';
+import { UserOutlined } from '@ant-design/icons';
+import { Avatar, Space, Progress } from 'antd';
 import './Join.css';
 
-const Join_imageSet = () => {
+const Join_imageSet: React.FC = () => {
   const [image, setImage]: any = useState(
     'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png',
   );
   const fileInput = useRef<any>();
 
   <Avatar
-    src={image}
+    icon={<UserOutlined />}
     style={{ margin: '20px' }}
     size={200}
     onClick={() => {

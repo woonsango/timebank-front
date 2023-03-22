@@ -28,7 +28,7 @@ const KakaoRedirectHandler = () => {
   const fetchAuthorizationCode = async () => {
     axios({
       method: 'post',
-      url: 'http://192.168.219.114:5000/authorization',
+      url: 'http://localhost:5000/authorization',
       data: authorizationCode,
     })
       .then((res) => {
@@ -47,7 +47,9 @@ const KakaoRedirectHandler = () => {
   const handleAuthorization = (props: any) => {
     setAuthorizationCode(props);
 
-    fetchAuthorizationCode();
+    //fetchAuthorizationCode(); //서버 전송 테스트 함수
+
+    handleLogin(PATH.JOIN); //서버 적용x
   };
 
   useEffect(() => {
