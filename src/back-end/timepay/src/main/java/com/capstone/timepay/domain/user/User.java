@@ -45,8 +45,8 @@ public class User extends BaseTimeEntity {
     @OneToMany(mappedBy = "user", orphanRemoval = true)
     private List<Inquiry> inquiries = new ArrayList<>();
 
-    @OneToMany(mappedBy = "user", orphanRemoval = true)
-    private List<DealBoardComment> dealBoardComments = new ArrayList<>();
+//    @OneToMany(mappedBy = "user", orphanRemoval = true)
+//    private List<DealBoardComment> dealBoardComments = new ArrayList<>();
 
     @OneToMany(mappedBy = "user", orphanRemoval = true)
     private List<DealRegister> dealRegisters = new ArrayList<>();
