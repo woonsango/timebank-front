@@ -5,6 +5,7 @@ import {
   selectedTagsRequestState,
   selectedTagsQnaState,
 } from '../../states/register';
+import { COMMON_COLOR } from '../../styles/constants/colors';
 
 const { CheckableTag } = Tag;
 

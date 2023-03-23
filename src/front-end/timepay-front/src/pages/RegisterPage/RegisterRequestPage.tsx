@@ -82,8 +82,6 @@ const RegisterRequestPage = () => {
     console.log('도움받기게시글 등록');
   };
 
-  //
-
   return (
     <Layout css={cssPostPageStyle}>
       <div className="wrapper">
