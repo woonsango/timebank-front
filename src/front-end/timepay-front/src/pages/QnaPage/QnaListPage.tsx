@@ -4,7 +4,6 @@ import { useNavigate, Link } from 'react-router-dom';
 import { ReactComponent as BackArrow } from '../../assets/images/icons/header-back-arrow.svg';
 import { cssMainHeaderStyle } from '../../components/MainHeader/MainHeader.styles';
 import { EditFilled } from '@ant-design/icons';
-import { PATH } from '../../utils/paths';
 
 const Header = Layout;
 
