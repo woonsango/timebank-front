@@ -1,4 +1,4 @@
-package com.capstone.timepay.controller.user.request;
+package com.capstone.timepay.controller.user.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
