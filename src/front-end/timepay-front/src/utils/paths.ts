@@ -6,5 +6,5 @@ export const PATH = {
   Register_HS: '/register/help-serve',
   Register_F: '/register/free',
   Qna_List: '/qna',
-  Qna_Register: 'qna/register',
+  Qna_Register: '/qna/register',
 };

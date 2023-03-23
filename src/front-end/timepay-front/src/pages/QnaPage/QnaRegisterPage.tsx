@@ -47,14 +47,12 @@ const QnaRegisterPage = () => {
     console.log('문의글 등록');
   };
 
-  //
-
   return (
     <Layout css={cssPostPageStyle}>
       <div className="wrapper">
         <Header css={cssMainHeaderStyle}>
           <BackArrow onClick={handleClickBack} />
-          <span>문의하기</span>
+          <span>문의작성</span>
         </Header>
         <Content style={{ paddingTop: 60 }}>
           <input
