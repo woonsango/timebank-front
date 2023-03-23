@@ -3,7 +3,6 @@ package com.capstone.timepay.service.admin;
 import com.capstone.timepay.domain.admin.Admin;
 import com.capstone.timepay.domain.admin.AdminRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

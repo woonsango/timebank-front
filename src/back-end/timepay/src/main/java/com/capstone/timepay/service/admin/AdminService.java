@@ -2,6 +2,7 @@ package com.capstone.timepay.service.admin;
 
 import com.capstone.timepay.domain.admin.Admin;
 import com.capstone.timepay.domain.admin.AdminRepository;
+import com.capstone.timepay.service.admin.dto.ChangePasswordDTO;
 import com.capstone.timepay.service.admin.dto.PostAdminDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -62,6 +63,26 @@ public class AdminService {
         }
 
         return resultMap;
+    }
+
+    public Map<String, Object> changePassword(ChangePasswordDTO dto, String adminName) {
+        Map<String, Object> result = new HashMap<>();
+        if (passwordEncoder.matches(dto.getCurrentPassword(), this.getOne(adminName).getPassword())) {
+            if (!dto.getNewPassword().equals(dto.getNewPassword2())) {
+                result.put("success", false);
+                result.put("message", "비밀번호1과 비밀번호2가 일치하지 않습니다.");
+            } else {
+                Admin admin = this.getOne(adminName).update(passwordEncoder.encode(dto.getNewPassword()));
+                adminRepository.save(admin);
+                result.put("success", true);
+                result.put("message", "비밀번호가 성공적으로 변경되었습니다.");
+            }
+        } else {
+            result.put("success", false);
+            result.put("message", "현재 비밀번호와 일치하지 않습니다.");
+        }
+
+        return result;
     }
 
     public Map<String, Object> delete(Long adminId) {

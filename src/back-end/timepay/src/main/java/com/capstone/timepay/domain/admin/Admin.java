@@ -34,4 +34,9 @@ public class Admin extends BaseTimeEntity {
     @JsonIgnore
     @OneToMany(mappedBy = "admin", orphanRemoval = true)
     private List<Notification> notifications = new ArrayList<>();
+
+    public Admin update(String password) {
+        this.password = password;
+        return this;
+    }
 }
