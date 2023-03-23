@@ -1,5 +1,7 @@
 package com.capstone.timepay.service.user;
 
+import com.capstone.timepay.controller.user.ApiController;
+import com.capstone.timepay.controller.user.request.RequestDTO;
 import com.capstone.timepay.domain.user.User;
 import com.capstone.timepay.domain.user.UserRepository;
 import com.capstone.timepay.service.user.dto.KakaoLoginDto;
@@ -7,16 +9,19 @@ import com.google.gson.JsonParser;
 import com.google.gson.JsonElement;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.io.*;
 import java.net.HttpURLConnection;
+import java.net.URI;
 import java.net.URL;
 
 @Service
 @RequiredArgsConstructor
 public class KakaoLoginService {
     private final UserRepository userRepository;
-
 
     public  String getKaKaoAccessToken(String code){
         String access_Token="";
@@ -68,11 +73,12 @@ public class KakaoLoginService {
         return access_Token;
     }
 
-    public  void createKakaoUser(String token) { // throws BaseException 오류나와서 보류
+    public  Long createKakaoUser(String token) { // throws BaseException 오류나와서 보류
         String reqURL = "https://kapi.kakao.com/v2/user/me";
         String email = null;
         String sex = null;
         String birthday = null;
+        Long id = null;
 
         //access_token을 이용하여 사용자 정보 조회
         try {
@@ -101,7 +107,7 @@ public class KakaoLoginService {
             JsonParser parser = new JsonParser();
             JsonElement element = parser.parse(result);
 
-            Long id = element.getAsJsonObject().get("id").getAsLong();
+            id = element.getAsJsonObject().get("id").getAsLong();
 
             /* 이메일 제공 여부 확인 및 이메일 가져오기 */
             boolean hasEmail = element.getAsJsonObject().get("kakao_account").getAsJsonObject().get("has_email").getAsBoolean();
@@ -136,7 +142,7 @@ public class KakaoLoginService {
             /* uid값 비교하여 중복된 데이터는 데이터베이스에 저장X */
             if(userRepository.findByuid(id) == null)
             {
-                createKakaoUsers(id, email, sex, birthday);
+                createKakaoUsers(id, email, sex);
             } else {
                 System.out.println("\n이미 저장된 데이터래요~\n");
             }
@@ -146,15 +152,19 @@ public class KakaoLoginService {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        return id;
+    }
+
+    public Long postKakaoData(@RequestBody Long uid){
+        return uid;
     }
 
     /* 데이터베이스 추가 작업 */
-    public KakaoLoginDto createKakaoUsers(Long id, String email, String sex, String birthday){
+    public KakaoLoginDto createKakaoUsers(Long id, String email, String sex){
         User user = new User();
         user.setUid(id);
         user.setEmail(email);
         user.setSex(sex);
-        //user.setBirthday(birthday);
         userRepository.save(user);
 
         return KakaoLoginDto.toKaKaoLoginDto(user);
