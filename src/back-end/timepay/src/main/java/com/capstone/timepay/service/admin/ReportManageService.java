@@ -66,16 +66,7 @@ public class ReportManageService {
 
         for(Report report : fCommentReports){
             FreeCommentReport fcr = freeCommentReportRepository.findById(report.getFCommentReportId()).orElseThrow(()->new IllegalArgumentException("2존재하지 않는 신고입니다."));
-//            System.out.println("--------------------1@");
-//            System.out.println(report.getReportId());
-//            System.out.println(fcr.getUser().getUserId());
-//            System.out.println(fcr.getUser().getName());
-//            System.out.println(fcr.getContent());
-//            System.out.println(fcr.getFreeBoardComment().getF_commentId());
-//            System.out.println(fcr.getCreatedAt());
-//            System.out.println(fcr.getFreeBoardComment().getUser().getUserId());
-//            System.out.println(fcr.getProcess());
-//            System.out.println("--------------------");
+
             ReportResponse element = ReportResponse.builder()
                     .reportId(report.getReportId())
                     .reporterId(fcr.getUser().getUserId())
