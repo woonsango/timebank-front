@@ -1,7 +1,5 @@
 package com.capstone.timepay.service.user;
 
-import com.capstone.timepay.controller.user.ApiController;
-import com.capstone.timepay.controller.user.request.RequestDTO;
 import com.capstone.timepay.domain.user.User;
 import com.capstone.timepay.domain.user.UserRepository;
 import com.capstone.timepay.service.user.dto.KakaoLoginDto;
@@ -9,13 +7,9 @@ import com.google.gson.JsonParser;
 import com.google.gson.JsonElement;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.client.RestTemplate;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import java.io.*;
 import java.net.HttpURLConnection;
-import java.net.URI;
 import java.net.URL;
 
 @Service
@@ -140,7 +134,7 @@ public class KakaoLoginService {
             System.out.println("birthday : " + birthday);
 
             /* uid값 비교하여 중복된 데이터는 데이터베이스에 저장X */
-            if(userRepository.findByuid(id) == null)
+            if(userRepository.findByUid(id) == null)
             {
                 createKakaoUsers(id, email, sex);
             } else {
@@ -153,10 +147,6 @@ public class KakaoLoginService {
             e.printStackTrace();
         }
         return id;
-    }
-
-    public Long postKakaoData(@RequestBody Long uid){
-        return uid;
     }
 
     /* 데이터베이스 추가 작업 */

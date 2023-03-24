@@ -1,5 +1,6 @@
 package com.capstone.timepay.domain;
 
+import lombok.Data;
 import lombok.Getter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -10,7 +11,7 @@ import javax.persistence.EntityListeners;
 import javax.persistence.MappedSuperclass;
 import java.time.LocalDateTime;
 
-@Getter
+@Data
 @MappedSuperclass
 @EnableJpaAuditing
 @EntityListeners(AuditingEntityListener.class)
