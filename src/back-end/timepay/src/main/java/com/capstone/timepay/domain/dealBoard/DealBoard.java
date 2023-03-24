@@ -32,6 +32,7 @@ public class DealBoard extends BaseTimeEntity {
     @Column(nullable = false)
     private String state;
 
+    @Lob
     @Column(nullable = false)
     private String content;
     private String category;

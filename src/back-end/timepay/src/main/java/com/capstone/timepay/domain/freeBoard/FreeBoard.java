@@ -30,6 +30,7 @@ public class FreeBoard extends BaseTimeEntity
     @Column(nullable = false, length = 100)
     private String title;
 
+    @Lob // 대용량 데이터
     @Column(nullable = false)
     private String content;
     private String category;
