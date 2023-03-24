@@ -6,12 +6,15 @@ import com.capstone.timepay.controller.admin.response.inquiry.InquiryResponse;
 import com.capstone.timepay.service.admin.InquiryManagerService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
 
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/admin/inquiry")
@@ -34,7 +37,7 @@ public class InquiryManageController {
 
         // 넘겨줄 쿼리가 없으면 "all"을 넘겨줄 것.
         List<InquiryResponse> responses = inquiryManagerService.searchInquiriesByQuery(state, category, writer, title);
-
+        
         return ResponseEntity.ok(responses);
     }
 
@@ -47,7 +50,7 @@ public class InquiryManageController {
         return ResponseEntity.ok(response);
     }
     @ApiOperation(value = "관리자 문의 답변 등록")
-    @PostMapping("/answer")
+    @PostMapping(value = "/answer", consumes = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<?> answerInquiry(@Valid @RequestBody InquiryAnswerRequest request){
 
         inquiryManagerService.saveInquiryAnswer(request.toServiceDto());
