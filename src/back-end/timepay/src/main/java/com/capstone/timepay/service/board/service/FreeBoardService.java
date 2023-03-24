@@ -86,6 +86,7 @@ public class FreeBoardService
         freeBoard.setContent(freeBoardDTO.getContent());
         freeBoard.setCategory(freeBoardDTO.getCategory());
         freeBoard.setUpdatedAt(LocalDateTime.now());
+        freeBoard.setHidden(freeBoardDTO.isHidden());
         return FreeBoardDTO.toFreeBoardDTO(freeBoard);
     }
 

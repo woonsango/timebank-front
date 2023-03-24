@@ -25,6 +25,7 @@ public class DealBoardDTO
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private int pay;
+    private boolean isHidden;
 
     public static DealBoardDTO toDealBoardDTO(DealBoard dealBoard)
     {
@@ -39,7 +40,8 @@ public class DealBoardDTO
                 dealBoard.getEndTime(),
                 dealBoard.getCreatedAt(),
                 dealBoard.getUpdatedAt(),
-                dealBoard.getPay()
+                dealBoard.getPay(),
+                dealBoard.isHidden()
         );
     }
 }

@@ -28,6 +28,24 @@ public class DealBoardController
         return new Response("SUCCESS", "개별 게시판 조회", dealBoardService.getDealBoard(id));
     }
 
+    // 숨김처리 안된 게시물 조회
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping("/dealBoard/good")
+    public Response<?> getGoodBoards()
+    {
+        return new Response("SUCCESS", "숨김처리 안된 게시판 조회", dealBoardService.getGoodBoard());
+    }
+
+
+    // 숨김처리된 게시물 조회
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping("/dealBoard/bad")
+    public Response<?> getBadBoards()
+    {
+        return new Response("SUCCESS", "숨김처리 게시판 조회", dealBoardService.getBadBoard());
+    }
+
+
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/dealBoard/write")
     public Response<?> write(@RequestBody DealBoardDTO dealBoardDTO)

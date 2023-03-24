@@ -2,8 +2,10 @@ package com.capstone.timepay.service.board.service;
 
 import com.capstone.timepay.domain.dealBoard.DealBoard;
 import com.capstone.timepay.domain.dealBoard.DealBoardRepository;
+import com.capstone.timepay.domain.freeBoard.FreeBoard;
 import com.capstone.timepay.domain.user.TestUser;
 import com.capstone.timepay.service.board.dto.DealBoardDTO;
+import com.capstone.timepay.service.board.dto.FreeBoardDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,6 +41,26 @@ public class DealBoardService
         return dealBoardDTO;
     }
 
+    // 숨김처리 안된 게시물만 조회
+    @Transactional(readOnly = true)
+    public List<DealBoardDTO> getGoodBoard()
+    {
+        List<DealBoard> dealBoards = dealBoardRepository.findAllByIsHiddenFalse();
+        List<DealBoardDTO> dealBoardDTOList = new ArrayList<>();
+        dealBoards.forEach(dealBoard -> dealBoardDTOList.add(DealBoardDTO.toDealBoardDTO(dealBoard)));
+        return dealBoardDTOList;
+    }
+
+    // 숨김처리된 게시물만 조회
+    @Transactional(readOnly = true)
+    public List<DealBoardDTO> getBadBoard()
+    {
+        List<DealBoard> dealBoards = dealBoardRepository.findAAByIsHiddenTrue();
+        List<DealBoardDTO> dealBoardDTOList = new ArrayList<>();
+        dealBoards.forEach(dealBoard -> dealBoardDTOList.add(DealBoardDTO.toDealBoardDTO(dealBoard)));
+        return dealBoardDTOList;
+    }
+
     // 게시물 작성
     @Transactional
     public DealBoardDTO write(DealBoardDTO dealBoardDTO)
@@ -53,6 +75,7 @@ public class DealBoardService
         dealBoard.setPay(dealBoardDTO.getPay());
         dealBoard.setCreatedAt(LocalDateTime.now());
         dealBoard.setUpdatedAt(LocalDateTime.now());
+        dealBoard.setHidden(dealBoardDTO.isHidden());
         dealBoardRepository.save(dealBoard);
         return DealBoardDTO.toDealBoardDTO(dealBoard);
     }
@@ -72,6 +95,7 @@ public class DealBoardService
         dealBoard.setStartTime(boardDto.getStartTime());
         dealBoard.setEndTime(boardDto.getEndTime());
         dealBoard.setPay(boardDto.getPay());
+        dealBoard.setHidden(boardDto.isHidden());
 
         return DealBoardDTO.toDealBoardDTO(dealBoard);
     }

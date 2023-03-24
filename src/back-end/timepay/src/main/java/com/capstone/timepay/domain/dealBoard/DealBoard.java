@@ -41,6 +41,10 @@ public class DealBoard extends BaseTimeEntity {
     private LocalDateTime endTime;
     private int pay;
 
+    // 숨김처리
+    @Column
+    private boolean isHidden;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private TestUser testUser;
