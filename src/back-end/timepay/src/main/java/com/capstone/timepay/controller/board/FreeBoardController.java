@@ -28,6 +28,24 @@ public class FreeBoardController {
         return new Response("SUCCESS", "개별 게시판 조회", freeBoardService.getBoard(id));
     }
 
+    // 숨김처리 안된 게시물 조회
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping("/freeBoard/good")
+    public Response<?> getGoodBoards()
+    {
+        return new Response("SUCCESS", "숨김처리 안된 게시판 조회", freeBoardService.getGoodBoard());
+    }
+
+
+    // 숨김처리된 게시물 조회
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping("/freeBoard/bad")
+    public Response<?> getBadBoards()
+    {
+        return new Response("SUCCESS", "숨김처리 게시판 조회", freeBoardService.getBadBoard());
+    }
+
+
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/freeBoard/write")
     public Response<?> write(@RequestBody FreeBoardDTO freeBoardDTO)

@@ -21,6 +21,7 @@ public class TestUserService {
         user.setName(registerDTO.getName());
         user.setPassword(registerDTO.getPassword());
         user.setUsername(registerDTO.getUsername());
+        user.setWarning(registerDTO.isWarning());
         return testUserRepository.save(user);
     }
 

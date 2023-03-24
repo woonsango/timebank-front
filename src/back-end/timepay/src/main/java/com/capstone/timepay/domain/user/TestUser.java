@@ -25,4 +25,7 @@ public class TestUser {
 
     @Column(nullable = false)
     private String name;
+
+    @Column
+    private boolean isWarning;
 }

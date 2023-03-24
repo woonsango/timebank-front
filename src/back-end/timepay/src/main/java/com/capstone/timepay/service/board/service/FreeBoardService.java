@@ -39,6 +39,26 @@ public class FreeBoardService
         return freeBoardDTO;
     }
 
+    // 숨김처리 안된 게시물만 조회
+    @Transactional(readOnly = true)
+    public List<FreeBoardDTO> getGoodBoard()
+    {
+        List<FreeBoard> freeBoards = freeBoardRepository.findAllByIsHiddenFalse();
+        List<FreeBoardDTO> freeBoardDTOList = new ArrayList<>();
+        freeBoards.forEach(freeBoard -> freeBoardDTOList.add(FreeBoardDTO.toFreeBoardDTO(freeBoard)));
+        return freeBoardDTOList;
+    }
+
+    // 숨김처리된 게시물만 조회
+    @Transactional(readOnly = true)
+    public List<FreeBoardDTO> getBadBoard()
+    {
+        List<FreeBoard> freeBoards = freeBoardRepository.findAAByIsHiddenTrue();
+        List<FreeBoardDTO> freeBoardDTOList = new ArrayList<>();
+        freeBoards.forEach(freeBoard -> freeBoardDTOList.add(FreeBoardDTO.toFreeBoardDTO(freeBoard)));
+        return freeBoardDTOList;
+    }
+
 
     // 게시물 작성
     @Transactional
@@ -50,6 +70,7 @@ public class FreeBoardService
         freeBoard.setCategory(freeBoardDTO.getCategory());
         freeBoard.setCreatedAt(LocalDateTime.now());
         freeBoard.setUpdatedAt(LocalDateTime.now());
+        freeBoard.setHidden(freeBoardDTO.isHidden());
         freeBoardRepository.save(freeBoard);
         return FreeBoardDTO.toFreeBoardDTO(freeBoard);
     }

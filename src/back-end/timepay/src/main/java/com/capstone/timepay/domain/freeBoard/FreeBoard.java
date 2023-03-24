@@ -34,6 +34,10 @@ public class FreeBoard extends BaseTimeEntity
     private String content;
     private String category;
 
+    // 숨김처리
+    @Column
+    private boolean isHidden;
+
     /*
         TODO: 게시글 유형, 상태, 지급 타임페이, 장소 보낼필요있음
         유저 정보도 보내야하는것 아닌가?
