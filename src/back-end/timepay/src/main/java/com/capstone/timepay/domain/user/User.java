@@ -4,7 +4,6 @@ import com.capstone.timepay.domain.BaseTimeEntity;
 import com.capstone.timepay.domain.dealBoardComment.DealBoardComment;
 import com.capstone.timepay.domain.dealBoardReport.DealBoardReport;
 import com.capstone.timepay.domain.dealRegister.DealRegister;
-import com.capstone.timepay.domain.freeBoard.FreeBoard;
 import com.capstone.timepay.domain.freeBoardComment.FreeBoardComment;
 import com.capstone.timepay.domain.freeBoardReport.FreeBoardReport;
 import com.capstone.timepay.domain.freeRegister.FreeRegister;
@@ -12,18 +11,15 @@ import com.capstone.timepay.domain.inquiry.Inquiry;
 import com.capstone.timepay.domain.userProfile.UserProfile;
 import com.capstone.timepay.domain.userToken.UserToken;
 import lombok.*;
-import org.hibernate.annotations.Cache;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Getter
-@Setter
+@Data
 @Entity
 public class User extends BaseTimeEntity {
 
