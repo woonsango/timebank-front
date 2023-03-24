@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.List;
 
-@Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/admin/inquiry")
@@ -37,7 +36,7 @@ public class InquiryManageController {
 
         // 넘겨줄 쿼리가 없으면 "all"을 넘겨줄 것.
         List<InquiryResponse> responses = inquiryManagerService.searchInquiriesByQuery(state, category, writer, title);
-        
+
         return ResponseEntity.ok(responses);
     }
 

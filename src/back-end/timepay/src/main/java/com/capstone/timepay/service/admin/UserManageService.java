@@ -171,8 +171,6 @@ public class UserManageService {
     }
 
     public void deleteUser(Long userId) {
-        User user = userRepository.findById(userId).orElseThrow(()->new IllegalArgumentException("존재하지 않는 회원입니다."));
-
-        userRepository.delete(user);
+        userRepository.deleteById(userId);
     }
 }
