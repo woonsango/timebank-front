@@ -25,6 +25,6 @@ public class DealRegister extends BaseTimeEntity {
     private User user;
 
     @ManyToOne
-    @JoinColumn(name="d_board_id")
+    @JoinColumn(name="deal_board_id")
     private DealBoard dealBoard;
 }

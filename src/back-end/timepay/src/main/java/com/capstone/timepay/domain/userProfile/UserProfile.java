@@ -2,17 +2,14 @@ package com.capstone.timepay.domain.userProfile;
 
 import com.capstone.timepay.domain.BaseTimeEntity;
 import com.capstone.timepay.domain.user.User;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Getter
+@Data
 @Entity
 public class UserProfile extends BaseTimeEntity {
     @Id
@@ -25,7 +22,5 @@ public class UserProfile extends BaseTimeEntity {
     private String imageUrl;
     private String introduction;
     private int timepay;
-
-
-
+    private Long uid;
 }
