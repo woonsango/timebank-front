@@ -3,9 +3,11 @@ package com.capstone.timepay.domain.user;
 import com.capstone.timepay.domain.BaseTimeEntity;
 import com.capstone.timepay.domain.dealBoardComment.DealBoardComment;
 import com.capstone.timepay.domain.dealBoardReport.DealBoardReport;
+import com.capstone.timepay.domain.dealCommentReport.DealCommentReport;
 import com.capstone.timepay.domain.dealRegister.DealRegister;
 import com.capstone.timepay.domain.freeBoardComment.FreeBoardComment;
 import com.capstone.timepay.domain.freeBoardReport.FreeBoardReport;
+import com.capstone.timepay.domain.freeCommentReport.FreeCommentReport;
 import com.capstone.timepay.domain.freeRegister.FreeRegister;
 import com.capstone.timepay.domain.inquiry.Inquiry;
 import com.capstone.timepay.domain.userProfile.UserProfile;
@@ -53,8 +55,14 @@ public class User extends BaseTimeEntity {
     @OneToMany(mappedBy = "user", orphanRemoval = true)
     private List<FreeBoardReport> freeBoardReports = new ArrayList<>();
 
-//    @OneToMany(mappedBy = "user", orphanRemoval = true)
-//    private List<FreeBoardComment> freeBoardComments = new ArrayList<>();
+    @OneToMany(mappedBy = "user", orphanRemoval = true)
+    private List<DealCommentReport> dealCommentReports = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user", orphanRemoval = true)
+    private List<FreeCommentReport> freeCommentReports = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user", orphanRemoval = true)
+    private List<FreeBoardComment> freeBoardComments = new ArrayList<>();
 
     @OneToMany(mappedBy = "user", orphanRemoval = true)
     private List<FreeRegister> freeRegisters = new ArrayList<>();
@@ -66,4 +74,19 @@ public class User extends BaseTimeEntity {
     @OneToOne
     @JoinColumn(name = "token_id")
     private UserToken userToken;
+
+    public void updateName(String name) {
+        this.name = name;
+    }
+    public void updateBirth(LocalDateTime birth) {
+        this.birthday = birth;
+    }
+    public void updateNickname(String nickname) {
+        this.nickname = nickname;
+    }
+    public void updateLocation(String region) {
+        this.location = region;
+    }
+
+
 }

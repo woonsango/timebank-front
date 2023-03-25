@@ -1,7 +1,10 @@
 package com.capstone.timepay.domain.admin;
 
 import com.capstone.timepay.domain.BaseTimeEntity;
+import com.capstone.timepay.domain.freeBoardComment.FreeBoardComment;
+import com.capstone.timepay.domain.inquiryAnswer.InquiryAnswer;
 import com.capstone.timepay.domain.notification.Notification;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -30,6 +33,15 @@ public class Admin extends BaseTimeEntity {
     private String email;
     private String phone;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "admin", orphanRemoval = true)
     private List<Notification> notifications = new ArrayList<>();
+
+    @OneToMany(mappedBy = "admin", orphanRemoval = true)
+    private List<InquiryAnswer> inquiryAnswers = new ArrayList<>();
+    
+    public Admin update(String password) {
+        this.password = password;
+        return this;
+    }
 }

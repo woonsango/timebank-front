@@ -22,6 +22,7 @@ public class FreeBoardReport extends BaseTimeEntity {
 
     @Column
     private String content;
+    private String process;
 
     @ManyToOne
     @JoinColumn(name="f_board_id")
