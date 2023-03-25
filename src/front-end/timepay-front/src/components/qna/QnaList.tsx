@@ -21,6 +21,10 @@ const QnaList = ({ qna }: QnaListProps) => {
       state: {
         title: qna?.title,
         content: qna?.content,
+        createdAt: qna?.createdAt,
+        status: qna?.status,
+        category: qna?.category,
+        attachment: qna?.attachment,
       },
     });
   };
