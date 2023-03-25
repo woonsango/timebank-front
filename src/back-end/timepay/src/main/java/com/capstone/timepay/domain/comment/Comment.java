@@ -1,34 +1,34 @@
-package com.capstone.timepay.domain.freeCommentReport;
+package com.capstone.timepay.domain.comment;
 
 import com.capstone.timepay.domain.BaseTimeEntity;
+import com.capstone.timepay.domain.dealBoardComment.DealBoardComment;
 import com.capstone.timepay.domain.freeBoard.FreeBoard;
 import com.capstone.timepay.domain.freeBoardComment.FreeBoardComment;
-import com.capstone.timepay.domain.user.User;
+import com.capstone.timepay.domain.freeCommentReport.FreeCommentReport;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Entity
-public class FreeCommentReport extends BaseTimeEntity {
+public class Comment extends BaseTimeEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long fc_reportId;
+    private Long commentId;
 
     @Column
-    private String content;
-    private String process;
-    @ManyToOne
-    @JoinColumn(name="f_comment_id")
-    private FreeBoardComment freeBoardComment;
+    private Long fBoardId;
+    private Long fCommentId;
+    private Long dBoardId;
+    private Long dCommentId;
 
-    @ManyToOne
-    @JoinColumn(name="user_id")
-    private User user;
 }

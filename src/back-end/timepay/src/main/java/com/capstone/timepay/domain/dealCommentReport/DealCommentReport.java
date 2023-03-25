@@ -22,8 +22,12 @@ public class DealCommentReport extends BaseTimeEntity {
 
     @Column
     private String content;
-
+    private String process;
     @ManyToOne
     @JoinColumn(name="d_comment_id")
     private DealBoardComment dealBoardComment;
+
+    @ManyToOne
+    @JoinColumn(name="user_id")
+    private User user;
 }

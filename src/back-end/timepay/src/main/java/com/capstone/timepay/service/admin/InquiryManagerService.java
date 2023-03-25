@@ -15,9 +15,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static java.util.function.Predicate.not;
+
 
 @Slf4j
 @Service
@@ -31,7 +33,6 @@ public class InquiryManagerService {
 
     public List<InquiryResponse> showAllInquiries() {
         List<Inquiry> inquiries = inquiryRepository.findAll();
-
         return inquiries.stream()
                         .map(inquiry -> InquiryResponse.builder()
                                 .inquiryId(inquiry.getInquiryId())
@@ -41,7 +42,7 @@ public class InquiryManagerService {
                                 .writer(inquiry.getUser().getName())
                                 .title(inquiry.getTitle())
                                 .build())
-                        .sorted(Comparator.comparing(InquiryResponse::getCreatedAt).reversed())
+                        //.sorted(Comparator.comparing(InquiryResponse::getCreatedAt).reversed())
                         .collect(Collectors.toList());
     }
 
@@ -62,19 +63,74 @@ public class InquiryManagerService {
             inquiries = inquiryRepository.findAllByCategoryAndState(category, state).orElseThrow(()->new IllegalArgumentException("존재하지 않는 문의입니다."));
         }
 
+        List<InquiryResponse> responses = new ArrayList<>();
+
+        if(writer.equals("all")){
+            if(title.equals("all")) responses = inquiryAll(inquiries);
+            else responses = inquiryTitle(inquiries,title);
+        }
+        else{
+            if(title.equals("all")) responses = inquiryWriter(inquiries,writer);
+            else responses = inquiryWriterTitle(inquiries,writer,title);
+        }
+        return responses;
+    }
+
+    public List<InquiryResponse> inquiryWriterTitle(List<Inquiry> inquiries, String writer, String title){
         return inquiries.stream()
-                        .map(inquiry -> InquiryResponse.builder()
-                                .inquiryId(inquiry.getInquiryId())
-                                .title(inquiry.getTitle())
-                                .category(inquiry.getCategory())
-                                .writer(inquiry.getUser().getName())
-                                .state(inquiry.getState())
-                                .createdAt(inquiry.getCreatedAt())
-                                .build())
-                        .filter(inquiryResponse -> inquiryResponse.getWriter().equals(writer) && !writer.equals("all"))
-                        .filter(inquiryResponse -> inquiryResponse.getTitle().contains(title) && !title.equals("all"))
-                        .sorted(Comparator.comparing(InquiryResponse::getCreatedAt).reversed())
-                        .collect(Collectors.toList());
+                .map(inquiry -> InquiryResponse.builder()
+                        .inquiryId(inquiry.getInquiryId())
+                        .title(inquiry.getTitle())
+                        .category(inquiry.getCategory())
+                        .writer(inquiry.getUser().getName())
+                        .state(inquiry.getState())
+                        .createdAt(inquiry.getCreatedAt())
+                        .build())
+                .filter(inquiryResponse -> inquiryResponse.getWriter().equals(writer))
+                .filter(inquiryResponse -> inquiryResponse.getTitle().contains(title))
+                //.sorted(Comparator.comparing(InquiryResponse::getCreatedAt).reversed())
+                .collect(Collectors.toList());
+    }
+    public List<InquiryResponse> inquiryWriter(List<Inquiry> inquiries, String writer){
+        return inquiries.stream()
+                .map(inquiry -> InquiryResponse.builder()
+                        .inquiryId(inquiry.getInquiryId())
+                        .title(inquiry.getTitle())
+                        .category(inquiry.getCategory())
+                        .writer(inquiry.getUser().getName())
+                        .state(inquiry.getState())
+                        .createdAt(inquiry.getCreatedAt())
+                        .build())
+                .filter(inquiryResponse -> inquiryResponse.getWriter().equals(writer))
+                //.sorted(Comparator.comparing(InquiryResponse::getCreatedAt).reversed())
+                .collect(Collectors.toList());
+    }
+    public List<InquiryResponse> inquiryTitle(List<Inquiry> inquiries, String title){
+        return inquiries.stream()
+                .map(inquiry -> InquiryResponse.builder()
+                        .inquiryId(inquiry.getInquiryId())
+                        .title(inquiry.getTitle())
+                        .category(inquiry.getCategory())
+                        .writer(inquiry.getUser().getName())
+                        .state(inquiry.getState())
+                        .createdAt(inquiry.getCreatedAt())
+                        .build())
+                .filter(inquiryResponse -> inquiryResponse.getTitle().contains(title))
+                //.sorted(Comparator.comparing(InquiryResponse::getCreatedAt).reversed())
+                .collect(Collectors.toList());
+    }
+    public List<InquiryResponse> inquiryAll(List<Inquiry> inquiries){
+        return inquiries.stream()
+                .map(inquiry -> InquiryResponse.builder()
+                        .inquiryId(inquiry.getInquiryId())
+                        .title(inquiry.getTitle())
+                        .category(inquiry.getCategory())
+                        .writer(inquiry.getUser().getName())
+                        .state(inquiry.getState())
+                        .createdAt(inquiry.getCreatedAt())
+                        .build())
+                //.sorted(Comparator.comparing(InquiryResponse::getCreatedAt).reversed())
+                .collect(Collectors.toList());
     }
 
 
