@@ -1,6 +1,7 @@
 package com.capstone.timepay.domain.freeBoardComment;
 
 import com.capstone.timepay.domain.BaseTimeEntity;
+import com.capstone.timepay.domain.comment.Comment;
 import com.capstone.timepay.domain.freeBoard.FreeBoard;
 import com.capstone.timepay.domain.freeCommentReport.FreeCommentReport;
 import com.capstone.timepay.domain.user.User;
@@ -37,4 +38,6 @@ public class FreeBoardComment extends BaseTimeEntity {
     @ManyToOne
     @JoinColumn(name="user_id")
     private User user;
+
+
 }

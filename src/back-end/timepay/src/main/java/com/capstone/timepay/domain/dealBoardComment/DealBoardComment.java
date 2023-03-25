@@ -1,6 +1,7 @@
 package com.capstone.timepay.domain.dealBoardComment;
 
 import com.capstone.timepay.domain.BaseTimeEntity;
+import com.capstone.timepay.domain.comment.Comment;
 import com.capstone.timepay.domain.dealBoard.DealBoard;
 import com.capstone.timepay.domain.dealBoardReport.DealBoardReport;
 import com.capstone.timepay.domain.dealCommentReport.DealCommentReport;
@@ -40,5 +41,6 @@ public class DealBoardComment extends BaseTimeEntity {
     @ManyToOne
     @JoinColumn(name="user_id")
     private User user;
+
 
 }

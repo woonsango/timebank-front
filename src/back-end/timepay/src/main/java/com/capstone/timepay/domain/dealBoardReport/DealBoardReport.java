@@ -22,6 +22,7 @@ public class DealBoardReport extends BaseTimeEntity {
 
     @Column
     private String content;
+    private String process;
 
     @ManyToOne
     @JoinColumn(name="user_id")
