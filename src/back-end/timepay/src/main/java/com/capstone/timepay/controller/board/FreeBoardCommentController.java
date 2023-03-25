@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.*;
 public class FreeBoardCommentController {
 
     private final FreeBoardCommentService freeBoardCommentService;
-    private final TestUserRepository testUserRepository;
 
     // 댓글 작성
     @ResponseStatus(HttpStatus.OK)
@@ -25,8 +24,7 @@ public class FreeBoardCommentController {
     public Response writeComment(@PathVariable("boardId") Long boardId, @RequestBody FreeBoardCommentDTO freeBoardCommentDTO)
     {
         // TODO: 추후 User 정보는 세션을 통해 주고받도록 수정
-        TestUser testUser = testUserRepository.findById(Long.valueOf(1)).get();
-        return new Response("SUCCESS", "댓글 작성", freeBoardCommentService.writeComment(boardId, freeBoardCommentDTO, testUser));
+        return new Response("SUCCESS", "댓글 작성", freeBoardCommentService.writeComment(boardId, freeBoardCommentDTO, freeBoardCommentDTO.getUid()));
     }
 
     @ResponseStatus(HttpStatus.OK)
