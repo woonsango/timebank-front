@@ -12,7 +12,7 @@ const KakaoRedirectHandler = () => {
 
   const navigate = useNavigate(); //history
 
-  const handleLogin = useCallback(
+  const GoToJoin = useCallback(
     (path: string) => {
       navigate(path);
     },
@@ -23,24 +23,21 @@ const KakaoRedirectHandler = () => {
     'code',
   );
 
-  console.log('인가 코드(Authorization Code): ', authorizationCode);
+  //console.log('인가 코드(Authorization Code): ', authorizationCode);
 
   const fetchAuthorizationCode = async () => {
     axios({
       method: 'post',
-      url: 'http://localhost:8080/post',
+      url: 'http://localhost:8080/code',
       data: authorizationCode,
     })
       .then((res) => {
         console.log(res); //서버 응답
         const response = res.data;
         const code = response.authorizationCode;
-        console.log('response: ', code);
+        console.log('서버가 인가코드를 받았답니다. ', code);
 
-        //서버로부터 정상적으로 토큰이 넘어오면
-        //! 토큰 저장하고?
-        //회원가입(Join Page로 화면 전환)
-        handleLogin(PATH.JOIN);
+        GoToJoin(PATH.JOIN);
       })
       .catch((err) => {
         console.log('카카오 로그인 에러', err);

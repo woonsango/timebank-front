@@ -3,6 +3,8 @@
 const express = require("express");
 const app = express();
 const port = process.env.PORT || 8080;
+const multer = require("multer");
+const upload = multer();
 
 //Cross Origin Resource Sharing
 const cors = require("cors");
@@ -13,23 +15,29 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors());
 app.use(bodyParser.json());
 
-app.post("/post", (req, res) => {
+/*프론트에서 인가코드 받아오기 */
+app.post("/code", (req, res) => {
   const authorizationCode = req.body;
-  console.log("front로부터 받은 인가 코드:", authorizationCode);
 
-  res.json({ message: "save authorization!", authorizationCode });
+  res.json({
+    message: "서버가 인가코드를 성공적으로 받았습니다.",
+    authorizationCode,
+  });
 });
 
-app.post("/join", (req, res) => {
-  const data = 1234567;
+/*프론트에게 uid 보내주기*/
+app.post("/uid", (req, res) => {
+  const uid = 1234567;
 
-  res.json({ message: "to client!", data });
+  res.json({ message: "서버가 uid를 전송했습니다. ", uid });
 });
 
-app.post("/info", (req, res) => {
+/*프론트에게 유저 정보와 uid 받아오고 보내주기 */
+app.post("/info", upload.single("user"), (req, res) => {
   const data = req.body;
-  console.log("front로부터 받은 유저 정보:", data);
-  res.json({ message: "to client!", data });
+  const uid = 1234567;
+  console.log("프론트로부터 유저 정보를 받았습니다. ", req.user);
+  res.json({ message: "서버가 유저 정보를 성공적으로 받았습니다." });
 });
 
 app.listen(port, () => console.log(`Listening on port ${port}`));

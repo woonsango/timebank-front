@@ -36,37 +36,19 @@ const topWrapperCSS = css`
   height: 100vh;
 `;
 
-/*서버로부터*/
-const getUid = async () => {
-  axios({
-    method: 'post',
-    url: 'http://localhost:8080/join',
-    data: 'please uid!',
-  })
-    .then((res) => {
-      console.log('서버의 응답', res); //서버 응답
-      const response = res.data;
-      const code = response.data;
-      console.log('response: ', code);
-    })
-    .catch((err) => {
-      console.log('카카오 로그인 에러', err);
-    });
-};
-
 const JoinPage = () => {
-  /*서버에게*/
-  const postUserInfo = async () => {
+  /*서버로부터 uid 받아오기*/
+  const getUid = async () => {
     axios({
       method: 'post',
-      url: 'http://localhost:8080/info',
-      data: { nickname: year, test: year },
+      url: 'http://localhost:8080/uid',
     })
       .then((res) => {
-        console.log('서버의 응답', res); //서버 응답
+        //console.log('서버로부터 uid를 받아왔습니다.', res); //서버 응답
         const response = res.data;
-
-        console.log('response: ', response);
+        const uid = response.uid;
+        console.log('서버로부터 uid를 받아왔습니다.', uid);
+        setUid(uid);
       })
       .catch((err) => {
         console.log('카카오 로그인 에러', err);
@@ -75,40 +57,37 @@ const JoinPage = () => {
 
   useEffect(() => {
     getUid();
-    postUserInfo();
   }, []);
 
   const { Text } = Typography;
   const [messageApi, contextHolder] = message.useMessage();
 
-  const [realName, setRealName] = useState('');
-  const [nickName, setNickName] = useState('');
-  const [phoneNumber, setPhoneNumber] = useState('');
-  const [introduction, setIntroduction] = useState('');
+  const [uid, setUid] = useState('');
+
   const [profileImage, setProfileImage]: any = useState(
     'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png',
   );
+  const [nickName, setNickName] = useState<string>('');
+  const [realName, setRealName] = useState('');
+  const [town, setTown] = useState('');
+  const [birth, setBirth] = useState('');
+  const [phoneNumber, setPhoneNumber] = useState('');
+  const [introduction, setIntroduction] = useState('');
 
   const [year, setYear] = useState<string>('연도');
   const [month, setMonth] = useState<string>('월');
-
   const [day, setDay] = useState<string>('일');
+
   const [gu, setGu] = useState(dongData[guData[0]]);
   const [dong, setDong] = useState(dongData[guData[0]][0]);
 
+  const [guText, setGuText] = useState<string>('');
+  const [dongText, setDongText] = useState<string>('');
+
   const handleFileChange = (e: any) => {
     const imageFile = e.target.files[0];
-    const last = imageFile;
-    if (imageFile !== null) {
-      setProfileImage(imageFile);
-    } else {
-      setProfileImage(
-        'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png',
-      );
-      return;
-    }
+    console.log(imageFile);
 
-    //프로필 사진 시각화
     const fileReader = new FileReader();
     fileReader.onload = () => {
       if (fileReader.readyState == 2) {
@@ -121,23 +100,28 @@ const JoinPage = () => {
   };
 
   /*onChange*/
-  const onChangeRealName = (value: any) => {
-    setRealName(value);
+  const onChangeProfileImage = (value: any) => {
+    setProfileImage(value);
   };
+
   const onChangeNickName = (value: any) => {
     setNickName(value);
   };
 
-  const onChangePhoneNumber = (value: any) => {
-    setPhoneNumber(value);
+  const onChangeRealName = (value: any) => {
+    setRealName(value);
   };
 
-  const onChangeIntroduction = (value: any) => {
-    setIntroduction(value);
+  const onChangeGu = (value: DongName) => {
+    setGu(dongData[value]);
+    setGuText(value.valueOf());
   };
 
-  const onChangeProfileImage = (value: any) => {
-    setProfileImage(value);
+  const onChangeDong = (value: DongName) => {
+    setDong(value);
+    setDongText(value.valueOf());
+    const town: string = guText + dongText;
+    setTown(town);
   };
 
   const onChangeYear: DatePickerProps['onChange'] = (date, dateString) => {
@@ -151,15 +135,15 @@ const JoinPage = () => {
 
   const onChangeDay = (value: string) => {
     setDay(value);
+    const bitrh: string = year + month + day;
+    setBirth(bitrh);
+  };
+  const onChangePhoneNumber = (value: any) => {
+    setPhoneNumber(value);
   };
 
-  const onChangeGu = (value: DongName) => {
-    setGu(dongData[value]);
-    //setDong(dongData[value][0]);
-  };
-
-  const onChangeDong = (value: DongName) => {
-    setDong(value);
+  const onChangeIntroduction = (value: any) => {
+    setIntroduction(value);
   };
 
   /* 닉네임 유효성 검사 커스텀 */
@@ -216,7 +200,7 @@ const JoinPage = () => {
   };
 
   /*Handle 가입 완료 Btn*/
-  const handleSubmitBtn = () => {
+  const handleSubmitBtn = async () => {
     console.log(dong);
     if (year === '연도' || month === '월' || day === '일') {
       warning('생년월일');
@@ -224,6 +208,31 @@ const JoinPage = () => {
     if (gu === dongData[guData[0]] || dong === '동') {
       warning('지역');
     } else {
+      let formData = new FormData();
+      formData.append('user', profileImage);
+      /*
+      formData.append('user', nickName);
+      formData.append('user', realName);
+      formData.append('user', town);
+      formData.append('user', birth);
+      formData.append('user', phoneNumber);
+      formData.append('user', introduction);
+
+      formData.append('user', uid);*/
+
+      await axios({
+        method: 'post',
+        url: 'http://localhost:8080/info',
+        data: formData,
+      })
+        .then((result) => {
+          console.log('서버가 유저 정보를 성공적으로 받았답니다. ');
+          console.log(result);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+
       GoToFinishJoinPage(PATH.FINISHJOIN);
     }
   };
@@ -279,7 +288,6 @@ const JoinPage = () => {
                 <input
                   type="file"
                   id="image_guide"
-                  src={profileImage}
                   accept="image/*"
                   onChange={handleFileChange}
                 />
