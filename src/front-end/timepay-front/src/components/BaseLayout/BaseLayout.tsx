@@ -27,15 +27,15 @@ const BaseLayout = () => {
     location.pathname === PATH.Register_HR ||
     location.pathname === PATH.Register_HS;
 
+  const Header = useMemo(() => {
+    if (isHome) return <HomeHeader />;
+    if (isSearch) return <SearchHeader />;
+    if (headerTitle) return <MainHeader />;
+  }, [isHome, isSearch, headerTitle]);
+
   return (
     <Layout css={cssBaseLayoutStyle}>
-      {isHome ? (
-        <HomeHeader />
-      ) : isSearch ? (
-        <SearchHeader />
-      ) : headerTitle ? (
-        <MainHeader />
-      ) : null}
+      {Header}
       <Layout.Content
         className={`main-section-container ${
           isSearch
