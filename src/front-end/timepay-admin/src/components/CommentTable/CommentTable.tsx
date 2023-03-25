@@ -188,6 +188,7 @@ const CommentTable = ({
               Modal.info({
                 title: `${record.commentId}번 내용`,
                 content: record.content,
+                okText: '확인',
               })
             }
           >
