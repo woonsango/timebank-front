@@ -19,7 +19,9 @@ const BaseLayout = () => {
   const isnoFooter =
     location.pathname === PATH.Register_F ||
     location.pathname === PATH.Register_HR ||
-    location.pathname === PATH.Register_HS;
+    location.pathname === PATH.Register_HS ||
+    location.pathname === PATH.Qna_List ||
+    location.pathname === PATH.Qna_Register;
 
   return (
     <Layout css={cssBaseLayoutStyle}>

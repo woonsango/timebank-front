@@ -58,7 +58,7 @@ const QnaRegisterPage = () => {
           <input
             css={cssPostTitleInputStyle}
             placeholder="제목을 입력하세요"
-            maxLength={25}
+            maxLength={22}
             value={title}
             onChange={handleTitleChange}
           />
