@@ -5,11 +5,10 @@ spring:
       path: /h2-console
 
   datasource:
-    url: jdbc:h2:~/local
-    username: sa # username과 password는 자신의 설정에 맞게
-    password:
-    driver-class-name: org.h2.Driver
-
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url : jdbc:mysql://localhost:3306/timepay?useSSL=false&allowPublicKeyRetrieval=true&useUnicode=true&serverTimezone=Asia/Seoul
+    username: root
+    password: call8112!!
   jpa:
     hibernate:
       ddl-auto: update
