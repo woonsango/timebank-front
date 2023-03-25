@@ -298,6 +298,11 @@ const SearchHeader = () => {
                       'startTime',
                       dayjs(timeString, 'HH:mm'),
                     );
+                    // setFieldValue 는 onValuesChange를 호출하지 못해서 직접 호출
+                    handleOnChangeOptionSearchForm(
+                      { startTime: dayjs(timeString, 'HH:mm') },
+                      optionSearchForm.getFieldsValue(),
+                    );
                   }}
                 />
               </Form.Item>
@@ -324,6 +329,11 @@ const SearchHeader = () => {
                     optionSearchForm.setFieldValue(
                       'endTime',
                       dayjs(timeString, 'HH:mm'),
+                    );
+                    // setFieldValue 는 onValuesChange를 호출하지 못해서 직접 호출
+                    handleOnChangeOptionSearchForm(
+                      { endTime: dayjs(timeString, 'HH:mm') },
+                      optionSearchForm.getFieldsValue(),
                     );
                   }}
                 />
