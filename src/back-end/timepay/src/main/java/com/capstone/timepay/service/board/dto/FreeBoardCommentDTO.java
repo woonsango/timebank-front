@@ -1,6 +1,8 @@
 package com.capstone.timepay.service.board.dto;
 
 import com.capstone.timepay.domain.freeBoardComment.FreeBoardComment;
+import com.capstone.timepay.domain.user.User;
+import com.capstone.timepay.domain.user.UserRepository;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -11,9 +13,10 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class FreeBoardCommentDTO {
+
     private Long freeBoardCommentId;
     private String content;
-    private String nickname;
+    private Long uid;    // 일단 uuid로 쏨
     private LocalDateTime createdAt;
 
     public static FreeBoardCommentDTO toFreeBoardCommentDTO(FreeBoardComment freeBoardComment)
@@ -21,7 +24,7 @@ public class FreeBoardCommentDTO {
         return new FreeBoardCommentDTO(
                 freeBoardComment.getFreeBoardCommentId(),
                 freeBoardComment.getContent(),
-                freeBoardComment.getTestUser().getName(),
+                freeBoardComment.getUid(),
                 freeBoardComment.getCreatedAt()
         );
     }

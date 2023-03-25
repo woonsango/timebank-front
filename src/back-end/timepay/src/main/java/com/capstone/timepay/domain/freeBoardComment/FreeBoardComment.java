@@ -5,6 +5,7 @@ import com.capstone.timepay.domain.comment.Comment;
 import com.capstone.timepay.domain.freeBoard.FreeBoard;
 import com.capstone.timepay.domain.freeCommentReport.FreeCommentReport;
 import com.capstone.timepay.domain.user.TestUser;
+import com.capstone.timepay.domain.user.User;
 import lombok.*;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
@@ -27,6 +28,7 @@ public class FreeBoardComment extends BaseTimeEntity {
 
     @Column // (nullable = false)
     private String content;
+    private Long uid;
 
     @OneToMany(mappedBy = "freeBoardComment", orphanRemoval = true)
     private List<FreeCommentReport> freeCommentReports = new ArrayList<>();
@@ -34,7 +36,7 @@ public class FreeBoardComment extends BaseTimeEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="free_board_id")
     private FreeBoard freeBoard;
-
+   
     @ManyToOne
     @JoinColumn(name="user_id")
     private User user;
