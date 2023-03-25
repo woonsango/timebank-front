@@ -28,11 +28,14 @@ const KakaoRedirectHandler = () => {
   const fetchAuthorizationCode = async () => {
     axios({
       method: 'post',
-      url: 'http://localhost:5000/authorization',
+      url: 'http://localhost:8080/post',
       data: authorizationCode,
     })
       .then((res) => {
         console.log(res); //서버 응답
+        const response = res.data;
+        const code = response.authorizationCode;
+        console.log('response: ', code);
 
         //서버로부터 정상적으로 토큰이 넘어오면
         //! 토큰 저장하고?
@@ -47,9 +50,9 @@ const KakaoRedirectHandler = () => {
   const handleAuthorization = (props: any) => {
     setAuthorizationCode(props);
 
-    //fetchAuthorizationCode(); //서버 전송 테스트 함수
+    fetchAuthorizationCode(); //서버 전송 테스트 함수
 
-    handleLogin(PATH.JOIN); //서버 적용x
+    //handleLogin(PATH.JOIN); //서버 적용x
   };
 
   useEffect(() => {

@@ -2,6 +2,7 @@ export const PATH = {
   LOGIN: '/',
   REDIRECT: '/oauth/redirect/kakao',
   JOIN: '/join',
+  FINISHJOIN: '/finishJoin',
   HOME: '/home',
   SEARCH: '/search',
   MY: '/my',

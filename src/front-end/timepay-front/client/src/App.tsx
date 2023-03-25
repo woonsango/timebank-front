@@ -16,7 +16,12 @@ function App() {
             path={PATH.REDIRECT}
             element={<PageRoutes.kakaoRedirectHandler />}
           />
+
           <Route path={PATH.JOIN} element={<PageRoutes.JoinPage />} />
+          <Route
+            path={PATH.FINISHJOIN}
+            element={<PageRoutes.FinishJoinPage />}
+          />
 
           <Route element={<BaseLayout />}>
             <Route path={PATH.HOME} element={<PageRoutes.HomePage />} />
