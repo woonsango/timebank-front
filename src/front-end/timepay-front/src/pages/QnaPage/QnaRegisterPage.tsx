@@ -45,6 +45,7 @@ const QnaRegisterPage = () => {
   const handleSubmit = () => {
     // 게시글 작성 완료 처리
     console.log('문의글 등록');
+    navigate(-1);
   };
 
   return (
