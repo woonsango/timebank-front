@@ -37,6 +37,7 @@ function App() {
               path={PATH.Qna_Detail}
               element={<PageRoutes.QnaDetailPage />}
             />
+            <Route path={PATH.Posts} element={<PageRoutes.PostPage />} />
           </Route>
         </Routes>
       </ConfigProvider>
