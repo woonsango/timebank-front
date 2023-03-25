@@ -1,4 +1,4 @@
-package com.capstone.timepay.controller.admin.request;
+package com.capstone.timepay.controller.admin;
 
 import com.capstone.timepay.domain.admin.Admin;
 import com.capstone.timepay.model.AuthenticationRequest;

@@ -16,7 +16,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/admin/inquiry")
+@RequestMapping("api/admins/inquiry")
 public class InquiryManageController {
 
     private final InquiryManagerService inquiryManagerService;

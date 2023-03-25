@@ -15,9 +15,6 @@ spring:
         show_sql: true
         format_sql: false
         default_batch_fetch_size: 1000
-  mvc:
-    pathmatch:
-      matching-strategy: ant_path_matcher
 
 jwt:
   secret: '62ee24aa5950496692f0c633e26b58b062ee24aa5950496692f0c633e26b58b0'
