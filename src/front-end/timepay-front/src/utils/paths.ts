@@ -7,4 +7,5 @@ export const PATH = {
   Register_F: '/register/free',
   Qna_List: '/qna',
   Qna_Register: '/qna/register',
+  Qna_Detail: '/qna/:id',
 };

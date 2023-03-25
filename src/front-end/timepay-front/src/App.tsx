@@ -33,6 +33,10 @@ function App() {
               path={PATH.Qna_Register}
               element={<PageRoutes.QnaRegisterPage />}
             />
+            <Route
+              path={PATH.Qna_Detail}
+              element={<PageRoutes.QnaDetailPage />}
+            />
           </Route>
         </Routes>
       </ConfigProvider>
