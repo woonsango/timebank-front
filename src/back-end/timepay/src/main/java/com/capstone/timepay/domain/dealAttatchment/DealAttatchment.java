@@ -23,6 +23,6 @@ public class DealAttatchment extends BaseTimeEntity {
     private String imageUrl;
 
     @ManyToOne
-    @JoinColumn(name="d_board_id")
+    @JoinColumn(name="deal_board_id")
     private DealBoard dealBoard;
 }

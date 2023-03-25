@@ -5,7 +5,6 @@ import com.capstone.timepay.domain.dealBoardComment.DealBoardComment;
 import com.capstone.timepay.domain.dealBoardReport.DealBoardReport;
 import com.capstone.timepay.domain.dealCommentReport.DealCommentReport;
 import com.capstone.timepay.domain.dealRegister.DealRegister;
-import com.capstone.timepay.domain.freeBoard.FreeBoard;
 import com.capstone.timepay.domain.freeBoardComment.FreeBoardComment;
 import com.capstone.timepay.domain.freeBoardReport.FreeBoardReport;
 import com.capstone.timepay.domain.freeCommentReport.FreeCommentReport;
@@ -13,21 +12,16 @@ import com.capstone.timepay.domain.freeRegister.FreeRegister;
 import com.capstone.timepay.domain.inquiry.Inquiry;
 import com.capstone.timepay.domain.userProfile.UserProfile;
 import com.capstone.timepay.domain.userToken.UserToken;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import org.hibernate.annotations.Cache;
+import lombok.*;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Getter
+@Data
 @Entity
 public class User extends BaseTimeEntity {
 
@@ -38,18 +32,19 @@ public class User extends BaseTimeEntity {
     @Column
     private String name;
     private String sex;
-    private LocalDateTime birthday;
+    private String birthday; // 카카오 API에서 String으로 제공함
     private String location;
     private String phone;
     private String nickname;
     private String email;
+    private Long uid;
     private boolean isBanned;
 
     @OneToMany(mappedBy = "user", orphanRemoval = true)
     private List<Inquiry> inquiries = new ArrayList<>();
 
-    @OneToMany(mappedBy = "user", orphanRemoval = true)
-    private List<DealBoardComment> dealBoardComments = new ArrayList<>();
+//    @OneToMany(mappedBy = "user", orphanRemoval = true)
+//    private List<DealBoardComment> dealBoardComments = new ArrayList<>();
 
     @OneToMany(mappedBy = "user", orphanRemoval = true)
     private List<DealRegister> dealRegisters = new ArrayList<>();
