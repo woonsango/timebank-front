@@ -274,7 +274,7 @@ const SearchHeader = () => {
               )}
             </Form.Item>
 
-            {/* RangePicker 로 넣은 경우 모바일 브라우저보다 크게 나와서 DatePicker로 2개 받음 */}
+            {/* RangePicker 로 넣은 경우 모바일 브라우저보다 크게 나와서 시작 일시, 끝 일시를 따로 받음*/}
             <Form.Item className="date-time-form" label="활동시작 시간">
               <Form.Item name="startDate">
                 <DatePicker
