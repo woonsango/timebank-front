@@ -37,6 +37,7 @@ const SimplePostCard = ({ post }: SimplePostCardProps) => {
         endTime: post?.endTime,
         region: post?.region,
         attachment: post?.attachment,
+        user: post?.user?.name,
       },
     });
   };
