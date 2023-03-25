@@ -2,10 +2,7 @@ package com.capstone.timepay.service.board.service;
 
 import com.capstone.timepay.domain.dealBoard.DealBoard;
 import com.capstone.timepay.domain.dealBoard.DealBoardRepository;
-import com.capstone.timepay.domain.freeBoard.FreeBoard;
-import com.capstone.timepay.domain.user.TestUser;
 import com.capstone.timepay.service.board.dto.DealBoardDTO;
-import com.capstone.timepay.service.board.dto.FreeBoardDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

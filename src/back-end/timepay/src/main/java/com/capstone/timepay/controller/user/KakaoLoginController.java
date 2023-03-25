@@ -1,6 +1,6 @@
 package com.capstone.timepay.controller.user;
 
-import com.capstone.timepay.service.user.KakaoLoginService;
+import com.capstone.timepay.service.user.service.KakaoLoginService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

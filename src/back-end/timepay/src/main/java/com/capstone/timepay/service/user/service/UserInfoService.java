@@ -1,4 +1,4 @@
-package com.capstone.timepay.service.user;
+package com.capstone.timepay.service.user.service;
 
 import com.capstone.timepay.controller.user.request.RequestDTO;
 import com.capstone.timepay.domain.user.User;
@@ -88,7 +88,7 @@ public class UserInfoService {
         String nickname = userData.getNickName();
         String location = userData.getLocation();
         String phone = userData.getPhone();
-        String birthday = userData.getBirthday();
+        LocalDateTime birthday = userData.getBirthday();
 
         /* 여기 아래부터 받은 데이터가 있는 것들만 찾습니다. */
         if(name != null)

@@ -43,7 +43,7 @@ public class FreeBoardCommentService {
     @Transactional(readOnly = true)
     public List<FreeBoardCommentDTO> getComments(Long boardId)
     {
-        List<FreeBoardComment> comments = freeBoardCommentRepository.findAllByFreeBoardId(boardId);
+        List<FreeBoardComment> comments = freeBoardCommentRepository.findAllByFreeBoard(freeBoardRepository.findById(boardId).get());
         List<FreeBoardCommentDTO> commentDTOS = new ArrayList<>();
 
         comments.forEach(s -> commentDTOS.add(FreeBoardCommentDTO.toFreeBoardCommentDTO(s)));

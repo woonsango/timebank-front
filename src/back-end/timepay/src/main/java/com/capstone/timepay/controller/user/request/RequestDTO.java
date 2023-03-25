@@ -5,6 +5,8 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.Data;
 
+import java.time.LocalDateTime;
+
 @Data
 @JsonNaming(value = PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class RequestDTO {
@@ -17,6 +19,6 @@ public class RequestDTO {
     private String location; // 지역
     private String phone; // 전화번호
     private String introduction; // 소개글
-    private String birthday; // 생일, 데이터 타입 변경 가능성 있음
+    private LocalDateTime birthday; // 생일, 데이터 타입 변경 가능성 있음
 }
 

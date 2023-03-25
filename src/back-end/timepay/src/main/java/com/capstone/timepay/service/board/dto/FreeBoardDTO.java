@@ -25,7 +25,7 @@ public class FreeBoardDTO
     public static FreeBoardDTO toFreeBoardDTO(FreeBoard freeBoard)
     {
         return new FreeBoardDTO(
-                freeBoard.getId(),
+                freeBoard.getF_boardId(),
                 freeBoard.getTitle(),
                 freeBoard.getContent(),
                 freeBoard.getCategory(),

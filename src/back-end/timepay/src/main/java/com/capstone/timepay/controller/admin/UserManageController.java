@@ -16,7 +16,7 @@ import javax.validation.Valid;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/admins/user-management")
+@RequestMapping("/api/admins/user-management")
 public class UserManageController {
 
     private final UserManageService userManageService;

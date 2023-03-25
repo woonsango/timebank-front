@@ -15,6 +15,7 @@ import com.capstone.timepay.domain.userToken.UserToken;
 import lombok.*;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,7 +33,7 @@ public class User extends BaseTimeEntity {
     @Column
     private String name;
     private String sex;
-    private String birthday; // 카카오 API에서 String으로 제공함
+    private LocalDateTime birthday; // 카카오 API에서 String으로 제공함
     private String location;
     private String phone;
     private String nickname;

@@ -4,7 +4,6 @@ import com.capstone.timepay.domain.dealBoard.DealBoard;
 import com.capstone.timepay.domain.dealBoard.DealBoardRepository;
 import com.capstone.timepay.domain.dealBoardComment.DealBoardComment;
 import com.capstone.timepay.domain.dealBoardComment.DealBoardCommentRepository;
-import com.capstone.timepay.domain.user.TestUser;
 import com.capstone.timepay.service.board.dto.DealBoardCommentDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -22,7 +21,7 @@ public class DealBoardCommentService {
 
     // 댓글 작성하기
     @Transactional
-    public DealBoardCommentDTO writeComment(Long boardId, DealBoardCommentDTO dealBoardCommentDTO, TestUser testUser)
+    public DealBoardCommentDTO writeComment(Long boardId, DealBoardCommentDTO dealBoardCommentDTO, Long uid)
     {
         DealBoardComment dealBoardComment = new DealBoardComment();
         dealBoardComment.setContent(dealBoardCommentDTO.getContent());
@@ -31,7 +30,7 @@ public class DealBoardCommentService {
             return new IllegalArgumentException("게시판을 찾을 수 없음");
         });
 
-        dealBoardComment.setTestUser(testUser);
+        dealBoardComment.setUid(uid);
         dealBoardComment.setDealBoard(dealBoard);
         dealBoardComment.setApplied(false);
         dealBoardComment.setAdopted(false);
@@ -47,7 +46,7 @@ public class DealBoardCommentService {
     @Transactional(readOnly = true)
     public List<DealBoardCommentDTO> getComments(Long boardId)
     {
-        List<DealBoardComment> comments = dealBoardCommentRepository.findAllByDealBoardCommentId(boardId);
+        List<DealBoardComment> comments = dealBoardCommentRepository.findAllByDealBoard(dealBoardRepository.findById(boardId).get());
         List<DealBoardCommentDTO> commentDTOS = new ArrayList<>();
 
         comments.forEach(s -> commentDTOS.add(DealBoardCommentDTO.toDealBoardCommentDTO(s)));

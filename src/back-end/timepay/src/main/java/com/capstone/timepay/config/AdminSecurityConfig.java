@@ -41,6 +41,7 @@ public class AdminSecurityConfig extends WebSecurityConfigurerAdapter {
         http.csrf().disable()
                 .authorizeRequests()
                 .antMatchers("/api/admins/login").permitAll()
+                .antMatchers("/api/admins/register").permitAll()
                 .antMatchers("/api/admins/**").authenticated()
                 .antMatchers(HttpMethod.POST, "/api/notifications/**").authenticated()
                 .anyRequest().permitAll().and()

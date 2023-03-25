@@ -1,12 +1,8 @@
 package com.capstone.timepay.domain.dealBoardComment;
 
 import com.capstone.timepay.domain.BaseTimeEntity;
-import com.capstone.timepay.domain.comment.Comment;
 import com.capstone.timepay.domain.dealBoard.DealBoard;
-import com.capstone.timepay.domain.dealBoardReport.DealBoardReport;
 import com.capstone.timepay.domain.dealCommentReport.DealCommentReport;
-import com.capstone.timepay.domain.freeBoard.FreeBoard;
-import com.capstone.timepay.domain.user.TestUser;
 import com.capstone.timepay.domain.user.User;
 import lombok.*;
 import org.hibernate.annotations.OnDelete;
@@ -25,7 +21,7 @@ import java.util.List;
 public class DealBoardComment extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long dealBoardCommentId;
+    private Long d_commentId;
 
     @Column(nullable = false)
     private String content;
@@ -33,19 +29,20 @@ public class DealBoardComment extends BaseTimeEntity {
     private boolean isAdopted;
     // 비공개여부
     private boolean isHidden;
+    private Long uid;
 
     @OneToMany(mappedBy = "dealBoardComment", orphanRemoval = true)
     private List<DealCommentReport> dealCommentReports = new ArrayList<>();
 
     @ManyToOne
-    @JoinColumn(name="deal_board_id")
+    @JoinColumn(name="d_boardId")
     @OnDelete(action = OnDeleteAction.CASCADE)
     private DealBoard dealBoard;
 
     @ManyToOne
     @JoinColumn(name="user_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
-    private TestUser testUser;
+    private User user;
 
 
 }

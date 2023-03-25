@@ -1,4 +1,4 @@
-package com.capstone.timepay.domain.annotation;
+package com.capstone.timepay.controller.board.annotation;
 
 
 import com.fasterxml.jackson.annotation.JsonInclude;

@@ -22,7 +22,7 @@ public class FreeBoardCommentDTO {
     public static FreeBoardCommentDTO toFreeBoardCommentDTO(FreeBoardComment freeBoardComment)
     {
         return new FreeBoardCommentDTO(
-                freeBoardComment.getFreeBoardCommentId(),
+                freeBoardComment.getF_commentId(),
                 freeBoardComment.getContent(),
                 freeBoardComment.getUid(),
                 freeBoardComment.getCreatedAt()

@@ -30,7 +30,7 @@ public class DealBoardDTO
     public static DealBoardDTO toDealBoardDTO(DealBoard dealBoard)
     {
         return new DealBoardDTO(
-                dealBoard.getDealBoardId(),
+                dealBoard.getD_boardId(),
                 dealBoard.getTitle(),
                 dealBoard.getState(),
                 dealBoard.getContent(),

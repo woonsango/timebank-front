@@ -12,11 +12,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.security.Principal;
 import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("api/admins/inquiry")
+@RequestMapping("/api/admins/inquiry")
 public class InquiryManageController {
 
     private final InquiryManagerService inquiryManagerService;

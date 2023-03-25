@@ -24,8 +24,8 @@ import java.util.List;
 public class FreeBoard extends BaseTimeEntity
 {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long f_boardId;
 
     @Column(nullable = false, length = 100)
     private String title;
