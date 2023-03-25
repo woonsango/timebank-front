@@ -13,7 +13,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/admin/comment")
+@RequestMapping("api/admins/comments")
 public class CommentManageController {
 
     private final CommentManageService commentManageService;

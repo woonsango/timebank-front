@@ -14,7 +14,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/admin/report")
+@RequestMapping("api/admins/reports")
 public class ReportManageController {
 
     private final ReportManageService reportManageService;
