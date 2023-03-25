@@ -1,6 +1,7 @@
 package com.capstone.timepay.domain.freeBoardComment;
 
 import com.capstone.timepay.domain.BaseTimeEntity;
+import com.capstone.timepay.domain.comment.Comment;
 import com.capstone.timepay.domain.freeBoard.FreeBoard;
 import com.capstone.timepay.domain.freeCommentReport.FreeCommentReport;
 import com.capstone.timepay.domain.user.TestUser;
@@ -34,8 +35,8 @@ public class FreeBoardComment extends BaseTimeEntity {
     @JoinColumn(name="free_board_id")
     private FreeBoard freeBoard;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="test_user_id")
-    @OnDelete(action = OnDeleteAction.CASCADE) // 연관된 유저가 삭제되면 같이 삭제
-    private TestUser testUser;
+    @ManyToOne
+    @JoinColumn(name="user_id")
+    private User user;
+
 }

@@ -6,6 +6,7 @@ import com.capstone.timepay.controller.admin.response.userManage.UserProfileResp
 import com.capstone.timepay.service.admin.UserManageService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,7 +16,7 @@ import javax.validation.Valid;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/admin/user-management")
+@RequestMapping("/admins/user-management")
 public class UserManageController {
 
     private final UserManageService userManageService;
@@ -31,12 +32,12 @@ public class UserManageController {
 
     @ApiOperation(value = "쿼리를 통한 유저 필터링 : 쿼리 ( name / email / nickname )")
     @GetMapping("/search")
-    public ResponseEntity<?> search(@RequestParam Long userId, @RequestParam String query){
+    public ResponseEntity<?> search(@RequestParam Long userId, @RequestParam String query, @RequestParam String value){
 
         List<MainResponse> responses = new ArrayList<>();
-        if(query.equals("name")) responses = userManageService.showAllUserListByName(userId, query);
-        else if(query.equals("email")) responses = userManageService.showAllUserListByEmail(userId, query);
-        else if(query.equals("nickname")) responses = userManageService.showAllUserListByNickname(userId, query);
+        if(query.equals("name")) responses = userManageService.showAllUserListByName(userId, value);
+        else if(query.equals("email")) responses = userManageService.showAllUserListByEmail(userId, value);
+        else if(query.equals("nickname")) responses = userManageService.showAllUserListByNickname(userId, value);
         else throw new IllegalArgumentException("잘못된 요청입니다.");
 
         return ResponseEntity.ok(responses);
@@ -59,7 +60,7 @@ public class UserManageController {
     }
 
     @ApiOperation(value = "유저 정보 수정")
-    @PatchMapping("/update")
+    @PatchMapping(value = "/update", consumes = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<?> updateUserInfo(@Valid @RequestBody UserInfoUpdateRequest request){
 
         userManageService.updateUserInfo(request.toServiceDto());
@@ -69,9 +70,11 @@ public class UserManageController {
 
     @ApiOperation(value = "유저 정보 삭제")
     @DeleteMapping("/delete")
-    public ResponseEntity<?> deleteUser(){
+    public ResponseEntity<?> deleteUser(@RequestParam Long userId){
 
-        return ResponseEntity.ok("");
+        userManageService.deleteUser(userId);
+
+        return ResponseEntity.ok("삭제되었습니다");
     }
 
     @ApiOperation(value = "유저 블랙리스트 등록")

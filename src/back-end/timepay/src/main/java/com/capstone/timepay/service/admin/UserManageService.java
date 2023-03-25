@@ -42,13 +42,13 @@ public class UserManageService {
                     .collect(Collectors.toList());
     }
 
-    public List<MainResponse> showAllUserListByName(Long userId, String query) {
+    public List<MainResponse> showAllUserListByName(Long userId, String value) {
 
         List<User> users = new ArrayList<>();
 
-        if(!ObjectUtils.isEmpty(userId) && !ObjectUtils.isEmpty(query)){
+        if(!ObjectUtils.isEmpty(userId) && !ObjectUtils.isEmpty(value)){
             User user = userRepository.findById(userId).orElseThrow(()->new IllegalArgumentException("존재하지 않는 회원입니다."));
-            if(user.getName().equals(query))
+            if(!user.getName().equals(value))
                 throw new IllegalArgumentException("존재하지 않는 회원입니다.");
             users.add(user);
         }
@@ -56,8 +56,8 @@ public class UserManageService {
             User user = userRepository.findById(userId).orElseThrow(()->new IllegalArgumentException("존재하지 않는 회원입니다."));
             users.add(user);
         }
-        else if(!ObjectUtils.isEmpty(query)){
-            users = userRepository.findAllByName(query).orElseThrow(()->new IllegalArgumentException("존재하지 않는 회원입니다."));
+        else if(!ObjectUtils.isEmpty(value)){
+            users = userRepository.findAllByName(value).orElseThrow(()->new IllegalArgumentException("존재하지 않는 회원입니다."));
         }
         else{
             users = userRepository.findAll();
@@ -82,7 +82,7 @@ public class UserManageService {
 
         if(!ObjectUtils.isEmpty(userId) && !ObjectUtils.isEmpty(query)){
             User user = userRepository.findById(userId).orElseThrow(()->new IllegalArgumentException("존재하지 않는 회원입니다."));
-            if(user.getName().equals(query))
+            if(!user.getEmail().equals(query))
                 throw new IllegalArgumentException("존재하지 않는 회원입니다.");
             users.add(user);
         }
@@ -116,7 +116,7 @@ public class UserManageService {
 
         if(!ObjectUtils.isEmpty(userId) && !ObjectUtils.isEmpty(query)){
             User user = userRepository.findById(userId).orElseThrow(()->new IllegalArgumentException("존재하지 않는 회원입니다."));
-            if(user.getName().equals(query))
+            if(!user.getNickname().equals(query))
                 throw new IllegalArgumentException("존재하지 않는 회원입니다.");
             users.add(user);
         }
@@ -153,6 +153,11 @@ public class UserManageService {
         user.updateName(userInfo.getName());
         user.updateLocation(userInfo.getRegion());
 
+        log.info(user.getName());
+        log.info(user.getLocation());
+        log.info(user.getNickname());
+        log.info(user.getBirthday().toString());
+
         userRepository.save(user);
 
     }
@@ -163,5 +168,9 @@ public class UserManageService {
 
         return new UserProfileResponse(user.getUserProfile().getImageUrl());
 
+    }
+
+    public void deleteUser(Long userId) {
+        userRepository.deleteById(userId);
     }
 }
