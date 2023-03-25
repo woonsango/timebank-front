@@ -7,10 +7,8 @@ import com.capstone.timepay.domain.dealBoardReport.DealBoardReport;
 import com.capstone.timepay.domain.dealCommentReport.DealCommentReport;
 import com.capstone.timepay.domain.dealRegister.DealRegister;
 import com.capstone.timepay.domain.notification.Notification;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import com.capstone.timepay.domain.user.TestUser;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -21,21 +19,35 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
+@Setter
 @Entity
 public class DealBoard extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long d_boardId;
+    private Long dealBoardId;
 
-    @Column
+    @Column(nullable = false)
     private String title;
+
+    @Column(nullable = false)
     private String state;
+
+    @Lob
+    @Column(nullable = false)
     private String content;
     private String category;
     private String location;
     private LocalDateTime startTime;
     private LocalDateTime endTime;
     private int pay;
+
+    // 숨김처리
+    @Column
+    private boolean isHidden;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private TestUser testUser;
 
     @OneToMany(mappedBy = "dealBoard", orphanRemoval = true)
     private List<DealBoardComment> dealBoardComments = new ArrayList<>();
