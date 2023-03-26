@@ -26,7 +26,7 @@ const LoginPage = () => {
     [navigate],
   );
 
-  const iconimg = <img width={300} src={kakao_login_logo}></img>;
+  //const iconimg = <img width={300} src={kakao_login_logo}></img>;
   const { Text } = Typography;
 
   return (
@@ -75,7 +75,7 @@ const LoginPage = () => {
         block
         className="kakaoBtn"
         href={KAKAO_AUTH_URL}
-        icon={iconimg}
+        icon={<img width={300} src={kakao_login_logo}></img>}
         css={css`
           margin-top: 30px;
         `}

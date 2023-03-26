@@ -7,7 +7,7 @@ import { css } from 'styled-components';
 const FinishJoinPage = () => {
   const navigate = useNavigate(); //history
 
-  const GoToHome = useCallback(
+  const goToHome = useCallback(
     (path: string) => {
       navigate(path);
     },
@@ -31,7 +31,7 @@ const FinishJoinPage = () => {
         <Button
           type="primary"
           onClick={() => {
-            GoToHome(PATH.HOME);
+            goToHome(PATH.HOME);
           }}
         >
           홈으로 가기

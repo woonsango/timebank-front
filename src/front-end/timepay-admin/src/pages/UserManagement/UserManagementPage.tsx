@@ -264,6 +264,8 @@ const UserManagementPage = () => {
   const [filter, setFilter] = useState<string>();
   const [modalBlackList, setModalBlackList] = useState(false);
   const [modalDelUser, setModalDelUser] = useState(false);
+  const [searchFilter, setSearchFilter] = useState<string>();
+  const [userUid, setUserUid] = useState<number>();
 
   const onChangeFilter = (value: string) => {
     setFilter(value);
@@ -309,6 +311,17 @@ const UserManagementPage = () => {
   };
   const hasSelected = selectedRowKeys.length > 0;
 
+  /*필터 검색*/
+  const handleSearchBtn = () => {};
+
+  const onChangeSearchFilter = (value: any) => {
+    setSearchFilter(value);
+  };
+
+  const onChangeSearchUid = (value: any) => {
+    setUserUid(value);
+  };
+
   return (
     <div>
       <Space direction="vertical" css={topWrapperCSS}>
@@ -323,17 +336,24 @@ const UserManagementPage = () => {
                 { value: '닉네임', label: '닉네임' },
               ]}
             />
-            <Input style={{ width: 170, marginLeft: 20 }} />
+            <Input
+              style={{ width: 170, marginLeft: 20 }}
+              onChange={onChangeSearchFilter}
+            />
             <Text strong style={{ marginLeft: 90 }}>
               회원 번호
             </Text>
-            <Input style={{ width: 170, marginLeft: 20 }} />
+            <Input
+              style={{ width: 170, marginLeft: 20 }}
+              onChange={onChangeSearchUid}
+            />
             <Button
               css={css`
                 background: gray;
               `}
               style={{ width: 80, marginLeft: 70 }}
               type="primary"
+              onClick={handleSearchBtn}
             >
               검색
             </Button>
