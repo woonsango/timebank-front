@@ -2,7 +2,6 @@ import { useCallback, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { ReactComponent as BackArrow } from '../../assets/images/icons/header-back-arrow.svg';
 import { cssMainHeaderStyle } from '../../components/MainHeader/MainHeader.styles';
-import { cssLine2Style } from '../QnaPage/QnaDetailPage.style';
 import {
   cssPostDetailPage,
   cssPostDetailFirst,
@@ -26,9 +25,19 @@ import {
   cssPostDetailContent1,
   cssPostDetailContent2,
   cssPostDetailAttachment,
+  cssPostFooter,
+  cssPostDetail,
+  cssPostTextarea,
+  cssLine2,
+  cssPostBtn,
+  cssPostFooter2,
 } from './PostPage.style';
 import PostStatusTag from '../../components/PostStatusTag';
 import { ClockCircleOutlined, FlagFilled } from '@ant-design/icons';
+import { Button, Layout } from 'antd';
+import TextArea from 'antd/es/input/TextArea';
+
+const Footer = Layout;
 
 const PostPage = () => {
   const navigate = useNavigate();
@@ -53,7 +62,7 @@ const PostPage = () => {
   }, [navigate]);
 
   return (
-    <div>
+    <Layout css={cssPostDetail}>
       <div css={cssMainHeaderStyle}>
         <BackArrow onClick={handleClickBack} />
         <span>{type}</span>
@@ -98,7 +107,17 @@ const PostPage = () => {
         </div>
         <div css={cssLine4} />
       </div>
-    </div>
+      <Footer css={cssPostFooter}>
+        <div css={cssLine2} />
+        <div css={cssPostFooter2}>
+          <TextArea
+            css={cssPostTextarea}
+            style={{ height: 100, width: '90%', fontSize: 20, resize: 'none' }}
+          ></TextArea>
+          <Button css={cssPostBtn}>등록</Button>
+        </div>
+      </Footer>
+    </Layout>
   );
 };
 export default PostPage;

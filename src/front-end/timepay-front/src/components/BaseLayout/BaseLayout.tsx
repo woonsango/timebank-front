@@ -16,12 +16,10 @@ const BaseLayout = () => {
   const isHome = useMemo(() => {
     return location.pathname === PATH.HOME;
   }, [location]);
-  const isnoFooter =
-    location.pathname === PATH.Register_F ||
-    location.pathname === PATH.Register_HR ||
-    location.pathname === PATH.Register_HS ||
-    location.pathname === PATH.Qna_List ||
-    location.pathname === PATH.Qna_Register;
+  const isFooter =
+    location.pathname === PATH.HOME ||
+    location.pathname === PATH.SEARCH ||
+    location.pathname === PATH.MY_PAGE;
 
   return (
     <Layout css={cssBaseLayoutStyle}>
@@ -33,7 +31,7 @@ const BaseLayout = () => {
       >
         <Outlet />
       </Layout.Content>
-      {isnoFooter ? null : <MainFooter />}
+      {isFooter ? <MainFooter /> : null}
     </Layout>
   );
 };

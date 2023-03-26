@@ -2,6 +2,14 @@ import { css } from '@emotion/react';
 import { COMMON_COLOR } from '../../styles/constants/colors';
 import '../../styles/fonts/pretendard/pretendard.css';
 
+export const cssPostDetail = css`
+  font-family: unset !important;
+  background: ${COMMON_COLOR.WHITE};
+  width: 100%;
+  height: 100vh;
+  display: flex;
+`;
+
 export const cssPostDetailPage = css`
   display: flex;
   flex-direction: column;
@@ -119,13 +127,45 @@ export const cssPostDetailContent2 = css`
   font-size: 18px;
   letter-spacing: 1.3px;
 `;
-export const cssPostDetailAttachment = css``;
+export const cssPostDetailAttachment = css`
+  margin-bottom: 90px;
+`;
+
+// footer
+export const cssPostFooter = css`
+  box-shadow: 0px -5px 2px 3px rgb(255, 255, 255, 0.5);
+  position: fixed;
+  width: 100%;
+  height: 100px;
+  bottom: 0;
+  padding: 0;
+  background-color: ${COMMON_COLOR.WHITE};
+`;
+export const cssPostFooter2 = css`
+  display: flex;
+  flex-direction: row;
+`;
+export const cssPostTextarea = css`
+  border: none;
+  :focus {
+    outline: none;
+  }
+`;
+export const cssPostBtn = css`
+  margin-top: 20px;
+  background-color: ${COMMON_COLOR.FONT1};
+  font-weight: 500;
+`;
 
 // lines
 export const cssLine1 = css`
   border-top: 1.5px solid ${COMMON_COLOR.FONT1};
   background-color: black;
   margin-top: 15px;
+`;
+export const cssLine2 = css`
+  border-top: 2px solid ${COMMON_COLOR.FONT4};
+  background-color: black;
 `;
 export const cssLine3 = css`
   border-top: 1.5px solid ${COMMON_COLOR.FONT1};
