@@ -3,6 +3,7 @@ import QnAManagementPage from './QnAManagement';
 import UserManagementPage from './UserManagement';
 import CategoryManagementPage from './CategoryManagement';
 import AdminManagementPage from './AdminManagement';
+import ReportManagementPage from './ReportManagement';
 
 const PageRoutes = {
   UserManagementPage,
@@ -10,6 +11,7 @@ const PageRoutes = {
   PostManagementPage,
   CategoryManagementPage,
   AdminManagementPage,
+  ReportManagementPage,
 };
 
 export default PageRoutes;
