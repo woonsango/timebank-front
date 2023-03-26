@@ -12,8 +12,8 @@ function App() {
     <RecoilRoot>
       <ConfigProvider theme={customTheme}>
         <Routes>
+          <Route index element={<PageRoutes.LoginPage />} />
           <Route element={<BaseLayout />}>
-            <Route index element={<PageRoutes.QnAManagementPage />} />
             <Route
               path={PATH.QNA_MANAGEMENT}
               element={<PageRoutes.QnAManagementPage />}
