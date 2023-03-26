@@ -18,7 +18,7 @@ const LoginPage = () => {
 
   const handleOnClickLoginBtn = () => {
     /*첫로그인 검증후 비밀번호 변경 페이지 접근 제어 추가예정*/
-    const firstLogin = true;
+    const firstLogin: boolean = true;
     firstLogin ? navigate('/password-edit') : navigate(`/post-management`);
   };
 
@@ -35,21 +35,19 @@ const LoginPage = () => {
           autoComplete="off"
           layout="vertical"
         >
-          <div>
-            <Form.Item
-              name="username"
-              rules={[{ required: true, message: '아이디를 입력해주세요.' }]}
-            >
-              <Input placeholder="아이디" />
-            </Form.Item>
+          <Form.Item
+            name="username"
+            rules={[{ required: true, message: '아이디를 입력해주세요.' }]}
+          >
+            <Input placeholder="아이디" />
+          </Form.Item>
 
-            <Form.Item
-              name="password"
-              rules={[{ required: true, message: '비밀번호를 입력해주세요.' }]}
-            >
-              <Input.Password placeholder="비밀번호" />
-            </Form.Item>
-          </div>
+          <Form.Item
+            name="password"
+            rules={[{ required: true, message: '비밀번호를 입력해주세요.' }]}
+          >
+            <Input.Password placeholder="비밀번호" />
+          </Form.Item>
 
           <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
             {/*로그인토큰 검증 아직 x */}
