@@ -13,6 +13,10 @@ function App() {
       <ConfigProvider theme={customTheme}>
         <Routes>
           <Route index element={<PageRoutes.LoginPage />} />
+          <Route
+            path={PATH.PASSWORD_EDIT}
+            element={<PageRoutes.PasswordEditPage />}
+          />
           <Route element={<BaseLayout />}>
             <Route
               path={PATH.QNA_MANAGEMENT}
