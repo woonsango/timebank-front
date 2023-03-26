@@ -1,4 +1,4 @@
-package com.capstone.timepay.model;
+package com.capstone.timepay.domain.dealCommentReport.model;
 
 import com.capstone.timepay.domain.admin.Admin;
 import lombok.Getter;

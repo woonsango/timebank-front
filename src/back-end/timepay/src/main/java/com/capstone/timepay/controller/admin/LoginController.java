@@ -1,8 +1,8 @@
 package com.capstone.timepay.controller.admin;
 
 import com.capstone.timepay.domain.admin.Admin;
-import com.capstone.timepay.model.AuthenticationRequest;
-import com.capstone.timepay.model.AuthenticationResponse;
+import com.capstone.timepay.domain.dealCommentReport.model.AuthenticationRequest;
+import com.capstone.timepay.domain.dealCommentReport.model.AuthenticationResponse;
 import com.capstone.timepay.service.admin.AdminDetailService;
 import com.capstone.timepay.utility.JwtUtils;
 import io.swagger.annotations.ApiOperation;
