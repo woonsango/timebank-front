@@ -24,6 +24,7 @@ import { PATH } from '../../utils/paths';
 import './Join_imageSet.css';
 
 import axios from 'axios';
+import { response } from 'express';
 
 /*행정동 타입 선언*/
 type DongName = keyof typeof dongData;
@@ -210,9 +211,9 @@ const JoinPage = () => {
     } else {
       let formData = new FormData();
       formData.append('user', profileImage);
-      /*
+
       formData.append('user', nickName);
-      formData.append('user', realName);
+      /*formData.append('user', realName);
       formData.append('user', town);
       formData.append('user', birth);
       formData.append('user', phoneNumber);
@@ -220,9 +221,17 @@ const JoinPage = () => {
 
       formData.append('user', uid);*/
 
+      let d = {
+        realname: realName,
+        nickname: nickName,
+      };
+
       await axios({
         method: 'post',
         url: 'http://localhost:8080/info',
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
         data: formData,
       })
         .then((result) => {
@@ -232,7 +241,6 @@ const JoinPage = () => {
         .catch((error) => {
           console.log(error);
         });
-
       GoToFinishJoinPage(PATH.FINISHJOIN);
     }
   };

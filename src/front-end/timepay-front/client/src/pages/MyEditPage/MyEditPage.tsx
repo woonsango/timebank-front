@@ -40,17 +40,7 @@ const MyEditPage: React.FC = () => {
   const handleFileChange = (e: any) => {
     const imageFile = e.target.files[0];
     console.log(imageFile);
-    if (imageFile !== null) {
-      setProfileImage(imageFile);
-      console.log('이미지:', profileImage);
-    } else {
-      setProfileImage(
-        'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png',
-      );
-      return;
-    }
 
-    //프로필 사진 시각화
     const fileReader = new FileReader();
     fileReader.onload = () => {
       if (fileReader.readyState == 2) {
@@ -180,7 +170,6 @@ const MyEditPage: React.FC = () => {
                 <input
                   type="file"
                   id="image_guide"
-                  src={profileImage}
                   accept="image/*"
                   onChange={handleFileChange}
                 />
