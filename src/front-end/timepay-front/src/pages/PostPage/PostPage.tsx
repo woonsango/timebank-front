@@ -31,11 +31,13 @@ import {
   cssLine2,
   cssPostBtn,
   cssPostFooter2,
+  cssLine5,
 } from './PostPage.style';
 import PostStatusTag from '../../components/PostStatusTag';
 import { ClockCircleOutlined, FlagFilled } from '@ant-design/icons';
 import { Button, Layout } from 'antd';
 import TextArea from 'antd/es/input/TextArea';
+import PostButton from '../../components/post/PostButton';
 
 const Footer = Layout;
 
@@ -109,8 +111,11 @@ const PostPage = () => {
       </div>
       <Footer css={cssPostFooter}>
         <div css={cssLine2} />
+        <PostButton />
+        <div css={cssLine5} />
         <div css={cssPostFooter2}>
           <TextArea
+            placeholder="댓글 입력창"
             css={cssPostTextarea}
             style={{ height: 100, width: '90%', fontSize: 20, resize: 'none' }}
           ></TextArea>

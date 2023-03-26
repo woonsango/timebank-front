@@ -128,7 +128,7 @@ export const cssPostDetailContent2 = css`
   letter-spacing: 1.3px;
 `;
 export const cssPostDetailAttachment = css`
-  margin-bottom: 90px;
+  margin-bottom: 10px;
 `;
 
 // footer
@@ -136,8 +136,9 @@ export const cssPostFooter = css`
   box-shadow: 0px -5px 2px 3px rgb(255, 255, 255, 0.5);
   position: fixed;
   width: 100%;
-  height: 100px;
+  height: 160px;
   bottom: 0;
+  margin: 0;
   padding: 0;
   background-color: ${COMMON_COLOR.WHITE};
 `;
@@ -145,6 +146,7 @@ export const cssPostFooter2 = css`
   display: flex;
   flex-direction: row;
 `;
+
 export const cssPostTextarea = css`
   border: none;
   :focus {
@@ -164,7 +166,7 @@ export const cssLine1 = css`
   margin-top: 15px;
 `;
 export const cssLine2 = css`
-  border-top: 2px solid ${COMMON_COLOR.FONT4};
+  border-top: 1.5px solid ${COMMON_COLOR.FONT1};
   background-color: black;
 `;
 export const cssLine3 = css`
@@ -178,4 +180,9 @@ export const cssLine4 = css`
   border-top: 5px solid ${COMMON_COLOR.FONT1};
   background-color: black;
   margin-top: 25px;
+  margin-bottom: 200px;
+`;
+export const cssLine5 = css`
+  border-top: 1.2px solid ${COMMON_COLOR.FONT4};
+  background-color: black;
 `;
