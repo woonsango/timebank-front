@@ -136,6 +136,14 @@ const PostTable = ({
         width: 120,
       },
       {
+        title: '작성자 회원번호',
+        key: 'userPk',
+        dataIndex: 'userPk',
+        width: 110,
+        sorter: (a: IPost, b: IPost) => a.user.userPk - b.user.userPk,
+        render: (_userPk: string, record: IPost) => record.user.userPk,
+      },
+      {
         title: '작성자 이름',
         key: 'userName',
         dataIndex: 'userName',
@@ -144,12 +152,12 @@ const PostTable = ({
         render: (_userName: string, record: IPost) => record.user.name,
       },
       {
-        title: '작성자 회원번호',
-        key: 'userPk',
-        dataIndex: 'userPk',
-        width: 110,
-        sorter: (a: IPost, b: IPost) => a.user.userPk - b.user.userPk,
-        render: (_userPk: string, record: IPost) => record.user.userPk,
+        title: '작성자 닉네임',
+        key: 'userNickname',
+        dataIndex: 'userNickname',
+        width: 100,
+        align: 'center',
+        render: (_userNickname: string, record: IPost) => record.user.nickname,
       },
       {
         title: '작성일시',
