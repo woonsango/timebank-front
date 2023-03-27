@@ -11,7 +11,7 @@ export const cssSearchHeaderStyle = css`
   gap: 10px;
   z-index: 120;
   background-color: ${COMMON_COLOR.WHITE};
-  border-bottom: 1px solid #cdcdcd;
+  border-bottom: 1px solid ${COMMON_COLOR.SILVER_GRAY};
   padding-bottom: 15px;
   .back-arrow {
     width: 20px;
