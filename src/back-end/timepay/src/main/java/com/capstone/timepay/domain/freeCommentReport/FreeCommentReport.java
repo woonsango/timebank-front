@@ -3,6 +3,7 @@ package com.capstone.timepay.domain.freeCommentReport;
 import com.capstone.timepay.domain.BaseTimeEntity;
 import com.capstone.timepay.domain.freeBoard.FreeBoard;
 import com.capstone.timepay.domain.freeBoardComment.FreeBoardComment;
+import com.capstone.timepay.domain.user.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -22,8 +23,12 @@ public class FreeCommentReport extends BaseTimeEntity {
 
     @Column
     private String content;
-
+    private String process;
     @ManyToOne
     @JoinColumn(name="f_comment_id")
     private FreeBoardComment freeBoardComment;
+
+    @ManyToOne
+    @JoinColumn(name="user_id")
+    private User user;
 }

@@ -3,6 +3,7 @@ package com.capstone.timepay.domain.notification;
 import com.capstone.timepay.domain.BaseTimeEntity;
 import com.capstone.timepay.domain.admin.Admin;
 import com.capstone.timepay.domain.freeBoard.FreeBoard;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -26,6 +27,7 @@ public class Notification extends BaseTimeEntity {
     private boolean isNotice;
     private String content;
     private String state;
+
 
     @ManyToOne
     @JoinColumn(name="admin_id")

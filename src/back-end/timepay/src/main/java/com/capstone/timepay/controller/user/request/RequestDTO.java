@@ -5,14 +5,14 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.Data;
 
+import java.time.LocalDateTime;
+
 @Data
 @JsonNaming(value = PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class RequestDTO {
     private Long uid; // 고유식별번호
-    @JsonProperty("image_url")
     private String imageUrl; // 프로필 이미지
     private String name; // 실명
-    @JsonProperty("nick_name")
     private String nickName; // 닉네임
     private String location; // 지역
     private String phone; // 전화번호

@@ -1,4 +1,4 @@
-package com.capstone.timepay.service.user;
+package com.capstone.timepay.service.user.service;
 
 import com.capstone.timepay.domain.user.User;
 import com.capstone.timepay.domain.user.UserRepository;

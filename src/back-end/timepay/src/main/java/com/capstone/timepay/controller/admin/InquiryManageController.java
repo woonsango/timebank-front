@@ -6,15 +6,18 @@ import com.capstone.timepay.controller.admin.response.inquiry.InquiryResponse;
 import com.capstone.timepay.service.admin.InquiryManagerService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.security.Principal;
 import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/admin/inquiry")
+@RequestMapping("/api/admins/inquiry")
 public class InquiryManageController {
 
     private final InquiryManagerService inquiryManagerService;
@@ -47,7 +50,7 @@ public class InquiryManageController {
         return ResponseEntity.ok(response);
     }
     @ApiOperation(value = "관리자 문의 답변 등록")
-    @PostMapping("/answer")
+    @PostMapping(value = "/answer", consumes = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<?> answerInquiry(@Valid @RequestBody InquiryAnswerRequest request){
 
         inquiryManagerService.saveInquiryAnswer(request.toServiceDto());

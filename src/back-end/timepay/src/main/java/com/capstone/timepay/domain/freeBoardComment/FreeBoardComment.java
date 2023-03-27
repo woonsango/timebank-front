@@ -4,10 +4,7 @@ import com.capstone.timepay.domain.BaseTimeEntity;
 import com.capstone.timepay.domain.freeBoard.FreeBoard;
 import com.capstone.timepay.domain.freeCommentReport.FreeCommentReport;
 import com.capstone.timepay.domain.user.User;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -17,6 +14,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
+@Setter
 @Entity
 public class FreeBoardComment extends BaseTimeEntity {
 
@@ -24,17 +22,19 @@ public class FreeBoardComment extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long f_commentId;
 
-    @Column
+    @Column // (nullable = false)
     private String content;
+    private Long uid;
 
     @OneToMany(mappedBy = "freeBoardComment", orphanRemoval = true)
     private List<FreeCommentReport> freeCommentReports = new ArrayList<>();
 
-    @ManyToOne
-    @JoinColumn(name="f_board_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="f_boardId")
     private FreeBoard freeBoard;
-
+   
     @ManyToOne
     @JoinColumn(name="user_id")
     private User user;
+
 }
