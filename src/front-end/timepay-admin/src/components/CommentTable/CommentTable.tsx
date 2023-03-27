@@ -85,6 +85,14 @@ const CommentTable = ({
         render: (text: string) => text || '-',
       },
       {
+        title: '작성자 회원번호',
+        key: 'userPk',
+        dataIndex: 'userPk',
+        width: 110,
+        sorter: (a: IComment, b: IComment) => b.user.userPk - a.user.userPk,
+        render: (_userPk: string, record: IComment) => record.user.userPk,
+      },
+      {
         title: '작성자 이름',
         key: 'userName',
         dataIndex: 'userName',
@@ -93,12 +101,13 @@ const CommentTable = ({
         render: (_userName: string, record: IComment) => record.user.name,
       },
       {
-        title: '작성자 회원번호',
-        key: 'userPk',
-        dataIndex: 'userPk',
-        width: 110,
-        sorter: (a: IComment, b: IComment) => b.user.userPk - a.user.userPk,
-        render: (_userPk: string, record: IComment) => record.user.userPk,
+        title: '작성자 닉네임',
+        key: 'nickname',
+        dataIndex: 'nickname',
+        width: 100,
+        align: 'center',
+        render: (_userNickname: string, record: IComment) =>
+          record.user.nickname,
       },
       {
         title: '작성일시',
