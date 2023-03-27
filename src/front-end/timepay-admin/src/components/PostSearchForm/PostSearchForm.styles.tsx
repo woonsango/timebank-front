@@ -18,10 +18,6 @@ export const cssPostSearchFormStyle = css`
     width: 100%;
     max-width: 120px;
   }
-  .ant-input {
-    width: 100%;
-    max-width: 250px;
-  }
   .ant-input-number {
     width: 100%;
     max-width: 150px;
