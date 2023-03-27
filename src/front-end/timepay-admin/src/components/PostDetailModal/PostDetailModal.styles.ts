@@ -1,4 +1,5 @@
 import { css } from '@emotion/react';
+import { COMMON_COLOR } from '../../styles/constants/colors';
 
 export const cssPostDetailModalStyle = css`
   .ant-modal-content {
@@ -17,7 +18,7 @@ export const cssPostDetailModalStyle = css`
     gap: 10px;
   }
   .post-detail-inner-container {
-    border: 1px solid #e5e5e5;
+    border: 1px solid ${COMMON_COLOR.FONT1};
     border-radius: 5px;
     padding: 10px;
   }

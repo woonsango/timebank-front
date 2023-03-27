@@ -3,7 +3,7 @@ import { COMMON_COLOR } from '../../styles/constants/colors';
 
 export const cssReportSearchFormStyle = css`
   padding: 20px;
-  border: 1px solid #cdcdcd;
+  border: 1px solid ${COMMON_COLOR.LIGHTGRAY};
   border-radius: 5px;
   width: 100%;
   .ant-form {
