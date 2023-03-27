@@ -2,7 +2,7 @@ import { Card } from 'antd';
 import { useCallback, useState } from 'react';
 import ReportSearchForm from '../../components/ReportSearchForm/ReportSearchForm';
 import ReportTable from '../../components/ReportTable';
-import { Item } from '../../interfaces/ReportItem';
+import { ReportItem } from '../../interfaces/ReportItem';
 import { cssReportManagementPageStyle } from './ReportManagementPage.styles';
 
 const ReportManagementPage = () => {

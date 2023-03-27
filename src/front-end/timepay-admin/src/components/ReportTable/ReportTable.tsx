@@ -6,14 +6,14 @@ import {
   cssReportTableRowCountStyle,
   cssReportTableStyle,
 } from './ReportTable.styles';
-import { Item } from '../../interfaces/ReportItem';
+import { ReportItem } from '../../interfaces/ReportItem';
 import ReportDetailModal from '../ReportDetailModal';
 
 const ReportTable = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [currentReport, setCurrentReport] = useState<Item>();
+  const [currentReport, setCurrentReport] = useState<ReportItem>();
 
-  const handleOnShowDetailReport = useCallback((report: Item) => {
+  const handleOnShowDetailReport = useCallback((report: ReportItem) => {
     setCurrentReport(report);
     setIsOpen(true);
   }, []);
@@ -23,7 +23,7 @@ const ReportTable = () => {
     setIsOpen(false);
   }, []);
 
-  const dummyDataSource: Item[] = [];
+  const dummyDataSource: ReportItem[] = [];
   for (let i = 0; i < 100; i++) {
     dummyDataSource.push({
       reportId: i,
@@ -40,14 +40,14 @@ const ReportTable = () => {
   }
 
   // @ts-ignore
-  const columns: ColumnsType<Item> = useMemo(() => {
+  const columns: ColumnsType<ReportItem> = useMemo(() => {
     return [
       {
         title: '신고 번호',
         key: 'reportId',
         dataIndex: 'reportId',
         width: 90,
-        sorter: (a: Item, b: Item) => a.reportId - b.reportId,
+        sorter: (a: ReportItem, b: ReportItem) => a.reportId - b.reportId,
       },
       {
         title: '신고자 이름',
@@ -73,7 +73,7 @@ const ReportTable = () => {
           { text: '댓글', value: '댓글' },
           { text: '게시글', value: '게시글' },
         ],
-        onFilter: (value: string, record: Item) =>
+        onFilter: (value: string, record: ReportItem) =>
           record.type.indexOf(value) === 0,
       },
       {
@@ -82,7 +82,7 @@ const ReportTable = () => {
         dataIndex: 'content',
         width: 150,
         align: 'center',
-        render: (_: string, record: Item) => (
+        render: (_: string, record: ReportItem) => (
           <Button type="link" onClick={() => handleOnShowDetailReport(record)}>
             더보기
           </Button>
@@ -101,7 +101,7 @@ const ReportTable = () => {
         dataIndex: 'postContent',
         width: 150,
         align: 'center',
-        render: (_: string, record: Item) => (
+        render: (_: string, record: ReportItem) => (
           <Button type="link" onClick={() => handleOnShowDetailReport(record)}>
             더보기
           </Button>
@@ -113,7 +113,7 @@ const ReportTable = () => {
         dataIndex: 'reportAt',
         width: 140,
         align: 'center',
-        sorter: (a: Item, b: Item) =>
+        sorter: (a: ReportItem, b: ReportItem) =>
           dayjs(a.reportAt).isAfter(dayjs(b.reportAt)),
       },
       {
@@ -133,7 +133,7 @@ const ReportTable = () => {
           { text: 'Y', value: 'Y' },
           { text: 'N', value: 'N' },
         ],
-        onFilter: (value: string, record: Item) =>
+        onFilter: (value: string, record: ReportItem) =>
           record.type.indexOf(value) === 0,
       },
     ];

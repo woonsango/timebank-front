@@ -1,4 +1,4 @@
-export interface Item {
+export interface ReportItem {
   reportId: number; //신고번호
   name: string; //신고자 이름
   number: number; //신고자 회원번호

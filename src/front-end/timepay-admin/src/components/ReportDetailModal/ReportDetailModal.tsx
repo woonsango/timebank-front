@@ -1,10 +1,10 @@
 import { Button, Modal } from 'antd';
 import { useMemo } from 'react';
-import { Item } from '../../interfaces/ReportItem';
+import { ReportItem } from '../../interfaces/ReportItem';
 import { cssReportDetailModalStyle } from './ReportDetailModal.styles';
 
 interface ReportDetailModalProps {
-  post?: Item;
+  post?: ReportItem;
   isOpen: boolean;
   onCancel: () => void;
 }
