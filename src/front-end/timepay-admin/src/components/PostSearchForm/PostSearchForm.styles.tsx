@@ -1,8 +1,9 @@
 import { css } from '@emotion/react';
+import { COMMON_COLOR } from '../../styles/constants/colors';
 
 export const cssPostSearchFormStyle = css`
   padding: 10px;
-  border: 1px solid #cdcdcd;
+  border: 1px solid ${COMMON_COLOR.SILVER_GRAY};
   border-radius: 5px;
   width: 100%;
   .ant-form {
@@ -29,6 +30,6 @@ export const cssPostSearchFormStyle = css`
   .ant-btn {
     width: 100%;
     max-width: 100px;
-    background-color: #858585;
+    background-color: ${COMMON_COLOR.FONT3};
   }
 `;
