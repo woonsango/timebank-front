@@ -31,7 +31,7 @@ public class FirebaseService {
         Blob blob = bucket.create(fileName, file.getBytes(), file.getContentType());
 
         // Firebase Storage에 업로드 된 이미지 URL return
-        return"https://storage.googleapis.com/" + bucket.getName() + "/" + blob.getName();
+        return "https://storage.googleapis.com/" + bucket.getName() + "/" + blob.getName();
     }
 
 }

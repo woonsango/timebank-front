@@ -18,6 +18,7 @@ public class ImageUploadTestService {
 
         // 이미지를 업로드하고 해당 url 저장
         String imageUrl = firebaseService.uploadFiles(image);
+        System.out.println(imageUrl);
 
         // 위의 url 주소를 저장할 테이블의 객체를 생성할 때 사용
         // ex ) UserProfile profile = UserProfile.builder().imageUrl(imageUrl). ........  . build();
