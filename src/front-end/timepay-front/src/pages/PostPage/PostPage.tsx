@@ -1,5 +1,5 @@
 import { useCallback, useState } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation, useParams } from 'react-router-dom';
 import { ReactComponent as BackArrow } from '../../assets/images/icons/header-back-arrow.svg';
 import { cssMainHeaderStyle } from '../../components/MainHeader/MainHeader.styles';
 import {
@@ -32,19 +32,28 @@ import {
   cssPostBtn,
   cssPostFooter2,
   cssLine5,
+  cssQnaDeleteStyle,
+  cssDeleteBtnStyle,
+  cssEditBtnStyle,
 } from './PostPage.style';
 import PostStatusTag from '../../components/PostStatusTag';
 import { ClockCircleOutlined, FlagFilled } from '@ant-design/icons';
 import { Button, Layout } from 'antd';
 import TextArea from 'antd/es/input/TextArea';
 import PostButton from '../../components/post/PostButton';
+import { IPost } from '../../api/interfaces/IPost';
+
+interface PostPageProps {
+  post?: IPost;
+}
 
 const Footer = Layout;
 
-const PostPage = () => {
+const PostPage = ({ post }: PostPageProps) => {
   const navigate = useNavigate();
   const location = useLocation();
   const {
+    id,
     type,
     title,
     content,
@@ -58,6 +67,25 @@ const PostPage = () => {
     region,
     user,
   } = location.state;
+
+  const handleEditPageChange = () => {
+    navigate(`/edit/${id}`, {
+      state: {
+        id,
+        type,
+        title,
+        content,
+        status,
+        category,
+        pay,
+        startTime,
+        endTime,
+        region,
+        attachment,
+        user,
+      },
+    });
+  };
 
   const handleClickBack = useCallback(() => {
     navigate(-1);
@@ -76,6 +104,13 @@ const PostPage = () => {
           <div css={cssPostDetailUser}>{user}</div>
         </div>
         <div css={cssLine1} />
+        <div css={cssQnaDeleteStyle}>
+          <Button css={cssEditBtnStyle} onClick={handleEditPageChange}>
+            수정
+          </Button>
+          <Button css={cssDeleteBtnStyle}>삭제</Button>
+        </div>
+        <div css={cssLine3} />
         <div css={cssPostDetailSecond}>
           <div css={cssPostDetailTitle}>{title}</div>
           <div css={cssPostDetailStatus}>
@@ -117,7 +152,12 @@ const PostPage = () => {
           <TextArea
             placeholder="댓글 입력창"
             css={cssPostTextarea}
-            style={{ height: 100, width: '90%', fontSize: 20, resize: 'none' }}
+            style={{
+              height: 100,
+              width: '90%',
+              fontSize: 20,
+              resize: 'none',
+            }}
           ></TextArea>
           <Button css={cssPostBtn}>등록</Button>
         </div>

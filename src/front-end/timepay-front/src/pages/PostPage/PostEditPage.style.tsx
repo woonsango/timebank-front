@@ -25,10 +25,10 @@ export const cssPostDetail = css`
   display: flex;
 `;
 
-export const cssPostDetailPage = css`
+export const cssPostEditPage = css`
   display: flex;
   flex-direction: column;
-  margin-top: 70px;
+  margin-top: 90px;
 `;
 
 // 1st block
@@ -54,21 +54,14 @@ export const cssPostDetailUser = css`
   margin-left: 65px;
   font-weight: 500;
 `;
-export const cssPostDetailCreatedAt = css`
-  display: flex;
-  justify-content: flex-end;
-  font-size: 15px;
-`;
 
 // 2nd block
-export const cssPostDetailSecond = css`
+export const cssPostEditSecond = css`
   margin-left: 25px;
   margin-right: 25px;
-  display: flex;
-  justify-content: space-between;
 `;
 export const cssPostDetailTitle = css`
-  margin-top: 25px;
+  margin-top: 20px;
   font-size: 22px;
   font-weight: 500;
 `;
@@ -133,12 +126,11 @@ export const cssPostDetailContent1 = css`
   font-size: 18px;
   font-weight: 500;
 `;
-export const cssPostDetailContent2 = css`
+export const cssPostEditContent2 = css`
   margin-top: 10px;
   padding: 10px;
-  border: 1.3px solid ${COMMON_COLOR.FONT1};
+  border: 1.5px solid ${COMMON_COLOR.MAIN1};
   border-radius: 10px;
-  background-color: ${COMMON_COLOR.GRAY};
   font-size: 18px;
   letter-spacing: 1.3px;
 `;
@@ -147,31 +139,49 @@ export const cssPostDetailAttachment = css`
 `;
 
 // footer
-export const cssPostFooter = css`
+export const cssPostEditFooter = css`
   box-shadow: 0px -5px 2px 3px rgb(255, 255, 255, 0.5);
   position: fixed;
   width: 100%;
-  height: 160px;
+  height: 70px;
   bottom: 0;
   margin: 0;
   padding: 0;
   background-color: ${COMMON_COLOR.WHITE};
 `;
-export const cssPostFooter2 = css`
+export const cssPostEditFooter2 = css`
   display: flex;
   flex-direction: row;
 `;
 
 export const cssPostTextarea = css`
-  border: none;
-  :focus {
-    outline: none;
-  }
+  margin-top: 10px;
+  padding: 10px;
+  border: 1.5px solid ${COMMON_COLOR.MAIN1};
+  border-radius: 10px;
+  font-size: 18px;
+  font-weight: 500;
+  letter-spacing: 1.3px;
 `;
-export const cssPostBtn = css`
-  margin-top: 20px;
+export const cssPostEditBtn1 = css`
+  width: 50%;
+  height: 70px;
   background-color: ${COMMON_COLOR.FONT1};
   font-weight: 500;
+  font-size: 19px;
+  border-radius: 0;
+  border: none;
+  background-color: ${COMMON_COLOR.FONT1};
+`;
+export const cssPostEditBtn2 = css`
+  width: 50%;
+  height: 70px;
+  background-color: ${COMMON_COLOR.FONT1};
+  font-weight: 500;
+  font-size: 19px;
+  border-radius: 0;
+  border: none;
+  background-color: ${COMMON_COLOR.MAIN1};
 `;
 
 // lines
@@ -191,12 +201,7 @@ export const cssLine3 = css`
   margin-left: 25px;
   margin-right: 25px;
 `;
-export const cssLine4 = css`
-  border-top: 5px solid ${COMMON_COLOR.FONT1};
-  background-color: black;
-  margin-top: 25px;
-  margin-bottom: 200px;
-`;
+
 export const cssLine5 = css`
   border-top: 1.2px solid ${COMMON_COLOR.FONT4};
   background-color: black;

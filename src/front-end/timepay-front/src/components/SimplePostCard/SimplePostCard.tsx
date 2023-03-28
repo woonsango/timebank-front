@@ -1,6 +1,6 @@
 import { Card, Spin } from 'antd';
 import { useCallback, useMemo } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { IPost } from '../../api/interfaces/IPost';
 import PostStatusTag from '../PostStatusTag';
 import {
@@ -26,6 +26,7 @@ const SimplePostCard = ({ post }: SimplePostCardProps) => {
   const handlePageChange = () => {
     navigate(`/post/${post?.postId}`, {
       state: {
+        id: post?.postId,
         type: post?.type,
         title: post?.title,
         content: post?.content,
