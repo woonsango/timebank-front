@@ -16,8 +16,8 @@ const ReportDetailModal = ({
   const footer = useMemo(() => {
     return (
       <div>
-        <Button type="primary"> 신고처리</Button>
-        <Button type="primary"> 신고반려</Button>
+        <Button type="primary">신고처리</Button>
+        <Button type="primary">신고반려</Button>
         <Button type="primary" onClick={onCancel}>
           닫기
         </Button>
