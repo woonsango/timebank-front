@@ -41,7 +41,7 @@ import PostStatusTag from '../../components/PostStatusTag';
 import { ClockCircleOutlined, FlagFilled } from '@ant-design/icons';
 import { Button, Layout } from 'antd';
 import TextArea from 'antd/es/input/TextArea';
-import { PostButton } from '../../components/post/PostButton';
+import PostButton from '../../components/post/PostButton';
 import { IPost } from '../../api/interfaces/IPost';
 
 interface PostPageProps {
