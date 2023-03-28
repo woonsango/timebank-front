@@ -4,6 +4,7 @@ import QnAManagementPage from './QnAManagement';
 import UserManagementPage from './UserManagement';
 import CategoryManagementPage from './CategoryManagement';
 import AdminManagementPage from './AdminManagement';
+import ReportManagementPage from './ReportManagement';
 import LoginPage from './Login';
 import PasswordEditPage from './PasswordEdit';
 
@@ -16,6 +17,7 @@ const PageRoutes = {
   CommentManagementPage,
   CategoryManagementPage,
   AdminManagementPage,
+  ReportManagementPage,
 };
 
 export default PageRoutes;

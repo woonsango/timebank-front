@@ -1,7 +1,6 @@
 import { css } from '@emotion/react';
-import { COMMON_COLOR } from '../../styles/constants/colors';
 
-export const cssPostDetailModalStyle = css`
+export const cssReportDetailModalStyle = css`
   .ant-modal-content {
     padding: 30px;
   }
@@ -12,24 +11,21 @@ export const cssPostDetailModalStyle = css`
     padding-top: 20px;
   }
 
-  .post-detail-container {
+  .reportContent {
     display: flex;
     flex-direction: column;
     gap: 10px;
   }
-  .post-detail-inner-container {
-    border: 1px solid ${COMMON_COLOR.FONT1};
+  .reportInnerContent {
+    border: 1px solid #e5e5e5;
     border-radius: 5px;
     padding: 10px;
   }
+
   .title {
     font-style: normal;
     font-weight: 700;
     font-size: 16px;
     line-height: 15px;
-  }
-  img {
-    width: 100%;
-    height: auto;
   }
 `;
