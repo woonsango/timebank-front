@@ -27,6 +27,10 @@ function App() {
               element={<PageRoutes.PostManagementPage />}
             />
             <Route
+              path={PATH.COMMENT_MANAGEMENT}
+              element={<PageRoutes.CommentManagementPage />}
+            />
+            <Route
               path={PATH.CATEGORY_MANAGEMENT}
               element={<PageRoutes.CategoryManagementPage />}
             />

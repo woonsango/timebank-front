@@ -1,7 +1,7 @@
 import { css } from '@emotion/react';
 import { COMMON_COLOR } from '../../styles/constants/colors';
 
-export const cssPostSearchFormStyle = css`
+export const cssCommentSearchFormStyle = css`
   padding: 10px;
   border: 1px solid ${COMMON_COLOR.SILVER_GRAY};
   border-radius: 5px;
@@ -18,6 +18,10 @@ export const cssPostSearchFormStyle = css`
   .ant-select {
     width: 100%;
     max-width: 120px;
+  }
+  .ant-input {
+    width: 100%;
+    max-width: 250px;
   }
   .ant-input-number {
     width: 100%;
