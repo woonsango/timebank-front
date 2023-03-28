@@ -2,8 +2,10 @@ import { css } from '@emotion/react';
 import { COMMON_COLOR } from '../../styles/constants/colors';
 
 export const cssReportSearchFormStyle = css`
-  padding: 20px;
-  border: 1px solid ${COMMON_COLOR.SLIVERGRAY};
+  padding-top: 30px;
+  padding-left: 20px;
+  padding-right: 20px;
+  border: 1px solid ${COMMON_COLOR.SLIVER_GRAY};
   border-radius: 5px;
   width: 100%;
   .ant-form {

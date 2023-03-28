@@ -14,35 +14,32 @@ const ReportSearchForm = () => {
     <div css={cssReportSearchFormStyle}>
       <Form layout="horizontal">
         <Row>
-          <Form.Item name="reportNumber" label="신고번호">
-            <Input style={{ width: 130 }} placeholder="신고번호 입력" />
+          <Form.Item
+            name="reportName"
+            style={{ marginRight: 15 }}
+            label="신고자 이름"
+          >
+            <Input style={{ width: 120 }} placeholder="이름 입력" />
           </Form.Item>
-          <Form.Item name="reportAuthorName" initialValue="name">
-            <Select>
-              <Select.Option value="name">이름</Select.Option>
-              <Select.Option value="userPk">회원번호</Select.Option>
-            </Select>
+          <Form.Item
+            name="reportNickname"
+            style={{ marginRight: 15 }}
+            label="신고자 닉네임"
+          >
+            <Input style={{ width: 120 }} placeholder="닉네임 입력" />
           </Form.Item>
-          <Form.Item name="authorSearchValue">
-            <Input placeholder="신고자 정보 입력" />
-          </Form.Item>
-          <Form.Item name="reportPostNumber" label="신고대상 글번호">
-            <Input style={{ width: 150 }} placeholder="신고게시글 번호 입력" />
-          </Form.Item>
-          <Form.Item name="regTime" label="작성시간">
-            <DatePicker.RangePicker />
-          </Form.Item>
-          <Form.Item name="reportPostList" initialValue="title">
+          <Form.Item name="reportPostType" initialValue="post">
             <Select style={{ width: 150 }}>
-              <Select.Option value="report">신고사유</Select.Option>
-              <Select.Option value="title">신고글 제목</Select.Option>
-              <Select.Option value="post">신고글 내용</Select.Option>
+              <Select.Option value="post">게시글 번호</Select.Option>
+              <Select.Option value="comment">댓글 번호</Select.Option>
             </Select>
           </Form.Item>
-          <Form.Item name="reportPostListValue">
-            <Input placeholder="신고 정보 입력" />
+          <Form.Item name="reportPostNumber">
+            <Input style={{ width: 150 }} placeholder="신고글 번호 입력" />
           </Form.Item>
-          <Button type="primary">검색</Button>
+          <Button style={{ marginLeft: 'auto' }} type="primary">
+            검색
+          </Button>
         </Row>
       </Form>
     </div>
