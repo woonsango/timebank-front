@@ -1,4 +1,5 @@
 import PostManagementPage from './PostManagement';
+import CommentManagementPage from './CommentManagement';
 import QnAManagementPage from './QnAManagement';
 import UserManagementPage from './UserManagement';
 import CategoryManagementPage from './CategoryManagement';
@@ -12,6 +13,7 @@ const PageRoutes = {
   UserManagementPage,
   QnAManagementPage,
   PostManagementPage,
+  CommentManagementPage,
   CategoryManagementPage,
   AdminManagementPage,
 };

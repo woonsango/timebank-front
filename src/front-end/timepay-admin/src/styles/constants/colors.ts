@@ -6,4 +6,6 @@ export const COMMON_COLOR = {
   FONT1: '#E5E5E5',
   FONT2: '#787878',
   LOGO1: '#FFC700',
+  FONT3: '#858585',
+  SILVER_GRAY: '#CDCDCD',
 };
