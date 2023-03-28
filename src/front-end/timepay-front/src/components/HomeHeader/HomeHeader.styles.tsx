@@ -10,7 +10,7 @@ export const cssHomeHeaderStyle = css`
   padding: 30px 20px 15px 20px;
 
   background-color: ${COMMON_COLOR.WHITE};
-  border-bottom: 1px solid #cdcdcd;
+  border-bottom: 1px solid ${COMMON_COLOR.SILVER_GRAY};
   display: flex;
   flex-direction: row;
   align-items: center;

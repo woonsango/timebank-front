@@ -1,4 +1,6 @@
 export const PATH = {
+  LOGIN: '/login',
+  PASSWORD_EDIT: '/password-edit',
   QNA_MANAGEMENT: '/qna-management',
   USER_MANAGEMENT: '/user-management',
   POST_MANAGEMENT: '/post-management',
