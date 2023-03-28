@@ -5,7 +5,7 @@ export const cssReportSearchFormStyle = css`
   padding-top: 30px;
   padding-left: 20px;
   padding-right: 20px;
-  border: 1px solid ${COMMON_COLOR.SLIVER_GRAY};
+  border: 1px solid ${COMMON_COLOR.SILVER_GRAY};
   border-radius: 5px;
   width: 100%;
   .ant-form {

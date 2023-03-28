@@ -5,5 +5,5 @@ export const COMMON_COLOR = {
   MAIN2: '#DF872D',
   FONT1: '#E5E5E5',
   FONT2: '#787878',
-  SLIVER_GRAY: '#CDCDCD',
+  SILVER_GRAY: '#CDCDCD',
 };
