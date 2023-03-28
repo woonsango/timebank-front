@@ -1,4 +1,4 @@
-import { useCallback, useState, useEffect } from 'react';
+import { useCallback, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Button, Layout } from 'antd';
 import TextArea from 'antd/es/input/TextArea';
@@ -134,7 +134,7 @@ const PostEditPage = ({ post }: PostProps) => {
           <TextArea
             defaultValue={content}
             css={cssPostEditContent2}
-            style={{ resize: 'none' }}
+            style={{ height: 200, resize: 'none' }}
           >
             {content}
           </TextArea>

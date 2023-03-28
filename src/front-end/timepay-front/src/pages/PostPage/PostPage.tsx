@@ -1,5 +1,6 @@
 import { useCallback, useState } from 'react';
-import { useNavigate, useLocation, useParams } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { Modal } from 'antd';
 import { ReactComponent as BackArrow } from '../../assets/images/icons/header-back-arrow.svg';
 import { cssMainHeaderStyle } from '../../components/MainHeader/MainHeader.styles';
 import {
@@ -40,7 +41,7 @@ import PostStatusTag from '../../components/PostStatusTag';
 import { ClockCircleOutlined, FlagFilled } from '@ant-design/icons';
 import { Button, Layout } from 'antd';
 import TextArea from 'antd/es/input/TextArea';
-import PostButton from '../../components/post/PostButton';
+import { PostButton } from '../../components/post/PostButton';
 import { IPost } from '../../api/interfaces/IPost';
 
 interface PostPageProps {
@@ -50,6 +51,8 @@ interface PostPageProps {
 const Footer = Layout;
 
 const PostPage = ({ post }: PostPageProps) => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   const navigate = useNavigate();
   const location = useLocation();
   const {
@@ -91,6 +94,18 @@ const PostPage = ({ post }: PostPageProps) => {
     navigate(-1);
   }, [navigate]);
 
+  const showModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleOk = () => {
+    setIsModalOpen(false);
+  };
+
+  const handleCancel = () => {
+    setIsModalOpen(false);
+  };
+
   return (
     <Layout css={cssPostDetail}>
       <div css={cssMainHeaderStyle}>
@@ -108,8 +123,18 @@ const PostPage = ({ post }: PostPageProps) => {
           <Button css={cssEditBtnStyle} onClick={handleEditPageChange}>
             수정
           </Button>
-          <Button css={cssDeleteBtnStyle}>삭제</Button>
+          <Button css={cssDeleteBtnStyle} onClick={showModal}>
+            삭제
+          </Button>
         </div>
+        <Modal
+          title="정말 종료로 상태를 변경하시겠습니까?"
+          open={isModalOpen}
+          onOk={handleOk}
+          onCancel={handleCancel}
+          okText="확인"
+          cancelText="취소"
+        ></Modal>
         <div css={cssLine3} />
         <div css={cssPostDetailSecond}>
           <div css={cssPostDetailTitle}>{title}</div>

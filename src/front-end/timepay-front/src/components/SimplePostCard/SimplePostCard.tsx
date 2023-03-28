@@ -1,6 +1,6 @@
 import { Card, Spin } from 'antd';
 import { useCallback, useMemo } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { IPost } from '../../api/interfaces/IPost';
 import PostStatusTag from '../PostStatusTag';
 import {
