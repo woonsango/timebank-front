@@ -9,4 +9,5 @@ export const PATH = {
   Qna_Register: '/qna/register',
   Qna_Detail: '/qna/:id',
   Posts: '/post/:id',
+  Posts_Edit: '/edit/:id',
 };

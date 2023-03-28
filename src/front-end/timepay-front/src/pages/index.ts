@@ -8,6 +8,7 @@ import QnaListPage from './QnaPage/QnaListPage';
 import QnaRegisterPage from './QnaPage/QnaRegisterPage';
 import QnaDetailPage from './QnaPage/QnaDetailPage';
 import PostPage from './PostPage/PostPage';
+import PostEditPage from './PostPage/PostEditPage';
 
 const PageRoutes = {
   HomePage,
@@ -20,6 +21,7 @@ const PageRoutes = {
   QnaRegisterPage,
   QnaDetailPage,
   PostPage,
+  PostEditPage,
 };
 
 export default PageRoutes;

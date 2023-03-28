@@ -38,6 +38,10 @@ function App() {
               element={<PageRoutes.QnaDetailPage />}
             />
             <Route path={PATH.Posts} element={<PageRoutes.PostPage />} />
+            <Route
+              path={PATH.Posts_Edit}
+              element={<PageRoutes.PostEditPage />}
+            />
           </Route>
         </Routes>
       </ConfigProvider>
