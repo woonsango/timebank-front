@@ -16,6 +16,28 @@ export const cssDeleteBtnStyle = css`
   letter-spacing: 2px;
   font-weight: 500;
 `;
+export const cssLikeContainer = css`
+  display: flex;
+  justify-content: flex-end;
+  font-size: 15px;
+  p {
+    margin: 0;
+    padding: 0;
+    margin-top: 10px;
+    margin-right: 10px;
+    font-size: 16px;
+    font-weight: 500;
+  }
+`;
+export const cssLike = css`
+  width: 45px;
+  height: 35px;
+  margin-top: 2px;
+  padding-top: 5px;
+  border: 1px solid ${COMMON_COLOR.FONT1};
+  border-radius: 5px;
+  background-color: ${COMMON_COLOR.WHITE};
+`;
 
 export const cssPostDetail = css`
   font-family: unset !important;
@@ -34,8 +56,7 @@ export const cssPostDetailPage = css`
 // 1st block
 export const cssPostDetailFirst = css`
   flex-direction: row;
-  margin-top: 10px;
-  margin-bottom: 15px;
+  margin-top: 10px;s
   margin-left: 25px;
   margin-right: 25px;
   font-size: 18px;
@@ -45,13 +66,14 @@ export const cssPostDetailProfile = css`
   justify-content: flex-start;
   width: 50px;
   height: 50px;
-  margin-top: -10px;
+  margin-top: 10px;
+  margin-left: 25px;
   border-radius: 25px;
   background-color: ${COMMON_COLOR.BLUE_GRAY};
 `;
 export const cssPostDetailUser = css`
   margin-top: -35px;
-  margin-left: 65px;
+  margin-left: 90px;
   font-weight: 500;
 `;
 export const cssPostDetailCreatedAt = css`

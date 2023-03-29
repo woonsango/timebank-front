@@ -36,6 +36,8 @@ import {
   cssQnaDeleteStyle,
   cssDeleteBtnStyle,
   cssEditBtnStyle,
+  cssLike,
+  cssLikeContainer,
 } from './PostPage.style';
 import PostStatusTag from '../../components/PostStatusTag';
 import { ClockCircleOutlined, FlagFilled } from '@ant-design/icons';
@@ -43,6 +45,8 @@ import { Button, Layout } from 'antd';
 import TextArea from 'antd/es/input/TextArea';
 import PostButton from '../../components/post/PostButton';
 import { IPost } from '../../api/interfaces/IPost';
+import { ReactComponent as LikeDefault } from '../../assets/images/icons/like_default.svg';
+import { ReactComponent as LikeClick } from '../../assets/images/icons/like_click.svg';
 
 interface PostPageProps {
   post?: IPost;
@@ -52,6 +56,7 @@ const Footer = Layout;
 
 const PostPage = ({ post }: PostPageProps) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [like, setLike] = useState(false);
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -106,6 +111,10 @@ const PostPage = ({ post }: PostPageProps) => {
     setIsModalOpen(false);
   };
 
+  const handleLike = () => {
+    setLike(!like);
+  };
+
   return (
     <Layout css={cssPostDetail}>
       <div css={cssMainHeaderStyle}>
@@ -117,6 +126,18 @@ const PostPage = ({ post }: PostPageProps) => {
           <div css={cssPostDetailCreatedAt}>{createdAt}</div>
           <div css={cssPostDetailProfile}></div>
           <div css={cssPostDetailUser}>{user}</div>
+          <div css={cssLikeContainer}>
+            <p>관심 </p>
+            {like === true ? (
+              <button css={cssLike} onClick={handleLike}>
+                <LikeClick />
+              </button>
+            ) : (
+              <button css={cssLike} onClick={handleLike}>
+                <LikeDefault />
+              </button>
+            )}
+          </div>
         </div>
         <div css={cssLine1} />
         <div css={cssQnaDeleteStyle}>
