@@ -28,6 +28,15 @@ function App() {
               path={PATH.Register_F}
               element={<PageRoutes.RegisterFreePage />}
             />
+            <Route path={PATH.Qna_List} element={<PageRoutes.QnaListPage />} />
+            <Route
+              path={PATH.Qna_Register}
+              element={<PageRoutes.QnaRegisterPage />}
+            />
+            <Route
+              path={PATH.Qna_Detail}
+              element={<PageRoutes.QnaDetailPage />}
+            />
           </Route>
         </Routes>
       </ConfigProvider>

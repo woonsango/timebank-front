@@ -4,6 +4,9 @@ import SearchPage from './SearchPage';
 import RegisterFreePage from './RegisterPage/RegisterFreePage';
 import RegisterRequestPage from './RegisterPage/RegisterRequestPage';
 import RegisterServePage from './RegisterPage/RegisterServePage';
+import QnaListPage from './QnaPage/QnaListPage';
+import QnaRegisterPage from './QnaPage/QnaRegisterPage';
+import QnaDetailPage from './QnaPage/QnaDetailPage';
 
 const PageRoutes = {
   HomePage,
@@ -12,6 +15,9 @@ const PageRoutes = {
   RegisterFreePage,
   RegisterRequestPage,
   RegisterServePage,
+  QnaListPage,
+  QnaRegisterPage,
+  QnaDetailPage,
 };
 
 export default PageRoutes;

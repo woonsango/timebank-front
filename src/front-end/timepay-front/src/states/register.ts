@@ -19,6 +19,10 @@ export const selectedTagsRequestState = atom<string[]>({
   key: 'selectedTagsRequestState',
   default: [],
 });
+export const selectedTagsQnaState = atom<string[]>({
+  key: 'selectedTagsQnaState',
+  default: [],
+});
 
 // dateRange
 export type DateRange = [Date | null, Date | null];
