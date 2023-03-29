@@ -28,6 +28,10 @@ function App() {
               path={PATH.Register_F}
               element={<PageRoutes.RegisterFreePage />}
             />
+            <Route
+              path={PATH.NOTIFICATION}
+              element={<PageRoutes.PushNotificationPage />}
+            />
           </Route>
         </Routes>
       </ConfigProvider>

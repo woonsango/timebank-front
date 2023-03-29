@@ -4,6 +4,7 @@ import SearchPage from './SearchPage';
 import RegisterFreePage from './RegisterPage/RegisterFreePage';
 import RegisterRequestPage from './RegisterPage/RegisterRequestPage';
 import RegisterServePage from './RegisterPage/RegisterServePage';
+import PushNotificationPage from './PushNotificationPage';
 
 const PageRoutes = {
   HomePage,
@@ -12,6 +13,7 @@ const PageRoutes = {
   RegisterFreePage,
   RegisterRequestPage,
   RegisterServePage,
+  PushNotificationPage,
 };
 
 export default PageRoutes;
