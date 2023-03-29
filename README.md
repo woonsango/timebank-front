@@ -29,41 +29,49 @@
 ### 한수연 (팀장)
 - student ID: 
 - E-mail: 
+- Github:
 - Role: 화면 디자인, Frontend
 
 ### 김명환
 - student ID: 
 - E-mail:
+- Github:
 - Role: Backend
 
 ### 김준영
 - student ID: 
 - E-mail:
+- Github:
 - Role: Backend
 
 ### 김하연
 - student ID: 
 - E-mail:
+- Github:
 - Role: Frontend
 
 ### 서준원
 - student ID: 
 - E-mail:
+- Github:
 - Role: Backend
 
 ### 이용훈
 - student ID: 
 - E-mail:
+- Github:
 - Role: Backend
 
 ### 이진
 - student ID: 
 - E-mail:
+- Github:
 - Role: Frontend
 
 ### 황세윤
 - student ID: 
 - E-mail:
+- Github:
 - Role: Frontend
 
 # :computer: 사용법
