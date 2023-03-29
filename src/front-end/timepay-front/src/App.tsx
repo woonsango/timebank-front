@@ -28,6 +28,10 @@ function App() {
               path={PATH.Register_F}
               element={<PageRoutes.RegisterFreePage />}
             />
+            <Route
+              path={PATH.NOTIFICATION}
+              element={<PageRoutes.PushNotificationPage />} 
+            />
             <Route path={PATH.Qna_List} element={<PageRoutes.QnaListPage />} />
             <Route
               path={PATH.Qna_Register}

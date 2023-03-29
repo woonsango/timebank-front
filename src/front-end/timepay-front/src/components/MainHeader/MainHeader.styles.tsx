@@ -27,4 +27,6 @@ export const cssMainHeaderStyle = css`
   .header-title {
     margin-top: 1px;
   }
+
+  z-index: 100;
 `;
