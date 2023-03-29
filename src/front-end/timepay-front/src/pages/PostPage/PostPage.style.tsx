@@ -79,7 +79,7 @@ export const cssPostDetailUser = css`
 export const cssPostDetailCreatedAt = css`
   display: flex;
   justify-content: flex-end;
-  font-size: 15px;
+  font-size: 16px;
 `;
 
 // 2nd block
@@ -168,6 +168,18 @@ export const cssPostDetailAttachment = css`
   margin-bottom: 10px;
 `;
 
+// comment
+export const cssCommentContainer = css`
+  margin-top: 10px;
+  margin-left: 25px;
+  margin-right: 25px;
+  margin-bottom: 200px;
+  p {
+    font-size: 22px;
+    font-weight: 500;
+  }
+`;
+
 // footer
 export const cssPostFooter = css`
   box-shadow: 0px -5px 2px 3px rgb(255, 255, 255, 0.5);
@@ -192,8 +204,19 @@ export const cssPostTextarea = css`
 `;
 export const cssPostBtn = css`
   margin-top: 20px;
+  margin-right: 10px;
+  width: 10%;
+  height: 40px;
+  border: none;
+  border-radius: 10px;
   background-color: ${COMMON_COLOR.FONT1};
   font-weight: 500;
+  font-size: 16px;
+  letter-spacing: 1.3px;
+  :active {
+    border: 1px solid ${COMMON_COLOR.FONT3};
+    background-color: ${COMMON_COLOR.GRAY};
+  }
 `;
 
 // lines
@@ -217,7 +240,6 @@ export const cssLine4 = css`
   border-top: 5px solid ${COMMON_COLOR.FONT1};
   background-color: black;
   margin-top: 25px;
-  margin-bottom: 200px;
 `;
 export const cssLine5 = css`
   border-top: 1.2px solid ${COMMON_COLOR.FONT4};

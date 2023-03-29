@@ -12,4 +12,6 @@ export const COMMON_COLOR = {
   GRAY: '#F4F4F4',
   CORAL: '#FF9574',
   NEON_GREEN: '#AFD939',
+  LIGHT_GRAY: '#E1E1E1',
+  SILVER_GRAY: '#CDCDCD',
 };

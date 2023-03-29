@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useState, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Modal } from 'antd';
 import { ReactComponent as BackArrow } from '../../assets/images/icons/header-back-arrow.svg';
@@ -38,18 +38,26 @@ import {
   cssEditBtnStyle,
   cssLike,
   cssLikeContainer,
+  cssCommentContainer,
 } from './PostPage.style';
 import PostStatusTag from '../../components/PostStatusTag';
 import { ClockCircleOutlined, FlagFilled } from '@ant-design/icons';
 import { Button, Layout } from 'antd';
-import TextArea from 'antd/es/input/TextArea';
 import PostButton from '../../components/post/PostButton';
 import { IPost } from '../../api/interfaces/IPost';
 import { ReactComponent as LikeDefault } from '../../assets/images/icons/like_default.svg';
 import { ReactComponent as LikeClick } from '../../assets/images/icons/like_click.svg';
 
+import Item from '../../components/post/Item';
+import InputText from '../../components/post/InputText';
+
 interface PostPageProps {
   post?: IPost;
+}
+
+interface TList {
+  id: number;
+  text: string;
 }
 
 const Footer = Layout;
@@ -57,6 +65,23 @@ const Footer = Layout;
 const PostPage = ({ post }: PostPageProps) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [like, setLike] = useState(false);
+
+  const [inputText, setInputText] = useState('');
+  const [tasks, setTasks] = useState<TList[]>([
+    {
+      id: 1,
+      text: '이거는 어떻게 해야하나요?',
+    },
+    {
+      id: 2,
+      text: '저 지원하고 싶네요~ 열심히 할수 있어요!',
+    },
+    {
+      id: 3,
+      text: '정확히 어디서 하는 건지 알려줘요',
+    },
+  ]);
+  const nextId = useRef(4);
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -113,6 +138,22 @@ const PostPage = ({ post }: PostPageProps) => {
 
   const handleLike = () => {
     setLike(!like);
+  };
+
+  // 입력값 변경 핸들러
+  const handleInputTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setInputText(e.target.value);
+  };
+
+  // 입력값 버튼 핸들러
+  const handleSubmitComment = (e: React.FormEvent<HTMLButtonElement>) => {
+    const newList: TList = {
+      id: nextId.current,
+      text: inputText,
+    };
+    setTasks(tasks.concat(newList));
+    setInputText('');
+    nextId.current += 1;
   };
 
   return (
@@ -189,23 +230,24 @@ const PostPage = ({ post }: PostPageProps) => {
           <div css={cssPostDetailAttachment}>{attachment}</div>
         </div>
         <div css={cssLine4} />
+        <div css={cssCommentContainer}>
+          <p>댓글</p>
+          <div>
+            {tasks.map((task) => (
+              <Item key={`${task.id}task`} id={task.id} text={task.text} />
+            ))}
+          </div>
+        </div>
       </div>
       <Footer css={cssPostFooter}>
         <div css={cssLine2} />
         <PostButton />
         <div css={cssLine5} />
         <div css={cssPostFooter2}>
-          <TextArea
-            placeholder="댓글 입력창"
-            css={cssPostTextarea}
-            style={{
-              height: 100,
-              width: '90%',
-              fontSize: 20,
-              resize: 'none',
-            }}
-          ></TextArea>
-          <Button css={cssPostBtn}>등록</Button>
+          <InputText onChange={handleInputTextChange} inputText={inputText} />
+          <button css={cssPostBtn} onClick={handleSubmitComment}>
+            등록
+          </button>
         </div>
       </Footer>
     </Layout>

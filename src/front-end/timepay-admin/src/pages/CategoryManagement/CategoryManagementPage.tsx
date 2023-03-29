@@ -5,7 +5,7 @@ import { Card } from 'antd';
 
 const CategoryManagementPage = () => {
   return (
-    <Card title="게시글 관리" css={cssCategoryManagementTitle}>
+    <Card title="카테고리 관리" css={cssCategoryManagementTitle}>
       <CategoryAdd />
       <CategoryTable />
     </Card>

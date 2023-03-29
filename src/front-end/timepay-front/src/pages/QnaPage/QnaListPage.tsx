@@ -208,8 +208,8 @@ const QnaListPage = () => {
         />
       </Link>
       <div style={{ marginTop: 70 }}>
-        {dummyData.map((qna, index) => (
-          <QnaList key={qna ? qna.qnaId : index} qna={qna} />
+        {dummyData.map((qna, qnaId) => (
+          <QnaList key={qnaId} qna={qna} />
         ))}
       </div>
     </div>
