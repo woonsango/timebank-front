@@ -16,11 +16,10 @@
 링크 걸어둘 예정   
 - Timepay Community 회의록 
 - Timepay Community 중간 발표 자료 PDF
-- Timepay Community 중간 소개 영상
 - Timepay Community 중간 보고서 PDF
 - Timepay Community 최종 발표 PDF
-- Timepay Community 최종 시연 영상
-- Timepay Community 최종 수행결과보고서 PDF
+- Timepay Community 최종 보고서 PDF
+- Timepay Community 수행결과보고서 PDF
 - Timepay Community 포스터 PDF
 
 
