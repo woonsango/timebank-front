@@ -34,6 +34,10 @@ function App() {
               path={PATH.ADMIN_MANAGEMENT}
               element={<PageRoutes.AdminManagementPage />}
             />
+            <Route
+              path={PATH.PUSH_MANAGEMENT}
+              element={<PageRoutes.PushManagementPage />}
+            />
           </Route>
         </Routes>
       </ConfigProvider>
