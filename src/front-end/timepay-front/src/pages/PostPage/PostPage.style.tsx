@@ -160,7 +160,6 @@ export const cssPostDetailContent2 = css`
   padding: 10px;
   border: 1.3px solid ${COMMON_COLOR.FONT1};
   border-radius: 10px;
-  background-color: ${COMMON_COLOR.GRAY};
   font-size: 18px;
   letter-spacing: 1.3px;
 `;

@@ -6,7 +6,7 @@ export const cssCommentItem = css`
   display: flex;
   flex-direction: row;
   width: 100%;
-  background-color: ${COMMON_COLOR.FONT1};
+  border: 1.3px solid ${COMMON_COLOR.LIGHT_GRAY};
   margin-bottom: 15px;
   padding: 15px;
   border-radius: 10px;
