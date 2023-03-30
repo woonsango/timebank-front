@@ -71,6 +71,6 @@
 # 문서 자료
 링크 걸어둘 예정 
 - [Figma](https://www.figma.com/file/VgaJP6q5Fygk1v46pwOoqR/TIMEPAY-1%EC%B0%A8).
-- [ERD Cloud]().
+- ERD Cloud
 
 
