@@ -1,37 +1,69 @@
-## Welcome to GitHub Pages
+# 타임페이 커뮤니티 (2023 다학제간캡스톤디자인 9팀)
 
-You can use the [editor on GitHub](https://github.com/kookmin-sw/cap-template/edit/master/index.md) to maintain and preview the content for your website in Markdown files.
+# :loudspeaker: 프로젝트 소개
+![Rogo1](https://user-images.githubusercontent.com/54920331/228437271-e60bb141-a33e-4dba-877f-504ced3551d6.png)
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
 
-### Markdown
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
 
-```markdown
-Syntax highlighted code block
+# :movie_camera: 소개 영상    
 
-# Header 1
-## Header 2
-### Header 3
+# :paperclip: 소개 자료
 
-- Bulleted
-- List
+링크 걸어둘 예정   
+- Timepay Community 회의록 
+- Timepay Community 중간 발표 자료 PDF
+- Timepay Community 중간 보고서 PDF
+- Timepay Community 최종 발표 PDF
+- Timepay Community 최종 보고서 PDF
+- Timepay Community 수행결과보고서 PDF
+- Timepay Community 포스터 PDF
 
-1. Numbered
-2. List
 
-**Bold** and _Italic_ and `Code` text
 
-[Link](url) and ![Image](src)
-```
+# :runner: 팀 소개
+### 한수연 (팀장)
+- student ID: ****1687
+- E-mail: suyunup57@gmail.com
+- Role: 화면 디자인, Frontend
 
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
+### 김명환
+- student ID: ****1582
+- E-mail: myeonghwan2@kookmin.ac.kr
+- Role: Backend
 
-### Jekyll Themes
+### 김준영
+- student ID: ****3049
+- E-mail: mrgentle1@kookmin.ac.kr
+- Role: Backend
 
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/kookmin-sw/cap-template/settings). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
+### 김하연
+- student ID: ****1581
+- E-mail: iioo3356@gmail.com
+- Role: Frontend
 
-### Support or Contact
+### 서준원
+- student ID: ****3384
+- E-mail: wnsdnjs700@gmail.com
+- Role: Backend
 
-Having trouble with Pages? Check out our [documentation](https://help.github.com/categories/github-pages-basics/) or [contact support](https://github.com/contact) and we’ll help you sort it out.
+### 이용훈
+- student ID: ****5301
+- E-mail: cjswl1357@kookmin.ac.kr
+- Role: Backend
+
+### 이진
+- student ID: ****1648
+- E-mail: leejin684@gmail.com
+- Role: Frontend
+
+### 황세윤
+- student ID: ****3167
+- E-mail: yoony0193@kookmin.ac.kr
+- Role: Frontend
+
+# :computer: 사용법
+
+
+
+
