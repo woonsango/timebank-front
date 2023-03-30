@@ -48,6 +48,7 @@ import { IPost } from '../../api/interfaces/IPost';
 import { ReactComponent as LikeDefault } from '../../assets/images/icons/like_default.svg';
 import { ReactComponent as LikeClick } from '../../assets/images/icons/like_click.svg';
 
+import { Comment } from '../../components/post/Comment';
 import Item from '../../components/post/Item';
 import InputText from '../../components/post/InputText';
 

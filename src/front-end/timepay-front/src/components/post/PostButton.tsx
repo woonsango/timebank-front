@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { Modal } from 'antd';
 import { cssPostButton, cssPostButtons } from './PostButton.style';
 
@@ -6,6 +6,26 @@ const PostButton = () => {
   const [buttonState, setButtonState] = useState<string>('start');
   const [prevButtonState, setPrevButtonState] = useState<string[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const buttonText = useMemo(() => {
+    switch (buttonState) {
+      case 'start':
+        return '활동시작';
+      case 'delayed':
+        return '활동지연';
+      case 'completed':
+        return '활동완료';
+      case 'end':
+      case 'pause':
+        return '종료';
+      case 'review':
+        return '후기';
+      case 'theEnd':
+        return '모든 활동이 끝난 게시글입니다 :)';
+      default:
+        return '';
+    }
+  }, [buttonState]);
 
   const onClickButton = (): void => {
     setPrevButtonState((prevState: string[]) => [...prevState, buttonState]);
@@ -78,13 +98,7 @@ const PostButton = () => {
           }}
           className={`${buttonState}`}
         >
-          {buttonState === 'start' && '활동시작'}
-          {buttonState === 'delayed' && '활동지연'}
-          {buttonState === 'completed' && '활동완료'}
-          {buttonState === 'end' && '종료'}
-          {buttonState === 'pause' && '종료'}
-          {buttonState === 'review' && '후기'}
-          {buttonState === 'theEnd' && '모든 활동이 끝난 게시글입니다 :)'}
+          {buttonText}
         </button>
       </div>
       <Modal

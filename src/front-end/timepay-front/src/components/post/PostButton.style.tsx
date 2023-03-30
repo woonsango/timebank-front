@@ -17,6 +17,9 @@ export const cssPostButton = css`
   border-radius: 5px;
   border: none;
   color: ${COMMON_COLOR.WHITE};
+  :hover {
+    color: ${COMMON_COLOR.WHITE};
+  }
   &.start {
     width: 95%;
     background-color: #ffa621;
