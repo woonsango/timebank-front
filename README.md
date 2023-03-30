@@ -6,9 +6,6 @@
 
 
 
-# :loudspeaker: Project Abstract
-
-
 # :movie_camera: 소개 영상    
 
 # :paperclip: 소개 자료
@@ -26,56 +23,46 @@
 
 # :runner: 팀 소개
 ### 한수연 (팀장)
-- student ID: 
-- E-mail: 
-- Github:
+- student ID: ****1687
+- E-mail: suyunup57@gmail.com
 - Role: 화면 디자인, Frontend
 
 ### 김명환
-- student ID: 
-- E-mail:
-- Github:
+- student ID: ****1582
+- E-mail: myeonghwan2@kookmin.ac.kr
 - Role: Backend
 
 ### 김준영
-- student ID: 
-- E-mail:
-- Github:
+- student ID: ****3049
+- E-mail: mrgentle1@kookmin.ac.kr
 - Role: Backend
 
 ### 김하연
-- student ID: 
-- E-mail:
-- Github:
+- student ID: ****1581
+- E-mail: iioo3356@gmail.com
 - Role: Frontend
 
 ### 서준원
-- student ID: 
-- E-mail:
-- Github:
+- student ID: ****3384
+- E-mail: wnsdnjs700@gmail.com
 - Role: Backend
 
 ### 이용훈
-- student ID: 
-- E-mail:
-- Github:
+- student ID: ****5301
+- E-mail: cjswl1357@kookmin.ac.kr
 - Role: Backend
 
 ### 이진
-- student ID: 
-- E-mail:
-- Github:
+- student ID: ****1648
+- E-mail: leejin684@gmail.com
 - Role: Frontend
 
 ### 황세윤
-- student ID: 
-- E-mail:
-- Github:
+- student ID: ****3167
+- E-mail: yoony0193@kookmin.ac.kr
 - Role: Frontend
 
 # :computer: 사용법
-
-소스코드제출시 설치법이나 사용법을 작성하세요.
 
 
 
