@@ -1,6 +1,6 @@
 import { BellOutlined, MenuOutlined } from '@ant-design/icons';
 import { Badge, Dropdown, MenuProps } from 'antd';
-import { useMemo } from 'react';
+import { useCallback, useMemo } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import {
   cssHomeHeaderMenuItemStyle,
@@ -101,6 +101,10 @@ const HomeHeader = () => {
     ];
   }, [currentPostType, navigate]);
 
+  const handleOnLinkNotification = useCallback(() => {
+    navigate(PATH.NOTIFICATION);
+  }, [navigate]);
+
   return (
     <div css={cssHomeHeaderStyle}>
       <Dropdown
@@ -116,7 +120,7 @@ const HomeHeader = () => {
         </div>
       </Dropdown>
       <Badge dot css={cssHomeHeaderNotificationStyle}>
-        <BellOutlined />
+        <BellOutlined onClick={handleOnLinkNotification} />
       </Badge>
     </div>
   );
