@@ -81,13 +81,13 @@
 # 7. 소개 자료
 
 링크 걸어둘 예정   
-- [Timepay Community 중간 발표 자료 PDF](https://docs.google.com/presentation/d/19nXZx3U4Oq5vQGxINCsUBJORwcco-KPZcU7yrmfJQTs/edit?usp=sharing)
-- Timepay Community 최종 발표 PDF
-- Timepay Community 포스터 PDF
+- 📒 [Timepay Community 중간 발표 자료 PDF](https://docs.google.com/presentation/d/19nXZx3U4Oq5vQGxINCsUBJORwcco-KPZcU7yrmfJQTs/edit?usp=sharing)
+- 📒 Timepay Community 최종 발표 PDF
+- 📒 Timepay Community 포스터 PDF
 
 # 8. 문서 자료
 링크 걸어둘 예정 
-- [Figma](https://www.figma.com/file/VgaJP6q5Fygk1v46pwOoqR/TIMEPAY-1%EC%B0%A8)
-- ERD Cloud
+- 📒 [Figma](https://www.figma.com/file/VgaJP6q5Fygk1v46pwOoqR/TIMEPAY-1%EC%B0%A8)
+- 📒 ERD Cloud
 
 
