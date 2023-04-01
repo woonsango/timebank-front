@@ -14,5 +14,12 @@ export const cssPushManagementTitle = css`
       justify-content: flex-end;
       gap: 10px;
     }
+    .createBtn {
+      width: 100px;
+      background-color: ${COMMON_COLOR.MAIN1};
+    }
+    .deleteBtn {
+      width: 100px;
+    }
   }
 `;
