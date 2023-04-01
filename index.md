@@ -15,12 +15,12 @@
 ### 한수연 (팀장)
 - student ID: ****1687
 - E-mail: suyunup57@gmail.com
-- Role: 화면 디자인, Frontend
+- Role: 팀장, UX/UI 디자인, Frontend admin
 
 ### 김명환
 - student ID: ****1582
 - E-mail: myeonghwan2@kookmin.ac.kr
-- Role: Backend
+- Role: Backend, 로그인 및 유저 관련 개발
 
 ### 김준영
 - student ID: ****3049
@@ -30,7 +30,7 @@
 ### 김하연
 - student ID: ****1581
 - E-mail: iioo3356@gmail.com
-- Role: Frontend
+- Role: 기획, 사용자 사이트, 관리자 사이트, Frontend 리드 및 개발
 
 ### 서준원
 - student ID: ****3384
@@ -45,7 +45,7 @@
 ### 이진
 - student ID: ****1648
 - E-mail: leejin684@gmail.com
-- Role: Frontend
+- Role: 기획, Frontend
 
 ### 황세윤
 - student ID: ****3167
@@ -53,7 +53,24 @@
 - Role: Frontend
 
 # 4. 기술 스택
-추후 추가 
+### 📚 Frontend
+
+### 📚 Backend
+|역할|종류|
+|-|-|
+|Framework|<img alt="RED" src ="https://img.shields.io/badge/SPRING-6DB33F.svg?&style=for-the-badge&logo=Spring&logoColor=white"/> <img alt="RED" src ="https://img.shields.io/badge/SPRING Boot-6DB33F.svg?&style=for-the-badge&logo=SpringBoot&logoColor=white"/>|
+|Database|<img alt="RED" src ="https://img.shields.io/badge/Mysql-4479A1.svg?&style=for-the-badge&logo=Mysql&logoColor=white"/>|
+|Programming Language|<img alt="RED" src ="https://img.shields.io/badge/JAVA-F7DF1E.svg?&style=for-the-badge&logo=Jameson&logoColor=white"/>|
+|API|![REST](https://img.shields.io/badge/Rest-0066B3?style=for-the-badge&logo=rest&logoColor=white)                                     
+|Version Control|![Git](https://img.shields.io/badge/git-E6484F.svg?style=for-the-badge&logo=git&logoColor=white) ![GitHub](https://img.shields.io/badge/github-%23121011.svg?style=for-the-badge&logo=github&logoColor=white) |
+<br />
+
+### 📚 Common
+|역할|종류|
+|-|-|
+|협업 관리|<img alt="RED" src ="https://img.shields.io/badge/Notion-000000.svg?&style=for-the-badge&logo=Notion&logoColor=white"/> |
+|디자인|<img alt="RED" src ="https://img.shields.io/badge/Figma-F24E1E.svg?&style=for-the-badge&logo=Figma&logoColor=white"/>|
+<br />
 
 # 5. 사용법          
 추후 추가 예정
@@ -64,7 +81,7 @@
 # 7. 소개 자료
 
 링크 걸어둘 예정   
-- [Timepay Community 중간 발표 자료 PDF](https://docs.google.com/presentation/d/1UiFGd1NZ43Rouw8zrfVBnSn59Qfl6Qwp7P88APq1qn0/edit#slide=id.g2106b719edc_0_0)
+- [Timepay Community 중간 발표 자료 PDF](https://docs.google.com/presentation/d/19nXZx3U4Oq5vQGxINCsUBJORwcco-KPZcU7yrmfJQTs/edit?usp=sharing)
 - Timepay Community 최종 발표 PDF
 - Timepay Community 포스터 PDF
 
