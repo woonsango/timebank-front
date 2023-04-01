@@ -12,13 +12,13 @@ import { IPush, IPushType } from '../../api/interfaces/IPush';
 interface PushTableProps {
   selectedPushIds?: React.Key[];
   setSelectedPushIds: (args?: React.Key[]) => void;
-  setSelectedPushs: (args?: IPush[]) => void;
+  setSelectedPushes: (args?: IPush[]) => void;
 }
 
 const PushTable = ({
   selectedPushIds,
   setSelectedPushIds,
-  setSelectedPushs,
+  setSelectedPushes,
 }: PushTableProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [currentPush, setCurrentPush] = useState<IPush>();
@@ -53,7 +53,7 @@ const PushTable = ({
         selectedRows,
       );
       setSelectedPushIds(selectedRowKeys);
-      setSelectedPushs(selectedRows);
+      setSelectedPushes(selectedRows);
     },
   };
 
