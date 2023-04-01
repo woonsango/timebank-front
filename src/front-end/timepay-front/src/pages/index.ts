@@ -8,6 +8,7 @@ import PushNotificationPage from './PushNotificationPage';
 import QnaListPage from './QnaPage/QnaListPage';
 import QnaRegisterPage from './QnaPage/QnaRegisterPage';
 import QnaDetailPage from './QnaPage/QnaDetailPage';
+import ActivityRecordPage from './ActivityRecordPage';
 
 const PageRoutes = {
   HomePage,
@@ -20,6 +21,7 @@ const PageRoutes = {
   QnaListPage,
   QnaRegisterPage,
   QnaDetailPage,
+  ActivityRecordPage,
 };
 
 export default PageRoutes;
