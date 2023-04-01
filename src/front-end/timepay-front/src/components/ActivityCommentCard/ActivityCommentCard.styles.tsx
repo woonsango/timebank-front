@@ -7,6 +7,8 @@ export const cssActivityCommentCardStyle = css`
   border-bottom: 1px solid ${COMMON_COLOR.FONT1};
   display: flex;
   flex-direction: column;
+  background-color: white;
+  margin-bottom: 5px;
   .activity-comment-content {
     font-style: normal;
     font-weight: 700;

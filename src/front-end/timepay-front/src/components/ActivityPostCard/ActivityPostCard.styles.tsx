@@ -7,7 +7,8 @@ export const cssActivityPostCardStyle = css`
   border-bottom: 1px solid ${COMMON_COLOR.FONT1};
   display: flex;
   flex-direction: column;
-
+  background-color: white;
+  margin-bottom: 5px;
   .activity-post-card-header {
     display: flex;
     flex-direction: row;
