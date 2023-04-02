@@ -74,14 +74,16 @@ public class UserManageController {
 
         userManageService.deleteUser(userId);
 
-        return ResponseEntity.ok("삭제되었습니다");
+        return ResponseEntity.ok("삭제되었습니다.");
     }
 
     @ApiOperation(value = "유저 블랙리스트 등록")
     @PostMapping("/blacklist")
-    public ResponseEntity<?> registerBlacklist(){
+    public ResponseEntity<?> registerBlacklist(@RequestParam Long userId){
 
-        return ResponseEntity.ok("");
+        userManageService.registerBlacklist(userId);
+
+        return ResponseEntity.ok("등록되었습니다.");
     }
 
 

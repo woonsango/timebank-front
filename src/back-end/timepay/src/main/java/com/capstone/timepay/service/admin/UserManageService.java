@@ -173,4 +173,13 @@ public class UserManageService {
     public void deleteUser(Long userId) {
         userRepository.deleteById(userId);
     }
+
+    public void registerBlacklist(Long userId) {
+
+        User user = userRepository.findById(userId).orElseThrow(()->new IllegalArgumentException("존재하지 않는 회원입니다."));
+        user.registerBlacklist();
+
+        userRepository.save(user);
+
+    }
 }

@@ -88,6 +88,9 @@ public class User extends BaseTimeEntity {
     public void updateLocation(String region) {
         this.location = region;
     }
+    public void registerBlacklist() {
+        this.isBanned = true;
+    }
 
 
 }
