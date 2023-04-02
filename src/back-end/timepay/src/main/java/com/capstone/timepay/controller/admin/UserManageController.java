@@ -83,7 +83,7 @@ public class UserManageController {
 
         userManageService.registerBlacklist(userId);
 
-        return ResponseEntity.ok("등록되었습니다.");
+        return ResponseEntity.ok("등록되었습니다."); 
     }
 
 
