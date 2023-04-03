@@ -166,7 +166,6 @@ const ActivityRecordPage = () => {
   }, [ACTIVITY_TAB_KEYS]);
 
   const items: TabsProps['items'] = useMemo(() => {
-    const newLocal = 'type';
     return [
       {
         key: ACTIVITY_TAB_KEYS.POST,
@@ -174,7 +173,7 @@ const ActivityRecordPage = () => {
         children: (
           <div>
             <Form form={postForm} css={cssHorizontalForm} layout="horizontal">
-              <Form.Item name={newLocal} style={{ width: 120 }} noStyle>
+              <Form.Item name="type" style={{ width: 120 }} noStyle>
                 <Select placeholder="유형 선택">
                   <Select.Option value="전체">전체</Select.Option>
                   <Select.Option value="도움주기">도움주기</Select.Option>
@@ -213,7 +212,7 @@ const ActivityRecordPage = () => {
               css={cssHorizontalForm}
               layout="horizontal"
             >
-              <Form.Item name={newLocal} style={{ width: 120 }} noStyle>
+              <Form.Item name="type" style={{ width: 120 }} noStyle>
                 <Select placeholder="유형 선택">
                   <Select.Option value="전체">전체</Select.Option>
                   <Select.Option value="지원">지원</Select.Option>
