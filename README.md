@@ -74,7 +74,6 @@
 |Database|<img alt="RED" src ="https://img.shields.io/badge/Mysql-4479A1.svg?&style=for-the-badge&logo=Mysql&logoColor=white"/>|
 |Programming Language|<img alt="RED" src ="https://img.shields.io/badge/JAVA-F7DF1E.svg?&style=for-the-badge&logo=Jameson&logoColor=white"/>|
 |API|![REST](https://img.shields.io/badge/Rest-0066B3?style=for-the-badge&logo=rest&logoColor=white)                                     
-|Version Control|![Git](https://img.shields.io/badge/git-E6484F.svg?style=for-the-badge&logo=git&logoColor=white) ![GitHub](https://img.shields.io/badge/github-%23121011.svg?style=for-the-badge&logo=github&logoColor=white) |
 <br />
 
 ### 📚 Common
@@ -82,6 +81,7 @@
 |-|-|
 |협업 관리|<img alt="RED" src ="https://img.shields.io/badge/Notion-000000.svg?&style=for-the-badge&logo=Notion&logoColor=white"/> |
 |디자인|<img alt="RED" src ="https://img.shields.io/badge/Figma-F24E1E.svg?&style=for-the-badge&logo=Figma&logoColor=white"/>|
+|Version Control|![Git](https://img.shields.io/badge/git-E6484F.svg?style=for-the-badge&logo=git&logoColor=white) ![GitHub](https://img.shields.io/badge/github-%23121011.svg?style=for-the-badge&logo=github&logoColor=white) |
 <br />
 
 
