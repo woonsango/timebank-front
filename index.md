@@ -102,11 +102,11 @@
   <th>역할</th>
   <th>종류</th>
   <tr>
-    <td>Framework</td>
+    <td><center>Framework</center></td>
     <td><img alt="RED" src ="https://img.shields.io/badge/SPRING-6DB33F.svg?&style=for-the-badge&logo=Spring&logoColor=white"/> <img alt="RED" src ="https://img.shields.io/badge/SPRING Boot-6DB33F.svg?&style=for-the-badge&logo=SpringBoot&logoColor=white"/></td>
   </tr>
   <tr>
-    <td>Database</td>
+    <td><strong>Database</strong></td>
     <td><img alt="RED" src ="https://img.shields.io/badge/Mysql-4479A1.svg?&style=for-the-badge&logo=Mysql&logoColor=white"/></td>
   </tr>
   <tr>
