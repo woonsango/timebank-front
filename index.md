@@ -102,7 +102,7 @@
     <th>종류</th>
     <tr>
       <td><strong>Library</strong></td>
-      <td><img alt="RED" src ="https://img.shields.io/badge/React-61DAFB.svg?&style=for-the-badge&logo=React&logoColor=white"/> <img alt="RED" src ="https://img.shields.io/badge/Ant Design-0170FE.svg?&style=for-the-badge&logo=AntDesign&logoColor=white"/></td>
+      <td><img alt="RED" src ="https://img.shields.io/badge/React-61DAFB.svg?&style=for-the-badge&logo=React&logoColor=white"/> </td>
     </tr>
     <tr>
       <td><strong>App</strong></td>
@@ -114,7 +114,7 @@
     </tr>
     <tr>
       <td><strong>UX/UI</strong></td>
-      <td><img alt="RED" src ="https://img.shields.io/badge/Figma-F24E1E?style=for-the-badge&logo=Figma&logoColor=white"/></td>
+      <td><img alt="RED" src ="https://img.shields.io/badge/Ant Design-0170FE.svg?&style=for-the-badge&logo=AntDesign&logoColor=white"/></td>
     </tr>
    </table>     
   </div>
