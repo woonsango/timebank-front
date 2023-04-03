@@ -99,11 +99,11 @@
 
 ### 📚 Backend
 <div style="text-align:center">
-  <table style="margin-left: auto; margin-right:auto;" border="1">
+  <table style="font-size:1.5em;" border="1">
     <th>역할</th>
     <th>종류</th>
     <tr>
-      <td>Framework</td>
+      <td><strong>Framework</strong></td>
       <td><img alt="RED" src ="https://img.shields.io/badge/SPRING-6DB33F.svg?&style=for-the-badge&logo=Spring&logoColor=white"/> <img alt="RED" src ="https://img.shields.io/badge/SPRING Boot-6DB33F.svg?&style=for-the-badge&logo=SpringBoot&logoColor=white"/></td>
     </tr>
     <tr>
@@ -124,19 +124,19 @@
 
 ### 📚 Common
 <div style="text-align:center">
-  <table style="margin-left: auto; margin-right: auto;" border="1">
+  <table style="font-size:1.5em;" border="1">
     <th>역할</th>
     <th>종류</th>
     <tr>
-      <td>협업 관리</td>
+      <td><strong>협업 관리</strong></td>
       <td><img alt="RED" src ="https://img.shields.io/badge/Notion-000000.svg?&style=for-the-badge&logo=Notion&logoColor=white"/></td>
     </tr>
     <tr>
-      <td>디자인</td>
+      <td><strong>디자인</strong></td>
       <td><img alt="RED" src ="https://img.shields.io/badge/Figma-F24E1E.svg?&style=for-the-badge&logo=Figma&logoColor=white"/></td>
     </tr>
     <tr>
-      <td>Version Control</td>
+      <td><strong>Version Control</strong></td>
       <td><img alt="RED" src ="https://img.shields.io/badge/git-E6484F.svg?style=for-the-badge&logo=git&logoColor=white"/>  <img alt="RED" src ="https://img.shields.io/badge/github-%23121011.svg?style=for-the-badge&logo=github&logoColor=white"/> </td>
     </tr>
    </table>  
