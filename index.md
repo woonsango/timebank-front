@@ -96,6 +96,29 @@
 # 4. 기술 스택
 ![기술스택](https://user-images.githubusercontent.com/55117730/229405717-55c8e2c0-da12-4653-b8c6-bc3e8d15bc89.png)
 ### 📚 Frontend
+<div style="text-align:center">
+  <table style="font-size:1.5em;" border="1">
+    <th>역할</th>
+    <th>종류</th>
+    <tr>
+      <td><strong>Library</strong></td>
+      <td><img alt="RED" src ="https://img.shields.io/badge/React-61DAFB.svg?&style=for-the-badge&logo=React&logoColor=white"/> <img alt="RED" src ="https://img.shields.io/badge/Ant Design-0170FE.svg?&style=for-the-badge&logo=AntDesign&logoColor=white"/></td>
+    </tr>
+    <tr>
+      <td><strong>App</strong></td>
+      <td><img alt="RED" src ="https://img.shields.io/badge/AndroidStudio-3DDC84.svg?&style=for-the-badge&logo=AndroidStudio&logoColor=white"/></td>
+    </tr>
+    <tr>
+      <td><strong>Programming Language</strong></td>
+      <td><img alt="RED" src ="https://img.shields.io/badge/TypeScript-3178C6.svg?&style=for-the-badge&logo=TypeScript&logoColor=white"/></td>
+    </tr>
+    <tr>
+      <td><strong>UX/UI</strong></td>
+      <td><img alt="RED" src ="https://img.shields.io/badge/Figma-F24E1E?style=for-the-badge&logo=Figma&logoColor=white"/></td>
+    </tr>
+   </table>     
+  </div>
+<br />
 
 ### 📚 Backend
 <div style="text-align:center">
@@ -142,6 +165,7 @@
    </table>  
   </div>
 <br />
+
 
 
 
