@@ -136,14 +136,18 @@ public class UserInfoService {
         findUser.setUpdatedAt(LocalDateTime.now());
         userRepository.save(findUser);
     }
-
+    /* api/users/create 하기 전 호출 시 에러 발생 */
+    /* 회원가입 전 회원조회 할 이유가 없다 생각하여 수정 X */
     public RequestDTO getUserInfo(Long uid){
         User userData = userRepository.findByUid(uid);
         UserProfile userProfileData = userProfileRepository.findByUid(uid);
         RequestDTO requestDTO = new RequestDTO();
+        String birthString = null;
 
-        /* LocalDateTime을 출력을 위한 String 형변환 */
-        String birthString = userData.getBirthday().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        if(userData.getBirthday() != null) {
+            /* LocalDateTime을 출력을 위한 String 형변환 */
+            birthString = userData.getBirthday().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        }
 
 
         /* 유저 테이블에서 데이터 가져오기 */
