@@ -98,45 +98,49 @@
 ### 📚 Frontend
 
 ### 📚 Backend
-<table border="stack">
-  <th>역할</th>
-  <th>종류</th>
-  <tr>
-    <td><center>Framework</center></td>
-    <td><img alt="RED" src ="https://img.shields.io/badge/SPRING-6DB33F.svg?&style=for-the-badge&logo=Spring&logoColor=white"/> <img alt="RED" src ="https://img.shields.io/badge/SPRING Boot-6DB33F.svg?&style=for-the-badge&logo=SpringBoot&logoColor=white"/></td>
-  </tr>
-  <tr>
-    <td><strong>Database</strong></td>
-    <td><img alt="RED" src ="https://img.shields.io/badge/Mysql-4479A1.svg?&style=for-the-badge&logo=Mysql&logoColor=white"/></td>
-  </tr>
-  <tr>
-    <td>Programming Language</td>
-    <td><img alt="RED" src ="https://img.shields.io/badge/JAVA-F7DF1E.svg?&style=for-the-badge&logo=Jameson&logoColor=white"/></td>
-  </tr>
-  <tr>
-    <td>API</td>
-    <td><img alt="RED" src ="https://img.shields.io/badge/Rest-0066B3?style=for-the-badge&logo=rest&logoColor=white"/></td>
-  </tr>
-    </table>                    
+<div style="text-align:center">
+  <table style="margin-left: auto; margin-right:auto;" border="1">
+    <th>역할</th>
+    <th>종류</th>
+    <tr>
+      <td>Framework</td>
+      <td><img alt="RED" src ="https://img.shields.io/badge/SPRING-6DB33F.svg?&style=for-the-badge&logo=Spring&logoColor=white"/> <img alt="RED" src ="https://img.shields.io/badge/SPRING Boot-6DB33F.svg?&style=for-the-badge&logo=SpringBoot&logoColor=white"/></td>
+    </tr>
+    <tr>
+      <td><strong>Database</strong></td>
+      <td><img alt="RED" src ="https://img.shields.io/badge/Mysql-4479A1.svg?&style=for-the-badge&logo=Mysql&logoColor=white"/></td>
+    </tr>
+    <tr>
+      <td><strong>Programming Language</strong></td>
+      <td><img alt="RED" src ="https://img.shields.io/badge/JAVA-F7DF1E.svg?&style=for-the-badge&logo=Jameson&logoColor=white"/></td>
+    </tr>
+    <tr>
+      <td><strong>API</strong></td>
+      <td><img alt="RED" src ="https://img.shields.io/badge/Rest-0066B3?style=for-the-badge&logo=rest&logoColor=white"/></td>
+    </tr>
+   </table>     
+  </div>
 <br />
 
 ### 📚 Common
-<table border="stack">
-  <th>역할</th>
-  <th>종류</th>
-  <tr>
-    <td>협업 관리</td>
-    <td><img alt="RED" src ="https://img.shields.io/badge/Notion-000000.svg?&style=for-the-badge&logo=Notion&logoColor=white"/></td>
-  </tr>
-  <tr>
-    <td>디자인</td>
-    <td><img alt="RED" src ="https://img.shields.io/badge/Figma-F24E1E.svg?&style=for-the-badge&logo=Figma&logoColor=white"/></td>
-  </tr>
-  <tr>
-    <td>Version Control</td>
-    <td><img alt="RED" src ="https://img.shields.io/badge/git-E6484F.svg?style=for-the-badge&logo=git&logoColor=white"/>  <img alt="RED" src ="https://img.shields.io/badge/github-%23121011.svg?style=for-the-badge&logo=github&logoColor=white"/> </td>
-  </tr>
-    </table>                    
+<div style="text-align:center">
+  <table style="margin-left: auto; margin-right: auto;" border="1">
+    <th>역할</th>
+    <th>종류</th>
+    <tr>
+      <td>협업 관리</td>
+      <td><img alt="RED" src ="https://img.shields.io/badge/Notion-000000.svg?&style=for-the-badge&logo=Notion&logoColor=white"/></td>
+    </tr>
+    <tr>
+      <td>디자인</td>
+      <td><img alt="RED" src ="https://img.shields.io/badge/Figma-F24E1E.svg?&style=for-the-badge&logo=Figma&logoColor=white"/></td>
+    </tr>
+    <tr>
+      <td>Version Control</td>
+      <td><img alt="RED" src ="https://img.shields.io/badge/git-E6484F.svg?style=for-the-badge&logo=git&logoColor=white"/>  <img alt="RED" src ="https://img.shields.io/badge/github-%23121011.svg?style=for-the-badge&logo=github&logoColor=white"/> </td>
+    </tr>
+   </table>  
+  </div>
 <br />
 
 
