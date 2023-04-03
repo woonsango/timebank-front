@@ -5,9 +5,13 @@ import com.capstone.timepay.domain.user.User;
 import com.capstone.timepay.domain.user.UserRepository;
 import com.capstone.timepay.domain.userProfile.UserProfile;
 import com.capstone.timepay.domain.userProfile.UserProfileRepository;
+import com.capstone.timepay.firebase.FirebaseService;
+import com.google.firebase.auth.FirebaseAuthException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -18,6 +22,7 @@ import java.time.format.DateTimeFormatter;
 public class UserInfoService {
     private final UserRepository userRepository;
     private final UserProfileRepository userProfileRepository;
+    private final FirebaseService firebaseService;
 
     public void createUserInfo(RequestDTO userData){
         /* 유저 프로필 데이터 저장 */
@@ -168,6 +173,23 @@ public class UserInfoService {
             System.out.println("존재하지 않는 회원이랍니다~");
         }
 
+    }
+
+    public String imageUpload(MultipartFile image) throws IOException, FirebaseAuthException {
+        if(image.getSize() != 0) {
+            // 이미지를 업로드하고 해당 url 저장
+            String imageUrl = firebaseService.uploadFiles(image);
+            System.out.println(imageUrl);
+
+            // 위의 url 주소를 저장할 테이블의 객체를 생성할 때 사용
+            // ex ) UserProfile profile = UserProfile.builder().imageUrl(imageUrl). ........  . build();
+
+            // url을 포함한 객체를 생성하고 해당 객체를 repository를 통해 테이블에 저장
+            // ex ) userProfileRepository.save(profile);
+            return imageUrl;
+        } else {
+            return null;
+        }
     }
 
 }
