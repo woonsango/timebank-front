@@ -98,12 +98,27 @@
 ### 📚 Frontend
 
 ### 📚 Backend
-|역할|종류|
-|-|-|
-|Framework|<img alt="RED" src ="https://img.shields.io/badge/SPRING-6DB33F.svg?&style=for-the-badge&logo=Spring&logoColor=white"/> <img alt="RED" src ="https://img.shields.io/badge/SPRING Boot-6DB33F.svg?&style=for-the-badge&logo=SpringBoot&logoColor=white"/>|
-|Database|<img alt="RED" src ="https://img.shields.io/badge/Mysql-4479A1.svg?&style=for-the-badge&logo=Mysql&logoColor=white"/>|
-|Programming Language|<img alt="RED" src ="https://img.shields.io/badge/JAVA-F7DF1E.svg?&style=for-the-badge&logo=Jameson&logoColor=white"/>|
-|API|![REST](https://img.shields.io/badge/Rest-0066B3?style=for-the-badge&logo=rest&logoColor=white)                                     
+<table border="stack">
+  <th>역할</th>
+  <th>종류</th>
+  <tr>
+    <td>Framework</td>
+    <td><img alt="RED" src ="https://img.shields.io/badge/SPRING-6DB33F.svg?&style=for-the-badge&logo=Spring&logoColor=white"/> <img alt="RED" src ="https://img.shields.io/badge/SPRING Boot-6DB33F.svg?&style=for-the-badge&logo=SpringBoot&logoColor=white"/></td>
+  </tr>
+  <tr>
+    <td>Database</td>
+    <td><img alt="RED" src ="https://img.shields.io/badge/Mysql-4479A1.svg?&style=for-the-badge&logo=Mysql&logoColor=white"/></td>
+  </tr>
+  <tr>
+    <td>Programming Language</td>
+    <td><img alt="RED" src ="https://img.shields.io/badge/JAVA-F7DF1E.svg?&style=for-the-badge&logo=Jameson&logoColor=white"/></td>
+  </tr>
+  <tr>
+    <td>API</td>
+    <td><img alt="RED" src ="https://img.shields.io/badge/Rest-0066B3?style=for-the-badge&logo=rest&logoColor=white"/></td>
+  </tr>
+    </table>
+                                
 <br />
 
 ### 📚 Common
