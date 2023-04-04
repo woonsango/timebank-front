@@ -50,7 +50,6 @@ const PasswordEditPage = () => {
                 '8자이상의 숫자 1개, 문자 1개, 특수문자 1개이상을 포함해야합니다',
             },
           ]}
-          hasFeedback
         >
           <Input.Password />
         </Form.Item>
@@ -59,7 +58,6 @@ const PasswordEditPage = () => {
           label="비밀번호 확인"
           name="newPasswordCheck"
           dependencies={['newPassword']}
-          hasFeedback
           rules={[
             { required: true, message: '비밀번호를 입력해주세요' },
             ({ getFieldValue }) => ({
@@ -68,7 +66,7 @@ const PasswordEditPage = () => {
                   return Promise.resolve();
                 }
                 return Promise.reject(
-                  new Error('비밀번호를 다시 확인해주세요!'),
+                  new Error('비밀번호가 일치하지 않습니다'),
                 );
               },
             }),
