@@ -12,8 +12,12 @@ function App() {
     <RecoilRoot>
       <ConfigProvider theme={customTheme}>
         <Routes>
+          <Route index element={<PageRoutes.LoginPage />} />
+          <Route
+            path={PATH.PASSWORD_EDIT}
+            element={<PageRoutes.PasswordEditPage />}
+          />
           <Route element={<BaseLayout />}>
-            <Route index element={<PageRoutes.QnAManagementPage />} />
             <Route
               path={PATH.QNA_MANAGEMENT}
               element={<PageRoutes.QnAManagementPage />}
@@ -27,6 +31,10 @@ function App() {
               element={<PageRoutes.PostManagementPage />}
             />
             <Route
+              path={PATH.COMMENT_MANAGEMENT}
+              element={<PageRoutes.CommentManagementPage />}
+            />
+            <Route
               path={PATH.CATEGORY_MANAGEMENT}
               element={<PageRoutes.CategoryManagementPage />}
             />
@@ -37,6 +45,10 @@ function App() {
             <Route
               path={PATH.PUSH_MANAGEMENT}
               element={<PageRoutes.PushManagementPage />}
+            />
+            <Route
+              path={PATH.REPORT_MANAGEMENT}
+              element={<PageRoutes.ReportManagementPage />}
             />
           </Route>
         </Routes>
