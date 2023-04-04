@@ -94,7 +94,7 @@
 ```   
 
 # 4. 기술 스택
-![기술스택](https://user-images.githubusercontent.com/55117730/229405717-55c8e2c0-da12-4653-b8c6-bc3e8d15bc89.png)
+
 ### 📚 Frontend
 <div style="text-align:center">
   <table style="font-size:1.5em;" border="1">
