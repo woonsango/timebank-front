@@ -8,18 +8,40 @@ import {
   cssLoginInnerBox,
   cssLoginOuterBox,
 } from './Login.styles';
+import { usePostLogin } from '../../api/hooks/login';
+import { setTokenToCookie } from '../../utils/token';
 
 const onFinishFailed = (errorInfo: any) => {
   console.log('Failed:', errorInfo);
 };
 
 const LoginPage = () => {
+  const [form] = Form.useForm();
   const navigate = useNavigate();
+  const loginMutation = usePostLogin();
 
-  const handleOnClickLoginBtn = () => {
+  const handleOnClickLoginBtn = async (values: any) => {
     /*첫로그인 검증후 비밀번호 변경 페이지 접근 제어 추가예정*/
     const firstLogin: boolean = true;
-    firstLogin ? navigate('/password-edit') : navigate(`/post-management`);
+    await loginMutation.mutateAsync(
+      {
+        adminName: values.username,
+        password: values.password,
+      },
+      {
+        onSuccess: (result) => {
+          setTokenToCookie(result.data.jwt, 1);
+          firstLogin
+            ? navigate('/password-edit')
+            : navigate(`/post-management`);
+        },
+        onError: (err) => {
+          console.log(err.response?.status);
+        },
+      },
+    );
+
+    // firstLogin ? navigate('/password-edit') : navigate(`/post-management`);
   };
 
   return (
@@ -27,6 +49,7 @@ const LoginPage = () => {
       <div css={cssLoginInnerBox}>
         <Logo fill={COMMON_COLOR.LOGO1} width="378px" height="128.01px" />
         <Form
+          form={form}
           name="basic"
           style={{ width: 300 }}
           initialValues={{ remember: true }}
