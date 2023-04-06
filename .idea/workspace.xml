@@ -4,12 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="775103a2-84dc-4bbc-8170-be97ad616dff" name="Changes" comment="">
+    <list default="true" id="775103a2-84dc-4bbc-8170-be97ad616dff" name="Changes" comment="Chore: 메인 레포 Sync Fork 해서 불필요한 Files 삭제">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/back-end/timepay/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/src/back-end/timepay/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/back-end/timepay/src/main/java/com/capstone/timepay/TimepayApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/back-end/timepay/src/main/java/com/capstone/timepay/TimepayApplication.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/back-end/timepay/src/main/java/com/capstone/timepay/domain/BaseTimeEntity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/back-end/timepay/src/main/java/com/capstone/timepay/domain/BaseTimeEntity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/back-end/timepay/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/src/back-end/timepay/src/main/resources/application.yml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -20,6 +16,11 @@
     <option name="BRANCH" value="origin/feat" />
   </component>
   <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="master" />
+      </map>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="MarkdownSettingsMigration">
@@ -35,7 +36,7 @@
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "WebServerToolWindowFactoryState": "false",
-    "last_opened_file_path": "D:/dev/spring/capstone/capstone-2023-09/src/back-end/timepay",
+    "last_opened_file_path": "C:/dev/spring/capstone1/src/back-end",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -52,10 +53,15 @@
     ]
   }
 }]]></component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\dev\spring\capstone1\src\back-end\timepay\src\main\java\com\capstone\timepay\controller\admin" />
+    </key>
+  </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="85c566b4-344a-4ffb-816a-640f5bda5d86" name="변경" comment="" />
+      <changelist id="775103a2-84dc-4bbc-8170-be97ad616dff" name="Changes" comment="" />
       <created>1678848467967</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
@@ -69,6 +75,12 @@
       <workItem from="1679381450443" duration="8000" />
       <workItem from="1679381536611" duration="717000" />
       <workItem from="1679382270553" duration="45000" />
+      <workItem from="1679710615329" duration="89000" />
+      <workItem from="1679718113667" duration="200000" />
+      <workItem from="1679722190003" duration="1756000" />
+      <workItem from="1679725793645" duration="1388000" />
+      <workItem from="1679728209619" duration="595000" />
+      <workItem from="1679876396441" duration="193000" />
     </task>
     <task id="LOCAL-00001" summary="Feat: gson gradle 추가, 카카오 로그인 기능 추가(서버 버그로 인해 테스트X)">
       <created>1679318459203</created>

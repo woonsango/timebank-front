@@ -6,16 +6,24 @@ import com.capstone.timepay.service.user.dto.KakaoLoginDto;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonElement;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Date;
+
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.algorithms.Algorithm;
+
+
 
 @Service
 @RequiredArgsConstructor
 public class KakaoLoginService {
     private final UserRepository userRepository;
+    private final Environment env;
 
     public  String getKaKaoAccessToken(String code){
         String access_Token="";
@@ -67,12 +75,13 @@ public class KakaoLoginService {
         return access_Token;
     }
 
-    public  Long createKakaoUser(String token) { // throws BaseException 오류나와서 보류
+    public  KakaoLoginDto createKakaoUser(String token) { // throws BaseException 오류나와서 보류
         String reqURL = "https://kapi.kakao.com/v2/user/me";
         String email = null;
         String sex = null;
         String birthday = null;
         Long id = null;
+        KakaoLoginDto user = new KakaoLoginDto();
 
         //access_token을 이용하여 사용자 정보 조회
         try {
@@ -103,50 +112,53 @@ public class KakaoLoginService {
 
             id = element.getAsJsonObject().get("id").getAsLong();
 
-            /* 이메일 제공 여부 확인 및 이메일 가져오기 */
-            boolean hasEmail = element.getAsJsonObject().get("kakao_account").getAsJsonObject().get("has_email").getAsBoolean();
-            if (hasEmail) {
-                email = element.getAsJsonObject().get("kakao_account").getAsJsonObject().get("email").getAsString();
+            /* uid값 비교하여 중복된 데이터는 데이터베이스에 저장X */
+            if(userRepository.findByUid(id) == null)
+            {
+                /* 이메일 제공 여부 확인 및 이메일 가져오기 */
+                boolean hasEmail = element.getAsJsonObject().get("kakao_account").getAsJsonObject().get("has_email").getAsBoolean();
+                if (hasEmail) {
+                    email = element.getAsJsonObject().get("kakao_account").getAsJsonObject().get("email").getAsString();
+
+                } else {
+                    email = "이메일 동의하지 않음";
+                }
+
+                /* 성별 제공 여부 확인 및 성별 가져오기 */
+                boolean hasSex = element.getAsJsonObject().get("kakao_account").getAsJsonObject().get("has_gender").getAsBoolean();
+                if (hasSex) {
+                    sex = element.getAsJsonObject().get("kakao_account").getAsJsonObject().get("gender").getAsString();
+                } else {
+                    sex = "성별 동의하지 않음";
+                }
+
+                /* 생일 제공 여부 확인 및 생일 가져오기 */
+                boolean hasBirthday = element.getAsJsonObject().get("kakao_account").getAsJsonObject().get("has_birthday").getAsBoolean();
+                if (hasBirthday) {
+                    birthday = element.getAsJsonObject().get("kakao_account").getAsJsonObject().get("birthday").getAsString();
+                } else {
+                    birthday = "생일 동의하지 않음";
+                }
 
             } else {
-                email = "이메일 동의하지 않음";
+                System.out.println("\n이미 저장된 데이터래요~\n");
+                User userTmp = userRepository.findByUid(id);
+                user = KakaoLoginDto.toKaKaoLoginDto(userTmp);
+                kakaoLoginJWT(user);
             }
 
-            /* 성별 제공 여부 확인 및 성별 가져오기 */
-            boolean hasSex = element.getAsJsonObject().get("kakao_account").getAsJsonObject().get("has_gender").getAsBoolean();
-            if (hasSex) {
-                sex = element.getAsJsonObject().get("kakao_account").getAsJsonObject().get("gender").getAsString();
-            } else {
-                sex = "성별 동의하지 않음";
-            }
-
-            /* 생일 제공 여부 확인 및 생일 가져오기 */
-            boolean hasBirthday = element.getAsJsonObject().get("kakao_account").getAsJsonObject().get("has_birthday").getAsBoolean();
-            if (hasBirthday) {
-                birthday = element.getAsJsonObject().get("kakao_account").getAsJsonObject().get("birthday").getAsString();
-            } else {
-                birthday = "생일 동의하지 않음";
-            }
 
             System.out.println("id : " + id);
             System.out.println("email : " + email);
             System.out.println("gender : " + sex);
             System.out.println("birthday : " + birthday);
 
-            /* uid값 비교하여 중복된 데이터는 데이터베이스에 저장X */
-            if(userRepository.findByUid(id) == null)
-            {
-                createKakaoUsers(id, email, sex);
-            } else {
-                System.out.println("\n이미 저장된 데이터래요~\n");
-            }
-
             br.close();
 
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return id;
+        return user;
     }
 
     /* 데이터베이스 추가 작업 */
@@ -158,5 +170,14 @@ public class KakaoLoginService {
         userRepository.save(user);
 
         return KakaoLoginDto.toKaKaoLoginDto(user);
+    }
+
+    public void kakaoLoginJWT(KakaoLoginDto userData){
+        String userID = Long.toString(userData.getId());
+        String token = JWT.create()
+                .withSubject("JwtToken")
+                .withExpiresAt(new Date(System.currentTimeMillis() + Long.parseLong(env.getProperty("token.expiration_time"))))
+                .withClaim("email", userData.getEmail())
+                .sign(Alorithm.HMAC512(env.getProperty("token.secret")));
     }
 }

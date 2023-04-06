@@ -35,19 +35,22 @@ public class KakaoLoginController {
     public ResponseEntity kakaoCallback(@RequestParam String code, @RequestBody AuthenticationRequest authenticationRequest) throws  Exception {
         String access_Token = kakaoLoginService.getKaKaoAccessToken(code);
         Long uid = kakaoLoginService.createKakaoUser(access_Token);
+        final UserDetails userDetails = userDetailService.loadUserByUsername(Long.toString(uid));
 
         /* JWT 토큰 발급 */
         /* 카카오 로그인을 통해 리다이렉션 되는 URL에서 RequestBody를 설정해줄 수 없음 */
         /* 서비스 단에서 RequestBody를 생성하여 토큰을 생성해야할 것 같음 */
-        String name = authenticationRequest.getName();
-        authenticate(uid, authenticationRequest.getPassword());
-        final UserDetails userDetails = userDetailService.loadUserByUsername(name);
-        final String token = jwtUtils.generateToken(userDetails);
-        final User user = userDetailService.getUser(name);
+
+        // String name = authenticationRequest.getName();
+        // authenticate(uid, authenticationRequest.getPassword());
+        // final UserDetails userDetails = userDetailService.loadUserByUsername(name);
+        // final String token = jwtUtils.generateToken(userDetails);
+        // final User user = userDetailService.getUser(name);
 
 
         /* DB 작성 완료 후, uid 보내기 */;
-        return ResponseEntity.ok(new AuthenticationResponse(token, user));
+        // return ResponseEntity.ok(new AuthenticationResponse(token, user));
+        return null;
     }
 
     private void authenticate(Long uid, String password) throws Exception {
