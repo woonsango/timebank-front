@@ -17,7 +17,8 @@ public class BoardActivityDto {
     private String boardState;
     private LocalDateTime startTime;
     private LocalDateTime endTime;
-    private LocalDateTime actualActivityTime;
+    private LocalDateTime actualStartTime;
+    private LocalDateTime actualEndTime;
     private String title;
 
 }

@@ -1,6 +1,7 @@
 package com.capstone.timepay.controller.admin;
 
 import com.capstone.timepay.controller.admin.request.userManage.UserInfoUpdateRequest;
+import com.capstone.timepay.controller.admin.response.userManage.ActivityListDto;
 import com.capstone.timepay.controller.admin.response.userManage.MainResponse;
 import com.capstone.timepay.controller.admin.response.userManage.UserProfileResponse;
 import com.capstone.timepay.service.admin.UserManageService;
@@ -45,9 +46,11 @@ public class UserManageController {
 
     @ApiOperation(value = "유저 활동 목록 조회")
     @GetMapping("/activity-list")
-    public ResponseEntity<?> showActivityList(){
+    public ResponseEntity<?> showActivityList(@RequestParam Long userId){
 
-        return ResponseEntity.ok("");
+        ActivityListDto activityListDto = userManageService.getActivityList(userId);
+
+        return ResponseEntity.ok(activityListDto);
     }
 
     @ApiOperation(value = "유저 프로필 이미지 조회")
@@ -83,7 +86,7 @@ public class UserManageController {
 
         userManageService.registerBlacklist(userId);
 
-        return ResponseEntity.ok("등록되었습니다."); 
+        return ResponseEntity.ok("등록되었습니다.");
     }
 
 

@@ -13,8 +13,8 @@ public class CommentActivityDto {
 
     private Long commentId;
     private LocalDateTime createdAt;
-    private String applyYN;
-    private String confirmYN;
+    private boolean isApplied;
+    private boolean isAdopted;
     private String content;
 
 }

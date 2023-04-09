@@ -7,11 +7,11 @@ import lombok.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ReceivedReportDto {
+public class ReportActivityDto {
 
     private Long reportId;
-    private String reporterName;
-    private Long reporterId;
+    private String reportedName;
+    private Long reportedId;
     private String reportReason;
     private Long boardId;
     private Long commentId;
