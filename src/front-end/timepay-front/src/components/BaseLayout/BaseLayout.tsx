@@ -18,16 +18,14 @@ const BaseLayout = () => {
     return location.pathname === PATH.HOME;
   }, [location]);
 
+  const isFooter =
+    location.pathname === PATH.HOME ||
+    location.pathname === PATH.SEARCH ||
+    location.pathname === PATH.MY_PAGE;
+
   const isSearch = useMemo(() => {
     return location.pathname === PATH.SEARCH;
   }, [location]);
-
-  const isnoFooter =
-    location.pathname === PATH.Register_F ||
-    location.pathname === PATH.Register_HR ||
-    location.pathname === PATH.Register_HS ||
-    location.pathname === PATH.Qna_List ||
-    location.pathname === PATH.Qna_Register;
 
   const Header = useMemo(() => {
     if (isHome) return <HomeHeader />;
@@ -49,7 +47,7 @@ const BaseLayout = () => {
       >
         <Outlet />
       </Layout.Content>
-      {isnoFooter ? null : <MainFooter />}
+      {isFooter ? <MainFooter /> : null}
     </Layout>
   );
 };

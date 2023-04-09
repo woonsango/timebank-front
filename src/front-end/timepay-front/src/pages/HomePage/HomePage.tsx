@@ -7,7 +7,7 @@ const HomePage = () => {
     {
       postId: 1,
       createdAt: '10분 전',
-      title: '예시 제목1',
+      title: '정릉 주민센터 봉사 해주실분 구해요',
       status: '활동완료',
       category: '이동 도움',
       pay: 120,

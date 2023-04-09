@@ -41,6 +41,11 @@ function App() {
               path={PATH.Qna_Detail}
               element={<PageRoutes.QnaDetailPage />}
             />
+            <Route path={PATH.Posts} element={<PageRoutes.PostPage />} />
+            <Route
+              path={PATH.Posts_Edit}
+              element={<PageRoutes.PostEditPage />}
+            />
             <Route
               path={PATH.MY_ACTIVITY_RECORD}
               element={<PageRoutes.ActivityRecordPage />}

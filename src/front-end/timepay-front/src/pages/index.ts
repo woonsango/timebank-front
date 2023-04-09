@@ -8,6 +8,8 @@ import PushNotificationPage from './PushNotificationPage';
 import QnaListPage from './QnaPage/QnaListPage';
 import QnaRegisterPage from './QnaPage/QnaRegisterPage';
 import QnaDetailPage from './QnaPage/QnaDetailPage';
+import PostPage from './PostPage/PostPage';
+import PostEditPage from './PostPage/PostEditPage';
 import ActivityRecordPage from './ActivityRecordPage';
 
 const PageRoutes = {
@@ -21,6 +23,8 @@ const PageRoutes = {
   QnaListPage,
   QnaRegisterPage,
   QnaDetailPage,
+  PostPage,
+  PostEditPage,
   ActivityRecordPage,
 };
 

@@ -1,5 +1,6 @@
 import { Card, Spin } from 'antd';
 import { useCallback, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { IPost } from '../../api/interfaces/IPost';
 import PostStatusTag from '../PostStatusTag';
 import {
@@ -21,6 +22,26 @@ interface SimplePostCardProps {
 }
 
 const SimplePostCard = ({ post }: SimplePostCardProps) => {
+  const navigate = useNavigate();
+  const handlePageChange = () => {
+    navigate(`/post/${post?.postId}`, {
+      state: {
+        id: post?.postId,
+        type: post?.type,
+        title: post?.title,
+        content: post?.content,
+        createdAt: post?.createdAt,
+        status: post?.status,
+        category: post?.category,
+        pay: post?.pay,
+        startTime: post?.startTime,
+        endTime: post?.endTime,
+        region: post?.region,
+        attachment: post?.attachment,
+        user: post?.user?.name,
+      },
+    });
+  };
   const footerComponent = useCallback(
     (nickname?: string, createdAt?: string) => {
       return (
@@ -91,7 +112,11 @@ const SimplePostCard = ({ post }: SimplePostCardProps) => {
   }, [post]);
 
   return (
-    <Card bordered={false} css={cssSimplePostCardStyle}>
+    <Card
+      bordered={false}
+      css={cssSimplePostCardStyle}
+      onClick={handlePageChange}
+    >
       <Spin size="large" spinning={!post}>
         {postCardContent}
       </Spin>
