@@ -1,6 +1,7 @@
 package com.capstone.timepay.controller.user;
 
 import com.capstone.timepay.controller.user.request.RequestDTO;
+import com.capstone.timepay.controller.user.response.ResponseDTO;
 import com.capstone.timepay.domain.user.User;
 import com.capstone.timepay.service.user.service.UserInfoService;
 import com.google.firebase.auth.FirebaseAuthException;
@@ -35,8 +36,8 @@ public class ApiController {
     @GetMapping("/get/{uid}")
     @ApiOperation(value="유저 데이터 조회",notes = "주소로 uid를 받아 해당하는 유저 정보를 조회합니다.")
     public ResponseEntity getUserInfo(@PathVariable Long uid){
-        RequestDTO requestData = userInfoService.getUserInfo(uid);
-        return ResponseEntity.ok(requestData);
+        ResponseDTO responseData = userInfoService.getUserInfo(uid);
+        return ResponseEntity.ok(responseData);
     }
 
     @PutMapping("/update")

@@ -1,6 +1,7 @@
 package com.capstone.timepay.service.user.service;
 
 import com.capstone.timepay.controller.user.request.RequestDTO;
+import com.capstone.timepay.controller.user.response.ResponseDTO;
 import com.capstone.timepay.domain.user.User;
 import com.capstone.timepay.domain.user.UserRepository;
 import com.capstone.timepay.domain.userProfile.UserProfile;
@@ -136,32 +137,25 @@ public class UserInfoService {
         findUser.setUpdatedAt(LocalDateTime.now());
         userRepository.save(findUser);
     }
-    /* api/users/create 하기 전 호출 시 에러 발생 */
-    /* 회원가입 전 회원조회 할 이유가 없다 생각하여 수정 X */
-    public RequestDTO getUserInfo(Long uid){
+
+    public ResponseDTO getUserInfo(Long uid){
         User userData = userRepository.findByUid(uid);
         UserProfile userProfileData = userProfileRepository.findByUid(uid);
-        RequestDTO requestDTO = new RequestDTO();
-        String birthString = null;
 
-        if(userData.getBirthday() != null) {
-            /* LocalDateTime을 출력을 위한 String 형변환 */
-            birthString = userData.getBirthday().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-        }
+        /* LocalDateTime을 출력을 위한 String 형변환 */
+        // String birthString = userData.getBirthday().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 
 
         /* 유저 테이블에서 데이터 가져오기 */
-        requestDTO.setUid(uid);
-        requestDTO.setName(userData.getName());
-        requestDTO.setBirthday(birthString);
-        requestDTO.setLocation(userData.getLocation());
-        requestDTO.setPhone(userData.getPhone());
-        requestDTO.setNickName(userData.getNickname());
+        String nickName = userData.getNickname();
 
         /* 유저 프로필 테이블에서 데이터 가져오기 */
-        requestDTO.setImageUrl(userProfileData.getImageUrl());
-        requestDTO.setIntroduction(userProfileData.getIntroduction());
-        return requestDTO;
+        String imageUrl = userProfileData.getImageUrl();
+        int timePay = userProfileData.getTimepay();
+
+        /* 생성자를 사용하여 객체 생성 */
+        ResponseDTO responseDTO = new ResponseDTO(uid, nickName, imageUrl, timePay);
+        return responseDTO;
     }
 
     public void deleteUserInfo(Long uid){
