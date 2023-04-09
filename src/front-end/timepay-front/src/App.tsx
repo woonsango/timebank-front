@@ -30,7 +30,7 @@ function App() {
             />
             <Route
               path={PATH.NOTIFICATION}
-              element={<PageRoutes.PushNotificationPage />} 
+              element={<PageRoutes.PushNotificationPage />}
             />
             <Route path={PATH.Qna_List} element={<PageRoutes.QnaListPage />} />
             <Route
@@ -45,6 +45,10 @@ function App() {
             <Route
               path={PATH.Posts_Edit}
               element={<PageRoutes.PostEditPage />}
+            />
+            <Route
+              path={PATH.MY_ACTIVITY_RECORD}
+              element={<PageRoutes.ActivityRecordPage />}
             />
           </Route>
         </Routes>

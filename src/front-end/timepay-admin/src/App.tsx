@@ -43,6 +43,10 @@ function App() {
               element={<PageRoutes.AdminManagementPage />}
             />
             <Route
+              path={PATH.PUSH_MANAGEMENT}
+              element={<PageRoutes.PushManagementPage />}
+            />
+            <Route
               path={PATH.REPORT_MANAGEMENT}
               element={<PageRoutes.ReportManagementPage />}
             />

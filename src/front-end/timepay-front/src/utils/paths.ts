@@ -11,4 +11,5 @@ export const PATH = {
   Qna_Detail: '/qna/:id',
   Posts: '/post/:id',
   Posts_Edit: '/edit/:id',
+  MY_ACTIVITY_RECORD: '/my-activity-record',
 };

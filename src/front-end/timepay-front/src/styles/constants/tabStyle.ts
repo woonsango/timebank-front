@@ -2,6 +2,7 @@ import { css } from '@emotion/react';
 import { COMMON_COLOR } from './colors';
 
 export const cssTabStyle = css`
+  height: 100%;
   .ant-tabs-nav {
     margin-bottom: 0px;
     border-bottom: 1px solid #cdcdcd;
@@ -27,7 +28,7 @@ export const cssTabStyle = css`
   }
 
   .ant-tabs-content-holder {
-    min-height: calc(100vh - 190px); // 실제 화면 높이 - (푸터, 헤더, 탭 높이)
+    height: 100%;
     background-color: #f7f7f7;
     padding-bottom: 10px;
   }

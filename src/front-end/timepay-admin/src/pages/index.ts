@@ -4,9 +4,13 @@ import QnAManagementPage from './QnAManagement';
 import UserManagementPage from './UserManagement';
 import CategoryManagementPage from './CategoryManagement';
 import AdminManagementPage from './AdminManagement';
+
+import PushManagementPage from './PushManagement';
+
 import ReportManagementPage from './ReportManagement';
 import LoginPage from './Login';
 import PasswordEditPage from './PasswordEdit';
+
 
 const PageRoutes = {
   LoginPage,
@@ -17,6 +21,7 @@ const PageRoutes = {
   CommentManagementPage,
   CategoryManagementPage,
   AdminManagementPage,
+  PushManagementPage,
   ReportManagementPage,
 };
 
