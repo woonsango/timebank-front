@@ -88,6 +88,4 @@ public class User extends BaseTimeEntity {
     public void updateLocation(String region) {
         this.location = region;
     }
-
-
 }

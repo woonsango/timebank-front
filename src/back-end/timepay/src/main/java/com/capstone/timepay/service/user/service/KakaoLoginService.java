@@ -7,15 +7,16 @@ import com.google.gson.JsonParser;
 import com.google.gson.JsonElement;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.env.Environment;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Date;
-
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.algorithms.Algorithm;
 
 
 
@@ -24,6 +25,7 @@ import com.auth0.jwt.algorithms.Algorithm;
 public class KakaoLoginService {
     private final UserRepository userRepository;
     private final Environment env;
+    private AuthenticationManager authenticationManager;
 
     public  String getKaKaoAccessToken(String code){
         String access_Token="";
@@ -144,7 +146,9 @@ public class KakaoLoginService {
                 System.out.println("\n이미 저장된 데이터래요~\n");
                 User userTmp = userRepository.findByUid(id);
                 user = KakaoLoginDto.toKaKaoLoginDto(userTmp);
-                kakaoLoginJWT(user);
+                Authentication kakaoUsernamePassword = new UsernamePasswordAuthenticationToken(id, email);
+                Authentication authentication = authenticationManager.authenticate(kakaoUsernamePassword);
+                SecurityContextHolder.getContext().setAuthentication(authentication);
             }
 
 
@@ -170,14 +174,5 @@ public class KakaoLoginService {
         userRepository.save(user);
 
         return KakaoLoginDto.toKaKaoLoginDto(user);
-    }
-
-    public void kakaoLoginJWT(KakaoLoginDto userData){
-        String userID = Long.toString(userData.getId());
-        String token = JWT.create()
-                .withSubject("JwtToken")
-                .withExpiresAt(new Date(System.currentTimeMillis() + Long.parseLong(env.getProperty("token.expiration_time"))))
-                .withClaim("email", userData.getEmail())
-                .sign(Alorithm.HMAC512(env.getProperty("token.secret")));
     }
 }
