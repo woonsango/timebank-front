@@ -141,11 +141,9 @@ public class InquiryManagerService {
     }
 
 
-    public void saveInquiryAnswer(InquiryAnswerDto answer) {
+    public void saveInquiryAnswer(InquiryAnswerDto answer, Admin admin) {
 
         Inquiry inquiry = inquiryRepository.findById(answer.getInquiryId()).orElseThrow(()->new IllegalArgumentException("존재하지 않는 문의입니다."));
-        Admin admin = adminRepository.findById(answer.getAdminId()).orElseThrow(()->new IllegalArgumentException("존재하지 않는 관리자입니다."));
-
         InquiryAnswer inquiryAnswer = InquiryAnswer.getNewInstance(answer, inquiry, admin);
 
         inquiryAnswerRepository.save(inquiryAnswer);

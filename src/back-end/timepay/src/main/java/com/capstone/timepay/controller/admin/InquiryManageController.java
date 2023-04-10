@@ -3,6 +3,8 @@ package com.capstone.timepay.controller.admin;
 import com.capstone.timepay.controller.admin.request.inquiry.InquiryAnswerRequest;
 import com.capstone.timepay.controller.admin.response.inquiry.InquiryDetailResponse;
 import com.capstone.timepay.controller.admin.response.inquiry.InquiryResponse;
+import com.capstone.timepay.domain.admin.Admin;
+import com.capstone.timepay.service.admin.AdminService;
 import com.capstone.timepay.service.admin.InquiryManagerService;
 import org.springframework.data.domain.Page;
 import io.swagger.annotations.ApiOperation;
@@ -22,6 +24,7 @@ import java.util.List;
 public class InquiryManageController {
 
     private final InquiryManagerService inquiryManagerService;
+    private final AdminService adminService;
 
     @ApiOperation(value = "전체 문의 리스트 조회")
     @GetMapping("/main")
@@ -58,9 +61,10 @@ public class InquiryManageController {
     }
     @ApiOperation(value = "관리자 문의 답변 등록")
     @PostMapping(value = "/answer", consumes = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<?> answerInquiry(@Valid @RequestBody InquiryAnswerRequest request){
+    public ResponseEntity<?> answerInquiry(@Valid @RequestBody InquiryAnswerRequest request, Principal principal){
 
-        inquiryManagerService.saveInquiryAnswer(request.toServiceDto());
+        Admin admin = adminService.getOne(principal.getName());
+        inquiryManagerService.saveInquiryAnswer(request.toServiceDto(), admin);
 
         return ResponseEntity.ok("답변이 등록되었습니다.");
     }
