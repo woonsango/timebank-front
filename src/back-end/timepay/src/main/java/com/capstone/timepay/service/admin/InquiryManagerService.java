@@ -1,5 +1,6 @@
 package com.capstone.timepay.service.admin;
 
+import ch.qos.logback.core.pattern.Converter;
 import com.capstone.timepay.controller.admin.response.inquiry.AdminAnswerResponse;
 import com.capstone.timepay.controller.admin.response.inquiry.InquiryDetailResponse;
 import com.capstone.timepay.controller.admin.response.inquiry.InquiryResponse;
@@ -9,17 +10,18 @@ import com.capstone.timepay.domain.inquiry.Inquiry;
 import com.capstone.timepay.domain.inquiry.InquiryRepository;
 import com.capstone.timepay.domain.inquiryAnswer.InquiryAnswer;
 import com.capstone.timepay.domain.inquiryAnswer.InquiryAnswerRepository;
+import com.capstone.timepay.domain.user.User;
+import com.capstone.timepay.domain.user.UserRepository;
 import com.capstone.timepay.service.admin.dto.InquiryAnswerDto;
-import org.springframework.data.domain.Page;
+import org.springframework.data.domain.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static java.util.function.Predicate.not;
@@ -33,113 +35,33 @@ public class InquiryManagerService {
     private final InquiryRepository inquiryRepository;
     private final AdminRepository adminRepository;
     private final InquiryAnswerRepository inquiryAnswerRepository;
+    private final UserRepository userRepository;
 
-    public List<InquiryResponse> showAllInquiries(int pageIndex, int pageSize) {
+    public Page<InquiryResponse> convertResponsePages(Page<Inquiry> pages){
+        Page<InquiryResponse> pageResponses = pages.map(new Function<Inquiry, InquiryResponse>() {
+            @Override
+            public InquiryResponse apply(Inquiry inquiry) {
+                return InquiryResponse.builder()
+                        .inquiryId(inquiry.getInquiryId())
+                        .state(inquiry.getState())
+                        .category(inquiry.getCategory())
+                        .createdAt(inquiry.getCreatedAt())
+                        .writer(inquiry.getUser().getName())
+                        .title(inquiry.getTitle())
+                        .build();
+            }
+        });
+
+        return pageResponses;
+    }
+
+    public Page<InquiryResponse> showAllInquiries(int pageIndex, int pageSize) {
+
         Pageable pageable = PageRequest.of(pageIndex, pageSize, Sort.by("createdAt").descending());
+        Page<Inquiry> pages = inquiryRepository.findAll(pageable);
 
-        List<Inquiry> inquiries = inquiryRepository.findAll(pageable).getContent();
-        return inquiries.stream()
-                .map(inquiry -> InquiryResponse.builder()
-                        .inquiryId(inquiry.getInquiryId())
-                        .state(inquiry.getState())
-                        .category(inquiry.getCategory())
-                        .createdAt(inquiry.getCreatedAt())
-                        .writer(inquiry.getUser().getName())
-                        .title(inquiry.getTitle())
-                        .build())
-                //.sorted(Comparator.comparing(InquiryResponse::getCreatedAt).reversed())
-                .collect(Collectors.toList());
+        return convertResponsePages(pages);
     }
-
-    public List<InquiryResponse> searchInquiriesByQuery(String state, String category, String writer, String title, int pageIndex, int pageSize) {
-
-        List<Inquiry> inquiries = new ArrayList<>();
-
-        Pageable pageable = PageRequest.of(pageIndex, pageSize, Sort.by("createdAt").descending());
-
-        if(state.equals("all") && category.equals("all")){
-            inquiries = inquiryRepository.findAll(pageable).getContent();
-        }
-        else if(state.equals("all")){
-            inquiries = inquiryRepository.findAllByCategory(category, pageable).getContent();
-        }
-        else if(category.equals("all")){
-            inquiries = inquiryRepository.findAllByState(state, pageable).getContent();
-        }
-        else{
-            inquiries = inquiryRepository.findAllByCategoryAndState(category, state, pageable).getContent();
-        }
-
-        List<InquiryResponse> responses = new ArrayList<>();
-
-        if(writer.equals("all")){
-            if(title.equals("all")) responses = inquiryAll(inquiries);
-            else responses = inquiryTitle(inquiries,title);
-        }
-        else{
-            if(title.equals("all")) responses = inquiryWriter(inquiries,writer);
-            else responses = inquiryWriterTitle(inquiries,writer,title);
-        }
-        return responses;
-    }
-
-    public List<InquiryResponse> inquiryWriterTitle(List<Inquiry> inquiries, String writer, String title){
-        return inquiries.stream()
-                .map(inquiry -> InquiryResponse.builder()
-                        .inquiryId(inquiry.getInquiryId())
-                        .title(inquiry.getTitle())
-                        .category(inquiry.getCategory())
-                        .writer(inquiry.getUser().getName())
-                        .state(inquiry.getState())
-                        .createdAt(inquiry.getCreatedAt())
-                        .build())
-                .filter(inquiryResponse -> inquiryResponse.getWriter().equals(writer))
-                .filter(inquiryResponse -> inquiryResponse.getTitle().contains(title))
-                //.sorted(Comparator.comparing(InquiryResponse::getCreatedAt).reversed())
-                .collect(Collectors.toList());
-    }
-    public List<InquiryResponse> inquiryWriter(List<Inquiry> inquiries, String writer){
-        return inquiries.stream()
-                .map(inquiry -> InquiryResponse.builder()
-                        .inquiryId(inquiry.getInquiryId())
-                        .title(inquiry.getTitle())
-                        .category(inquiry.getCategory())
-                        .writer(inquiry.getUser().getName())
-                        .state(inquiry.getState())
-                        .createdAt(inquiry.getCreatedAt())
-                        .build())
-                .filter(inquiryResponse -> inquiryResponse.getWriter().equals(writer))
-                //.sorted(Comparator.comparing(InquiryResponse::getCreatedAt).reversed())
-                .collect(Collectors.toList());
-    }
-    public List<InquiryResponse> inquiryTitle(List<Inquiry> inquiries, String title){
-        return inquiries.stream()
-                .map(inquiry -> InquiryResponse.builder()
-                        .inquiryId(inquiry.getInquiryId())
-                        .title(inquiry.getTitle())
-                        .category(inquiry.getCategory())
-                        .writer(inquiry.getUser().getName())
-                        .state(inquiry.getState())
-                        .createdAt(inquiry.getCreatedAt())
-                        .build())
-                .filter(inquiryResponse -> inquiryResponse.getTitle().contains(title))
-                //.sorted(Comparator.comparing(InquiryResponse::getCreatedAt).reversed())
-                .collect(Collectors.toList());
-    }
-    public List<InquiryResponse> inquiryAll(List<Inquiry> inquiries){
-        return inquiries.stream()
-                .map(inquiry -> InquiryResponse.builder()
-                        .inquiryId(inquiry.getInquiryId())
-                        .title(inquiry.getTitle())
-                        .category(inquiry.getCategory())
-                        .writer(inquiry.getUser().getName())
-                        .state(inquiry.getState())
-                        .createdAt(inquiry.getCreatedAt())
-                        .build())
-                //.sorted(Comparator.comparing(InquiryResponse::getCreatedAt).reversed())
-                .collect(Collectors.toList());
-    }
-
 
     public void saveInquiryAnswer(InquiryAnswerDto answer, Admin admin) {
 
@@ -173,6 +95,59 @@ public class InquiryManagerService {
                                 .collect(Collectors.toList());
 
         return new InquiryDetailResponse(inquiryResponse,adminAnswerResponses);
+
+    }
+
+    public Page<InquiryResponse> searchInquiriesByQuery(String state, String category, String writer, String title, int pageIndex, int pageSize) {
+        Pageable pageable = PageRequest.of(pageIndex, pageSize);
+
+        if(!ObjectUtils.isEmpty(writer) && ObjectUtils.isEmpty(title)){
+            User user = userRepository.findByName(writer);
+            Page<Inquiry> pages = inquiryRepository.findAllByUser(user, pageable);
+
+            List<InquiryResponse> responses = convertResponsePages(pages)
+                    .stream()
+                    .filter(inquiryResponse -> inquiryResponse.getState().equals(state))
+                    .filter(inquiryResponse -> inquiryResponse.getCategory().equals(category))
+                    .collect(Collectors.toList());
+
+            return new PageImpl<>(responses);
+        }
+        else if(ObjectUtils.isEmpty(writer) && !ObjectUtils.isEmpty(title)){
+            Page<Inquiry> pages = inquiryRepository.findByTitleContains(title, pageable);
+
+            List<InquiryResponse> responses = convertResponsePages(pages)
+                    .stream()
+                    .filter(inquiryResponse -> inquiryResponse.getState().equals(state))
+                    .filter(inquiryResponse -> inquiryResponse.getCategory().equals(category))
+                    .collect(Collectors.toList());
+
+            return new PageImpl<>(responses);
+        }
+        else if(!ObjectUtils.isEmpty(writer) && !ObjectUtils.isEmpty(title)){
+
+            Page<Inquiry> pages = inquiryRepository.findByTitleContains(title, pageable);
+
+            List<InquiryResponse> responses = convertResponsePages(pages)
+                    .stream()
+                    .filter(inquiryResponse -> inquiryResponse.getState().equals(state))
+                    .filter(inquiryResponse -> inquiryResponse.getCategory().equals(category))
+                    .filter(inquiryResponse -> inquiryResponse.getWriter().equals(writer))
+                    .collect(Collectors.toList());
+
+            return new PageImpl<>(responses);
+        }
+        else{
+            Page<Inquiry> pages = inquiryRepository.findAll(pageable);
+
+            List<InquiryResponse> responses = convertResponsePages(pages)
+                    .stream()
+                    .filter(inquiryResponse -> inquiryResponse.getState().equals(state))
+                    .filter(inquiryResponse -> inquiryResponse.getCategory().equals(category))
+                    .collect(Collectors.toList());
+
+            return new PageImpl<>(responses);
+        }
 
     }
 }

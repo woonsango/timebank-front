@@ -9,7 +9,6 @@ import com.capstone.timepay.service.admin.InquiryManagerService;
 import org.springframework.data.domain.Page;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -28,27 +27,25 @@ public class InquiryManageController {
 
     @ApiOperation(value = "전체 문의 리스트 조회")
     @GetMapping("/main")
-    public ResponseEntity<?> main2(@RequestParam(defaultValue = "0") int pageIndex,
+    public ResponseEntity<?> main(@RequestParam(defaultValue = "0") int pageIndex,
                                    @RequestParam(defaultValue = "50") int pageSize){
 
-        List<InquiryResponse> responses = inquiryManagerService.showAllInquiries(pageIndex, pageSize);
+        Page<InquiryResponse> responses = inquiryManagerService.showAllInquiries(pageIndex, pageSize);
 
         return ResponseEntity.ok(responses);
     }
 
-    @ApiOperation(value = "쿼리를 통한 문의 필터링 : 넘겨줄 쿼리가 없으면 all을 넘겨줄 것")
+    @ApiOperation(value = "쿼리를 통한 문의 필터링 : state, category 는 필수로 넘겨줄 것")
     @GetMapping("/search")
     public ResponseEntity<?> searchInquiries(@RequestParam String state,
                                               @RequestParam String category,
-                                              @RequestParam String writer,
-                                              @RequestParam String title,
+                                              @RequestParam(required = false) String writer,
+                                              @RequestParam(required = false) String title,
                                               @RequestParam(defaultValue = "0") int pageIndex,
                                               @RequestParam(defaultValue = "50") int pageSize){
 
-        // 넘겨줄 쿼리가 없으면 "all"을 넘겨줄 것.
-        List<InquiryResponse> responses = inquiryManagerService.searchInquiriesByQuery(state, category, writer, title, pageIndex, pageSize);
-
-        return ResponseEntity.ok(responses);
+        Page<InquiryResponse> test = inquiryManagerService.searchInquiriesByQuery(state, category, writer, title, pageIndex, pageSize);
+        return ResponseEntity.ok(test);
     }
 
     @ApiOperation(value = "세부 문의 정보 조회")

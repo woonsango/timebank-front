@@ -7,6 +7,7 @@ import com.capstone.timepay.controller.admin.response.userManage.UserProfileResp
 import com.capstone.timepay.service.admin.UserManageService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.validation.Valid;
 
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/admins/user-management")
@@ -24,22 +26,42 @@ public class UserManageController {
 
     @ApiOperation(value = "전체 유저 정보 리스트 조회")
     @GetMapping("/main")
-    public ResponseEntity<?> main(){
+    public ResponseEntity<?> main(@RequestParam(defaultValue = "0") int pageIndex,
+                                  @RequestParam(defaultValue = "50") int pageSize){
 
-        List<MainResponse> responses = userManageService.showAllUserList();
+        List<MainResponse> responses = userManageService.showAllUserList(pageIndex, pageSize);
 
         return ResponseEntity.ok(responses);
     }
 
     @ApiOperation(value = "쿼리를 통한 유저 필터링 : 쿼리 ( name / email / nickname )")
-    @GetMapping("/search")
-    public ResponseEntity<?> search(@RequestParam Long userId, @RequestParam String query, @RequestParam String value){
+    @GetMapping("/search2")
+    public ResponseEntity<?> search2(@RequestParam Long userId, @RequestParam String query, @RequestParam String value){
 
         List<MainResponse> responses = new ArrayList<>();
         if(query.equals("name")) responses = userManageService.showAllUserListByName(userId, value);
         else if(query.equals("email")) responses = userManageService.showAllUserListByEmail(userId, value);
         else if(query.equals("nickname")) responses = userManageService.showAllUserListByNickname(userId, value);
         else throw new IllegalArgumentException("잘못된 요청입니다.");
+
+        return ResponseEntity.ok(responses);
+    }
+
+    @ApiOperation(value = "쿼리를 통한 유저 필터링 : 쿼리 ( name / email / nickname )")
+    @GetMapping("/search")
+    public ResponseEntity<?> search(@RequestParam(required = false) Long userId,
+                                    @RequestParam(required = false) String query,
+                                    @RequestParam(defaultValue = "0") int pageIndex,
+                                    @RequestParam(defaultValue = "50") int pageSize){
+
+//        List<MainResponse> responses = new ArrayList<>();
+//        if(query.equals("name")) responses = userManageService.showAllUserListByName(userId, query, pageIndex, pageSize);
+//        else if(query.equals("email")) responses = userManageService.showAllUserListByEmail(userId, query, pageIndex, pageSize);
+//        else if(query.equals("nickname")) responses = userManageService.showAllUserListByNickname(userId, query, pageIndex, pageSize);
+//        else throw new IllegalArgumentException("잘못된 요청입니다.");
+        System.out.println("userId:: " + userId);
+        System.out.println("query:: " + query);
+        List<MainResponse> responses = userManageService.showAllUserBySearch(userId, query, pageIndex, pageSize);
 
         return ResponseEntity.ok(responses);
     }

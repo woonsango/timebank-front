@@ -30,6 +30,9 @@ import com.capstone.timepay.domain.userProfile.UserProfileRepository;
 import com.capstone.timepay.service.admin.dto.UserUpdateDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
@@ -58,11 +61,15 @@ public class UserManageService {
     private final FreeBoardReportRepository freeBoardReportRepository;
     private final FreeCommentReportRepository freeCommentReportRepository;
 
-    public List<MainResponse> showAllUserList() {
+    public List<User> getAllUserList(int pageIndex, int pageSize){
+        Pageable pageable = PageRequest.of(pageIndex, pageSize);
 
-        List<User> users = userRepository.findAll();
+        return userRepository.findAll(pageable).getContent();
+    }
 
-        return users.stream()
+    public List<MainResponse> showAllUserList(int pageIndex, int pageSize) {
+
+        return getAllUserList(pageIndex, pageSize).stream()
                     .map(user -> MainResponse.builder()
                         .userId(user.getUserId())
                         .userName(user.getName())
@@ -438,5 +445,54 @@ public class UserManageService {
                 .receivedReportDtos(receivedReports)
                 .build();
 
+    }
+
+    public List<MainResponse> showAllUserBySearch(Long userId, String query, int pageIndex, int pageSize) {
+
+        List<User> users = new ArrayList<>();
+
+        if(!ObjectUtils.isEmpty(userId) && ObjectUtils.isEmpty(query)){
+            users.add(userRepository.findById(userId).get());
+        }
+        else if(ObjectUtils.isEmpty(userId) && !ObjectUtils.isEmpty(query)){
+            log.info("@@@@@@@@@@@@@@@@@@@@@@@@@");
+            List<User> names = userRepository.findByNameContains(query);
+            List<User> nicknames = userRepository.findByNicknameContains(query);
+            List<User> emails = userRepository.findByEmailContains(query);
+            List<User> result = new ArrayList<>(names);
+            result.removeAll(nicknames);
+            result.addAll(nicknames);
+            result.removeAll(emails);
+            result.addAll(emails);
+            if(pageIndex*pageSize+pageSize >= result.size()){
+                users = result.subList(pageIndex*pageSize,result.size());
+            }
+            else{
+                users = result.subList(pageIndex*pageSize,pageIndex*pageSize+pageSize);
+            }
+        }
+        else if(!ObjectUtils.isEmpty(userId) && !ObjectUtils.isEmpty(query)){
+            User user = userRepository.findById(userId).get();
+            if(user.getName().contains(query) || user.getNickname().contains(query) || user.getEmail().contains(query)){
+                users.add(user);
+            }
+        }
+        else{
+            log.info("!!!!!!!!!!!!!!!!!!!!!!");
+            users = getAllUserList(pageIndex, pageSize);
+        }
+
+        return users.stream()
+                .map(user -> MainResponse.builder()
+                        .userId(user.getUserId())
+                        .userName(user.getName())
+                        .nickName(user.getNickname())
+                        .sex(user.getSex())
+                        .birth(user.getBirthday())
+                        .region(user.getLocation())
+                        .timepay(user.getUserProfile().getTimepay()) // 확인 필요
+                        .build())
+                .sorted(Comparator.comparing(MainResponse::getUserId))
+                .collect(Collectors.toList());
     }
 }
