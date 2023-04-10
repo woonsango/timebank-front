@@ -2,7 +2,7 @@ package com.capstone.timepay.controller.user;
 
 import com.capstone.timepay.domain.user.model.AuthenticationRequest;
 import com.capstone.timepay.domain.user.model.AuthenticationResponse;
-import com.capstone.timepay.domain.user.User;
+
 import com.capstone.timepay.service.user.dto.KakaoLoginDto;
 import org.springframework.security.authentication.AuthenticationManager;
 import com.capstone.timepay.service.user.service.KakaoLoginService;
@@ -33,7 +33,7 @@ public class KakaoLoginController {
     /* 카카오 로그인 */
     @GetMapping("/login")
     @ApiOperation(value="카카오 간편 로그인 콜백 함수",notes = "리다이렉션 URI로 실행되는 함수입니다. 따로 사용 X")
-    public ResponseEntity kakaoCallback(@RequestParam String code, @RequestBody AuthenticationRequest authenticationRequest) throws  Exception {
+    public ResponseEntity<?> kakaoCallback(@RequestParam String code) throws  Exception {
         String access_Token = kakaoLoginService.getKaKaoAccessToken(code);
         KakaoLoginDto data = kakaoLoginService.createKakaoUser(access_Token);
         String email = data.getEmail();
@@ -57,9 +57,9 @@ public class KakaoLoginController {
         // return ResponseEntity.ok(new AuthenticationResponse(token, user));
     }
 
-    private void authenticate(Long uid, String password) throws Exception {
+    private void authenticate(Long uid, String email) throws Exception {
         try {
-            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(uid, password));
+            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(uid, email));
         } catch (DisabledException e) {
             throw new Exception("USER_DISABLED", e);
         } catch (BadCredentialsException e) {
