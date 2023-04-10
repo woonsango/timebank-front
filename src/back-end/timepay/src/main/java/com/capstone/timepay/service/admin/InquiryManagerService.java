@@ -10,8 +10,12 @@ import com.capstone.timepay.domain.inquiry.InquiryRepository;
 import com.capstone.timepay.domain.inquiryAnswer.InquiryAnswer;
 import com.capstone.timepay.domain.inquiryAnswer.InquiryAnswerRepository;
 import com.capstone.timepay.service.admin.dto.InquiryAnswerDto;
+import org.springframework.data.domain.Page;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -30,37 +34,40 @@ public class InquiryManagerService {
     private final AdminRepository adminRepository;
     private final InquiryAnswerRepository inquiryAnswerRepository;
 
+    public List<InquiryResponse> showAllInquiries(int pageIndex, int pageSize) {
+        Pageable pageable = PageRequest.of(pageIndex, pageSize, Sort.by("createdAt").descending());
 
-    public List<InquiryResponse> showAllInquiries() {
-        List<Inquiry> inquiries = inquiryRepository.findAll();
+        List<Inquiry> inquiries = inquiryRepository.findAll(pageable).getContent();
         return inquiries.stream()
-                        .map(inquiry -> InquiryResponse.builder()
-                                .inquiryId(inquiry.getInquiryId())
-                                .state(inquiry.getState())
-                                .category(inquiry.getCategory())
-                                .createdAt(inquiry.getCreatedAt())
-                                .writer(inquiry.getUser().getName())
-                                .title(inquiry.getTitle())
-                                .build())
-                        //.sorted(Comparator.comparing(InquiryResponse::getCreatedAt).reversed())
-                        .collect(Collectors.toList());
+                .map(inquiry -> InquiryResponse.builder()
+                        .inquiryId(inquiry.getInquiryId())
+                        .state(inquiry.getState())
+                        .category(inquiry.getCategory())
+                        .createdAt(inquiry.getCreatedAt())
+                        .writer(inquiry.getUser().getName())
+                        .title(inquiry.getTitle())
+                        .build())
+                //.sorted(Comparator.comparing(InquiryResponse::getCreatedAt).reversed())
+                .collect(Collectors.toList());
     }
 
-    public List<InquiryResponse> searchInquiriesByQuery(String state, String category, String writer, String title) {
+    public List<InquiryResponse> searchInquiriesByQuery(String state, String category, String writer, String title, int pageIndex, int pageSize) {
 
         List<Inquiry> inquiries = new ArrayList<>();
 
+        Pageable pageable = PageRequest.of(pageIndex, pageSize, Sort.by("createdAt").descending());
+
         if(state.equals("all") && category.equals("all")){
-            inquiries = inquiryRepository.findAll();
+            inquiries = inquiryRepository.findAll(pageable).getContent();
         }
         else if(state.equals("all")){
-            inquiries = inquiryRepository.findAllByCategory(category).orElseThrow(()->new IllegalArgumentException("존재하지 않는 문의입니다."));
+            inquiries = inquiryRepository.findAllByCategory(category, pageable).getContent();
         }
         else if(category.equals("all")){
-            inquiries = inquiryRepository.findAllByState(state).orElseThrow(()->new IllegalArgumentException("존재하지 않는 문의입니다."));
+            inquiries = inquiryRepository.findAllByState(state, pageable).getContent();
         }
         else{
-            inquiries = inquiryRepository.findAllByCategoryAndState(category, state).orElseThrow(()->new IllegalArgumentException("존재하지 않는 문의입니다."));
+            inquiries = inquiryRepository.findAllByCategoryAndState(category, state, pageable).getContent();
         }
 
         List<InquiryResponse> responses = new ArrayList<>();

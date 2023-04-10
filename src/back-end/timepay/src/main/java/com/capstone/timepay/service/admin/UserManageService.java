@@ -226,7 +226,7 @@ public class UserManageService {
         List<BoardActivityDto> boardActivityDtos = new ArrayList<>();
         List<FreeRegister> freeRegisters = freeRegisterRepository.findAllById(Collections.singleton(userId));
         for(FreeRegister element : freeRegisters){
-            Board board = boardRepository.findByFBoardId(element.getFreeBoard().getF_boardId()).orElseThrow(()->new IllegalArgumentException("존재하지 않는 게시글입니다."));
+            Board board = boardRepository.findByfBoardId(element.getFreeBoard().getF_boardId()).orElseThrow(()->new IllegalArgumentException("존재하지 않는 게시글입니다."));
             BoardActivityDto boardActivityDto = BoardActivityDto.builder()
                     .boardId(board.getBoardId())
                     .createdAt(element.getFreeBoard().getCreatedAt())
@@ -243,7 +243,7 @@ public class UserManageService {
 
         List<DealRegister> dealRegisters = dealRegisterRepository.findAllById(Collections.singleton(userId));
         for(DealRegister element : dealRegisters){
-            Board board = boardRepository.findByFBoardId(element.getDealBoard().getD_boardId()).orElseThrow(()->new IllegalArgumentException("존재하지 않는 게시글입니다."));
+            Board board = boardRepository.findByfBoardId(element.getDealBoard().getD_boardId()).orElseThrow(()->new IllegalArgumentException("존재하지 않는 게시글입니다."));
             BoardActivityDto boardActivityDto = BoardActivityDto.builder()
                     .boardId(board.getBoardId())
                     .createdAt(element.getDealBoard().getCreatedAt())
@@ -262,7 +262,7 @@ public class UserManageService {
         List<CommentActivityDto> commentActivityDtos = new ArrayList<>();
         List<DealBoardComment> dComments = dealBoardCommentRepository.findAllByUser(user);
         for(DealBoardComment element : dComments){
-            Comment comment = commentRepository.findByDCommentId(element.getD_commentId());
+            Comment comment = commentRepository.findBydCommentId(element.getD_commentId());
             CommentActivityDto commentActivityDto = CommentActivityDto.builder()
                     .commentId(comment.getCommentId())
                     .createdAt(element.getCreatedAt())
@@ -274,7 +274,7 @@ public class UserManageService {
         }
         List<FreeBoardComment> fComments = freeBoardCommentRepository.findAllByUser(user);
         for(FreeBoardComment element : fComments){
-            Comment comment = commentRepository.findByFCommentId(element.getF_commentId());
+            Comment comment = commentRepository.findByfCommentId(element.getF_commentId());
             CommentActivityDto commentActivityDto = CommentActivityDto.builder()
                     .commentId(comment.getCommentId())
                     .createdAt(element.getCreatedAt())
@@ -299,7 +299,7 @@ public class UserManageService {
 
         for(FreeBoardReport element : fbReports){
             // 신고 한 내역
-            Report report = reportRepository.findByFBoardReportId(element.getFb_reportId());
+            Report report = reportRepository.findByfBoardReportId(element.getFb_reportId());
             FreeRegister freeRegister = freeRegisterRepository.findByFreeBoard(element.getFreeBoard()).orElseThrow(()->new IllegalArgumentException("존재하지 않는 게시글입니다."));
             ReportActivityDto reportDto = ReportActivityDto.builder()
                     .reportId(report.getReportId())
@@ -335,7 +335,7 @@ public class UserManageService {
 
         for(DealBoardReport element : dbReports){
             // 신고 한 내역
-            Report report = reportRepository.findByDBoardReportId(element.getDb_reportId());
+            Report report = reportRepository.findBydBoardReportId(element.getDb_reportId());
             DealRegister dealRegister = dealRegisterRepository.findByDealBoard(element.getDealBoard()).orElseThrow(()->new IllegalArgumentException("존재하지 않는 게시글입니다."));
             ReportActivityDto reportDto = ReportActivityDto.builder()
                     .reportId(report.getReportId())
@@ -371,7 +371,7 @@ public class UserManageService {
 
         for(FreeCommentReport element : fcReports){
             // 신고 한 내역
-            Report report = reportRepository.findByFCommentReportId(element.getFc_reportId());
+            Report report = reportRepository.findByfCommentReportId(element.getFc_reportId());
             ReportActivityDto reportDto = ReportActivityDto.builder()
                     .reportId(report.getReportId())
                     .reportedName(element.getFreeBoardComment().getUser().getName()) // User의 Name 보냄 (Nickname x)
@@ -406,7 +406,7 @@ public class UserManageService {
 
         for(DealCommentReport element : dcReports){
             // 신고 한 내역
-            Report report = reportRepository.findByDCommentReportId(element.getDc_reportId());
+            Report report = reportRepository.findBydCommentReportId(element.getDc_reportId());
             ReportActivityDto reportDto = ReportActivityDto.builder()
                     .reportId(report.getReportId())
                     .reportedName(element.getDealBoardComment().getUser().getName()) // User의 Name 보냄 (Nickname x)
