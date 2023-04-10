@@ -44,8 +44,8 @@ public class InquiryManageController {
                                               @RequestParam(defaultValue = "0") int pageIndex,
                                               @RequestParam(defaultValue = "50") int pageSize){
 
-        Page<InquiryResponse> test = inquiryManagerService.searchInquiriesByQuery(state, category, writer, title, pageIndex, pageSize);
-        return ResponseEntity.ok(test);
+        Page<InquiryResponse> responses = inquiryManagerService.searchInquiriesByQuery(state, category, writer, title, pageIndex, pageSize);
+        return ResponseEntity.ok(responses);
     }
 
     @ApiOperation(value = "세부 문의 정보 조회")

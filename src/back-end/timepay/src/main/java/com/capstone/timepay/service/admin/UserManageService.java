@@ -1,5 +1,6 @@
 package com.capstone.timepay.service.admin;
 
+import com.capstone.timepay.controller.admin.response.inquiry.InquiryResponse;
 import com.capstone.timepay.controller.admin.response.userManage.*;
 import com.capstone.timepay.domain.board.Board;
 import com.capstone.timepay.domain.board.BoardRepository;
@@ -22,6 +23,7 @@ import com.capstone.timepay.domain.freeCommentReport.FreeCommentReport;
 import com.capstone.timepay.domain.freeCommentReport.FreeCommentReportRepository;
 import com.capstone.timepay.domain.freeRegister.FreeRegister;
 import com.capstone.timepay.domain.freeRegister.FreeRegisterRepository;
+import com.capstone.timepay.domain.inquiry.Inquiry;
 import com.capstone.timepay.domain.report.Report;
 import com.capstone.timepay.domain.report.ReportRepository;
 import com.capstone.timepay.domain.user.User;
@@ -30,9 +32,7 @@ import com.capstone.timepay.domain.userProfile.UserProfileRepository;
 import com.capstone.timepay.service.admin.dto.UserUpdateDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
@@ -40,6 +40,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -67,10 +68,11 @@ public class UserManageService {
         return userRepository.findAll(pageable).getContent();
     }
 
-    public List<MainResponse> showAllUserList(int pageIndex, int pageSize) {
-
-        return getAllUserList(pageIndex, pageSize).stream()
-                    .map(user -> MainResponse.builder()
+    public Page<MainResponse> convertResponsePages(Page<User> pages){
+        Page<MainResponse> pageResponses = pages.map(new Function<User, MainResponse>() {
+            @Override
+            public MainResponse apply(User user) {
+                return MainResponse.builder()
                         .userId(user.getUserId())
                         .userName(user.getName())
                         .nickName(user.getNickname())
@@ -78,112 +80,44 @@ public class UserManageService {
                         .birth(user.getBirthday())
                         .region(user.getLocation())
                         .timepay(user.getUserProfile().getTimepay()) // 확인 필요
-                        .build())
-                    .sorted(Comparator.comparing(MainResponse::getUserId))
-                    .collect(Collectors.toList());
+                        .build();
+            }
+        });
+
+        return pageResponses;
     }
 
-    public List<MainResponse> showAllUserListByName(Long userId, String value) {
+    public Page<MainResponse> showAllUserList(int pageIndex, int pageSize) {
 
-        List<User> users = new ArrayList<>();
+        Pageable pageable = PageRequest.of(pageIndex, pageSize, Sort.by("userId"));
+        Page<User> pages = userRepository.findAll(pageable);
 
-        if(!ObjectUtils.isEmpty(userId) && !ObjectUtils.isEmpty(value)){
-            User user = userRepository.findById(userId).orElseThrow(()->new IllegalArgumentException("존재하지 않는 회원입니다."));
-            if(!user.getName().equals(value))
-                throw new IllegalArgumentException("존재하지 않는 회원입니다.");
-            users.add(user);
-        }
-        else if(!ObjectUtils.isEmpty(userId)){
-            User user = userRepository.findById(userId).orElseThrow(()->new IllegalArgumentException("존재하지 않는 회원입니다."));
-            users.add(user);
-        }
-        else if(!ObjectUtils.isEmpty(value)){
-            users = userRepository.findAllByName(value).orElseThrow(()->new IllegalArgumentException("존재하지 않는 회원입니다."));
-        }
-        else{
-            users = userRepository.findAll();
-        }
-
-        return users.stream()
-                .map(user -> MainResponse.builder()
-                        .userId(user.getUserId())
-                        .userName(user.getName())
-                        .nickName(user.getNickname())
-                        .sex(user.getSex())
-                        .birth(user.getBirthday())
-                        .region(user.getLocation())
-                        .timepay(user.getUserProfile().getTimepay()) // 확인 필요
-                        .build())
-                .sorted(Comparator.comparing(MainResponse::getUserId))
-                .collect(Collectors.toList());
+        return convertResponsePages(pages);
     }
-    public List<MainResponse> showAllUserListByEmail(Long userId, String query) {
 
-        List<User> users = new ArrayList<>();
+    public Page<MainResponse> showAllUserBySearch(Long userId, String query, String value, int pageIndex, int pageSize) {
+        Pageable pageable = PageRequest.of(pageIndex, pageSize);
 
-        if(!ObjectUtils.isEmpty(userId) && !ObjectUtils.isEmpty(query)){
-            User user = userRepository.findById(userId).orElseThrow(()->new IllegalArgumentException("존재하지 않는 회원입니다."));
-            if(!user.getEmail().equals(query))
-                throw new IllegalArgumentException("존재하지 않는 회원입니다.");
-            users.add(user);
+        if(!ObjectUtils.isEmpty(userId)){
+            List<User> user = userRepository.findById(userId).stream().collect(Collectors.toList());
+            Page<User> pages = new PageImpl<>(user);
+            return convertResponsePages(pages);
         }
-        else if(!ObjectUtils.isEmpty(userId)){
-            User user = userRepository.findById(userId).orElseThrow(()->new IllegalArgumentException("존재하지 않는 회원입니다."));
-            users.add(user);
+        else if(!ObjectUtils.isEmpty(query) && !ObjectUtils.isEmpty(value)){
+            if(query.equals("name")){
+                Page<User> pages = userRepository.findAllByName(pageable, value);
+                return convertResponsePages(pages);
+            }
+            else if(query.equals("nickname")){
+                Page<User> pages = userRepository.findAllByNickname(pageable, value);
+                return convertResponsePages(pages);
+            }
+            else{
+                Page<User> pages = userRepository.findAllByEmail(pageable, value);
+                return convertResponsePages(pages);
+            }
         }
-        else if(!ObjectUtils.isEmpty(query)){
-            users = userRepository.findAllByEmail(query).orElseThrow(()->new IllegalArgumentException("존재하지 않는 회원입니다."));
-        }
-        else{
-            users = userRepository.findAll();
-        }
-
-        return users.stream()
-                .map(user -> MainResponse.builder()
-                        .userId(user.getUserId())
-                        .userName(user.getName())
-                        .nickName(user.getNickname())
-                        .sex(user.getSex())
-                        .birth(user.getBirthday())
-                        .region(user.getLocation())
-                        .timepay(user.getUserProfile().getTimepay()) // 확인 필요
-                        .build())
-                .sorted(Comparator.comparing(MainResponse::getUserId))
-                .collect(Collectors.toList());
-    }
-    public List<MainResponse> showAllUserListByNickname(Long userId, String query) {
-
-        List<User> users = new ArrayList<>();
-
-        if(!ObjectUtils.isEmpty(userId) && !ObjectUtils.isEmpty(query)){
-            User user = userRepository.findById(userId).orElseThrow(()->new IllegalArgumentException("존재하지 않는 회원입니다."));
-            if(!user.getNickname().equals(query))
-                throw new IllegalArgumentException("존재하지 않는 회원입니다.");
-            users.add(user);
-        }
-        else if(!ObjectUtils.isEmpty(userId)){
-            User user = userRepository.findById(userId).orElseThrow(()->new IllegalArgumentException("존재하지 않는 회원입니다."));
-            users.add(user);
-        }
-        else if(!ObjectUtils.isEmpty(query)){
-            users = userRepository.findAllByNickname(query).orElseThrow(()->new IllegalArgumentException("존재하지 않는 회원입니다."));
-        }
-        else{
-            users = userRepository.findAll();
-        }
-
-        return users.stream()
-                .map(user -> MainResponse.builder()
-                        .userId(user.getUserId())
-                        .userName(user.getName())
-                        .nickName(user.getNickname())
-                        .sex(user.getSex())
-                        .birth(user.getBirthday())
-                        .region(user.getLocation())
-                        .timepay(user.getUserProfile().getTimepay()) // 확인 필요
-                        .build())
-                .sorted(Comparator.comparing(MainResponse::getUserId))
-                .collect(Collectors.toList());
+        else throw new IllegalArgumentException("잘못된 파라미터 요청입니다.");
     }
 
     public void updateUserInfo(UserUpdateDto userInfo) {
@@ -447,52 +381,5 @@ public class UserManageService {
 
     }
 
-    public List<MainResponse> showAllUserBySearch(Long userId, String query, int pageIndex, int pageSize) {
 
-        List<User> users = new ArrayList<>();
-
-        if(!ObjectUtils.isEmpty(userId) && ObjectUtils.isEmpty(query)){
-            users.add(userRepository.findById(userId).get());
-        }
-        else if(ObjectUtils.isEmpty(userId) && !ObjectUtils.isEmpty(query)){
-            log.info("@@@@@@@@@@@@@@@@@@@@@@@@@");
-            List<User> names = userRepository.findByNameContains(query);
-            List<User> nicknames = userRepository.findByNicknameContains(query);
-            List<User> emails = userRepository.findByEmailContains(query);
-            List<User> result = new ArrayList<>(names);
-            result.removeAll(nicknames);
-            result.addAll(nicknames);
-            result.removeAll(emails);
-            result.addAll(emails);
-            if(pageIndex*pageSize+pageSize >= result.size()){
-                users = result.subList(pageIndex*pageSize,result.size());
-            }
-            else{
-                users = result.subList(pageIndex*pageSize,pageIndex*pageSize+pageSize);
-            }
-        }
-        else if(!ObjectUtils.isEmpty(userId) && !ObjectUtils.isEmpty(query)){
-            User user = userRepository.findById(userId).get();
-            if(user.getName().contains(query) || user.getNickname().contains(query) || user.getEmail().contains(query)){
-                users.add(user);
-            }
-        }
-        else{
-            log.info("!!!!!!!!!!!!!!!!!!!!!!");
-            users = getAllUserList(pageIndex, pageSize);
-        }
-
-        return users.stream()
-                .map(user -> MainResponse.builder()
-                        .userId(user.getUserId())
-                        .userName(user.getName())
-                        .nickName(user.getNickname())
-                        .sex(user.getSex())
-                        .birth(user.getBirthday())
-                        .region(user.getLocation())
-                        .timepay(user.getUserProfile().getTimepay()) // 확인 필요
-                        .build())
-                .sorted(Comparator.comparing(MainResponse::getUserId))
-                .collect(Collectors.toList());
-    }
 }

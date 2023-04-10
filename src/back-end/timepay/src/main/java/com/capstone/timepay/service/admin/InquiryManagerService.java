@@ -33,7 +33,7 @@ import static java.util.function.Predicate.not;
 public class InquiryManagerService {
 
     private final InquiryRepository inquiryRepository;
-    private final AdminRepository adminRepository;
+
     private final InquiryAnswerRepository inquiryAnswerRepository;
     private final UserRepository userRepository;
 
