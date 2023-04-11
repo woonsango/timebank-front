@@ -65,7 +65,12 @@
 # :computer: 사용법
 
 # 기술 스택
-### 📚 Frontend
+### 📚 Frontend     
+|역할|종류|
+|-|-| 
+|Framework|<img src="https://img.shields.io/badge/React-61DAFB?style=for-the-badge&logo=React&logoColor=white">|
+|Programming Language|<img src="https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=TypeScript&logoColor=white">|          
+<br />
 
 ### 📚 Backend
 |역할|종류|
