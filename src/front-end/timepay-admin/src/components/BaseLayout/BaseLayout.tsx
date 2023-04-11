@@ -8,6 +8,7 @@ import {
   NotificationOutlined,
   TeamOutlined,
   UserSwitchOutlined,
+  OrderedListOutlined,
 } from '@ant-design/icons';
 import { Layout, Menu, MenuProps } from 'antd';
 import { useMemo, useState } from 'react';
@@ -15,6 +16,7 @@ import { Link, Outlet } from 'react-router-dom';
 import { PATH } from '../../utils/paths';
 import { cssBaseLayoutStyle } from './BaseLayout.styles';
 import { ReactComponent as Logo } from '../../assets/images/timepay-logo.svg';
+import { COMMON_COLOR } from '../../styles/constants/colors';
 
 const BaseLayout = () => {
   const [collapsed, setCollapsed] = useState(false);
@@ -84,13 +86,27 @@ const BaseLayout = () => {
           </Link>
         ),
       },
+      {
+        key: PATH.CATEGORY_MANAGEMENT,
+        label: '카테고리 관리',
+        icon: (
+          <Link to={PATH.CATEGORY_MANAGEMENT}>
+            <OrderedListOutlined />
+          </Link>
+        ),
+      },
     ];
   }, []);
 
   return (
     <Layout css={cssBaseLayoutStyle}>
       <Layout.Sider trigger={null} collapsible collapsed={collapsed}>
-        <Logo className={`logo ${collapsed ? 'collapsed' : 'no-collapsed'}`} />
+        <Logo
+          fill={COMMON_COLOR.WHITE}
+          width="101"
+          height="34"
+          className={`logo ${collapsed ? 'collapsed' : 'no-collapsed'}`}
+        />
         <Menu
           defaultSelectedKeys={[window.location.pathname]}
           mode="inline"

@@ -16,7 +16,7 @@ export const cssMainHeaderStyle = css`
   font-size: 20px;
   line-height: 15px;
   border: 0;
-  border-bottom: 1px solid #cdcdcd;
+  border-bottom: 1px solid ${COMMON_COLOR.SILVER_GRAY};
 
   display: flex;
   flex-direction: row;
@@ -27,4 +27,6 @@ export const cssMainHeaderStyle = css`
   .header-title {
     margin-top: 1px;
   }
+
+  z-index: 100;
 `;
