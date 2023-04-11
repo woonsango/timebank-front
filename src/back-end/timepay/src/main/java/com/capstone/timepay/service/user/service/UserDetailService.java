@@ -1,26 +1,33 @@
 package com.capstone.timepay.service.user.service;
 
 import com.capstone.timepay.domain.user.User;
-// import org.springframework.security.core.userdetails.User;
 import com.capstone.timepay.domain.user.UserRepository;
-import com.capstone.timepay.service.user.service.jwt.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.Optional;
+
 @RequiredArgsConstructor
 @Service
-public class UserDetailService implements UserDetailsService {
+public class UserDetailService {
 
     private final UserRepository userRepository;
 
-    @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        User user = userRepository.findByEmail(email);
+        Optional<User> user = userRepository.findByEmail(email);
 
-        return new UserDetailsImpl(user);
+        if (!user.isPresent()) {
+            throw new UsernameNotFoundException("User not found with username: " + email);
+        }
+
+        return new org.springframework.security.core.userdetails.User(
+                user.get().getEmail(), user.get().getEncodedPassword(),
+                new ArrayList<>());
+
+        //return new UserDetailsImpl(user);
     }
 
     public User getUser(String name) {

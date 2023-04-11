@@ -1,16 +1,20 @@
 package com.capstone.timepay.service.user.service;
 
+import com.capstone.timepay.domain.signUpUser.SignUpUser;
+import com.capstone.timepay.domain.signUpUser.SignUpUserRepository;
 import com.capstone.timepay.domain.user.User;
 import com.capstone.timepay.domain.user.UserRepository;
 import com.capstone.timepay.service.user.dto.KakaoLoginDto;
+
 import com.google.gson.JsonParser;
 import com.google.gson.JsonElement;
 import lombok.RequiredArgsConstructor;
-import org.springframework.core.env.Environment;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
@@ -22,10 +26,12 @@ import java.util.Date;
 
 @Service
 @RequiredArgsConstructor
+@EnableWebSecurity
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class KakaoLoginService {
     private final UserRepository userRepository;
-    private final Environment env;
-    private AuthenticationManager authenticationManager;
+    private final PasswordEncoder passwordEncoder;
+    private final SignUpUserRepository signUpUserRepository;
 
     public  String getKaKaoAccessToken(String code){
         String access_Token="";
@@ -77,15 +83,17 @@ public class KakaoLoginService {
         return access_Token;
     }
 
-    public  KakaoLoginDto createKakaoUser(String token) { // throws BaseException 오류나와서 보류
+    public User createKakaoUser(String token) { // throws BaseException 오류나와서 보류
         String reqURL = "https://kapi.kakao.com/v2/user/me";
         String email = null;
         String sex = null;
         String birthday = null;
         Long id = null;
-        KakaoLoginDto user = new KakaoLoginDto();
+        // KakaoLoginDto user = new KakaoLoginDto();
+        User kakaoUser = null;
 
         //access_token을 이용하여 사용자 정보 조회
+
         try {
             URL url = new URL(reqURL);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -113,66 +121,106 @@ public class KakaoLoginService {
             JsonElement element = parser.parse(result);
 
             id = element.getAsJsonObject().get("id").getAsLong();
+            String password = Long.toString(id);
+
+            kakaoUser = userRepository.findByUid(id).orElse(null);
 
             /* uid값 비교하여 중복된 데이터는 데이터베이스에 저장X */
-            if(userRepository.findByUid(id) == null)
-            {
-                /* 이메일 제공 여부 확인 및 이메일 가져오기 */
-                boolean hasEmail = element.getAsJsonObject().get("kakao_account").getAsJsonObject().get("has_email").getAsBoolean();
-                if (hasEmail) {
-                    email = element.getAsJsonObject().get("kakao_account").getAsJsonObject().get("email").getAsString();
+            if (kakaoUser == null) {
+                if (signUpUserRepository.findByUid(id).orElse(null) == null) {
+                    /* 이메일 제공 여부 확인 및 이메일 가져오기 */
+                    boolean hasEmail = element.getAsJsonObject().get("kakao_account").getAsJsonObject().get("has_email").getAsBoolean();
+                    if (hasEmail) {
+                        email = element.getAsJsonObject().get("kakao_account").getAsJsonObject().get("email").getAsString();
+
+                    } else {
+                        email = "이메일 동의하지 않음";
+                    }
+
+                    /* 성별 제공 여부 확인 및 성별 가져오기 */
+                    boolean hasSex = element.getAsJsonObject().get("kakao_account").getAsJsonObject().get("has_gender").getAsBoolean();
+                    if (hasSex) {
+                        sex = element.getAsJsonObject().get("kakao_account").getAsJsonObject().get("gender").getAsString();
+                    } else {
+                        sex = "성별 동의하지 않음";
+                    }
+
+                    /* 생일 제공 여부 확인 및 생일 가져오기 */
+                    boolean hasBirthday = element.getAsJsonObject().get("kakao_account").getAsJsonObject().get("has_birthday").getAsBoolean();
+                    if (hasBirthday) {
+                        birthday = element.getAsJsonObject().get("kakao_account").getAsJsonObject().get("birthday").getAsString();
+                    } else {
+                        birthday = "생일 동의하지 않음";
+                    }
+
+                    String encodedPassword = passwordEncoder.encode(password);
+                    SignUpUser usertmp = createKakaoUsers(id, email, sex, encodedPassword);
+
+                    System.out.println("id : " + kakaoUser.getUid());
+                    System.out.println("email : " + kakaoUser.getEmail());
+                    System.out.println("gender : " + kakaoUser.getSex());
+
+                    return converSignUpToUser(usertmp);
 
                 } else {
-                    email = "이메일 동의하지 않음";
-                }
+                    System.out.println("\n이미 회원가입 신청한 계정이래요~\n");
 
-                /* 성별 제공 여부 확인 및 성별 가져오기 */
-                boolean hasSex = element.getAsJsonObject().get("kakao_account").getAsJsonObject().get("has_gender").getAsBoolean();
-                if (hasSex) {
-                    sex = element.getAsJsonObject().get("kakao_account").getAsJsonObject().get("gender").getAsString();
-                } else {
-                    sex = "성별 동의하지 않음";
-                }
+                    SignUpUser signUpUser = signUpUserRepository.findByUid(id).orElse(null);
+                    System.out.println("id : " + signUpUser.getUid());
+                    System.out.println("email : " + signUpUser.getEmail());
+                    System.out.println("gender : " + signUpUser.getSex());
 
-                /* 생일 제공 여부 확인 및 생일 가져오기 */
-                boolean hasBirthday = element.getAsJsonObject().get("kakao_account").getAsJsonObject().get("has_birthday").getAsBoolean();
-                if (hasBirthday) {
-                    birthday = element.getAsJsonObject().get("kakao_account").getAsJsonObject().get("birthday").getAsString();
-                } else {
-                    birthday = "생일 동의하지 않음";
+                    return converSignUpToUser(signUpUser);
                 }
-
-            } else {
-                System.out.println("\n이미 저장된 데이터래요~\n");
-                User userTmp = userRepository.findByUid(id);
-                user = KakaoLoginDto.toKaKaoLoginDto(userTmp);
-                Authentication kakaoUsernamePassword = new UsernamePasswordAuthenticationToken(id, email);
-                Authentication authentication = authenticationManager.authenticate(kakaoUsernamePassword);
-                SecurityContextHolder.getContext().setAuthentication(authentication);
+            } else{
+                System.out.println("\n이미 가입된 계정이래요~\n");
             }
-
-
-            System.out.println("id : " + id);
-            System.out.println("email : " + email);
-            System.out.println("gender : " + sex);
-            System.out.println("birthday : " + birthday);
 
             br.close();
 
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return user;
+
+        return kakaoUser;
     }
 
     /* 데이터베이스 추가 작업 */
-    public KakaoLoginDto createKakaoUsers(Long id, String email, String sex){
-        User user = new User();
+    public SignUpUser createKakaoUsers(Long id, String email, String sex, String encodePassword){
+        SignUpUser user = new SignUpUser();
         user.setUid(id);
         user.setEmail(email);
         user.setSex(sex);
-        userRepository.save(user);
+        user.setEncodedPassword(encodePassword);
+        signUpUserRepository.save(user);
 
-        return KakaoLoginDto.toKaKaoLoginDto(user);
+        return user;
     }
+
+    public User converSignUpToUser(SignUpUser signUpUser){ // SignUpUser 오브젝트를 User 오브젝트로 변경
+        User user = new User();
+        user.setUid(signUpUser.getUid());
+        user.setEmail(signUpUser.getEmail());
+        user.setSex(signUpUser.getSex());
+        user.setEncodedPassword(signUpUser.getEncodedPassword());
+        return user;
+    }
+
+    public SignUpUser converUserTosignUp(Long uid){
+        User user = userRepository.findByUid(uid).orElse(null);
+        SignUpUser signUpUser = new SignUpUser();
+        signUpUser.setUid(user.getUid());
+        signUpUser.setEmail(user.getEmail());
+        signUpUser.setSex(user.getSex());
+        signUpUser.setEncodedPassword(user.getEncodedPassword());
+        return signUpUser;
+    }
+
+    public boolean isUser(Long uid){
+        if(userRepository.findByUid(uid).orElse(null) == null)
+            return false;
+        return true;
+    }
+
+
 }

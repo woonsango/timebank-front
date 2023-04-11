@@ -11,6 +11,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -23,6 +24,11 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 @Order(0)
 public class AdminSecurityConfig extends WebSecurityConfigurerAdapter {
+
+    private static final String[] PUBLIC_URI = {
+            "/api/admins/login",
+            "/api/admins/register",
+    };
 
     @Autowired
     private AdminDetailService adminDetailService;
@@ -39,33 +45,18 @@ public class AdminSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Override
+    public void configure(WebSecurity web) throws Exception {
+        web.ignoring().mvcMatchers(PUBLIC_URI);
+    }
+
+    @Override
     public void configure(HttpSecurity http) throws Exception {
         http.csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/api/admins/login").permitAll()
-                .antMatchers("/api/admins/register").permitAll()
                 .antMatchers("/api/admins/**").authenticated()
-                .antMatchers(HttpMethod.POST, "/api/notifications/**").authenticated()
-                .anyRequest().permitAll().and()
+                .antMatchers(HttpMethod.POST, "/api/notifications/**").authenticated().and()
                 .exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint).and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.addFilterBefore(adminJwtFilter, UsernamePasswordAuthenticationFilter.class);
-    }
-
-    @Bean
-    public AuthenticationManager authenticationManager() throws Exception {
-        return authentication -> {
-            String username = authentication.getPrincipal().toString();
-            String password = authentication.getCredentials().toString();
-
-            UserDetails userDetails = adminDetailService.loadUserByUsername(username);
-
-            if (!passwordEncoder().matches(password, userDetails.getPassword())) {
-                throw new BadCredentialsException("Invalid password");
-            }
-
-            return new UsernamePasswordAuthenticationToken(userDetails.getUsername(), userDetails.getPassword(),
-                    userDetails.getAuthorities());
-        };
     }
 }

@@ -2,6 +2,8 @@ package com.capstone.timepay.service.user.service;
 
 import com.capstone.timepay.controller.user.request.RequestDTO;
 import com.capstone.timepay.controller.user.response.ResponseDTO;
+import com.capstone.timepay.domain.signUpUser.SignUpUser;
+import com.capstone.timepay.domain.signUpUser.SignUpUserRepository;
 import com.capstone.timepay.domain.user.User;
 import com.capstone.timepay.domain.user.UserRepository;
 import com.capstone.timepay.domain.userProfile.UserProfile;
@@ -15,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Optional;
 
 
 /* 받은 데이터를 데이터베이스에 저장 */
@@ -24,6 +27,8 @@ public class UserInfoService {
     private final UserRepository userRepository;
     private final UserProfileRepository userProfileRepository;
     private final FirebaseService firebaseService;
+    private final KakaoLoginService kakaoLoginService;
+    private final SignUpUserRepository signUpUserRepository;
 
     public void createUserInfo(RequestDTO userData){
         /* 유저 프로필 데이터 저장 */
@@ -51,7 +56,7 @@ public class UserInfoService {
         }
 
         /* uid를 매핑하여 user table에 데이터 입력 */
-        User findUser = userRepository.findByUid(userUid);
+        SignUpUser findUser = signUpUserRepository.findByUid(userUid).orElse(null);
 
         /* String으로 입력받은 생년월일을 LocalDateTime으로 형변환 */
         String birthData = userData.getBirthday();
@@ -69,7 +74,7 @@ public class UserInfoService {
         UserProfile saveUserProfile = userProfileRepository.findByUid(userUid);
         findUser.setUserProfile(saveUserProfile);
 
-        userRepository.save(findUser);
+        signUpUserRepository.save(findUser);
     }
 
     public void updateUserInfo(RequestDTO userData){
@@ -97,7 +102,7 @@ public class UserInfoService {
         }
 
         /* uid를 매핑하여 user table에 데이터 입력 */
-        User findUser = userRepository.findByUid(userUid);
+        User findUser = userRepository.findByUid(userUid).orElse(null);
 
         /* 코드 재활용을 위한 변수 생성*/
         /* String으로 입력받은 생년월일을 LocalDateTime으로 형변환 */
@@ -139,7 +144,7 @@ public class UserInfoService {
     }
 
     public ResponseDTO getUserInfo(Long uid){
-        User userData = userRepository.findByUid(uid);
+        User userData = userRepository.findByUid(uid).orElse(null);
         UserProfile userProfileData = userProfileRepository.findByUid(uid);
 
         /* LocalDateTime을 출력을 위한 String 형변환 */
@@ -159,7 +164,7 @@ public class UserInfoService {
     }
 
     public void deleteUserInfo(Long uid){
-        User userData = userRepository.findByUid(uid); // 중복 사용 많은데 함수로 빼둘지 고민
+        User userData = userRepository.findByUid(uid).orElse(null); // 중복 사용 많은데 함수로 빼둘지 고민
         
         /* deleteById를 사용하지 않고 에러 메세지를 직접 커스텀 */
         if(userData != null) {
@@ -188,6 +193,15 @@ public class UserInfoService {
         } else {
             return null;
         }
+    }
+
+    public User signUpUser(Long uid){
+        SignUpUser signupUser = signUpUserRepository.findByUid(uid).orElse(null);
+        User user = kakaoLoginService.converSignUpToUser(signupUser);
+
+        userRepository.save(user);
+        signUpUserRepository.delete(signupUser);
+        return user;
     }
 
 }

@@ -9,10 +9,6 @@ import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.DisabledException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -30,7 +26,6 @@ import javax.servlet.http.HttpServletResponse;
 @RequestMapping("/api/admins/")
 public class LoginController {
 
-    private final AuthenticationManager authenticationManager;
 
     @Autowired
     private JwtUtils jwtUtils;
@@ -38,13 +33,13 @@ public class LoginController {
     @Autowired
     private AdminDetailService adminDetailService;
 
+
     @PostMapping("/login")
     @ApiOperation(value = "로그인 API")
     public ResponseEntity<?> createAuthenticationToken(
             @RequestBody AuthenticationRequest authenticationRequest) throws Exception {
 
         String adminName = authenticationRequest.getAdminName();
-        authenticate(adminName, authenticationRequest.getPassword());
         final UserDetails userDetails = adminDetailService.loadUserByUsername(adminName);
         final String token = jwtUtils.generateToken(userDetails);
         final Admin admin = adminDetailService.getAdmin(adminName);
@@ -65,13 +60,4 @@ public class LoginController {
         return ResponseEntity.ok("로그아웃되었습니다.");
     }
 
-    private void authenticate(String username, String password) throws Exception {
-        try {
-            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
-        } catch (DisabledException e) {
-            throw new Exception("USER_DISABLED", e);
-        } catch (BadCredentialsException e) {
-            throw new Exception("INVALID_CREDENTIALS", e);
-        }
-    }
 }

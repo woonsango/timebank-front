@@ -45,6 +45,13 @@ public class AdminJwtFilter extends OncePerRequestFilter {
                 if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
                     UserDetails userDetails = adminDetailService.loadUserByUsername(username);
 
+                    /*  */
+//                          if(){
+//                                userDetails = adminDetailService.loadUserByUsername(username);
+//                            }else{
+//                                userDetails =  userDetailService.loadUserByUsername(username);
+//                            }
+
                     if (jwtUtils.validateToken(token, userDetails)) {
                         UsernamePasswordAuthenticationToken authentication =
                                 new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());

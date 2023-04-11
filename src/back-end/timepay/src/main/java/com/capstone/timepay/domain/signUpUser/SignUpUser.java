@@ -28,6 +28,7 @@ public class SignUpUser extends BaseTimeEntity {
     private String nickname;
     private String email;
     private Long uid;
+    private String encodedPassword;
     private boolean isBanned;
 
     @OneToOne
