@@ -12,7 +12,7 @@ const KakaoRedirectHandler = () => {
 
   const navigate = useNavigate(); //history
 
-  const GoToJoin = useCallback(
+  const goToJoin = useCallback(
     (path: string) => {
       navigate(path);
     },
@@ -37,7 +37,7 @@ const KakaoRedirectHandler = () => {
         const code = response.authorizationCode;
         console.log('서버가 인가코드를 받았답니다. ', code);
 
-        GoToJoin(PATH.JOIN);
+        goToJoin(PATH.JOIN);
       })
       .catch((err) => {
         console.log('카카오 로그인 에러', err);
@@ -47,9 +47,9 @@ const KakaoRedirectHandler = () => {
   const handleAuthorization = (props: any) => {
     setAuthorizationCode(props);
 
-    fetchAuthorizationCode(); //서버 전송 테스트 함수
+    //fetchAuthorizationCode(); //서버 전송 테스트 함수
 
-    //handleLogin(PATH.JOIN); //서버 적용x
+    goToJoin(PATH.JOIN); //서버 적용x
   };
 
   useEffect(() => {

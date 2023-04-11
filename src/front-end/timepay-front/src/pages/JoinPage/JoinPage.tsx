@@ -24,7 +24,6 @@ import { PATH } from '../../utils/paths';
 import './Join_imageSet.css';
 
 import axios from 'axios';
-import { response } from 'express';
 
 /*행정동 타입 선언*/
 type DongName = keyof typeof dongData;
@@ -38,32 +37,8 @@ const topWrapperCSS = css`
 `;
 
 const JoinPage = () => {
-  /*서버로부터 uid 받아오기*/
-  const getUid = async () => {
-    axios({
-      method: 'post',
-      url: 'http://localhost:8080/uid',
-    })
-      .then((res) => {
-        //console.log('서버로부터 uid를 받아왔습니다.', res); //서버 응답
-        const response = res.data;
-        const uid = response.uid;
-        console.log('서버로부터 uid를 받아왔습니다.', uid);
-        setUid(uid);
-      })
-      .catch((err) => {
-        console.log('카카오 로그인 에러', err);
-      });
-  };
-
-  useEffect(() => {
-    getUid();
-  }, []);
-
   const { Text } = Typography;
   const [messageApi, contextHolder] = message.useMessage();
-
-  const [uid, setUid] = useState('');
 
   const [profileImage, setProfileImage]: any = useState(
     'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png',
@@ -212,15 +187,6 @@ const JoinPage = () => {
       let formData = new FormData();
       formData.append('user', profileImage);
 
-      formData.append('user', nickName);
-      /*formData.append('user', realName);
-      formData.append('user', town);
-      formData.append('user', birth);
-      formData.append('user', phoneNumber);
-      formData.append('user', introduction);
-
-      formData.append('user', uid);*/
-
       let d = {
         realname: realName,
         nickname: nickName,
@@ -241,7 +207,7 @@ const JoinPage = () => {
         .catch((error) => {
           console.log(error);
         });
-      GoToFinishJoinPage(PATH.FINISHJOIN);
+      goToFinishJoinPage(PATH.FINISHJOIN);
     }
   };
 
@@ -256,7 +222,7 @@ const JoinPage = () => {
 
   const navigate = useNavigate(); //history
 
-  const GoToFinishJoinPage = useCallback(
+  const goToFinishJoinPage = useCallback(
     (path: string) => {
       navigate(path);
     },

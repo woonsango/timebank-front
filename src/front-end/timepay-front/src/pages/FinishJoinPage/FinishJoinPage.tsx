@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import { useCallback } from 'react';
 import { Button, Result } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import { PATH } from '../../utils/paths';
