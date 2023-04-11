@@ -18,8 +18,6 @@ export const PATH = {
   MY_ACTIVITY_RECORD: '/my-activity-record',
   MY: '/my',
   MY_EDIT: '/myEdit',
-
-  //추가
   ACTIVITY: '/activity', //활동기록
   REPORT: '/report', //신고기록
   INQUIRE: '/inquire', //문의기록
