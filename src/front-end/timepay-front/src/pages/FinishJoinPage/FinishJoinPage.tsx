@@ -2,7 +2,7 @@ import { useCallback } from 'react';
 import { Button, Result } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import { PATH } from '../../utils/paths';
-import { css } from 'styled-components';
+import { css } from '@emotion/react';
 
 const FinishJoinPage = () => {
   const navigate = useNavigate(); //history
