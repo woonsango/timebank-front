@@ -61,9 +61,9 @@ const MainFooter = () => {
           <SearchOutlined />
         </NavLink>
       </Button>
-      <Button onClick={() => handleOnClickLinkBtn(PATH.MY_PAGE)}>
+      <Button onClick={() => handleOnClickLinkBtn(PATH.MY)}>
         <NavLink
-          to={PATH.MY_PAGE}
+          to={PATH.MY}
           className={({ isActive }) => (isActive ? 'active' : undefined)}
         >
           <UserOutlined />

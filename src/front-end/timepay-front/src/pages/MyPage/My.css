@@ -1,0 +1,172 @@
+.MyPage {
+  position: absolute;
+
+  width: 100%;
+  height: 100%;
+
+  /*background-color: rgb(238, 238, 177);*/
+}
+
+.MyEdit {
+  /*프로필 수정 Btn*/
+  text-align: right;
+  padding: 3%;
+
+  /*border: 1px solid #141414a2;*/
+}
+
+.Edit {
+  border: none;
+  border-radius: 8px;
+
+  font-size: 14px;
+
+  background-color: #f1af23;
+  color: white;
+
+  height: 15%;
+}
+
+.MyTopBox {
+  /*프로필 이미지, 닉네임, 고유 번호 박스*/
+  display: flex;
+  width: 80%;
+
+  /* border: 1px solid #6d6a6aa2; */
+}
+
+/*이미지, 공백, 닉네임 width 비율: 25+5+70*/
+.MyImageWrap {
+  width: 25%;
+}
+
+.space {
+  width: 5%;
+
+  /* border: 1px solid #3ec415a2; */
+}
+
+.MyNameWrap {
+  /*이름 틀*/
+  width: 70%;
+
+  /* border: 1px solid #3ec415a2; */
+}
+
+.MyProfileImage {
+  /*프로필 이미지(원형)*/
+  width: 100%;
+  height: 100%;
+
+  border-radius: 70%;
+
+  /* border: 1px solid #6d6a6aa2; */
+}
+
+.MyName {
+  font-size: 20px;
+  font-weight: 600;
+  color: gray;
+
+  margin-top: 10px;
+
+  /*벗어난 텍스트 처리*/
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.MyPersonalNum {
+  font-size: 12px;
+  color: #6d6a6aa2;
+
+  /* border: 1px solid #6d6a6aa2; */
+}
+
+.MyTotalBox {
+  display: flex;
+  width: 80%;
+
+  margin-top: 40px;
+  margin-bottom: 40px;
+
+  /* border: 1px solid #6d6a6aa2; */
+}
+
+.MyLeftBox {
+  display: inline-block;
+  width: 30%;
+
+  /* border: 1px solid #b30a0aa2; */
+}
+
+.MyRightBox {
+  display: inline-block;
+  width: 70%; /*100-30*/
+  margin-left: 3%;
+
+  /* border: 1px solid #2411c9a2; */
+}
+
+.MyLeft {
+  /* border: 1px solid #6d6a6aa2; */
+}
+
+.MyRight {
+  /* border: 1px solid #6d6a6aa2; */
+}
+
+.MyTitleText {
+  font-size: 13px;
+  font-weight: 600;
+  color: #f1af23;
+
+  margin-top: 10px;
+}
+
+.MyContentText {
+  font-size: 13px;
+  font-weight: 600;
+  color: gray;
+
+  margin-top: 10px;
+
+  overflow: hidden;
+
+  width: 100%;
+
+  /*벗어난 텍스트 처리*/
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.MyBlock {
+  display: flex;
+  justify-content: center;
+
+  /* border: 1px solid #ff00b3; */
+}
+
+.MyPageMoveBox {
+  width: 80%;
+  height: 40px;
+
+  margin-top: 5px;
+
+  /* border: 1px solid #b41717a2; */
+}
+
+.MyPageText {
+  width: 100%;
+  height: 100%;
+
+  text-align: left;
+
+  color: gray;
+  background-color: white;
+
+  border: 1px solid #6d6a6aa2;
+  border-radius: 8px;
+
+  font-size: 15px;
+  font-weight: 700;
+}
