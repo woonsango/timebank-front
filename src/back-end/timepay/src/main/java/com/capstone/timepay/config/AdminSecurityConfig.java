@@ -28,6 +28,8 @@ public class AdminSecurityConfig extends WebSecurityConfigurerAdapter {
     private static final String[] PUBLIC_URI = {
             "/api/admins/login",
             "/api/admins/register",
+            "/api/user/**",
+            "/login",
     };
 
     @Autowired
