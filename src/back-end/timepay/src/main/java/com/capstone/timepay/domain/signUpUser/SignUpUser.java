@@ -37,8 +37,6 @@ public class SignUpUser extends BaseTimeEntity {
     private String encodedPassword;
     private boolean isBanned;
 
-    private String roles;
-
 
     @ManyToOne
     @JoinColumn(name = "profile_id")

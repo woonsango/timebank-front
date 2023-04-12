@@ -18,18 +18,19 @@ public class UserDetailService implements UserDetailsService {
     private final UserRepository userRepository;
 
     @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        Optional<User> user = userRepository.findByEmail(email);
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        Optional<User> user = userRepository.findByEmail(username);
+        /* 디버깅 모드를 통해 여기까지 user의 Authorities()가 있음을 확인함 */
 
         if (!user.isPresent()) {
-            throw new UsernameNotFoundException("User not found with username: " + email);
+            throw new UsernameNotFoundException("User not found with username: " + username);
         }
 
         return new org.springframework.security.core.userdetails.User(
-                user.get().getEmail(), user.get().getEncodedPassword(),
-                new ArrayList<>());
+                user.get().getEmail(), user.get().getEncodedPassword(), user.get().getAuthorities());
 
-        //return new UserDetailsImpl(user);
+
+        // return userRepository.findByEmail(username).orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
     }
 
     public User getUser(String name) {
