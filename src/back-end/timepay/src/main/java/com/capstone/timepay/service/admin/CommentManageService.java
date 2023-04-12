@@ -1,6 +1,7 @@
 package com.capstone.timepay.service.admin;
 
 import com.capstone.timepay.controller.admin.response.comment.CommentResponse;
+import com.capstone.timepay.controller.admin.response.inquiry.InquiryResponse;
 import com.capstone.timepay.domain.comment.Comment;
 import com.capstone.timepay.domain.comment.CommentRepository;
 import com.capstone.timepay.domain.dealBoardComment.DealBoardComment;
@@ -9,13 +10,21 @@ import com.capstone.timepay.domain.dealBoardReport.DealBoardReportRepository;
 import com.capstone.timepay.domain.freeBoard.FreeBoardRepository;
 import com.capstone.timepay.domain.freeBoardComment.FreeBoardComment;
 import com.capstone.timepay.domain.freeBoardComment.FreeBoardCommentRepository;
+import com.capstone.timepay.domain.inquiry.Inquiry;
+import com.capstone.timepay.service.admin.dto.CommentHideDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -28,59 +37,71 @@ public class CommentManageService {
     private final FreeBoardRepository freeBoardRepository;
     private final DealBoardReportRepository dealBoardReportRepository;
     private final DealBoardCommentRepository dealBoardCommentRepository;
-    public List<CommentResponse> showAllComments() {
 
-        List<Comment> freeComments = commentRepository.findAll().stream().filter(comment -> comment.getDCommentId() == 0).collect(Collectors.toUnmodifiableList());
-        List<Comment> dealComments = commentRepository.findAll().stream().filter(comment -> comment.getFCommentId() == 0).collect(Collectors.toUnmodifiableList());
+    public Page<CommentResponse> convertResponsePages(Page<Comment> pages){
+        Page<CommentResponse> pageResponses = pages.map(new Function<Comment, CommentResponse>() {
+            @Override
+            public CommentResponse apply(Comment comment) {
 
-        List<CommentResponse> responses = new ArrayList<>();
-        for(Comment comment : freeComments){
-            FreeBoardComment fComment = freeBoardCommentRepository.findById(comment.getFCommentId()).orElseThrow(()->new IllegalArgumentException("존재하지 않는 댓글입니다."));
-            CommentResponse element = CommentResponse.builder()
-                                                        .commentId(comment.getCommentId())
-                                                        .originBoardId(comment.getFBoardId())
-                                                        .originCommentId(comment.getFCommentId())
-                                                        .applyYN(false)
-                                                        .selectYN(false)
-                                                        .content(fComment.getContent())
-                                                        .writerId(fComment.getUser().getUserId())
-                                                        .writerName(fComment.getUser().getName())
-                                                        .writtenTime(fComment.getCreatedAt())
-                                                        .originWriterYN(false)
-                                                    .build();
-            responses.add(element);
-        }
-        for(Comment comment : dealComments){
-            DealBoardComment dComment = dealBoardCommentRepository.findById(comment.getDCommentId()).orElseThrow(()->new IllegalArgumentException("존재하지 않는 댓글입니다."));
-            CommentResponse element = CommentResponse.builder()
-                    .commentId(comment.getCommentId())
-                    .originBoardId(comment.getDBoardId())
-                    .originCommentId(comment.getDCommentId())
-                    .applyYN(dComment.isApplied())
-                    .selectYN(dComment.isAdopted())
-                    .content(dComment.getContent())
-                    .writerId(dComment.getUser().getUserId())
-                    .writerName(dComment.getUser().getName())
-                    .writtenTime(dComment.getCreatedAt())
-                    .originWriterYN(false)
-                    .build();
-            responses.add(element);
-        }
+                // 1. 자유 게시판 댓글
+                if(Objects.isNull(comment.getDealBoardComment())){
+                    return CommentResponse.builder()
+                            .commentId(comment.getCommentId())
+                            .originBoardId(comment.getFreeBoardComment().getFreeBoard().getF_boardId())
+                            .originCommentId(comment.getFreeBoardComment().getF_commentId())
+                            .applyYN(false)
+                            .selectYN(false)
+                            .content(comment.getFreeBoardComment().getContent())
+                            .writerId(comment.getFreeBoardComment().getUser().getUserId())
+                            .writerName(comment.getFreeBoardComment().getUser().getName())
+                            .writtenTime(comment.getFreeBoardComment().getCreatedAt())
+                            .originWriterYN(false)
+                            .build();
+                }
+                else{
+                    // 2. 거래 게시판 댓글
+                    return CommentResponse.builder()
+                            .commentId(comment.getCommentId())
+                            .originBoardId(comment.getDealBoardComment().getDealBoard().getD_boardId())
+                            .originCommentId(comment.getDealBoardComment().getD_commentId())
+                            .applyYN(comment.getDealBoardComment().isApplied())
+                            .selectYN(comment.getDealBoardComment().isAdopted())
+                            .content(comment.getDealBoardComment().getContent())
+                            .writerId(comment.getDealBoardComment().getUser().getUserId())
+                            .writerName(comment.getDealBoardComment().getUser().getName())
+                            .writtenTime(comment.getDealBoardComment().getCreatedAt())
+                            .originWriterYN(false)
+                            .build();
+                }
 
-        return responses.stream().sorted(Comparator.comparing(CommentResponse::getCommentId)).collect(Collectors.toUnmodifiableList());
+            }
+        });
 
+        return pageResponses;
     }
 
-    public void deleteComment(Long commentId) {
+    public Page<CommentResponse> showAllComments(int pageIndex, int pageSize) {
+        Pageable pageable = PageRequest.of(pageIndex, pageSize);
+        Page<Comment> comments = commentRepository.findAll(pageable);
 
-        Comment comment = commentRepository.findById(commentId).orElseThrow(()->new IllegalArgumentException("존재하지 않는 댓글입니다."));
+        return convertResponsePages(comments);
+    }
 
-        // 지워야 하는 댓글이 거래 게시판 댓글일 경우 => 해당 댓글 지움
-        if(comment.getFCommentId() == 0) dealBoardCommentRepository.deleteById(comment.getDCommentId());
-        else freeBoardCommentRepository.deleteById(comment.getFCommentId());
+    public void hideComment(CommentHideDto comments) {
 
-        // 댓글 전체 테이블의 컬럼도 지움
-        commentRepository.deleteById(commentId);
+        for(Long commentId : comments.getCommentIds()){
+            Comment comment = commentRepository.findById(commentId).orElseThrow(()->new IllegalArgumentException("존재하지 않는 댓글입니다."));
+
+            // 1. 자유 게시판 댓글인 경우
+            if(Objects.isNull(comment.getDealBoardComment())){
+                comment.getFreeBoardComment().updateIsHidden(true);
+                freeBoardCommentRepository.save(comment.getFreeBoardComment());
+            }
+            else{   // 2. 거래 게시판 댓글인 경우
+                comment.getDealBoardComment().updateIsHidden(true);
+                dealBoardCommentRepository.save(comment.getDealBoardComment());
+            }
+        }
 
     }
 }

@@ -28,7 +28,7 @@ public class InquiryManageController {
     @ApiOperation(value = "전체 문의 리스트 조회")
     @GetMapping("/main")
     public ResponseEntity<?> main(@RequestParam(defaultValue = "0") int pageIndex,
-                                   @RequestParam(defaultValue = "50") int pageSize){
+                                  @RequestParam(defaultValue = "50") int pageSize){
 
         Page<InquiryResponse> responses = inquiryManagerService.showAllInquiries(pageIndex, pageSize);
 
@@ -38,11 +38,11 @@ public class InquiryManageController {
     @ApiOperation(value = "쿼리를 통한 문의 필터링 : state, category 는 필수로 넘겨줄 것")
     @GetMapping("/search")
     public ResponseEntity<?> searchInquiries(@RequestParam String state,
-                                              @RequestParam String category,
-                                              @RequestParam(required = false) String writer,
-                                              @RequestParam(required = false) String title,
-                                              @RequestParam(defaultValue = "0") int pageIndex,
-                                              @RequestParam(defaultValue = "50") int pageSize){
+                                             @RequestParam String category,
+                                             @RequestParam(required = false) String writer,
+                                             @RequestParam(required = false) String title,
+                                             @RequestParam(defaultValue = "0") int pageIndex,
+                                             @RequestParam(defaultValue = "50") int pageSize){
 
         Page<InquiryResponse> responses = inquiryManagerService.searchInquiriesByQuery(state, category, writer, title, pageIndex, pageSize);
         return ResponseEntity.ok(responses);

@@ -1,14 +1,15 @@
 package com.capstone.timepay.controller.admin;
 
+import com.capstone.timepay.controller.admin.request.report.PenaltyUserRequest;
 import com.capstone.timepay.controller.admin.response.comment.CommentResponse;
 import com.capstone.timepay.controller.admin.response.report.ReportResponse;
 import com.capstone.timepay.service.admin.ReportManageService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -21,10 +22,19 @@ public class ReportManageController {
 
     @ApiOperation(value = "전체 댓글 리스트 조회")
     @GetMapping("/main")
-    public ResponseEntity<?> main(){
+    public ResponseEntity<?> main(@RequestParam(defaultValue = "0") int pageIndex,
+                                  @RequestParam(defaultValue = "50") int pageSize){
 
-        List<ReportResponse> responses = reportManageService.showAllReports();
+        Page<ReportResponse> responses = reportManageService.showAllReports(pageIndex, pageSize);
 
         return ResponseEntity.ok(responses);
+    }
+    @ApiOperation(value = "신고 회원 리스트 제재 처리")
+    @PatchMapping(value = "/penalty", consumes = {MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity<?> penalty(@RequestBody PenaltyUserRequest request){
+
+        reportManageService.penaltyUsers(request.toServiceDto());
+
+        return ResponseEntity.ok("제재 처리 되었습니다");
     }
 }
