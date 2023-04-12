@@ -68,8 +68,10 @@
 ### 📚 Frontend     
 |역할|종류|
 |-|-| 
-|Framework|<img src="https://img.shields.io/badge/React-61DAFB?style=for-the-badge&logo=React&logoColor=white">|
-|Programming Language|<img src="https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=TypeScript&logoColor=white">|          
+|Library|<img alt="RED" src ="https://img.shields.io/badge/React-61DAFB.svg?&style=for-the-badge&logo=React&logoColor=white"/>|
+|App|<img alt="RED" src ="https://img.shields.io/badge/AndroidStudio-3DDC84.svg?&style=for-the-badge&logo=AndroidStudio&logoColor=white"/>|
+|Programming Language|<img alt="RED" src ="https://img.shields.io/badge/TypeScript-3178C6.svg?&style=for-the-badge&logo=TypeScript&logoColor=white"/>|
+|UX/UI|<img alt="RED" src ="https://img.shields.io/badge/Ant Design-0170FE.svg?&style=for-the-badge&logo=AntDesign&logoColor=white"/>
 <br />
 
 ### 📚 Backend
