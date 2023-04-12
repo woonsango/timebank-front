@@ -10,6 +10,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -28,8 +29,10 @@ public class AdminSecurityConfig extends WebSecurityConfigurerAdapter {
     private static final String[] PUBLIC_URI = {
             "/api/admins/login",
             "/api/admins/register",
-            "/api/user/**",
+            "/api/users/create",
+            "/api/users/test/**",
             "/login",
+            "/api/users/delete/**", // 테스트용
     };
 
     @Autowired
@@ -46,6 +49,8 @@ public class AdminSecurityConfig extends WebSecurityConfigurerAdapter {
         return new BCryptPasswordEncoder();
     }
 
+    /* 아래 configure를 하기 전에 먼저 실행되는 함수 */
+    /* PUBLIC_URI 접근에 대한 것들은 검증하지 않기 때문에 ignoring */
     @Override
     public void configure(WebSecurity web) throws Exception {
         web.ignoring().mvcMatchers(PUBLIC_URI);
@@ -54,11 +59,14 @@ public class AdminSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(HttpSecurity http) throws Exception {
         http.csrf().disable()
-                .authorizeRequests()
-                .antMatchers("/api/admins/**").authenticated()
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and() // 세션 사용 X
+                .authorizeRequests() // 요청에 대한 사용 권한 체크
+                .antMatchers("/api/admins/**").hasRole("ADMIN")
+                .antMatchers("/api/users/**").hasRole("USER")
+                // .anyRequest().permitAll() 그외 모든 요청 접근 가능, 위 configure을 오버라이딩하여 깔끔하게 해결함
                 .antMatchers(HttpMethod.POST, "/api/notifications/**").authenticated().and()
-                .exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint).and()
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+                .exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint);
+
         http.addFilterBefore(adminJwtFilter, UsernamePasswordAuthenticationFilter.class);
     }
 }

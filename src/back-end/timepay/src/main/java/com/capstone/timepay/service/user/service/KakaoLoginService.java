@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Collections;
 import java.util.Date;
 
 
@@ -156,9 +157,10 @@ public class KakaoLoginService {
                     String encodedPassword = passwordEncoder.encode(password);
                     SignUpUser usertmp = createKakaoUsers(id, email, sex, encodedPassword);
 
-                    System.out.println("id : " + kakaoUser.getUid());
-                    System.out.println("email : " + kakaoUser.getEmail());
-                    System.out.println("gender : " + kakaoUser.getSex());
+                    System.out.println("id : " + usertmp.getUid());
+                    System.out.println("email : " + usertmp.getEmail());
+                    System.out.println("gender : " + usertmp.getSex());
+                    System.out.println("회원가입 ~!!!");
 
                     return converSignUpToUser(usertmp);
 
@@ -187,14 +189,21 @@ public class KakaoLoginService {
 
     /* 데이터베이스 추가 작업 */
     public SignUpUser createKakaoUsers(Long id, String email, String sex, String encodePassword){
-        SignUpUser user = new SignUpUser();
-        user.setUid(id);
-        user.setEmail(email);
-        user.setSex(sex);
-        user.setEncodedPassword(encodePassword);
-        signUpUserRepository.save(user);
-
-        return user;
+//        SignUpUser user = new SignUpUser();
+//        user.setUid(id);
+//        user.setEmail(email);
+//        user.setSex(sex);
+//        user.setEncodedPassword(encodePassword);
+//        user.setRoles(Collections.singletonList("ROLE_USER"));
+//        signUpUserRepository.save(user);
+//
+//
+//        return user;
+        return signUpUserRepository.save(SignUpUser.builder().
+                uid(id).email(email).sex(sex)
+                .encodedPassword(encodePassword)
+                .roles("ROLE_USER")
+                .build());
     }
 
     public User converSignUpToUser(SignUpUser signUpUser){ // SignUpUser 오브젝트를 User 오브젝트로 변경
@@ -203,6 +212,8 @@ public class KakaoLoginService {
         user.setEmail(signUpUser.getEmail());
         user.setSex(signUpUser.getSex());
         user.setEncodedPassword(signUpUser.getEncodedPassword());
+        user.setUserProfile(signUpUser.getUserProfile());
+        user.setRoles(Collections.singletonList("ROLE_USER"));
         return user;
     }
 

@@ -59,6 +59,8 @@ public class UserInfoService {
         SignUpUser findUser = signUpUserRepository.findByUid(userUid).orElse(null);
 
         /* String으로 입력받은 생년월일을 LocalDateTime으로 형변환 */
+        /* 만약 SignUpUser 테이블에 존재하지 않으면 에러 발생 */
+        /* 근데 최초 카카오 로그인을 하면 SignUpUser 테이블이 자동 생성되는데 굳이 예외처리? */
         String birthData = userData.getBirthday();
         DateTimeFormatter format1 = DateTimeFormatter.ofPattern("yyyyMMddHHmm");
         LocalDateTime birthLocalDateTime = LocalDateTime.parse(birthData, format1);
@@ -184,11 +186,6 @@ public class UserInfoService {
             String imageUrl = firebaseService.uploadFiles(image);
             System.out.println(imageUrl);
 
-            // 위의 url 주소를 저장할 테이블의 객체를 생성할 때 사용
-            // ex ) UserProfile profile = UserProfile.builder().imageUrl(imageUrl). ........  . build();
-
-            // url을 포함한 객체를 생성하고 해당 객체를 repository를 통해 테이블에 저장
-            // ex ) userProfileRepository.save(profile);
             return imageUrl;
         } else {
             return null;

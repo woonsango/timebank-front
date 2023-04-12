@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Collections;
+
 @RestController
 @RequiredArgsConstructor
 public class KakaoLoginController {
@@ -34,11 +36,11 @@ public class KakaoLoginController {
     public ResponseEntity<?> kakaoCallback(@RequestParam String code) throws Exception {
         String access_Token = kakaoLoginService.getKaKaoAccessToken(code);
         User user = kakaoLoginService.createKakaoUser(access_Token);
-//        authenticate(user.getEmail(), Long.toString(user.getUid()));
+
         if(kakaoLoginService.isUser(user.getUid())) {
             final UserDetails userDetails = userDetailService.loadUserByUsername(user.getEmail());
-            final String token = jwtUtils.generateToken(userDetails);
-            return ResponseEntity.ok(new AuthenticationResponse(token, user));
+            final String token = jwtUtils.createToken(userDetails.getUsername(), user.getRoles());
+            return ResponseEntity.ok(new AuthenticationResponse(token, user.getRoles()));
         }
 
         return ResponseEntity.ok("회원가입 신청 완료\n" + user.getUid());
