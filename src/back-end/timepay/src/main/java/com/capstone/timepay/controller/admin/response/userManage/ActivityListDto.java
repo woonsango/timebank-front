@@ -1,6 +1,7 @@
 package com.capstone.timepay.controller.admin.response.userManage;
 
 import lombok.*;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 
@@ -11,8 +12,10 @@ import java.util.List;
 @AllArgsConstructor
 public class ActivityListDto {
 
-    private List<BoardActivityDto> boardActivityDtos;
-    private List<CommentActivityDto> commentActivityDtos;
+    private Page<FreeBoardActivityDto> freeBoardActivityDtos;
+    private Page<FreeCommentActivityDto> freeCommentActivityDtos;
+    private Page<DealBoardActivityDto> dealBoardActivityDtos;
+    private Page<DealCommentActivityDto> dealCommentActivityDtos;
     private List<ReceivedReportDto> receivedReportDtos;
     private List<ReportActivityDto> reportActivityDtos;
 

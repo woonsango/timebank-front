@@ -50,9 +50,11 @@ public class UserManageController {
 
     @ApiOperation(value = "유저 활동 목록 조회")
     @GetMapping("/activity-list")
-    public ResponseEntity<?> showActivityList(@RequestParam Long userId){
+    public ResponseEntity<?> showActivityList(@RequestParam Long userId,
+                                              @RequestParam(defaultValue = "0") int pageIndex,
+                                              @RequestParam(defaultValue = "50") int pageSize){
 
-        ActivityListDto activityListDto = userManageService.getActivityList(userId);
+        ActivityListDto activityListDto = userManageService.getActivityList(userId,pageIndex,pageSize);
 
         return ResponseEntity.ok(activityListDto);
     }

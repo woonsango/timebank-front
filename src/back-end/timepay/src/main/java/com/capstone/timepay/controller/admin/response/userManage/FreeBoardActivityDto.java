@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class BoardActivityDto {
+public class FreeBoardActivityDto {
 
     private Long boardId;
     private LocalDateTime createdAt;

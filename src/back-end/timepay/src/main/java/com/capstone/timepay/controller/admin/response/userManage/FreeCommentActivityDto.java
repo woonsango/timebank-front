@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class CommentActivityDto {
+public class FreeCommentActivityDto {
 
     private Long commentId;
     private LocalDateTime createdAt;

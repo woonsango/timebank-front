@@ -16,4 +16,5 @@ public class ReportActivityDto {
     private Long boardId;
     private Long commentId;
 
+
 }
