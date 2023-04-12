@@ -4,9 +4,15 @@ import com.capstone.timepay.domain.BaseTimeEntity;
 
 import com.capstone.timepay.domain.userProfile.UserProfile;
 import lombok.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Builder
 @NoArgsConstructor
@@ -28,11 +34,12 @@ public class SignUpUser extends BaseTimeEntity {
     private String nickname;
     private String email;
     private Long uid;
+    private String encodedPassword;
     private boolean isBanned;
 
-    @OneToOne
+
+    @ManyToOne
     @JoinColumn(name = "profile_id")
     private UserProfile userProfile;
-
 
 }

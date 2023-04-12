@@ -52,6 +52,7 @@ public class AdminService {
                 .name(dto.getName())
                 .email(dto.getEmail())
                 .phone(dto.getPhone())
+                .roles(Collections.singletonList("ROLE_ADMIN"))
                 .build();
 
         try {

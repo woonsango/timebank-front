@@ -9,7 +9,7 @@ spring:
     password: call8112!!
   jpa:
     hibernate:
-      ddl-auto: none
+      ddl-auto: update
     properties:
       hibernate:
         show_sql: true
@@ -25,3 +25,5 @@ jwt:
 app:
   firebase-configuration-file: ./serviceAccountKey.json
   firebase-bucket: timepay-79a6f.appspot.com
+
+spring.main.allow-bean-definition-overriding: true

@@ -1,0 +1,134 @@
+Index: .idea/workspace.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project version=\"4\">\r\n  <component name=\"AutoImportSettings\">\r\n    <option name=\"autoReloadType\" value=\"SELECTIVE\" />\r\n  </component>\r\n  <component name=\"ChangeListManager\">\r\n    <list default=\"true\" id=\"775103a2-84dc-4bbc-8170-be97ad616dff\" name=\"Changes\" comment=\"\">\r\n      <change beforePath=\"$PROJECT_DIR$/.idea/workspace.xml\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/.idea/workspace.xml\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/back-end/timepay/build.gradle\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/back-end/timepay/build.gradle\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/back-end/timepay/src/main/java/com/capstone/timepay/TimepayApplication.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/back-end/timepay/src/main/java/com/capstone/timepay/TimepayApplication.java\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/back-end/timepay/src/main/java/com/capstone/timepay/domain/BaseTimeEntity.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/back-end/timepay/src/main/java/com/capstone/timepay/domain/BaseTimeEntity.java\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/back-end/timepay/src/main/resources/application.yml\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/back-end/timepay/src/main/resources/application.yml\" afterDir=\"false\" />\r\n    </list>\r\n    <option name=\"SHOW_DIALOG\" value=\"false\" />\r\n    <option name=\"HIGHLIGHT_CONFLICTS\" value=\"true\" />\r\n    <option name=\"HIGHLIGHT_NON_ACTIVE_CHANGELIST\" value=\"false\" />\r\n    <option name=\"LAST_RESOLUTION\" value=\"IGNORE\" />\r\n  </component>\r\n  <component name=\"Git.Merge.Settings\">\r\n    <option name=\"BRANCH\" value=\"origin/feat\" />\r\n  </component>\r\n  <component name=\"Git.Settings\">\r\n    <option name=\"RECENT_GIT_ROOT_PATH\" value=\"$PROJECT_DIR$\" />\r\n  </component>\r\n  <component name=\"MarkdownSettingsMigration\">\r\n    <option name=\"stateVersion\" value=\"1\" />\r\n  </component>\r\n  <component name=\"ProjectId\" id=\"2N23hOp4j6J3oRexWs84wrjUs90\" />\r\n  <component name=\"ProjectViewState\">\r\n    <option name=\"hideEmptyMiddlePackages\" value=\"true\" />\r\n    <option name=\"showLibraryContents\" value=\"true\" />\r\n  </component>\r\n  <component name=\"PropertiesComponent\"><![CDATA[{\r\n  \"keyToString\": {\r\n    \"RunOnceActivity.OpenProjectViewOnStart\": \"true\",\r\n    \"RunOnceActivity.ShowReadmeOnStart\": \"true\",\r\n    \"WebServerToolWindowFactoryState\": \"false\",\r\n    \"last_opened_file_path\": \"D:/dev/spring/capstone/capstone-2023-09/src/back-end/timepay\",\r\n    \"node.js.detected.package.eslint\": \"true\",\r\n    \"node.js.detected.package.tslint\": \"true\",\r\n    \"node.js.selected.package.eslint\": \"(autodetect)\",\r\n    \"node.js.selected.package.tslint\": \"(autodetect)\",\r\n    \"nodejs_package_manager_path\": \"npm\",\r\n    \"settings.editor.selected.configurable\": \"vcs.Git\",\r\n    \"vue.rearranger.settings.migration\": \"true\"\r\n  },\r\n  \"keyToStringList\": {\r\n    \"GitStage.ChangesTree.GroupingKeys\": [\r\n      \"directory\",\r\n      \"module\",\r\n      \"repository\"\r\n    ]\r\n  }\r\n}]]></component>\r\n  <component name=\"SpellCheckerSettings\" RuntimeDictionaries=\"0\" Folders=\"0\" CustomDictionaries=\"0\" DefaultDictionary=\"application-level\" UseSingleDictionary=\"true\" transferred=\"true\" />\r\n  <component name=\"TaskManager\">\r\n    <task active=\"true\" id=\"Default\" summary=\"Default task\">\r\n      <changelist id=\"85c566b4-344a-4ffb-816a-640f5bda5d86\" name=\"변경\" comment=\"\" />\r\n      <created>1678848467967</created>\r\n      <option name=\"number\" value=\"Default\" />\r\n      <option name=\"presentableId\" value=\"Default\" />\r\n      <updated>1678848467967</updated>\r\n      <workItem from=\"1678848469544\" duration=\"49000\" />\r\n      <workItem from=\"1678848550428\" duration=\"1299000\" />\r\n      <workItem from=\"1678867412076\" duration=\"1613000\" />\r\n      <workItem from=\"1679135782389\" duration=\"2103000\" />\r\n      <workItem from=\"1679194405171\" duration=\"145000\" />\r\n      <workItem from=\"1679316132352\" duration=\"1482000\" />\r\n      <workItem from=\"1679381450443\" duration=\"8000\" />\r\n      <workItem from=\"1679381536611\" duration=\"717000\" />\r\n      <workItem from=\"1679382270553\" duration=\"45000\" />\r\n    </task>\r\n    <task id=\"LOCAL-00001\" summary=\"Feat: gson gradle 추가, 카카오 로그인 기능 추가(서버 버그로 인해 테스트X)\">\r\n      <created>1679318459203</created>\r\n      <option name=\"number\" value=\"00001\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00001\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1679318459203</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00002\" summary=\"Chore: 메인 레포 Sync Fork 해서 불필요한 Files 삭제\">\r\n      <created>1679381634518</created>\r\n      <option name=\"number\" value=\"00002\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00002\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1679381634518</updated>\r\n    </task>\r\n    <option name=\"localTasksCounter\" value=\"3\" />\r\n    <servers />\r\n  </component>\r\n  <component name=\"TypeScriptGeneratedFilesManager\">\r\n    <option name=\"version\" value=\"3\" />\r\n  </component>\r\n  <component name=\"Vcs.Log.Tabs.Properties\">\r\n    <option name=\"TAB_STATES\">\r\n      <map>\r\n        <entry key=\"MAIN\">\r\n          <value>\r\n            <State />\r\n          </value>\r\n        </entry>\r\n      </map>\r\n    </option>\r\n  </component>\r\n  <component name=\"VcsManagerConfiguration\">\r\n    <MESSAGE value=\"Feat: gson gradle 추가, 카카오 로그인 기능 추가(서버 버그로 인해 테스트X)\" />\r\n    <MESSAGE value=\"Chore: 메인 레포 Sync Fork 해서 불필요한 Files 삭제\" />\r\n    <option name=\"LAST_COMMIT_MESSAGE\" value=\"Chore: 메인 레포 Sync Fork 해서 불필요한 Files 삭제\" />\r\n  </component>\r\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/workspace.xml b/.idea/workspace.xml
+--- a/.idea/workspace.xml	
++++ b/.idea/workspace.xml	
+@@ -4,11 +4,38 @@
+     <option name="autoReloadType" value="SELECTIVE" />
+   </component>
+   <component name="ChangeListManager">
+-    <list default="true" id="775103a2-84dc-4bbc-8170-be97ad616dff" name="Changes" comment="">
++    <list default="true" id="775103a2-84dc-4bbc-8170-be97ad616dff" name="Changes" comment="Chore: 메인 레포 Sync Fork 해서 불필요한 Files 삭제">
++      <change afterPath="$PROJECT_DIR$/src/back-end/timepay/src/main/java/com/capstone/timepay/controller/admin/InquiryManageController.java" afterDir="false" />
++      <change afterPath="$PROJECT_DIR$/src/back-end/timepay/src/main/java/com/capstone/timepay/controller/admin/UserManageController.java" afterDir="false" />
++      <change afterPath="$PROJECT_DIR$/src/back-end/timepay/src/main/java/com/capstone/timepay/controller/admin/request/inquiry/InquiryAnswerRequest.java" afterDir="false" />
++      <change afterPath="$PROJECT_DIR$/src/back-end/timepay/src/main/java/com/capstone/timepay/controller/admin/request/userManage/UserInfoUpdateRequest.java" afterDir="false" />
++      <change afterPath="$PROJECT_DIR$/src/back-end/timepay/src/main/java/com/capstone/timepay/controller/admin/response/inquiry/AdminAnswerResponse.java" afterDir="false" />
++      <change afterPath="$PROJECT_DIR$/src/back-end/timepay/src/main/java/com/capstone/timepay/controller/admin/response/inquiry/InquiryDetailResponse.java" afterDir="false" />
++      <change afterPath="$PROJECT_DIR$/src/back-end/timepay/src/main/java/com/capstone/timepay/controller/admin/response/inquiry/InquiryResponse.java" afterDir="false" />
++      <change afterPath="$PROJECT_DIR$/src/back-end/timepay/src/main/java/com/capstone/timepay/controller/admin/response/userManage/BoardActivityDto.java" afterDir="false" />
++      <change afterPath="$PROJECT_DIR$/src/back-end/timepay/src/main/java/com/capstone/timepay/controller/admin/response/userManage/CommentActivityDto.java" afterDir="false" />
++      <change afterPath="$PROJECT_DIR$/src/back-end/timepay/src/main/java/com/capstone/timepay/controller/admin/response/userManage/MainResponse.java" afterDir="false" />
++      <change afterPath="$PROJECT_DIR$/src/back-end/timepay/src/main/java/com/capstone/timepay/controller/admin/response/userManage/ReceivedReportDto.java" afterDir="false" />
++      <change afterPath="$PROJECT_DIR$/src/back-end/timepay/src/main/java/com/capstone/timepay/controller/admin/response/userManage/UserProfileResponse.java" afterDir="false" />
++      <change afterPath="$PROJECT_DIR$/src/back-end/timepay/src/main/java/com/capstone/timepay/controller/board/HomeController.java" afterDir="false" />
++      <change afterPath="$PROJECT_DIR$/src/back-end/timepay/src/main/java/com/capstone/timepay/domain/inquiryAnswer/InquiryAnswer.java" afterDir="false" />
++      <change afterPath="$PROJECT_DIR$/src/back-end/timepay/src/main/java/com/capstone/timepay/domain/inquiryAnswer/InquiryAnswerRepository.java" afterDir="false" />
++      <change afterPath="$PROJECT_DIR$/src/back-end/timepay/src/main/java/com/capstone/timepay/service/admin/InquiryManagerService.java" afterDir="false" />
++      <change afterPath="$PROJECT_DIR$/src/back-end/timepay/src/main/java/com/capstone/timepay/service/admin/UserManageService.java" afterDir="false" />
++      <change afterPath="$PROJECT_DIR$/src/back-end/timepay/src/main/java/com/capstone/timepay/service/admin/dto/InquiryAnswerDto.java" afterDir="false" />
++      <change afterPath="$PROJECT_DIR$/src/back-end/timepay/src/main/java/com/capstone/timepay/service/admin/dto/UserUpdateDto.java" afterDir="false" />
+       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+       <change beforePath="$PROJECT_DIR$/src/back-end/timepay/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/src/back-end/timepay/build.gradle" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/back-end/timepay/src/main/java/com/capstone/timepay/TimepayApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/back-end/timepay/src/main/java/com/capstone/timepay/TimepayApplication.java" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/back-end/timepay/src/main/java/com/capstone/timepay/domain/BaseTimeEntity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/back-end/timepay/src/main/java/com/capstone/timepay/domain/BaseTimeEntity.java" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/src/back-end/timepay/docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/src/back-end/timepay/docker-compose.yml" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/src/back-end/timepay/src/main/java/com/capstone/timepay/controller/board/request/Test.java" beforeDir="false" />
++      <change beforePath="$PROJECT_DIR$/src/back-end/timepay/src/main/java/com/capstone/timepay/controller/board/response/Test.java" beforeDir="false" />
++      <change beforePath="$PROJECT_DIR$/src/back-end/timepay/src/main/java/com/capstone/timepay/controller/user/ApiController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/back-end/timepay/src/main/java/com/capstone/timepay/controller/admin/ApiController.java" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/src/back-end/timepay/src/main/java/com/capstone/timepay/domain/admin/Admin.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/back-end/timepay/src/main/java/com/capstone/timepay/domain/admin/Admin.java" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/src/back-end/timepay/src/main/java/com/capstone/timepay/domain/inquiry/Inquiry.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/back-end/timepay/src/main/java/com/capstone/timepay/domain/inquiry/Inquiry.java" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/src/back-end/timepay/src/main/java/com/capstone/timepay/domain/inquiry/InquiryRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/back-end/timepay/src/main/java/com/capstone/timepay/domain/inquiry/InquiryRepository.java" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/src/back-end/timepay/src/main/java/com/capstone/timepay/domain/user/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/back-end/timepay/src/main/java/com/capstone/timepay/domain/user/User.java" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/src/back-end/timepay/src/main/java/com/capstone/timepay/domain/user/UserRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/back-end/timepay/src/main/java/com/capstone/timepay/domain/user/UserRepository.java" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/src/back-end/timepay/src/main/java/com/capstone/timepay/service/user/UserInfoService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/back-end/timepay/src/main/java/com/capstone/timepay/service/user/UserInfoService.java" afterDir="false" />
+       <change beforePath="$PROJECT_DIR$/src/back-end/timepay/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/src/back-end/timepay/src/main/resources/application.yml" afterDir="false" />
+     </list>
+     <option name="SHOW_DIALOG" value="false" />
+@@ -20,6 +47,11 @@
+     <option name="BRANCH" value="origin/feat" />
+   </component>
+   <component name="Git.Settings">
++    <option name="RECENT_BRANCH_BY_REPOSITORY">
++      <map>
++        <entry key="$PROJECT_DIR$" value="master" />
++      </map>
++    </option>
+     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+   </component>
+   <component name="MarkdownSettingsMigration">
+@@ -30,32 +62,37 @@
+     <option name="hideEmptyMiddlePackages" value="true" />
+     <option name="showLibraryContents" value="true" />
+   </component>
+-  <component name="PropertiesComponent"><![CDATA[{
+-  "keyToString": {
+-    "RunOnceActivity.OpenProjectViewOnStart": "true",
+-    "RunOnceActivity.ShowReadmeOnStart": "true",
+-    "WebServerToolWindowFactoryState": "false",
+-    "last_opened_file_path": "D:/dev/spring/capstone/capstone-2023-09/src/back-end/timepay",
+-    "node.js.detected.package.eslint": "true",
+-    "node.js.detected.package.tslint": "true",
+-    "node.js.selected.package.eslint": "(autodetect)",
+-    "node.js.selected.package.tslint": "(autodetect)",
+-    "nodejs_package_manager_path": "npm",
+-    "settings.editor.selected.configurable": "vcs.Git",
+-    "vue.rearranger.settings.migration": "true"
++  <component name="PropertiesComponent">{
++  &quot;keyToString&quot;: {
++    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
++    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
++    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
++    &quot;last_opened_file_path&quot;: &quot;C:/dev/spring/capstone1&quot;,
++    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
++    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
++    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
++    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
++    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
++    &quot;settings.editor.selected.configurable&quot;: &quot;vcs.Git&quot;,
++    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+   },
+-  "keyToStringList": {
+-    "GitStage.ChangesTree.GroupingKeys": [
+-      "directory",
+-      "module",
+-      "repository"
++  &quot;keyToStringList&quot;: {
++    &quot;GitStage.ChangesTree.GroupingKeys&quot;: [
++      &quot;directory&quot;,
++      &quot;module&quot;,
++      &quot;repository&quot;
+     ]
+   }
+-}]]></component>
++}</component>
++  <component name="RecentsManager">
++    <key name="MoveFile.RECENT_KEYS">
++      <recent name="C:\dev\spring\capstone1\src\back-end\timepay\src\main\java\com\capstone\timepay\controller\admin" />
++    </key>
++  </component>
+   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+   <component name="TaskManager">
+     <task active="true" id="Default" summary="Default task">
+-      <changelist id="85c566b4-344a-4ffb-816a-640f5bda5d86" name="변경" comment="" />
++      <changelist id="775103a2-84dc-4bbc-8170-be97ad616dff" name="Changes" comment="" />
+       <created>1678848467967</created>
+       <option name="number" value="Default" />
+       <option name="presentableId" value="Default" />
+@@ -69,6 +106,11 @@
+       <workItem from="1679381450443" duration="8000" />
+       <workItem from="1679381536611" duration="717000" />
+       <workItem from="1679382270553" duration="45000" />
++      <workItem from="1679710615329" duration="89000" />
++      <workItem from="1679718113667" duration="200000" />
++      <workItem from="1679722190003" duration="1756000" />
++      <workItem from="1679725793645" duration="1388000" />
++      <workItem from="1679728209619" duration="595000" />
+     </task>
+     <task id="LOCAL-00001" summary="Feat: gson gradle 추가, 카카오 로그인 기능 추가(서버 버그로 인해 테스트X)">
+       <created>1679318459203</created>
