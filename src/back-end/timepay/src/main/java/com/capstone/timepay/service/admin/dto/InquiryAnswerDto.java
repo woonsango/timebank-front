@@ -10,13 +10,12 @@ import lombok.*;
 public class InquiryAnswerDto {
 
     private String content;
-    private Long adminId;
     private Long inquiryId;
 
 
 
-    public static InquiryAnswerDto of(String content, Long adminId, Long inquiryId){
-        return new InquiryAnswerDto(content,adminId, inquiryId);
+    public static InquiryAnswerDto of(String content, Long inquiryId){
+        return new InquiryAnswerDto(content, inquiryId);
     }
 
 }

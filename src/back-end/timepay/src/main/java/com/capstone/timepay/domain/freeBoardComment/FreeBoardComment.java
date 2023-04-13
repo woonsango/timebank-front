@@ -25,6 +25,7 @@ public class FreeBoardComment extends BaseTimeEntity {
     @Column // (nullable = false)
     private String content;
     private Long uid;
+    private boolean isHidden;
 
     @OneToMany(mappedBy = "freeBoardComment", orphanRemoval = true)
     private List<FreeCommentReport> freeCommentReports = new ArrayList<>();
@@ -36,5 +37,9 @@ public class FreeBoardComment extends BaseTimeEntity {
     @ManyToOne
     @JoinColumn(name="user_id")
     private User user;
+
+    public void updateIsHidden(boolean isHidden){
+        this.isHidden = isHidden;
+    }
 
 }

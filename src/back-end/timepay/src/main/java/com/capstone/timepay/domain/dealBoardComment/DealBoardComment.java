@@ -44,5 +44,9 @@ public class DealBoardComment extends BaseTimeEntity {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private User user;
 
+    public void updateIsHidden(boolean isHidden){
+        this.isHidden = isHidden;
+    }
+
 
 }
