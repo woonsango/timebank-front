@@ -1,6 +1,10 @@
 package com.capstone.timepay.domain.board;
 
 import com.capstone.timepay.domain.BaseTimeEntity;
+import com.capstone.timepay.domain.dealBoard.DealBoard;
+import com.capstone.timepay.domain.freeBoard.FreeBoard;
+import com.capstone.timepay.domain.user.User;
+import com.capstone.timepay.domain.userProfile.UserProfile;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -19,8 +23,11 @@ public class Board extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long boardId;
 
-    @Column
-    private Long fBoardId;
-    private Long dBoardId;
+    @OneToOne
+    @JoinColumn(name = "f_boardId")
+    private FreeBoard freeBoard;
 
+    @OneToOne
+    @JoinColumn(name = "d_boardId")
+    private DealBoard dealBoard;
 }
