@@ -1,6 +1,7 @@
 package com.capstone.timepay.domain.comment;
 
 import com.capstone.timepay.domain.BaseTimeEntity;
+import com.capstone.timepay.domain.dealBoard.DealBoard;
 import com.capstone.timepay.domain.dealBoardComment.DealBoardComment;
 import com.capstone.timepay.domain.freeBoard.FreeBoard;
 import com.capstone.timepay.domain.freeBoardComment.FreeBoardComment;
@@ -25,10 +26,11 @@ public class Comment extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long commentId;
 
-    @Column
-    private Long fBoardId;
-    private Long fCommentId;
-    private Long dBoardId;
-    private Long dCommentId;
+    @OneToOne
+    @JoinColumn(name = "f_commentId")
+    private FreeBoardComment freeBoardComment;
 
+    @OneToOne
+    @JoinColumn(name = "d_commentId")
+    private DealBoardComment dealBoardComment;
 }
