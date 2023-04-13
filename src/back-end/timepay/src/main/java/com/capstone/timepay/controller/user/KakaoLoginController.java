@@ -37,7 +37,7 @@ public class KakaoLoginController {
         String access_Token = kakaoLoginService.getKaKaoAccessToken(code);
         User user = kakaoLoginService.createKakaoUser(access_Token);
 
-        if(kakaoLoginService.isUser(user.getUid())) {
+        if(user.isSignUp()) {
             final UserDetails userDetails = userDetailService.loadUserByUsername(user.getEmail());
             final String token = jwtUtils.createToken(userDetails.getUsername(), user.getRoles());
             return ResponseEntity.ok(new AuthenticationResponse(token, user.getRoles()));
