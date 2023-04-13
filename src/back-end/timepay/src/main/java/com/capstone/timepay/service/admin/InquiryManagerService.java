@@ -102,7 +102,7 @@ public class InquiryManagerService {
         Pageable pageable = PageRequest.of(pageIndex, pageSize);
 
         if(!ObjectUtils.isEmpty(writer) && ObjectUtils.isEmpty(title)){
-            User user = userRepository.findByName(writer);
+            User user = userRepository.findByName(writer).orElseThrow(IllegalArgumentException::new);
             Page<Inquiry> pages = inquiryRepository.findAllByUser(user, pageable);
 
             List<InquiryResponse> responses = convertResponsePages(pages)

@@ -2,8 +2,6 @@ package com.capstone.timepay.service.user.service;
 
 import com.capstone.timepay.controller.user.request.RequestDTO;
 import com.capstone.timepay.controller.user.response.ResponseDTO;
-import com.capstone.timepay.domain.signUpUser.SignUpUser;
-import com.capstone.timepay.domain.signUpUser.SignUpUserRepository;
 import com.capstone.timepay.domain.user.User;
 import com.capstone.timepay.domain.user.UserRepository;
 import com.capstone.timepay.domain.userProfile.UserProfile;
@@ -17,6 +15,8 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Optional;
 
 
@@ -28,7 +28,6 @@ public class UserInfoService {
     private final UserProfileRepository userProfileRepository;
     private final FirebaseService firebaseService;
     private final KakaoLoginService kakaoLoginService;
-    private final SignUpUserRepository signUpUserRepository;
 
     public void createUserInfo(RequestDTO userData){
         /* 유저 프로필 데이터 저장 */
@@ -56,7 +55,7 @@ public class UserInfoService {
         }
 
         /* uid를 매핑하여 user table에 데이터 입력 */
-        SignUpUser findUser = signUpUserRepository.findByUid(userUid).orElse(null);
+        User findUser = userRepository.findByUid(userUid).orElseThrow(IllegalArgumentException::new);
 
         /* String으로 입력받은 생년월일을 LocalDateTime으로 형변환 */
         /* 만약 SignUpUser 테이블에 존재하지 않으면 에러 발생 */
@@ -76,7 +75,7 @@ public class UserInfoService {
         UserProfile saveUserProfile = userProfileRepository.findByUid(userUid);
         findUser.setUserProfile(saveUserProfile);
 
-        signUpUserRepository.save(findUser);
+        userRepository.save(findUser);
     }
 
     public void updateUserInfo(RequestDTO userData){
@@ -104,7 +103,7 @@ public class UserInfoService {
         }
 
         /* uid를 매핑하여 user table에 데이터 입력 */
-        User findUser = userRepository.findByUid(userUid).orElse(null);
+        User findUser = userRepository.findByUid(userUid).orElseThrow(IllegalArgumentException::new);
 
         /* 코드 재활용을 위한 변수 생성*/
         /* String으로 입력받은 생년월일을 LocalDateTime으로 형변환 */
@@ -146,7 +145,7 @@ public class UserInfoService {
     }
 
     public ResponseDTO getUserInfo(Long uid){
-        User userData = userRepository.findByUid(uid).orElse(null);
+        User userData = userRepository.findByUid(uid).orElseThrow(IllegalArgumentException::new);
         UserProfile userProfileData = userProfileRepository.findByUid(uid);
 
         /* LocalDateTime을 출력을 위한 String 형변환 */
@@ -166,7 +165,7 @@ public class UserInfoService {
     }
 
     public void deleteUserInfo(Long uid){
-        User userData = userRepository.findByUid(uid).orElse(null); // 중복 사용 많은데 함수로 빼둘지 고민
+        User userData = userRepository.findByUid(uid).orElseThrow(IllegalArgumentException::new); // 중복 사용 많은데 함수로 빼둘지 고민
         
         /* deleteById를 사용하지 않고 에러 메세지를 직접 커스텀 */
         if(userData != null) {
@@ -188,16 +187,15 @@ public class UserInfoService {
 
             return imageUrl;
         } else {
+
             return null;
         }
     }
 
     public User signUpUser(Long uid){
-        SignUpUser signupUser = signUpUserRepository.findByUid(uid).orElse(null);
-        User user = kakaoLoginService.converSignUpToUser(signupUser);
-
+        User user = userRepository.findByUid(uid).orElseThrow(IllegalArgumentException::new);
+        user.setSignUp(true);
         userRepository.save(user);
-        signUpUserRepository.delete(signupUser);
         return user;
     }
 

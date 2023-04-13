@@ -159,7 +159,7 @@ public class ReportManageService {
                 ObjectUtils.isEmpty(reportSearchDto.getStartTime()) &&
                 ObjectUtils.isEmpty(reportSearchDto.getEndTime())){
 
-            User user = userRepository.findByName(reportSearchDto.getName());
+            User user = userRepository.findByName(reportSearchDto.getName()).orElseThrow(IllegalArgumentException::new);
             List<ReportResponse> fcrs = convertFCRToResponse(freeCommentReportRepository.findAllByUser(user));
             List<ReportResponse> fbrs = convertFBRToResponse(freeBoardReportRepository.findAllByUser(user));
             List<ReportResponse> dcrs = convertDCRToResponse(dealCommentReportRepository.findAllByUser(user));

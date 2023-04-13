@@ -46,6 +46,7 @@ public class User extends BaseTimeEntity {
     private Long uid;
     private String encodedPassword;
     private boolean isBanned;
+    private boolean isSignUp;
 
     @ElementCollection(fetch = FetchType.EAGER)
     @Builder.Default

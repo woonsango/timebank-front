@@ -21,6 +21,6 @@ public interface UserRepository extends JpaRepository<User,Long> {
 
     Page<User> findAll(Pageable pageable);
 
-    User findByName(String writer);
+    // User findByName(String writer);
 
 }
