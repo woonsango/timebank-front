@@ -6,6 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public interface DealBoardCommentRepository extends JpaRepository<DealBoardComment,Long> {
@@ -13,4 +14,8 @@ public interface DealBoardCommentRepository extends JpaRepository<DealBoardComme
 
     List<DealBoardComment> findAllByUser(User user);
     Page<DealBoardComment> findAllByUser(User user, Pageable pageable);
+
+    List<DealBoardComment> findByContentContains(String content);
+
+    List<DealBoardComment> findByCreatedAtLessThanEqualAndCreatedAtGreaterThanEqual(LocalDateTime startTime, LocalDateTime endTime);
 }

@@ -1,18 +1,15 @@
 package com.capstone.timepay.controller.admin;
 
 import com.capstone.timepay.controller.admin.request.comment.CommentHideRequest;
+import com.capstone.timepay.controller.admin.request.comment.CommentSearchRequest;
 import com.capstone.timepay.controller.admin.response.comment.CommentResponse;
-import com.capstone.timepay.controller.admin.response.inquiry.InquiryResponse;
 import com.capstone.timepay.service.admin.CommentManageService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -27,6 +24,15 @@ public class CommentManageController {
                                   @RequestParam(defaultValue = "50") int pageSize){
 
         Page<CommentResponse> responses = commentManageService.showAllComments(pageIndex, pageSize);
+
+        return ResponseEntity.ok(responses);
+    }
+
+    @ApiOperation(value = "댓글 검색 조회")
+    @GetMapping(value = "/search", consumes = {MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity<?> search(@RequestBody CommentSearchRequest request){
+
+        Page<CommentResponse> responses = commentManageService.showCommentsBySearch(request.toServiceDto());
 
         return ResponseEntity.ok(responses);
     }
