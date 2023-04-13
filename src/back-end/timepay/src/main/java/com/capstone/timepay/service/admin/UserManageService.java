@@ -399,8 +399,8 @@ public class UserManageService {
                 .dealBoardActivityDtos(dealBoardActivityDtos)
                 .freeCommentActivityDtos(freeCommentActivityDtos)
                 .dealCommentActivityDtos(dealCommentActivityDtos)
-                .reportActivityDtos(reports)
-                .receivedReportDtos(receivedReports)
+                .reportActivityDtos(new PageImpl<>(reports))
+                .receivedReportDtos(new PageImpl<>(receivedReports))
                 .build();
 
     }

@@ -16,7 +16,7 @@ public class ActivityListDto {
     private Page<FreeCommentActivityDto> freeCommentActivityDtos;
     private Page<DealBoardActivityDto> dealBoardActivityDtos;
     private Page<DealCommentActivityDto> dealCommentActivityDtos;
-    private List<ReceivedReportDto> receivedReportDtos;
-    private List<ReportActivityDto> reportActivityDtos;
+    private Page<ReceivedReportDto> receivedReportDtos;
+    private Page<ReportActivityDto> reportActivityDtos;
 
 }
