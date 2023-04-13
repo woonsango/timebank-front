@@ -9,10 +9,12 @@ import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+
 
 @RestController
 @RequiredArgsConstructor
@@ -25,7 +27,7 @@ public class ApiController {
 
     @PostMapping("/create")
     @ApiOperation(value="유저 데이터 생성",notes = "uid를 이용하여 유저 테이블과 유저 프로필 테이블을 매핑하고, DB에 데이터를 생성합니다.")
-    public ResponseEntity postKakaoData(@ModelAttribute RequestDTO requestData, @RequestPart MultipartFile image) throws Exception {
+    public ResponseEntity<?> postKakaoData(@ModelAttribute RequestDTO requestData, @RequestPart MultipartFile image) throws Exception {
 
         requestData.setImageUrl(userInfoService.imageUpload(image));
         userInfoService.createUserInfo(requestData);
@@ -35,14 +37,14 @@ public class ApiController {
 
     @GetMapping("/get/{uid}")
     @ApiOperation(value="유저 데이터 조회",notes = "주소로 uid를 받아 해당하는 유저 정보를 조회합니다.")
-    public ResponseEntity getUserInfo(@PathVariable Long uid){
+    public ResponseEntity<?> getUserInfo(@PathVariable Long uid){
         ResponseDTO responseData = userInfoService.getUserInfo(uid);
         return ResponseEntity.ok(responseData);
     }
 
     @PutMapping("/update")
     @ApiOperation(value="유저 데이터 수정",notes = "uid를 이용하여 유저를 매핑하고 데이터를 수정합니다.")
-    public ResponseEntity putUserInfo(@ModelAttribute RequestDTO requestData, @RequestPart MultipartFile image) throws Exception{
+    public ResponseEntity<?> putUserInfo(@ModelAttribute RequestDTO requestData, @RequestPart MultipartFile image) throws Exception{
         requestData.setImageUrl(userInfoService.imageUpload(image));
         userInfoService.updateUserInfo(requestData);
         return ResponseEntity.ok(requestData);
@@ -50,8 +52,14 @@ public class ApiController {
 
     @DeleteMapping("/delete/{uid}")
     @ApiOperation(value="유저 데이터 삭제(회원탈퇴)",notes = "주소로 uid를 받아 해당하는 유저 정보를 삭제합니다.")
-    public ResponseEntity deleteUserInfo(@PathVariable Long uid) {
+    public ResponseEntity<?> deleteUserInfo(@PathVariable Long uid) {
         userInfoService.deleteUserInfo(uid);
         return ResponseEntity.ok(uid + " Delete Success");
+    }
+
+    @PostMapping("/test/{uid}")
+    @ApiOperation(value="유저 회원가입 승인",notes = "회원가입 대기 목록에서 uid에 해당하는 유저를 회원가입 처리합니다.")
+    public ResponseEntity<?> signUpUser(@PathVariable Long uid) throws Exception{
+        return ResponseEntity.ok(userInfoService.signUpUser(uid));
     }
 }

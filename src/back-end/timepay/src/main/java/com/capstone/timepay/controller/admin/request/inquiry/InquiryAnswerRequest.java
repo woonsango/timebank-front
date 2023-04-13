@@ -16,12 +16,9 @@ public class InquiryAnswerRequest {
     private String content;
 
     @NotNull
-    private Long adminId;
-
-    @NotNull
     private Long inquiryId;
 
     public InquiryAnswerDto toServiceDto(){
-        return InquiryAnswerDto.of(content, adminId, inquiryId);
+        return InquiryAnswerDto.of(content, inquiryId);
     }
 }

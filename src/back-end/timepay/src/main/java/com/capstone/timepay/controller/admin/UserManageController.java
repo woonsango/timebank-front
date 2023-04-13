@@ -1,11 +1,14 @@
 package com.capstone.timepay.controller.admin;
 
 import com.capstone.timepay.controller.admin.request.userManage.UserInfoUpdateRequest;
+import com.capstone.timepay.controller.admin.response.userManage.ActivityListDto;
 import com.capstone.timepay.controller.admin.response.userManage.MainResponse;
 import com.capstone.timepay.controller.admin.response.userManage.UserProfileResponse;
 import com.capstone.timepay.service.admin.UserManageService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.validation.Valid;
 
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/admins/user-management")
@@ -23,31 +27,36 @@ public class UserManageController {
 
     @ApiOperation(value = "전체 유저 정보 리스트 조회")
     @GetMapping("/main")
-    public ResponseEntity<?> main(){
+    public ResponseEntity<?> main(@RequestParam(defaultValue = "0") int pageIndex,
+                                  @RequestParam(defaultValue = "50") int pageSize){
 
-        List<MainResponse> responses = userManageService.showAllUserList();
+        Page<MainResponse> responses = userManageService.showAllUserList(pageIndex, pageSize);
 
         return ResponseEntity.ok(responses);
     }
 
     @ApiOperation(value = "쿼리를 통한 유저 필터링 : 쿼리 ( name / email / nickname )")
     @GetMapping("/search")
-    public ResponseEntity<?> search(@RequestParam Long userId, @RequestParam String query, @RequestParam String value){
+    public ResponseEntity<?> search(@RequestParam(required = false) Long userId,
+                                    @RequestParam(required = false) String query,
+                                    @RequestParam(required = false) String value,
+                                    @RequestParam(defaultValue = "0") int pageIndex,
+                                    @RequestParam(defaultValue = "50") int pageSize){
 
-        List<MainResponse> responses = new ArrayList<>();
-        if(query.equals("name")) responses = userManageService.showAllUserListByName(userId, value);
-        else if(query.equals("email")) responses = userManageService.showAllUserListByEmail(userId, value);
-        else if(query.equals("nickname")) responses = userManageService.showAllUserListByNickname(userId, value);
-        else throw new IllegalArgumentException("잘못된 요청입니다.");
+        Page<MainResponse> responses = userManageService.showAllUserBySearch(userId, query, value, pageIndex, pageSize);
 
         return ResponseEntity.ok(responses);
     }
 
     @ApiOperation(value = "유저 활동 목록 조회")
     @GetMapping("/activity-list")
-    public ResponseEntity<?> showActivityList(){
+    public ResponseEntity<?> showActivityList(@RequestParam Long userId,
+                                              @RequestParam(defaultValue = "0") int pageIndex,
+                                              @RequestParam(defaultValue = "50") int pageSize){
 
-        return ResponseEntity.ok("");
+        ActivityListDto activityListDto = userManageService.getActivityList(userId,pageIndex,pageSize);
+
+        return ResponseEntity.ok(activityListDto);
     }
 
     @ApiOperation(value = "유저 프로필 이미지 조회")
@@ -74,14 +83,16 @@ public class UserManageController {
 
         userManageService.deleteUser(userId);
 
-        return ResponseEntity.ok("삭제되었습니다");
+        return ResponseEntity.ok("삭제되었습니다.");
     }
 
     @ApiOperation(value = "유저 블랙리스트 등록")
     @PostMapping("/blacklist")
-    public ResponseEntity<?> registerBlacklist(){
+    public ResponseEntity<?> registerBlacklist(@RequestParam Long userId){
 
-        return ResponseEntity.ok("");
+        userManageService.registerBlacklist(userId);
+
+        return ResponseEntity.ok("등록되었습니다.");
     }
 
 

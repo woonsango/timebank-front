@@ -1,6 +1,7 @@
 package com.capstone.timepay.controller.admin;
 
 import com.capstone.timepay.domain.admin.Admin;
+import com.capstone.timepay.domain.admin.AdminRepository;
 import com.capstone.timepay.domain.dealCommentReport.model.AuthenticationRequest;
 import com.capstone.timepay.domain.dealCommentReport.model.AuthenticationResponse;
 import com.capstone.timepay.service.admin.AdminDetailService;
@@ -9,10 +10,6 @@ import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.DisabledException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -30,23 +27,24 @@ import javax.servlet.http.HttpServletResponse;
 @RequestMapping("/api/admins/")
 public class LoginController {
 
-    private final AuthenticationManager authenticationManager;
 
     @Autowired
     private JwtUtils jwtUtils;
 
     @Autowired
     private AdminDetailService adminDetailService;
+    private final AdminRepository adminRepository;
+
 
     @PostMapping("/login")
     @ApiOperation(value = "로그인 API")
     public ResponseEntity<?> createAuthenticationToken(
             @RequestBody AuthenticationRequest authenticationRequest) throws Exception {
-
         String adminName = authenticationRequest.getAdminName();
-        authenticate(adminName, authenticationRequest.getPassword());
+        Admin adminData = adminRepository.findByAdminName(adminName).orElse(null);
         final UserDetails userDetails = adminDetailService.loadUserByUsername(adminName);
-        final String token = jwtUtils.generateToken(userDetails);
+        // final String token = jwtUtils.generateToken(userDetails, adminData.getRoles());
+        final String token = jwtUtils.createToken(userDetails.getUsername(), adminData.getRoles());
         final Admin admin = adminDetailService.getAdmin(adminName);
         return ResponseEntity.ok(new AuthenticationResponse(token, admin));
     }
@@ -65,13 +63,4 @@ public class LoginController {
         return ResponseEntity.ok("로그아웃되었습니다.");
     }
 
-    private void authenticate(String username, String password) throws Exception {
-        try {
-            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
-        } catch (DisabledException e) {
-            throw new Exception("USER_DISABLED", e);
-        } catch (BadCredentialsException e) {
-            throw new Exception("INVALID_CREDENTIALS", e);
-        }
-    }
 }

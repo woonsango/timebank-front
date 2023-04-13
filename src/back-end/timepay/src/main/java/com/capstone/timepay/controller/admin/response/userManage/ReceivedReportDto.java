@@ -10,6 +10,10 @@ import lombok.*;
 public class ReceivedReportDto {
 
     private Long reportId;
-
+    private String reporterName;
+    private Long reporterId;
+    private String reportReason;
+    private Long boardId;
+    private Long commentId;
 
 }

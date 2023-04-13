@@ -27,8 +27,7 @@ public class AdminDetailService implements UserDetailsService {
         }
 
         return new User(
-                admin.get().getAdminName(), admin.get().getPassword(),
-                new ArrayList<>());
+                admin.get().getAdminName(), admin.get().getPassword(), admin.get().getAuthorities());
     }
 
     public Admin getAdmin(String adminName) {

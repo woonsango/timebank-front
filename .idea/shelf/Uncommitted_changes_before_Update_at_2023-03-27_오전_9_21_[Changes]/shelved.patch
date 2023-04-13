@@ -1,0 +1,34 @@
+Index: src/back-end/timepay/src/main/java/com/capstone/timepay/service/user/UserInfoService.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.capstone.timepay.service.user;\r\n\r\nimport com.capstone.timepay.controller.user.request.RequestDTO;\r\nimport com.capstone.timepay.domain.user.User;\r\nimport com.capstone.timepay.domain.user.UserRepository;\r\nimport com.capstone.timepay.domain.userProfile.UserProfile;\r\nimport com.capstone.timepay.domain.userProfile.UserProfileRepository;\r\nimport lombok.RequiredArgsConstructor;\r\nimport org.springframework.stereotype.Service;\r\n\r\nimport java.time.LocalDateTime;\r\n\r\n\r\n/* 받은 데이터를 데이터베이스에 저장 */\r\n@Service\r\n@RequiredArgsConstructor\r\npublic class UserInfoService {\r\n    private final UserRepository userRepository;\r\n    private final UserProfileRepository userProfileRepository;\r\n\r\n    public void createUserInfo(RequestDTO userData){\r\n        /* 유저 프로필 데이터 저장 */\r\n        Long userUid = userData.getUid();\r\n\r\n\r\n        /* uid값 비교하여 중복된 데이터는 데이터베이스에 저장X */\r\n        if(userProfileRepository.findByUid(userUid) == null)\r\n        {\r\n            UserProfile userProfile = new UserProfile();\r\n            userProfile.setImageUrl(userData.getImageUrl());\r\n            userProfile.setIntroduction(userData.getIntroduction());\r\n            userProfile.setUid(userUid);\r\n            userProfile.setCreatedAt(LocalDateTime.now());\r\n            userProfile.setUpdatedAt(LocalDateTime.now());\r\n            userProfileRepository.save(userProfile);\r\n\r\n        } else {\r\n            System.out.println(\"\\n이미 저장된 데이터래요~\\n\");\r\n        }\r\n\r\n\r\n        /* uid를 매핑하여 user table에 데이터 입력 */\r\n        User findUser = userRepository.findByUid(userUid);\r\n\r\n        findUser.setName(userData.getName());\r\n        findUser.setNickname(userData.getNickName());\r\n        findUser.setLocation(userData.getLocation());\r\n        findUser.setPhone(userData.getPhone());\r\n        findUser.setBirthday(userData.getBirthday());\r\n        findUser.setCreatedAt(LocalDateTime.now());\r\n        findUser.setUpdatedAt(LocalDateTime.now());\r\n\r\n        UserProfile saveUserProfile = userProfileRepository.findByUid(userUid);\r\n        findUser.setUserProfile(saveUserProfile);\r\n\r\n        userRepository.save(findUser);\r\n    }\r\n\r\n    public void updateUserInfo(RequestDTO userData){\r\n        Long userUid = userData.getUid();\r\n\r\n        if(userProfileRepository.findByUid(userUid) == null)\r\n        {\r\n            System.out.println(\"\\n존재하지 않는 유저라네요~\\n\");\r\n\r\n        } else {\r\n            UserProfile userProfile = new UserProfile();\r\n\r\n            /* 코드 재활용을 위한 변수 생성 */\r\n            String imageUrl = userData.getImageUrl();\r\n            String introduction =  userData.getIntroduction();\r\n\r\n            if(imageUrl != null)\r\n                userProfile.setImageUrl(imageUrl);\r\n\r\n            if(introduction != null)\r\n                userProfile.setIntroduction(introduction);\r\n\r\n            userProfile.setUpdatedAt(LocalDateTime.now());\r\n            userProfileRepository.save(userProfile);\r\n        }\r\n\r\n        /* uid를 매핑하여 user table에 데이터 입력 */\r\n        User findUser = userRepository.findByUid(userUid);\r\n\r\n        /* 코드 재활용을 위한 변수 생성*/\r\n        String name = userData.getName();\r\n        String nickname = userData.getNickName();\r\n        String location = userData.getLocation();\r\n        String phone = userData.getPhone();\r\n        String birthday = userData.getBirthday();\r\n\r\n        /* 여기 아래부터 받은 데이터가 있는 것들만 찾습니다. */\r\n        if(name != null)\r\n            findUser.setName(name);\r\n\r\n        if(nickname != null)\r\n            findUser.setNickname(nickname);\r\n\r\n        if(location != null)\r\n            findUser.setLocation(location);\r\n\r\n        if(phone != null)\r\n            findUser.setPhone(phone);\r\n\r\n        if(birthday != null)\r\n            findUser.setBirthday(birthday); // 생일은 수정 못하게?\r\n\r\n        findUser.setUpdatedAt(LocalDateTime.now());\r\n        userRepository.save(findUser);\r\n    }\r\n}\r\n
+===================================================================
+diff --git a/src/back-end/timepay/src/main/java/com/capstone/timepay/service/user/UserInfoService.java b/src/back-end/timepay/src/main/java/com/capstone/timepay/service/user/UserInfoService.java
+--- a/src/back-end/timepay/src/main/java/com/capstone/timepay/service/user/UserInfoService.java	
++++ b/src/back-end/timepay/src/main/java/com/capstone/timepay/service/user/UserInfoService.java	
+@@ -26,13 +26,18 @@
+         /* uid값 비교하여 중복된 데이터는 데이터베이스에 저장X */
+         if(userProfileRepository.findByUid(userUid) == null)
+         {
+-            UserProfile userProfile = new UserProfile();
+-            userProfile.setImageUrl(userData.getImageUrl());
+-            userProfile.setIntroduction(userData.getIntroduction());
+-            userProfile.setUid(userUid);
+-            userProfile.setCreatedAt(LocalDateTime.now());
+-            userProfile.setUpdatedAt(LocalDateTime.now());
+-            userProfileRepository.save(userProfile);
++            if(userRepository.findByUid(userUid)) {
++
++                UserProfile userProfile = new UserProfile();
++                userProfile.setImageUrl(userData.getImageUrl());
++                userProfile.setIntroduction(userData.getIntroduction());
++                userProfile.setUid(userUid);
++                userProfile.setCreatedAt(LocalDateTime.now());
++                userProfile.setUpdatedAt(LocalDateTime.now());
++                userProfileRepository.save(userProfile);
++            } else{
++                System.out.println("\n없는 유저 데이터래요~ 프로필~\n");
++            }
+ 
+         } else {
+             System.out.println("\n이미 저장된 데이터래요~\n");
