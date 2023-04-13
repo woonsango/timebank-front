@@ -19,7 +19,7 @@ public class KakaoLoginDto {
 
     public static KakaoLoginDto toKaKaoLoginDto(User user){
         return new KakaoLoginDto(
-                user.getUserId(),
+                user.getUid(),
                 user.getEmail(),
                 user.getSex()
                 //user.getBirthday()
