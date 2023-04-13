@@ -3,12 +3,14 @@ package com.capstone.timepay.service.admin;
 import com.capstone.timepay.controller.admin.response.comment.CommentResponse;
 import com.capstone.timepay.controller.admin.response.report.ReportResponse;
 import com.capstone.timepay.domain.comment.Comment;
+import com.capstone.timepay.domain.dealBoardComment.DealBoardComment;
 import com.capstone.timepay.domain.dealBoardReport.DealBoardReport;
 import com.capstone.timepay.domain.dealBoardReport.DealBoardReportRepository;
 import com.capstone.timepay.domain.dealCommentReport.DealCommentReport;
 import com.capstone.timepay.domain.dealCommentReport.DealCommentReportRepository;
 import com.capstone.timepay.domain.dealRegister.DealRegister;
 import com.capstone.timepay.domain.dealRegister.DealRegisterRepository;
+import com.capstone.timepay.domain.freeBoardComment.FreeBoardComment;
 import com.capstone.timepay.domain.freeBoardReport.FreeBoardReport;
 import com.capstone.timepay.domain.freeBoardReport.FreeBoardReportRepository;
 import com.capstone.timepay.domain.freeCommentReport.FreeCommentReport;
@@ -19,14 +21,14 @@ import com.capstone.timepay.domain.report.Report;
 import com.capstone.timepay.domain.report.ReportRepository;
 import com.capstone.timepay.domain.user.User;
 import com.capstone.timepay.domain.user.UserRepository;
+import com.capstone.timepay.service.admin.dto.CommentSearchDto;
 import com.capstone.timepay.service.admin.dto.PenaltyUserDto;
+import com.capstone.timepay.service.admin.dto.ReportSearchDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -87,7 +89,7 @@ public class ReportManageService {
                             .reason(report.getFreeCommentReport().getContent())
                             .targetId(report.getFreeCommentReport().getFreeBoardComment().getF_commentId())
                             .reportedAt(report.getFreeCommentReport().getCreatedAt())
-                            .targetReportId(fcr.getUser().getUserId())
+                            .targetReportId(fcr.getFreeBoardComment().getUser().getUserId())
                             .process(report.getFreeCommentReport().getProcess())
                             .build();
                 }
@@ -117,7 +119,7 @@ public class ReportManageService {
                             .reason(report.getDealCommentReport().getContent())
                             .targetId(report.getDealCommentReport().getDealBoardComment().getD_commentId())
                             .reportedAt(report.getDealCommentReport().getCreatedAt())
-                            .targetReportId(dcr.getUser().getUserId())
+                            .targetReportId(dcr.getDealBoardComment().getUser().getUserId())
                             .process(report.getDealCommentReport().getProcess())
                             .build();
                 }
@@ -135,4 +137,154 @@ public class ReportManageService {
             userRepository.save(user);
         }
     }
+
+    public Page<ReportResponse> showReportsBySearch(ReportSearchDto reportSearchDto) {
+
+        if(!ObjectUtils.isEmpty(reportSearchDto.getReportId()) &&
+            ObjectUtils.isEmpty(reportSearchDto.getName()) &&
+            ObjectUtils.isEmpty(reportSearchDto.getContent()) &&
+            ObjectUtils.isEmpty(reportSearchDto.getStartTime()) &&
+            ObjectUtils.isEmpty(reportSearchDto.getEndTime())){
+
+            Report report = reportRepository.findByReportId(reportSearchDto.getReportId()).orElseThrow(()->new IllegalArgumentException("존재하지 않는 신고입니다."));
+            List<Report> reports = new ArrayList<>();
+            reports.add(report);
+
+            return convertResponsePages(new PageImpl<>(reports));
+
+        }
+        else if(ObjectUtils.isEmpty(reportSearchDto.getReportId()) &&
+                !ObjectUtils.isEmpty(reportSearchDto.getName()) &&
+                ObjectUtils.isEmpty(reportSearchDto.getContent()) &&
+                ObjectUtils.isEmpty(reportSearchDto.getStartTime()) &&
+                ObjectUtils.isEmpty(reportSearchDto.getEndTime())){
+
+            User user = userRepository.findByName(reportSearchDto.getName());
+            List<ReportResponse> fcrs = convertFCRToResponse(freeCommentReportRepository.findAllByUser(user));
+            List<ReportResponse> fbrs = convertFBRToResponse(freeBoardReportRepository.findAllByUser(user));
+            List<ReportResponse> dcrs = convertDCRToResponse(dealCommentReportRepository.findAllByUser(user));
+            List<ReportResponse> dbrs = convertDBRToResponse(dealBoardReportRepository.findAllByUser(user));
+
+            List<ReportResponse> reportResponses = new ArrayList<>();
+            reportResponses.addAll(fbrs);
+            reportResponses.addAll(fcrs);
+            reportResponses.addAll(dbrs);
+            reportResponses.addAll(dcrs);
+
+            return new PageImpl<>(reportResponses);
+        }
+        else if(ObjectUtils.isEmpty(reportSearchDto.getReportId()) &&
+                ObjectUtils.isEmpty(reportSearchDto.getName()) &&
+                !ObjectUtils.isEmpty(reportSearchDto.getContent()) &&
+                ObjectUtils.isEmpty(reportSearchDto.getStartTime()) &&
+                ObjectUtils.isEmpty(reportSearchDto.getEndTime())){
+
+            List<ReportResponse> fcrs = convertFCRToResponse(freeCommentReportRepository.findByContentContains(reportSearchDto.getContent()));
+            List<ReportResponse> fbrs = convertFBRToResponse(freeBoardReportRepository.findByContentContains(reportSearchDto.getContent()));
+            List<ReportResponse> dcrs = convertDCRToResponse(dealCommentReportRepository.findByContentContains(reportSearchDto.getContent()));
+            List<ReportResponse> dbrs = convertDBRToResponse(dealBoardReportRepository.findByContentContains(reportSearchDto.getContent()));
+
+            List<ReportResponse> reportResponses = new ArrayList<>();
+            reportResponses.addAll(fbrs);
+            reportResponses.addAll(fcrs);
+            reportResponses.addAll(dbrs);
+            reportResponses.addAll(dcrs);
+
+            return new PageImpl<>(reportResponses);
+        }
+        else if(ObjectUtils.isEmpty(reportSearchDto.getReportId()) &&
+                ObjectUtils.isEmpty(reportSearchDto.getName()) &&
+                ObjectUtils.isEmpty(reportSearchDto.getContent()) &&
+                !ObjectUtils.isEmpty(reportSearchDto.getStartTime()) &&
+                !ObjectUtils.isEmpty(reportSearchDto.getEndTime())){
+
+            List<ReportResponse> fcrs =
+                    convertFCRToResponse(freeCommentReportRepository.findByCreatedAtLessThanEqualAndCreatedAtGreaterThanEqual(reportSearchDto.getEndTime(), reportSearchDto.getStartTime()));
+            List<ReportResponse> fbrs =
+                    convertFBRToResponse(freeBoardReportRepository.findByCreatedAtLessThanEqualAndCreatedAtGreaterThanEqual(reportSearchDto.getEndTime(), reportSearchDto.getStartTime()));
+            List<ReportResponse> dcrs =
+                    convertDCRToResponse(dealCommentReportRepository.findByCreatedAtLessThanEqualAndCreatedAtGreaterThanEqual(reportSearchDto.getEndTime(), reportSearchDto.getStartTime()));
+            List<ReportResponse> dbrs =
+                    convertDBRToResponse(dealBoardReportRepository.findByCreatedAtLessThanEqualAndCreatedAtGreaterThanEqual(reportSearchDto.getEndTime(), reportSearchDto.getStartTime()));
+
+            List<ReportResponse> reportResponses = new ArrayList<>();
+            reportResponses.addAll(fbrs);
+            reportResponses.addAll(fcrs);
+            reportResponses.addAll(dbrs);
+            reportResponses.addAll(dcrs);
+
+            return new PageImpl<>(reportResponses);
+        }
+        else throw new IllegalArgumentException("잘못된 파라미터 요청입니다.");
+
+    }
+    public List<ReportResponse> convertFCRToResponse(List<FreeCommentReport> report){
+        return report
+                .stream()
+                .map(freeCommentReport ->
+                        ReportResponse.builder()
+                                .reportId(reportRepository.findByFreeCommentReport(freeCommentReport).getReportId())
+                                .reporterId(freeCommentReport.getUser().getUserId())
+                                .reporterName(freeCommentReport.getUser().getName())
+                                .type("자유게시글댓글")
+                                .reason(freeCommentReport.getContent())
+                                .targetId(freeCommentReport.getFreeBoardComment().getF_commentId())
+                                .reportedAt(freeCommentReport.getCreatedAt())
+                                .targetReportId(freeCommentReport.getFreeBoardComment().getUser().getUserId())
+                                .process(freeCommentReport.getProcess())
+                                .build())
+                .collect(Collectors.toList());
+    }
+    public List<ReportResponse> convertDCRToResponse(List<DealCommentReport> report){
+        return report
+                .stream()
+                .map(dealCommentReport ->
+                        ReportResponse.builder()
+                                .reportId(reportRepository.findByDealCommentReport(dealCommentReport).getReportId())
+                                .reporterId(dealCommentReport.getUser().getUserId())
+                                .reporterName(dealCommentReport.getUser().getName())
+                                .type("거래게시글댓글")
+                                .reason(dealCommentReport.getContent())
+                                .targetId(dealCommentReport.getDealBoardComment().getD_commentId())
+                                .reportedAt(dealCommentReport.getCreatedAt())
+                                .targetReportId(dealCommentReport.getDealBoardComment().getUser().getUserId())
+                                .process(dealCommentReport.getProcess())
+                                .build())
+                .collect(Collectors.toList());
+    }
+    public List<ReportResponse> convertFBRToResponse(List<FreeBoardReport> report){
+        return report
+                .stream()
+                .map(freeBoardReport ->
+                        ReportResponse.builder()
+                                .reportId(reportRepository.findByFreeBoardReport(freeBoardReport).getReportId())
+                                .reporterId(freeBoardReport.getUser().getUserId())
+                                .reporterName(freeBoardReport.getUser().getName())
+                                .type("자유게시글")
+                                .reason(freeBoardReport.getContent())
+                                .targetId(freeBoardReport.getFreeBoard().getF_boardId())
+                                .reportedAt(freeBoardReport.getCreatedAt())
+                                .targetReportId(freeRegisterRepository.findByFreeBoard(freeBoardReport.getFreeBoard()).get().getUser().getUserId())
+                                .process(freeBoardReport.getProcess())
+                                .build())
+                .collect(Collectors.toList());
+    }
+    public List<ReportResponse> convertDBRToResponse(List<DealBoardReport> report){
+        return report
+                .stream()
+                .map(dealBoardReport ->
+                        ReportResponse.builder()
+                                .reportId(reportRepository.findByDealBoardReport(dealBoardReport).getReportId())
+                                .reporterId(dealBoardReport.getUser().getUserId())
+                                .reporterName(dealBoardReport.getUser().getName())
+                                .type("거래게시글")
+                                .reason(dealBoardReport.getContent())
+                                .targetId(dealBoardReport.getDealBoard().getD_boardId())
+                                .reportedAt(dealBoardReport.getCreatedAt())
+                                .targetReportId(dealRegisterRepository.findByDealBoard(dealBoardReport.getDealBoard()).get().getUser().getUserId())
+                                .process(dealBoardReport.getProcess())
+                                .build())
+                .collect(Collectors.toList());
+    }
+
 }

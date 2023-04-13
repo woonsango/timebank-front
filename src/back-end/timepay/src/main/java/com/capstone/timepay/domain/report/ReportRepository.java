@@ -6,6 +6,8 @@ import com.capstone.timepay.domain.freeBoardReport.FreeBoardReport;
 import com.capstone.timepay.domain.freeCommentReport.FreeCommentReport;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.Optional;
+
 public interface ReportRepository extends JpaRepository<Report,Long> {
 
     Report findByFreeBoardReport(FreeBoardReport freeBoardReport);
@@ -15,4 +17,6 @@ public interface ReportRepository extends JpaRepository<Report,Long> {
     Report findByFreeCommentReport(FreeCommentReport freeCommentReport);
 
     Report findByDealCommentReport(DealCommentReport dealCommentReport);
+
+    Optional<Report> findByReportId(Long reportId);
 }

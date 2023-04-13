@@ -109,12 +109,6 @@ public class CommentManageService {
 
     public Page<CommentResponse> showCommentsBySearch(CommentSearchDto commentSearchDto) {
 
-        System.out.println("ID : " + ObjectUtils.isEmpty(commentSearchDto.getCommentId()));
-        System.out.println("NAME : " + ObjectUtils.isEmpty(commentSearchDto.getName()));
-        System.out.println("CONTENT : " + ObjectUtils.isEmpty(commentSearchDto.getContent()));
-        System.out.println("START : " + ObjectUtils.isEmpty(commentSearchDto.getStartTime()));
-        System.out.println("END : " + ObjectUtils.isEmpty(commentSearchDto.getEndTime()));
-
         if(!ObjectUtils.isEmpty(commentSearchDto.getCommentId()) &&
             ObjectUtils.isEmpty(commentSearchDto.getName()) &&
             ObjectUtils.isEmpty(commentSearchDto.getContent()) &&
