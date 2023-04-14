@@ -7,22 +7,42 @@ import {
   cssPasswordEditButtonStyle,
   cssPasswordEditInnerBox,
 } from './PasswordEditPage.styles';
+import { usePasswordChange } from '../../api/hooks/passwordChange';
+import { getTokenFromCookie } from '../../utils/token';
 
 const onFinishFailed = (errorInfo: any) => {
   console.log('Failed:', errorInfo);
 };
 
 const PasswordEditPage = () => {
+  const [form] = Form.useForm();
   const navigate = useNavigate();
+  const passwordChangeMutation = usePasswordChange();
 
-  const handleOnClickChangeBtn = () => {
-    navigate(`/post-management`);
+  const handleOnClickChangeBtn = async (values: any) => {
+    await passwordChangeMutation.mutateAsync(
+      {
+        currentPassword: values.currentPassword,
+        newPassword: values.newPassword,
+        newPassword2: values.newPasswordCheck,
+      },
+      {
+        onSuccess: (result) => {
+          navigate(`/post-management`);
+        },
+        onError: (err) => {
+          console.log(err.response?.status);
+        },
+      },
+    );
+    // navigate(`/post-management`);
   };
 
   return (
     <div css={cssPasswordEditInnerBox}>
       <Logo fill={COMMON_COLOR.LOGO1} width="378px" height="128.01px" />
       <Form
+        form={form}
         name="basic"
         style={{ width: 300 }}
         onFinish={handleOnClickChangeBtn}
