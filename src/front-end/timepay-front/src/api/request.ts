@@ -18,7 +18,7 @@ request.interceptors.request.use((config) => {
     'Authorization',
     !HEADER_NOT_REQUIRED_URLS.includes(config.url!)
       ? token
-        ? `Baerer ${token}`
+        ? `Bearer ${token}`
         : undefined
       : undefined,
   );
