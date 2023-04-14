@@ -5,12 +5,17 @@ import com.capstone.timepay.domain.freeBoard.FreeBoardRepository;
 import com.capstone.timepay.domain.user.User;
 import com.capstone.timepay.service.board.dto.FreeBoardDTO;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -18,14 +23,21 @@ public class FreeBoardService
 {
     private final FreeBoardRepository freeBoardRepository;
 
-    // 모든 게시물 조회
-    @Transactional(readOnly = true)
-    public List<FreeBoardDTO> getBoards()
+    public FreeBoard getId(Long id)
     {
-        List<FreeBoard> freeBoards = freeBoardRepository.findAll();
-        List<FreeBoardDTO> freeBoardDTOList = new ArrayList<>();
-        freeBoards.forEach(freeBoard -> freeBoardDTOList.add(FreeBoardDTO.toFreeBoardDTO(freeBoard)));
-        return freeBoardDTOList;
+        return freeBoardRepository.findById(id).orElse(null);
+    }
+
+    // 모든 게시물 조회
+    @Transactional
+    public Page<FreeBoardDTO> getBoards(int pagingIndex, int pagingSize)
+    {
+        Pageable pageable = PageRequest.of(pagingIndex, pagingSize);
+        Page<FreeBoard> freeBoardPage = freeBoardRepository.findByIsHiddenFalse(pageable);
+        List<FreeBoardDTO> freeBoardDTOList = freeBoardPage.stream()
+                .map(FreeBoardDTO::toFreeBoardDTO)
+                .collect(Collectors.toList());
+        return new PageImpl<>(freeBoardDTOList, freeBoardPage.getPageable(), freeBoardPage.getTotalElements());
     }
 
     // 개별 게시물 조회
@@ -39,27 +51,6 @@ public class FreeBoardService
         return freeBoardDTO;
     }
 
-    // 숨김처리 안된 게시물만 조회
-    @Transactional(readOnly = true)
-    public List<FreeBoardDTO> getGoodBoard()
-    {
-        List<FreeBoard> freeBoards = freeBoardRepository.findAllByIsHiddenFalse();
-        List<FreeBoardDTO> freeBoardDTOList = new ArrayList<>();
-        freeBoards.forEach(freeBoard -> freeBoardDTOList.add(FreeBoardDTO.toFreeBoardDTO(freeBoard)));
-        return freeBoardDTOList;
-    }
-
-    // 숨김처리된 게시물만 조회
-    @Transactional(readOnly = true)
-    public List<FreeBoardDTO> getBadBoard()
-    {
-        List<FreeBoard> freeBoards = freeBoardRepository.findAAByIsHiddenTrue();
-        List<FreeBoardDTO> freeBoardDTOList = new ArrayList<>();
-        freeBoards.forEach(freeBoard -> freeBoardDTOList.add(FreeBoardDTO.toFreeBoardDTO(freeBoard)));
-        return freeBoardDTOList;
-    }
-
-
     // 게시물 작성
     @Transactional
     public FreeBoardDTO write(FreeBoardDTO freeBoardDTO)
@@ -71,6 +62,7 @@ public class FreeBoardService
         freeBoard.setCreatedAt(LocalDateTime.now());
         freeBoard.setUpdatedAt(LocalDateTime.now());
         freeBoard.setHidden(freeBoardDTO.isHidden());
+        freeBoard.setUid(freeBoardDTO.getUid());
         freeBoardRepository.save(freeBoard);
         return FreeBoardDTO.toFreeBoardDTO(freeBoard);
     }

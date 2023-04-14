@@ -21,7 +21,7 @@ public class DealBoardCommentService {
 
     // 댓글 작성하기
     @Transactional
-    public DealBoardCommentDTO writeComment(Long boardId, DealBoardCommentDTO dealBoardCommentDTO, Long uid)
+    public DealBoardCommentDTO writeComment(Long boardId, DealBoardCommentDTO dealBoardCommentDTO)
     {
         DealBoardComment dealBoardComment = new DealBoardComment();
         dealBoardComment.setContent(dealBoardCommentDTO.getContent());
@@ -30,7 +30,7 @@ public class DealBoardCommentService {
             return new IllegalArgumentException("게시판을 찾을 수 없음");
         });
 
-        dealBoardComment.setUid(uid);
+        dealBoardComment.setUid(dealBoardCommentDTO.getUid());
         dealBoardComment.setDealBoard(dealBoard);
         dealBoardComment.setApplied(false);
         dealBoardComment.setAdopted(false);
@@ -54,16 +54,17 @@ public class DealBoardCommentService {
     }
 
     // 삭제
-    @Transactional
-    public String deleteComment(Long commentId)
-    {
+    @Transactional(readOnly = true)
+    public void delete(Long commentId) {
         DealBoardComment dealBoardComment = dealBoardCommentRepository.findById(commentId).orElseThrow(() -> {
-            return new IllegalArgumentException("댓글 Id를 찾을 수 없습니다.");
+            return new IllegalArgumentException("Comment Id를 찾을 수 없습니다");
         });
         dealBoardCommentRepository.deleteById(commentId);
-        return "삭제 완료";
     }
 
-
-
+    @Transactional(readOnly = true)
+    public DealBoardComment getCommentId(Long id)
+    {
+        return dealBoardCommentRepository.findById(id).orElse(null);
+    }
 }

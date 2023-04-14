@@ -1,11 +1,17 @@
 package com.capstone.timepay.controller.board;
 
-import com.capstone.timepay.controller.board.annotation.Response;
+import com.capstone.timepay.domain.dealBoard.DealBoard;
 import com.capstone.timepay.service.board.dto.DealBoardDTO;
 import com.capstone.timepay.service.board.service.DealBoardService;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @RequiredArgsConstructor
 @RestController
@@ -14,57 +20,115 @@ public class DealBoardController
 {
     private final DealBoardService dealBoardService;
 
-    @ResponseStatus(HttpStatus.OK)
+    @ApiOperation(value = "거래게시판 모든 게시판 불러오기")
     @GetMapping("")
-    public Response<?> getBoards()
+    public ResponseEntity<Page<DealBoardDTO>> getBoards(
+            @RequestParam(value = "pagingIndex", defaultValue = "0") int pagingIndex,
+            @RequestParam(value = "pagingSize", defaultValue = "50") int pagingSize)
     {
-        return new Response("SUCCESS", "전체 게시판 조회", dealBoardService.getDealBoards());
+        Page<DealBoardDTO> paging = dealBoardService.getDealBoards(pagingIndex, pagingSize);
+        if (paging.isEmpty())
+        {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(paging, HttpStatus.OK);
     }
 
-    @ResponseStatus(HttpStatus.OK)
+    @ApiOperation(value = "거래게시판 개별 게시판 불러오기")
     @GetMapping("/{id}")
-    public Response<?> getBoard(@PathVariable("id") Long id)
+    public ResponseEntity<DealBoardDTO> getBoard(@PathVariable("id") Long id)
     {
-        return new Response("SUCCESS", "개별 게시판 조회", dealBoardService.getDealBoard(id));
+        return new ResponseEntity(dealBoardService.getDealBoard(id), HttpStatus.OK);
     }
 
-    // 숨김처리 안된 게시물 조회
-    @ResponseStatus(HttpStatus.OK)
-    @GetMapping("/good")
-    public Response<?> getGoodBoards()
-    {
-        return new Response("SUCCESS", "숨김처리 안된 게시판 조회", dealBoardService.getGoodBoard());
-    }
-
-
-    // 숨김처리된 게시물 조회
-    @ResponseStatus(HttpStatus.OK)
-    @GetMapping("/bad")
-    public Response<?> getBadBoards()
-    {
-        return new Response("SUCCESS", "숨김처리 게시판 조회", dealBoardService.getBadBoard());
-    }
-
-
-    @ResponseStatus(HttpStatus.CREATED)
+    @ApiOperation(value = "거래게시판 게시글 작성")
     @PostMapping("/write")
-    public Response<?> write(@RequestBody DealBoardDTO dealBoardDTO)
+    public ResponseEntity write(@RequestBody DealBoardDTO dealBoardDTO)
     {
-        return new Response("SUCCESS", "게시글 작성", dealBoardService.write(dealBoardDTO));
+        return new ResponseEntity(dealBoardService.write(dealBoardDTO), HttpStatus.OK);
     }
 
-    @ResponseStatus(HttpStatus.OK)
+    @ApiOperation(value = "거래게시판 게시글 수정")
     @PutMapping("/update/{id}")
-    public Response<?> update(@RequestBody DealBoardDTO dealBoardDTO, @PathVariable("id") Long id)
+    public Map<String, Object> update(@RequestBody DealBoardDTO dealBoardDTO,
+                                      @PathVariable("id") Long id,
+                                      @RequestHeader(name = "uuid") Long uuid)
     {
-        return new Response("SUCCESS", "게시글 수정", dealBoardService.update(id, dealBoardDTO));
+        Map<String, Object> updateMap = new HashMap<>();
+        DealBoard dealBoard = dealBoardService.getId(id);
+        if (dealBoard == null)
+        {
+            updateMap.put("success", false);
+            updateMap.put("message", "해당 게시글을 찾을 수 없습니다");
+            return updateMap;
+        }
+
+        if (!dealBoard.getUid().equals(uuid))
+        {
+            updateMap.put("success", false);
+            updateMap.put("message", "수정 권한이 없습니다");
+            return updateMap;
+        }
+
+        dealBoardService.update(id, dealBoardDTO);
+        updateMap.put("success", true);
+        updateMap.put("dealBoard", dealBoard);
+        return updateMap;
     }
 
-    @ResponseStatus(HttpStatus.OK)
+    @ApiOperation(value = "거래게시판 게시글 삭제")
     @DeleteMapping ("/delete/{id}")
-    public Response<?> delete(@PathVariable("id") Long id)
+    public Map<String, Object> delete(@RequestBody DealBoardDTO dealBoardDTO,
+                                      @PathVariable("id") Long id,
+                                      @RequestHeader(name = "uuid") Long uuid)
     {
+        Map<String, Object> deleteMap = new HashMap<>();
+        DealBoard dealBoard = dealBoardService.getId(id);
+        if (dealBoard == null)
+        {
+            deleteMap.put("success", false);
+            deleteMap.put("message", "해당 게시글을 찾을 수 없습니다");
+            return deleteMap;
+        }
+
+        if (!dealBoard.getUid().equals(uuid))
+        {
+            deleteMap.put("success", false);
+            deleteMap.put("message", "삭제 권한이 없습니다");
+            return deleteMap;
+        }
+
         dealBoardService.delete(id);
-        return new Response("SUCCESS", "게시글 삭제", null);
+        deleteMap.put("success", true);
+        return deleteMap;
+    }
+
+    // == 글 작성 후 로직 == //
+    @ApiOperation(value = "모집중에서 모집완료로 변경시키는 컨트롤러")
+    @PutMapping("/{boardId}/start")
+    public Map<String, Object> readyToStart(@RequestBody DealBoardDTO dealBoardDTO,
+                                            @PathVariable("boardId") Long boardId,
+                                            @RequestHeader(name = "uuid") Long uuid)
+    {
+        Map<String, Object> resultMap = new HashMap<>();
+        DealBoard dealBoard  = dealBoardService.getId(boardId);
+
+        if (dealBoard == null)
+        {
+            resultMap.put("success", false);
+            resultMap.put("message", "해당 게시글을 찾을 수 없습니다");
+            return resultMap;
+        }
+
+        if (!dealBoard.getUid().equals(uuid))
+        {
+            resultMap.put("success", false);
+            resultMap.put("message", "상태를 수정할 권한이 없습니다");
+            return resultMap;
+        }
+
+        dealBoardService.modifyStatus(boardId, dealBoardDTO);
+        resultMap.put("success", true);
+        return resultMap;
     }
 }

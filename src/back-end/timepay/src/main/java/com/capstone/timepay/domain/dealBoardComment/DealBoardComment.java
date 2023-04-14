@@ -31,15 +31,15 @@ public class DealBoardComment extends BaseTimeEntity {
     private boolean isHidden;
     private Long uid;
 
-    @OneToMany(mappedBy = "dealBoardComment", orphanRemoval = true)
+    @OneToMany(mappedBy = "dealBoardComment", orphanRemoval = true, fetch = FetchType.LAZY)
     private List<DealCommentReport> dealCommentReports = new ArrayList<>();
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="d_boardId")
     @OnDelete(action = OnDeleteAction.CASCADE)
     private DealBoard dealBoard;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="user_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
     private User user;

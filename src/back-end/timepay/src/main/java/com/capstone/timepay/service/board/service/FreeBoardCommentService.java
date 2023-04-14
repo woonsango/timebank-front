@@ -22,7 +22,7 @@ public class FreeBoardCommentService {
 
     // 댓글 작성
     @Transactional
-    public FreeBoardCommentDTO writeComment(Long boardId, FreeBoardCommentDTO freeBoardCommentDTO, Long uid)
+    public FreeBoardCommentDTO writeComment(Long boardId, FreeBoardCommentDTO freeBoardCommentDTO)
     {
         FreeBoardComment freeBoardComment = new FreeBoardComment();
         freeBoardComment.setContent(freeBoardCommentDTO.getContent());
@@ -32,7 +32,7 @@ public class FreeBoardCommentService {
             return new IllegalArgumentException("게시판을 찾을 수 없습니다.");
         });
 
-        freeBoardComment.setUid(uid);
+        freeBoardComment.setUid(freeBoardCommentDTO.getUid());
         freeBoardComment.setFreeBoard(freeBoard);
         freeBoardCommentRepository.save(freeBoardComment);
 
@@ -50,14 +50,26 @@ public class FreeBoardCommentService {
         return commentDTOS;
     }
 
+    @Transactional(readOnly = true)
+    public FreeBoardComment getCommentId(Long id)
+    {
+        return freeBoardCommentRepository.findById(id).orElse(null);
+    }
+
     // 댓글 삭제
     @Transactional
-    public String deleteComment(Long commentId)
+    public String delete(Long commentId)
     {
         FreeBoardComment freeBoardComment = freeBoardCommentRepository.findById(commentId).orElseThrow(() -> {
             return new IllegalArgumentException("댓글을 찾을 수 없습니다");
         });
         freeBoardCommentRepository.deleteById(commentId);
         return "삭제 완료";
+    }
+
+    // 댓글 수정
+    @Transactional
+    public void update(FreeBoardComment freeBoardComment) {
+        freeBoardCommentRepository.save(freeBoardComment);
     }
 }
