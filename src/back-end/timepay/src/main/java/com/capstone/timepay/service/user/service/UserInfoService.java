@@ -9,6 +9,7 @@ import com.capstone.timepay.domain.userProfile.UserProfileRepository;
 import com.capstone.timepay.firebase.FirebaseService;
 import com.google.firebase.auth.FirebaseAuthException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -164,12 +165,28 @@ public class UserInfoService {
         return responseDTO;
     }
 
-    public void deleteUserInfo(Long uid){
-        User userData = userRepository.findByUid(uid).orElseThrow(IllegalArgumentException::new); // 중복 사용 많은데 함수로 빼둘지 고민
-        
+//    public void deleteUserInfo2(Long uid){
+//        User userData = userRepository.findByUid(uid).orElseThrow(IllegalArgumentException::new); // 중복 사용 많은데 함수로 빼둘지 고민
+//
+//        /* deleteById를 사용하지 않고 에러 메세지를 직접 커스텀 */
+//        if(userData != null) {
+//            UserProfile userProfileData = userProfileRepository.findByUid(uid);
+//            userRepository.delete(userData);
+//            userProfileRepository.delete(userProfileData);
+//
+//        } else{
+//            System.out.println("존재하지 않는 회원이랍니다~");
+//        }
+//
+//    }
+
+    public void deleteUserInfo(Authentication auth){
+        String userEmail = auth.getName();
+        User userData = userRepository.findByEmail(userEmail).orElseThrow(IllegalArgumentException::new);
+
         /* deleteById를 사용하지 않고 에러 메세지를 직접 커스텀 */
         if(userData != null) {
-            UserProfile userProfileData = userProfileRepository.findByUid(uid);
+            UserProfile userProfileData = userProfileRepository.findByUid(userData.getUid());
             userRepository.delete(userData);
             userProfileRepository.delete(userProfileData);
 
