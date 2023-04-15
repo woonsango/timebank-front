@@ -10,9 +10,14 @@ import lombok.RequiredArgsConstructor;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 
@@ -50,16 +55,41 @@ public class ApiController {
         return ResponseEntity.ok(requestData);
     }
 
-    @DeleteMapping("/delete/{uid}")
-    @ApiOperation(value="유저 데이터 삭제(회원탈퇴)",notes = "주소로 uid를 받아 해당하는 유저 정보를 삭제합니다.")
-    public ResponseEntity<?> deleteUserInfo(@PathVariable Long uid) {
-        userInfoService.deleteUserInfo(uid);
-        return ResponseEntity.ok(uid + " Delete Success");
+    /* 회원탈퇴 기능은 path로 UID를 받는 것이 아니라 */
+    /* JWT 토큰으로 유저를 판별하여 탈퇴로 변경 */
+//    @DeleteMapping("/delete/{uid}")
+//    @ApiOperation(value="유저 데이터 삭제(회원탈퇴)",notes = "주소로 uid를 받아 해당하는 유저 정보를 삭제합니다.")
+//    public ResponseEntity<?> deleteUserInfo(@PathVariable Long uid) {
+//        userInfoService.deleteUserInfo2(uid);
+//        return ResponseEntity.ok(uid + " Delete Success");
+//    }
+
+    @DeleteMapping("/delete")
+    @ApiOperation(value="유저 데이터 삭제(회원탈퇴)",notes = "JWT 토큰에 해당하는 유저 정보를 삭제합니다.")
+    public ResponseEntity<?> deleteUserInfo2() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+        userInfoService.deleteUserInfo(auth);
+        return ResponseEntity.ok(auth.getName() + " Delete Success");
     }
 
     @PostMapping("/test/{uid}")
     @ApiOperation(value="유저 회원가입 승인",notes = "회원가입 대기 목록에서 uid에 해당하는 유저를 회원가입 처리합니다.")
     public ResponseEntity<?> signUpUser(@PathVariable Long uid) throws Exception{
         return ResponseEntity.ok(userInfoService.signUpUser(uid));
+    }
+
+    @PostMapping("/logout")
+    @ApiOperation(value = "로그아웃 API", notes = "JWT 토큰으로 유저를 구분하여 로그아웃합니다.")
+    public ResponseEntity<?> logout(HttpServletRequest request, HttpServletResponse response) {
+        // 현재 인증된 사용자의 인증 토큰을 가져온다.
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        // 인증 토큰이 존재하면 로그아웃 처리를 한다.
+        if (authentication != null) {
+            new SecurityContextLogoutHandler().logout(request, response, authentication);
+        }
+
+        return ResponseEntity.ok("로그아웃되었습니다.");
     }
 }
