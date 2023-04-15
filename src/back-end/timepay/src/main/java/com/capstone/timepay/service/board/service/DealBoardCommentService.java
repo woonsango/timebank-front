@@ -1,5 +1,7 @@
 package com.capstone.timepay.service.board.service;
 
+import com.capstone.timepay.domain.comment.Comment;
+import com.capstone.timepay.domain.comment.CommentRepository;
 import com.capstone.timepay.domain.dealBoard.DealBoard;
 import com.capstone.timepay.domain.dealBoard.DealBoardRepository;
 import com.capstone.timepay.domain.dealBoardComment.DealBoardComment;
@@ -18,6 +20,7 @@ public class DealBoardCommentService {
 
     private final DealBoardCommentRepository dealBoardCommentRepository;
     private final DealBoardRepository dealBoardRepository;
+    private final CommentRepository commentRepository;
 
     // 댓글 작성하기
     @Transactional
@@ -35,6 +38,12 @@ public class DealBoardCommentService {
         dealBoardComment.setApplied(false);
         dealBoardComment.setAdopted(false);
         // TODO: 유저에 따라 숨김처리 하냐 안하냐 결정
+
+        Comment comment = Comment.builder().
+                freeBoardComment(null).
+                dealBoardComment(dealBoardComment).
+                build();
+        commentRepository.save(comment);
 
         dealBoardCommentRepository.save(dealBoardComment);
 
