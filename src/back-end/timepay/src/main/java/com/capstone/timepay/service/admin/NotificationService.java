@@ -42,7 +42,6 @@ public class NotificationService {
                 .imageUrl(dto.getImageUrl())
                 .isNotice(dto.isNotice())
                 .content(dto.getContent())
-                .state(dto.getState())
                 .admin(admin).build();
         try {
             this.notificationRepository.save(notification);
