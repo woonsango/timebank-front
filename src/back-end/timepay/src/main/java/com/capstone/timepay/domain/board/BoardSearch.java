@@ -8,9 +8,9 @@ import org.springframework.data.jpa.domain.Specification;
 
 public class BoardSearch {
     // 카테고리별
-    public static Specification<Board> withCategory(String category) {
-        return (root, query, builder) -> builder.equal(root.get("category"), category);
-    }
+//    public static Specification<Board> withCategory(String category) {
+//        return (root, query, builder) -> builder.equal(root.get("category"), category);
+//    }
 
     // 최신순
     public static Specification<Board> latest() {

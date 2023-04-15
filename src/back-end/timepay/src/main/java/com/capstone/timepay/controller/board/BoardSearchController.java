@@ -1,8 +1,7 @@
-// TODO: Board 구현후 검색 실행
-
 //package com.capstone.timepay.controller.board;
 //
 //import com.capstone.timepay.domain.board.Board;
+//import com.capstone.timepay.service.board.service.BoardService;
 //import lombok.RequiredArgsConstructor;
 //import org.springframework.web.bind.annotation.GetMapping;
 //import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,9 +18,8 @@
 //
 //    @GetMapping("/search")
 //    public List<Board> boardSearch(
-//            @RequestParam(required = false) String sort,
-//            @RequestParam(required = false) String category)
+//            @RequestParam(required = false) String sort)
 //    {
-//        return boardService.boardSearch(sort, category);
+//        return boardService.boardSearch(sort);
 //    }
 //}
