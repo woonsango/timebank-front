@@ -22,7 +22,7 @@ import java.util.List;
 @Entity
 public class DealBoard extends BaseTimeEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long d_boardId;
 
     @Column(nullable = false)

@@ -1,5 +1,7 @@
 package com.capstone.timepay.service.board.service;
 
+import com.capstone.timepay.domain.board.Board;
+import com.capstone.timepay.domain.board.BoardRepository;
 import com.capstone.timepay.domain.board.BoardStatus;
 import com.capstone.timepay.domain.dealBoard.DealBoard;
 import com.capstone.timepay.domain.dealBoard.DealBoardRepository;
@@ -22,6 +24,7 @@ import java.util.stream.Collectors;
 public class DealBoardService
 {
     private final DealBoardRepository dealBoardRepository;
+    private final BoardRepository boardRepository;
 
     public DealBoard getId(Long id)
     {
@@ -67,6 +70,13 @@ public class DealBoardService
         dealBoard.setUpdatedAt(LocalDateTime.now());
         dealBoard.setHidden(dealBoardDTO.isHidden());
         dealBoard.setUid(dealBoardDTO.getUid());
+
+        Board board = Board.builder().
+                freeBoard(null).
+                dealBoard(dealBoard).
+                build();
+        boardRepository.save(board);
+
         dealBoardRepository.save(dealBoard);
         return DealBoardDTO.toDealBoardDTO(dealBoard);
     }

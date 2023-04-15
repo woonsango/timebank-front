@@ -8,9 +8,4 @@ import java.util.List;
 import java.util.Optional;
 
 public interface BoardRepository extends JpaRepository<Board,Long> {
-    List<Board> findByUid(Long uid);
-
-    List<Board> getBoardsByUidAndCategory(Long uid, String category);
-
-    Page<Board> findByIsHiddenFalse(Pageable pageable);
 }

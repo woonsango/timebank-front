@@ -19,7 +19,7 @@ import java.util.List;
 @Entity
 public class Inquiry extends BaseTimeEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long inquiryId;
 
     @Column

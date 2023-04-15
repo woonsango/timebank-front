@@ -1,5 +1,7 @@
 package com.capstone.timepay.service.board.service;
 
+import com.capstone.timepay.domain.board.Board;
+import com.capstone.timepay.domain.board.BoardRepository;
 import com.capstone.timepay.domain.freeBoard.FreeBoard;
 import com.capstone.timepay.domain.freeBoard.FreeBoardRepository;
 import com.capstone.timepay.domain.user.User;
@@ -22,6 +24,7 @@ import java.util.stream.Collectors;
 public class FreeBoardService
 {
     private final FreeBoardRepository freeBoardRepository;
+    private final BoardRepository boardRepository;
 
     public FreeBoard getId(Long id)
     {
@@ -64,6 +67,12 @@ public class FreeBoardService
         freeBoard.setHidden(freeBoardDTO.isHidden());
         freeBoard.setUid(freeBoardDTO.getUid());
         freeBoardRepository.save(freeBoard);
+
+        Board board = Board.builder().
+                freeBoard(freeBoard).
+                dealBoard(null).
+                build();
+        boardRepository.save(board);
         return FreeBoardDTO.toFreeBoardDTO(freeBoard);
     }
 
