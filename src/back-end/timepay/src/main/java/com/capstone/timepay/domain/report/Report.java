@@ -41,4 +41,11 @@ public class Report extends BaseTimeEntity {
     @JoinColumn(name = "dc_reportId")
     private DealCommentReport dealCommentReport;
 
+    public Report(FreeBoardReport freeBoardReport, DealBoardReport dealBoardReport, FreeCommentReport freeCommentReport, DealCommentReport dealCommentReport){
+        this.freeBoardReport = freeBoardReport;
+        this.dealBoardReport = dealBoardReport;
+        this.freeCommentReport = freeCommentReport;
+        this.dealCommentReport = dealCommentReport;
+    }
+
 }

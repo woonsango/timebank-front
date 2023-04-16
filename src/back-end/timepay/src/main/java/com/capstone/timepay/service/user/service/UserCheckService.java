@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class UserCheckService {
     private final UserRepository userRepository;
-    private final UserProfileRepository userProfileRepository;
 
     public boolean checkNickName(String nickName) {
         User user = userRepository.findByNickname(nickName).orElse(null);

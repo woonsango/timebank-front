@@ -97,17 +97,4 @@ public class ApiController {
 
         return ResponseEntity.ok("로그아웃되었습니다.");
     }
-
-    @PostMapping("/report")
-    @ApiOperation(value = "신고 API", notes = "JWT 토큰으로 유저를 구분하여 신고 DB에 작성합니다.")
-    public ResponseEntity<?> report(HttpServletRequest request, HttpServletResponse response) {
-        /* 현재 인증된 사용자의 인증 토큰을 가져온다.*/
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-        /* 어떤 정보를 바탕으로 어느 신고인지 구분? */
-
-        return ResponseEntity.ok("로그아웃되었습니다.");
-    }
-
-
 }

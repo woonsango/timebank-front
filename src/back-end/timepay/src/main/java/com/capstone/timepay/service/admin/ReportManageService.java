@@ -138,7 +138,7 @@ public class ReportManageService {
         }
     }
 
-    public Page<ReportResponse> showReportsBySearch(ReportSearchDto reportSearchDto) {
+    public Page<ReportResponse> dealBoardshowReportsBySearch(ReportSearchDto reportSearchDto) {
 
         if(!ObjectUtils.isEmpty(reportSearchDto.getReportId()) &&
             ObjectUtils.isEmpty(reportSearchDto.getName()) &&
