@@ -35,3 +35,12 @@ export const useCreateNotifications = () => {
   });
 };
 
+export const useDeleteNotifications = () => {
+  return useMutation<AxiosResponse<boolean>, AxiosError, number[]>({
+    mutationKey: 'useDeleteNotifications',
+    mutationFn: (deleteNotificationIds) =>
+      apiRequest.delete(API_URL.NOTIFICATIONS, {
+        data: { ids: deleteNotificationIds },
+      }),
+  });
+};

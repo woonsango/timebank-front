@@ -1,9 +1,11 @@
-import { Button, Modal, Table } from 'antd';
+import { Button, message, Modal, Table } from 'antd';
 import type { ColumnType } from 'antd/es/table';
-import { useMemo } from 'react';
+import { useCallback, useMemo } from 'react';
 import dayjs from 'dayjs';
 import { IPush } from '../../api/interfaces/IPush';
 import { INotification } from '../../api/interfaces/INotification';
+import { useQueryClient } from 'react-query';
+import { useDeleteNotifications } from '../../api/hooks/notification';
 
 export interface PushDeleteModalProps {
   pushes?: INotification[];
@@ -15,6 +17,46 @@ const PushDeleteModal = ({
   isOpen,
   onCancel,
 }: PushDeleteModalProps) => {
+  const queryClient = useQueryClient();
+  const deleteNotificationMutation = useDeleteNotifications();
+
+  const [messageApi, contextHolder] = message.useMessage();
+
+  const handleOnDeleteNotifications = useCallback(() => {
+    console.log(pushes);
+    console.log(pushes?.map((push) => push.notificationId));
+    if (pushes) {
+      deleteNotificationMutation.mutateAsync(
+        pushes?.map((push) => push.notificationId),
+        {
+          onSuccess: (result) => {
+            messageApi.open({
+              type: 'success',
+              content: '공지가 삭제되었습니다.',
+            });
+          },
+          onError: (err) => {
+            messageApi.open({
+              type: 'error',
+              content: (
+                <>
+                  오류 발생: <br />
+                  {err}
+                </>
+              ),
+            });
+          },
+          onSettled: async (data) => {
+            onCancel();
+            await queryClient.invalidateQueries({
+              queryKey: ['useGetNotifications'],
+            });
+          },
+        },
+      );
+    }
+  }, [pushes, onCancel, messageApi, queryClient, deleteNotificationMutation]);
+
   //@ts-ignore
   const columns: ColumnType<INotification> = useMemo(() => {
     return [
@@ -51,12 +93,12 @@ const PushDeleteModal = ({
     return (
       <>
         <Button onClick={onCancel}>취소</Button>
-        <Button onClick={onCancel} type="primary">
+        <Button onClick={handleOnDeleteNotifications} type="primary">
           삭제
         </Button>
       </>
     );
-  }, [onCancel]);
+  }, [onCancel, handleOnDeleteNotifications]);
 
   return (
     <Modal
@@ -66,6 +108,7 @@ const PushDeleteModal = ({
       footer={footer}
       width={1100}
     >
+      {contextHolder}
       <div className="pushes-info">
         <span>총 {pushes?.length} 개</span>
       </div>
