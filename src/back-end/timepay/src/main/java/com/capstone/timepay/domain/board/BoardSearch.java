@@ -7,24 +7,40 @@ import org.springframework.data.jpa.domain.Specification;
  */
 
 public class BoardSearch {
-    // 카테고리별
-//    public static Specification<Board> withCategory(String category) {
-//        return (root, query, builder) -> builder.equal(root.get("category"), category);
-//    }
 
-    // 최신순
-    public static Specification<Board> latest() {
+    public static Specification<Board> latestFirst() {
         return (root, query, builder) -> {
-            query.orderBy(builder.desc(root.get("createdAt")));
+            query.orderBy(builder.desc(root.get("createdDate")));
             return builder.conjunction();
         };
     }
 
-    // 과거순
-    public static Specification<Board> oldest() {
+    public static Specification<Board> oldestFirst() {
         return (root, query, builder) -> {
-            query.orderBy(builder.asc(root.get("createdAt")));
+            query.orderBy(builder.asc(root.get("createdDate")));
             return builder.conjunction();
         };
+    }
+
+    public static Specification<Board> freeBoard() {
+        return (root, query, builder) -> builder.isNotNull(root.get("freeBoard"));
+    }
+
+    public static Specification<Board> dealBoard() {
+        return (root, query, builder) -> builder.isNotNull(root.get("dealBoard"));
+    }
+
+    public static Specification<Board> createdBy(String user) {
+        return (root, query, builder) -> builder.or(
+                builder.like(root.get("freeBoard").get("createdBy"), "%" + user + "%"),
+                builder.like(root.get("dealBoard").get("createdBy"), "%" + user + "%")
+        );
+    }
+
+    public static Specification<Board> category(String category) {
+        return (root, query, builder) -> builder.or(
+                builder.like(root.get("freeBoard").get("category"), "%" + category + "%"),
+                builder.like(root.get("dealBoard").get("category"), "%" + category + "%")
+        );
     }
 }

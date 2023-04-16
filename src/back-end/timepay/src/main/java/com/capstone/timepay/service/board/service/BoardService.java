@@ -55,20 +55,41 @@ public class BoardService {
         return new PageImpl<>(boardDTOs, pageable, boards.getTotalElements());
     }
 
-//    public List<Board> boardSearch(
-//            @RequestParam(required = false) String sort)
-//    {
-//        Specification<Board> spec = Specification.where(null);
-//
-//        if (sort != null) {
-//            if (sort.equals("latest")) {
-//                spec = spec.and(BoardSearch.latest());
-//            } else if (sort.equals("oldest")) {
-//                spec = spec.and(BoardSearch.oldest());
-//            }
-//        }
-//
-//        return boardRepository.findAll(spec);
-//    }
+    public enum SortType {
+        LATEST_FIRST, OLDEST_FIRST
+    }
+
+    public List<Board> search(SortType sortType, boolean freeBoard, boolean dealBoard, String user, String category) {
+        Specification<Board> spec = Specification.where(null);
+
+        switch (sortType) {
+            case LATEST_FIRST:
+                spec = spec.and(BoardSearch.latestFirst());
+                break;
+            case OLDEST_FIRST:
+                spec = spec.and(BoardSearch.oldestFirst());
+                break;
+            default:
+                break;
+        }
+
+        if (freeBoard) {
+            spec = spec.and(BoardSearch.freeBoard());
+        }
+
+        if (dealBoard) {
+            spec = spec.and(BoardSearch.dealBoard());
+        }
+
+        if (user != null) {
+            spec = spec.and(BoardSearch.createdBy(user));
+        }
+
+        if (category != null) {
+            spec = spec.and(BoardSearch.category(category));
+        }
+
+        return boardRepository.findAll(spec);
+    }
 
 }
