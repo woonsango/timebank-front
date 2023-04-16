@@ -5,10 +5,12 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class PostNotificationDTO {
+public class NotificationPostDTO {
+
     private String title;
     private String imageUrl;
     private boolean isNotice;
     private String content;
     private String state;
+
 }

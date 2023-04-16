@@ -1,11 +1,11 @@
 package com.capstone.timepay.controller.admin;
 
+import com.capstone.timepay.controller.admin.request.notification.NotificationPostRequest;
+import com.capstone.timepay.controller.admin.response.notification.NotificationInfoResponse;
 import com.capstone.timepay.domain.admin.Admin;
-import com.capstone.timepay.domain.notification.Notification;
 import com.capstone.timepay.service.admin.AdminService;
-import com.capstone.timepay.service.admin.dto.DeleteNotificationDTO;
 import com.capstone.timepay.service.admin.NotificationService;
-import com.capstone.timepay.service.admin.dto.PostNotificationDTO;
+import com.capstone.timepay.service.admin.dto.DeleteNotificationDTO;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -26,10 +26,10 @@ public class NotificationController {
 
     @PostMapping("")
     @ApiOperation(value = "공지사항 생성")
-    public ResponseEntity<Boolean> createNotification(@RequestBody PostNotificationDTO dto,
+    public ResponseEntity<Boolean> createNotification(@RequestBody NotificationPostRequest request,
                                                       Principal principal) {
-        Admin admin = this.adminService.getOne(principal.getName());
-        boolean success = this.notificationService.create(dto, admin);
+        Admin admin = this.adminService.getAdmin(principal.getName());
+        boolean success = this.notificationService.create(request.toServiceDto(), admin);
         return new ResponseEntity<>(success, HttpStatus.OK);
     }
 
@@ -59,11 +59,11 @@ public class NotificationController {
 
     @GetMapping("")
     @ApiOperation("전체 공지사항 리스트 조회")
-    public ResponseEntity<Page<Notification>> getNotifications(
+    public ResponseEntity<Page<NotificationInfoResponse>> getNotifications(
             @RequestParam(value = "pagingIndex", defaultValue = "0") int pagingIndex,
             @RequestParam(value = "pagingSize", defaultValue = "50") int pagingSize) {
 
-        Page<Notification> paging = this.notificationService.getList(pagingIndex, pagingSize);
+        Page<NotificationInfoResponse> paging = this.notificationService.getList(pagingIndex, pagingSize);
         if (paging.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
@@ -73,13 +73,13 @@ public class NotificationController {
 
     @GetMapping("/search")
     @ApiOperation("특정 공지사항 검색")
-    public ResponseEntity<Page<Notification>> searchNotifications(
+    public ResponseEntity<Page<NotificationInfoResponse>> searchNotifications(
             @RequestParam("title") String title,
             @RequestParam(value = "pagingIndex", defaultValue = "0") int pagingIndex,
             @RequestParam(value = "pagingSize", defaultValue = "50") int pagingSize) {
 
         System.out.println(title);
-        Page<Notification> paging = this.notificationService.search(pagingIndex, pagingSize, title);
+        Page<NotificationInfoResponse> paging = this.notificationService.search(pagingIndex, pagingSize, title);
         if (paging.isEmpty()) {
             System.out.println("no content");
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -90,7 +90,7 @@ public class NotificationController {
 
     @GetMapping("/{notificationId}")
     @ApiOperation("특정 id값 공지사항 조회")
-    public ResponseEntity<Notification> getNotification(@PathVariable Long notificationId) {
+    public ResponseEntity<NotificationInfoResponse> getNotification(@PathVariable Long notificationId) {
         return new ResponseEntity<>(this.notificationService.getOne(notificationId).get(), HttpStatus.OK);
     }
 }

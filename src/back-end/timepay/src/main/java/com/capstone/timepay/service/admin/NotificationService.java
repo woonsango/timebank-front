@@ -1,9 +1,10 @@
 package com.capstone.timepay.service.admin;
 
+import com.capstone.timepay.controller.admin.response.notification.NotificationInfoResponse;
 import com.capstone.timepay.domain.admin.Admin;
 import com.capstone.timepay.domain.notification.Notification;
 import com.capstone.timepay.domain.notification.NotificationRepository;
-import com.capstone.timepay.service.admin.dto.PostNotificationDTO;
+import com.capstone.timepay.service.admin.dto.NotificationPostDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -22,21 +23,24 @@ public class NotificationService {
 
     private final NotificationRepository notificationRepository;
 
-    public Page<Notification> getList(int pagingIndex, int pagingSize) {
+    public Page<NotificationInfoResponse> getList(int pagingIndex, int pagingSize) {
         Pageable pageable = PageRequest.of(pagingIndex, pagingSize, Sort.by("createdAt").descending());
-        return this.notificationRepository.findAll(pageable);
+        Page<Notification> notifications = this.notificationRepository.findAll(pageable);
+        return notifications.map(NotificationInfoResponse::new);
     }
 
-    public Page<Notification> search(int pagingIndex, int pagingSize, String title) {
+    public Page<NotificationInfoResponse> search(int pagingIndex, int pagingSize, String title) {
         Pageable pageable = PageRequest.of(pagingIndex, pagingSize, Sort.by("createdAt").descending());
-        return this.notificationRepository.findByTitleContaining(title, pageable);
+        Page<Notification> notifications = this.notificationRepository.findByTitleContaining(title, pageable);
+        return notifications.map(NotificationInfoResponse::new);
     }
 
-    public Optional<Notification> getOne(Long id) {
-        return this.notificationRepository.findById(id);
+    public Optional<NotificationInfoResponse> getOne(Long id) {
+        return this.notificationRepository.findById(id)
+                .map(NotificationInfoResponse::new);
     }
 
-    public boolean create(PostNotificationDTO dto, Admin admin) {
+    public boolean create(NotificationPostDTO dto, Admin admin) {
         Notification notification = Notification.builder()
                 .title(dto.getTitle())
                 .imageUrl(dto.getImageUrl())
