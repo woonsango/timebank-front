@@ -48,11 +48,6 @@ const PushTable = ({
 
   const rowSelection = {
     onChange: (selectedRowKeys: React.Key[], selectedRows: INotification[]) => {
-      console.log(
-        `selectedRowKeys: ${selectedRowKeys}`,
-        'selectedRows: ',
-        selectedRows,
-      );
       setSelectedPushIds(selectedRowKeys);
       setSelectedPushes(selectedRows);
     },
