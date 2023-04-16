@@ -1,11 +1,12 @@
-import { Button, message, Modal, Select, Table } from 'antd';
+import { Button, Modal, Table } from 'antd';
 import type { ColumnType } from 'antd/es/table';
-import { useCallback, useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import dayjs from 'dayjs';
 import { IPush } from '../../api/interfaces/IPush';
+import { INotification } from '../../api/interfaces/INotification';
 
 export interface PushDeleteModalProps {
-  pushes?: IPush[];
+  pushes?: INotification[];
   isOpen: boolean;
   onCancel: () => void;
 }
@@ -14,30 +15,16 @@ const PushDeleteModal = ({
   isOpen,
   onCancel,
 }: PushDeleteModalProps) => {
-  // @ts-ignore
-  const columns: ColumnType<IPush> = useMemo(() => {
+  //@ts-ignore
+  const columns: ColumnType<INotification> = useMemo(() => {
     return [
       {
         title: '공지 번호',
-        key: 'pushId',
-        dataIndex: 'pushId',
+        key: 'notificationId',
+        dataIndex: 'notificationId',
         width: 50,
-        sorter: (a: IPush, b: IPush) => a.pushId - b.pushId,
-      },
-      {
-        title: '공지 유형',
-        key: 'type',
-        dataIndex: 'type',
-        width: 80,
-        align: 'center',
-        filters: [
-          { text: 'notice', value: 'notice' },
-          { text: 'activity', value: 'activity' },
-          { text: 'comment', value: 'comment' },
-          { text: 'bookmark', value: 'bookmark' },
-        ],
-        onFilter: (value: string, record: IPush) =>
-          record.type.indexOf(value) === 0,
+        sorter: (a: INotification, b: INotification) =>
+          a.notificationId - b.notificationId,
       },
 
       {
@@ -54,7 +41,7 @@ const PushDeleteModal = ({
         dataIndex: 'createdAt',
         width: 100,
         align: 'center',
-        sorter: (a: IPush, b: IPush) =>
+        sorter: (a: INotification, b: INotification) =>
           dayjs(a.createdAt).isAfter(dayjs(b.createdAt)),
       },
     ];
@@ -85,7 +72,7 @@ const PushDeleteModal = ({
       <Table
         //@ts-ignore
         columns={columns}
-        rowKey="pushId"
+        rowKey="notificationId"
         dataSource={pushes}
         scroll={{ x: 1000, y: 300 }}
         pagination={false}

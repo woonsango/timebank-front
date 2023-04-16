@@ -1,6 +1,6 @@
 import { Button, Card } from 'antd';
 import { useCallback, useState } from 'react';
-import { IPush } from '../../api/interfaces/IPush';
+import { INotification } from '../../api/interfaces/INotification';
 import PushAddModal from '../../components/PushAddModal';
 import PushDeleteModal from '../../components/PushDeleteModal';
 import PushSearchForm from '../../components/PushSearchForm';
@@ -17,7 +17,8 @@ const PushManagementPage = () => {
   }, []);
 
   const [selectedPushIds, setSelectedPushIds] = useState<React.Key[]>();
-  const [selectedPushes, setSelectedPushes] = useState<IPush[]>();
+  const [selectedPushes, setSelectedPushes] = useState<INotification[]>();
+
   return (
     <Card title="PUSH(공지) 관리" css={cssPushManagementTitle}>
       <PushSearchForm />
