@@ -1,7 +1,7 @@
 import { Form, Input, Row, Button } from 'antd';
 import { useCallback } from 'react';
 import { useQueryClient } from 'react-query';
-import { useSetRecoilState } from 'recoil';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { IGetNotificationRequest } from '../../api/interfaces/INotification';
 import { pushSearchState } from '../../states/pushSearchState';
 import { cssPushSearchFormStyle } from './PushSearchForm.styles';
@@ -9,6 +9,7 @@ import { cssPushSearchFormStyle } from './PushSearchForm.styles';
 const PushSearchForm = () => {
   const queryClient = useQueryClient();
 
+  const pushSearchValue = useRecoilValue(pushSearchState);
   const setPushSearch = useSetRecoilState(pushSearchState);
   const handleOnSearchPush = useCallback(
     async (values: IGetNotificationRequest) => {
@@ -24,7 +25,11 @@ const PushSearchForm = () => {
     <div css={cssPushSearchFormStyle}>
       <Form layout="horizontal" onFinish={handleOnSearchPush}>
         <Row>
-          <Form.Item label="공지 제목" name="title">
+          <Form.Item
+            label="공지 제목"
+            name="title"
+            initialValue={pushSearchValue?.title}
+          >
             <Input placeholder="공지 제목 입력" />
           </Form.Item>
           <Button
