@@ -8,6 +8,7 @@ import com.capstone.timepay.domain.freeBoard.FreeBoardRepository;
 import com.capstone.timepay.domain.freeBoardComment.FreeBoardComment;
 import com.capstone.timepay.domain.freeBoardComment.FreeBoardCommentRepository;
 import com.capstone.timepay.domain.user.User;
+import com.capstone.timepay.domain.user.UserRepository;
 import com.capstone.timepay.service.board.dto.FreeBoardCommentDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -23,20 +24,22 @@ public class FreeBoardCommentService {
     private final FreeBoardCommentRepository freeBoardCommentRepository;
     private final FreeBoardRepository freeBoardRepository;
     private final CommentRepository commentRepository;
-
+    private final UserRepository userRepository;
     // 댓글 작성
     @Transactional
-    public FreeBoardCommentDTO writeComment(Long boardId, FreeBoardCommentDTO freeBoardCommentDTO)
+    public FreeBoardCommentDTO writeComment(Long boardId, FreeBoardCommentDTO freeBoardCommentDTO, String email)
     {
-        FreeBoardComment freeBoardComment = new FreeBoardComment();
-        freeBoardComment.setContent(freeBoardCommentDTO.getContent());
-
+        User user = userRepository.findByEmail(email).orElse(null);
         FreeBoard freeBoard = freeBoardRepository.findById(boardId).orElseThrow(() -> {
             return new IllegalArgumentException("게시판을 찾을 수 없습니다.");
         });
 
-        freeBoardComment.setUid(freeBoardCommentDTO.getUid());
-        freeBoardComment.setFreeBoard(freeBoard);
+        FreeBoardComment freeBoardComment = FreeBoardComment.builder()
+                .content(freeBoardCommentDTO.getContent())
+                .isHidden(freeBoardCommentDTO.isHidden())
+                .freeBoard(freeBoard)
+                .user(user)
+                .build();
         freeBoardCommentRepository.save(freeBoardComment);
 
         Comment comment = Comment.builder().
@@ -80,5 +83,12 @@ public class FreeBoardCommentService {
     @Transactional
     public void update(FreeBoardComment freeBoardComment) {
         freeBoardCommentRepository.save(freeBoardComment);
+    }
+
+    public String getEmail(Long id)
+    {
+        FreeBoardComment freeBoardComment = freeBoardCommentRepository.findById(id).orElse(null);
+        User user = freeBoardComment.getUser();
+        return user.getEmail();
     }
 }

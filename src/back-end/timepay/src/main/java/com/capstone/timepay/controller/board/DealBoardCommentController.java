@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -31,17 +32,23 @@ public class DealBoardCommentController {
 
     @ApiOperation(value = "거래게시글 댓글작성")
     @PostMapping("/write/{boardId}")
-    public ResponseEntity writeDealBoardComment(@PathVariable("boardId") Long boardId, @RequestBody DealBoardCommentDTO dealBoardCommentDTO)
+    public ResponseEntity writeDealBoardComment(@PathVariable("boardId") Long boardId,
+                                                @RequestBody DealBoardCommentDTO dealBoardCommentDTO,
+                                                Principal principal)
     {
-        return new ResponseEntity(dealBoardCommentService.writeComment(boardId, dealBoardCommentDTO), HttpStatus.OK);
+        return new ResponseEntity(dealBoardCommentService.writeComment(boardId, dealBoardCommentDTO, principal.getName()), HttpStatus.OK);
     }
 
     // 댓글 삭제
     @ApiOperation(value = "거래게시글 댓글 삭제")
     @DeleteMapping("/comments/{boardId}/{commentId}")
-    public Map<String, Object> deleteDealBoardComment(@RequestBody DealBoardCommentDTO dealBoardCommentDTO, @PathVariable("boardId") Long boardId, @PathVariable("commentId") Long commentId) {
+    public Map<String, Object> deleteDealBoardComment(@RequestBody DealBoardCommentDTO dealBoardCommentDTO,
+                                                      @PathVariable("boardId") Long boardId,
+                                                      @PathVariable("commentId") Long commentId,
+                                                      Principal principal) {
         Map<String, Object> deleteMap = new HashMap<>();
         DealBoardComment dealBoardComment = dealBoardCommentService.getCommentId(commentId);
+        String userEmail = dealBoardCommentService.getEmail(commentId);
 
         if (dealBoardComment == null)
         {
@@ -49,7 +56,7 @@ public class DealBoardCommentController {
             deleteMap.put("message", "해당 댓글을 찾을 수가 없습니다");
         }
 
-        if (!dealBoardComment.getUid().equals(dealBoardCommentDTO.getUid()))
+        if (!userEmail.equals(principal.getName()))
         {
             deleteMap.put("success", false);
             deleteMap.put("message", "삭제 권한이 없습니다");

@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -22,10 +23,12 @@ public class FreeBoardCommentController {
     // 댓글 작성
     @ApiOperation(value = "자유게시글 댓글작성")
     @PostMapping("/write/{boardId}")
-    public ResponseEntity writeFreeBoardComment(@PathVariable("boardId") Long boardId, @RequestBody FreeBoardCommentDTO freeBoardCommentDTO)
+    public ResponseEntity writeFreeBoardComment(@PathVariable("boardId") Long boardId,
+                                                @RequestBody FreeBoardCommentDTO freeBoardCommentDTO,
+                                                Principal principal)
     {
         // TODO: 추후 User 정보는 세션을 통해 주고받도록 수정
-        return new ResponseEntity(freeBoardCommentService.writeComment(boardId, freeBoardCommentDTO), HttpStatus.OK);
+        return new ResponseEntity(freeBoardCommentService.writeComment(boardId, freeBoardCommentDTO, principal.getName()), HttpStatus.OK);
     }
 
     @ApiOperation(value = "자유게시글 게시판의 댓글 불러오기")
@@ -40,9 +43,10 @@ public class FreeBoardCommentController {
     public ResponseEntity<Map<String, Object>> deleteFreeBoardComment(
             @PathVariable("boardId") Long boardId,
             @PathVariable("commentId") Long commentId,
-            @RequestHeader(name = "uuid") Long uuid) {
+            Principal principal) {
 
         Map<String, Object> deleteMap = new HashMap<>();
+        String userEmail = freeBoardCommentService.getEmail(commentId);
 
         try {
             FreeBoardComment freeBoardComment = freeBoardCommentService.getCommentId(commentId);
@@ -53,7 +57,7 @@ public class FreeBoardCommentController {
                 return new ResponseEntity<>(deleteMap, HttpStatus.NOT_FOUND);
             }
 
-            if (!freeBoardComment.getUid().equals(uuid)) {
+            if (!userEmail.equals(principal.getName())) {
                 deleteMap.put("success", false);
                 deleteMap.put("message", "삭제 권한이 없습니다");
                 return new ResponseEntity<Map<String, Object>>(deleteMap, HttpStatus.FORBIDDEN);
@@ -75,10 +79,11 @@ public class FreeBoardCommentController {
     public ResponseEntity<Map<String, Object>> updateFreeBoardComment(
             @PathVariable("boardId") Long boardId,
             @PathVariable("commentId") Long commentId,
-            @RequestHeader(name = "uuid") Long uuid,
+            Principal principal,
             @RequestBody FreeBoardCommentDTO freeBoardCommentDTO) {
 
         Map<String, Object> updateMap = new HashMap<>();
+        String userEmail = freeBoardCommentService.getEmail(commentId);
 
         try {
             FreeBoardComment freeBoardComment = freeBoardCommentService.getCommentId(commentId);
@@ -89,7 +94,7 @@ public class FreeBoardCommentController {
                 return new ResponseEntity<>(updateMap, HttpStatus.NOT_FOUND);
             }
 
-            if (!freeBoardComment.getUid().equals(uuid)) {
+            if (!userEmail.equals(principal.getName())) {
                 updateMap.put("success", false);
                 updateMap.put("message", "수정 권한이 없습니다");
                 return new ResponseEntity<>(updateMap, HttpStatus.FORBIDDEN);

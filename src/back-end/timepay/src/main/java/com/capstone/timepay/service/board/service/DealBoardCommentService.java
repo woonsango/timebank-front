@@ -6,6 +6,8 @@ import com.capstone.timepay.domain.dealBoard.DealBoard;
 import com.capstone.timepay.domain.dealBoard.DealBoardRepository;
 import com.capstone.timepay.domain.dealBoardComment.DealBoardComment;
 import com.capstone.timepay.domain.dealBoardComment.DealBoardCommentRepository;
+import com.capstone.timepay.domain.user.User;
+import com.capstone.timepay.domain.user.UserRepository;
 import com.capstone.timepay.service.board.dto.DealBoardCommentDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -21,23 +23,25 @@ public class DealBoardCommentService {
     private final DealBoardCommentRepository dealBoardCommentRepository;
     private final DealBoardRepository dealBoardRepository;
     private final CommentRepository commentRepository;
-
+    private final UserRepository userRepository;
     // 댓글 작성하기
     @Transactional
-    public DealBoardCommentDTO writeComment(Long boardId, DealBoardCommentDTO dealBoardCommentDTO)
+    public DealBoardCommentDTO writeComment(Long boardId, DealBoardCommentDTO dealBoardCommentDTO,
+                                            String email)
     {
-        DealBoardComment dealBoardComment = new DealBoardComment();
-        dealBoardComment.setContent(dealBoardCommentDTO.getContent());
-
+        User user = userRepository.findByEmail(email).orElse(null);
         DealBoard dealBoard = dealBoardRepository.findById(boardId).orElseThrow(() -> {
             return new IllegalArgumentException("게시판을 찾을 수 없음");
         });
 
-        dealBoardComment.setUid(dealBoardCommentDTO.getUid());
-        dealBoardComment.setDealBoard(dealBoard);
-        dealBoardComment.setApplied(false);
-        dealBoardComment.setAdopted(false);
-        // TODO: 유저에 따라 숨김처리 하냐 안하냐 결정
+        DealBoardComment dealBoardComment = DealBoardComment.builder()
+                .content(dealBoardCommentDTO.getContent())
+                .isHidden(dealBoardCommentDTO.isHidden())
+                .isApplied(false)
+                .isApplied(false)
+                .user(user)
+                .dealBoard(dealBoard)
+                .build();
 
         Comment comment = Comment.builder().
                 freeBoardComment(null).
@@ -75,5 +79,11 @@ public class DealBoardCommentService {
     public DealBoardComment getCommentId(Long id)
     {
         return dealBoardCommentRepository.findById(id).orElse(null);
+    }
+
+    public String getEmail(Long commentId) {
+        DealBoardComment dealBoardComment = dealBoardCommentRepository.findById(commentId).orElse(null);
+        User user = dealBoardComment.getUser();
+        return user.getEmail();
     }
 }

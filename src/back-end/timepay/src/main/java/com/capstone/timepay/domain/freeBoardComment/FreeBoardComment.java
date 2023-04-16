@@ -24,7 +24,6 @@ public class FreeBoardComment extends BaseTimeEntity {
 
     @Column // (nullable = false)
     private String content;
-    private Long uid;
     private boolean isHidden;
 
     @OneToMany(mappedBy = "freeBoardComment", orphanRemoval = true, fetch = FetchType.LAZY)

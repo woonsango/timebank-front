@@ -29,7 +29,6 @@ public class DealBoardComment extends BaseTimeEntity {
     private boolean isAdopted;
     // 비공개여부
     private boolean isHidden;
-    private Long uid;
 
     @OneToMany(mappedBy = "dealBoardComment", orphanRemoval = true, fetch = FetchType.LAZY)
     private List<DealCommentReport> dealCommentReports = new ArrayList<>();
