@@ -2,7 +2,6 @@ import { Button, message, Modal, Table } from 'antd';
 import type { ColumnType } from 'antd/es/table';
 import { useCallback, useMemo } from 'react';
 import dayjs from 'dayjs';
-import { IPush } from '../../api/interfaces/IPush';
 import { INotification } from '../../api/interfaces/INotification';
 import { useQueryClient } from 'react-query';
 import { useDeleteNotifications } from '../../api/hooks/notification';
@@ -23,8 +22,6 @@ const PushDeleteModal = ({
   const [messageApi, contextHolder] = message.useMessage();
 
   const handleOnDeleteNotifications = useCallback(() => {
-    console.log(pushes);
-    console.log(pushes?.map((push) => push.notificationId));
     if (pushes) {
       deleteNotificationMutation.mutateAsync(
         pushes?.map((push) => push.notificationId),
@@ -75,7 +72,8 @@ const PushDeleteModal = ({
         dataIndex: 'name',
         width: 80,
         align: 'center',
-        render: (_userName: string, record: IPush) => record.name,
+        render: (_userName: string, record: INotification) =>
+          record.admin.adminName,
       },
       {
         title: '작성일시',
@@ -83,8 +81,11 @@ const PushDeleteModal = ({
         dataIndex: 'createdAt',
         width: 100,
         align: 'center',
+        render: (createAt: string) =>
+          (createAt || '').split('.')[0].replaceAll('T', ' '),
         sorter: (a: INotification, b: INotification) =>
-          dayjs(a.createdAt).isAfter(dayjs(b.createdAt)),
+          dayjs(a.createdAt, 'YYYY-MM-DDTHH:mm:ss').unix() -
+          dayjs(b.createdAt, 'YYYY-MM-DDTHH:mm:ss').unix(),
       },
     ];
   }, []);
@@ -110,14 +111,14 @@ const PushDeleteModal = ({
     >
       {contextHolder}
       <div className="pushes-info">
-        <span>총 {pushes?.length} 개</span>
+        <span>총 {pushes?.length || 0} 개</span>
       </div>
       <Table
         //@ts-ignore
         columns={columns}
         rowKey="notificationId"
         dataSource={pushes}
-        scroll={{ x: 1000, y: 300 }}
+        scroll={{ x: 300, y: 300 }}
         pagination={false}
       />
     </Modal>

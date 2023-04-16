@@ -79,8 +79,11 @@ const PushTable = ({
         dataIndex: 'createdAt',
         width: 140,
         align: 'center',
+        render: (createAt: string) =>
+          (createAt || '').split('.')[0].replaceAll('T', ' '),
         sorter: (a: INotification, b: INotification) =>
-          dayjs(a.createdAt).isAfter(dayjs(b.createdAt)),
+          dayjs(a.createdAt, 'YYYY-MM-DDTHH:mm:ss').unix() -
+          dayjs(b.createdAt, 'YYYY-MM-DDTHH:mm:ss').unix(),
       },
       {
         title: '공지 제목',
