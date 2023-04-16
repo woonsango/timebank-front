@@ -2,6 +2,7 @@ import React, { useCallback } from 'react';
 import { Modal, Form, Input, Button, message } from 'antd';
 import { useCreateNotifications } from '../../api/hooks/notification';
 import { cssPushAddModalStyle } from './PushAddModal.style';
+import { useQueryClient } from 'react-query';
 
 export interface PushAddModalProps {
   isOpen: boolean;
@@ -9,6 +10,8 @@ export interface PushAddModalProps {
 }
 
 const PushAddModal = ({ isOpen, onCancel }: PushAddModalProps) => {
+  const queryClient = useQueryClient();
+
   const [form] = Form.useForm();
   const [messageApi, contextHolder] = message.useMessage();
   const { TextArea } = Input;
@@ -40,13 +43,16 @@ const PushAddModal = ({ isOpen, onCancel }: PushAddModalProps) => {
             ),
           });
         },
-        onSettled: (data) => {
+        onSettled: async (data) => {
           onCancel();
+          await queryClient.invalidateQueries({
+            queryKey: ['useGetNotifications'],
+          });
           form.resetFields();
         },
       });
     },
-    [form, createNotificationMutation, messageApi, onCancel],
+    [queryClient, form, createNotificationMutation, messageApi, onCancel],
   );
 
   return (
