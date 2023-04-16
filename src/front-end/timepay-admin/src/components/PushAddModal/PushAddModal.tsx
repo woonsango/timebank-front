@@ -11,12 +11,11 @@ export interface PushAddModalProps {
 
 const PushAddModal = ({ isOpen, onCancel }: PushAddModalProps) => {
   const queryClient = useQueryClient();
+  const createNotificationMutation = useCreateNotifications();
 
   const [form] = Form.useForm();
   const [messageApi, contextHolder] = message.useMessage();
   const { TextArea } = Input;
-
-  const createNotificationMutation = useCreateNotifications();
 
   const layout = {
     labelCol: { span: 6 },
