@@ -113,7 +113,7 @@ const PushTable = ({
         {selectedPushIds && selectedPushIds.length > 0
           ? `${selectedPushIds.length} 개 선택 / `
           : ''}
-        총 {dataSource.length} 개
+        총 {data?.data.totalElements || 0} 개
       </div>
       <Table
         css={cssPushTableStyle}
