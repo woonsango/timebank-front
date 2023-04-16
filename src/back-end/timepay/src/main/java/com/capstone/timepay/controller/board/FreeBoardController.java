@@ -1,8 +1,11 @@
 package com.capstone.timepay.controller.board;
 
 import com.capstone.timepay.domain.freeBoard.FreeBoard;
+import com.capstone.timepay.domain.freeRegister.FreeRegister;
+import com.capstone.timepay.domain.freeRegister.FreeRegisterRepository;
 import com.capstone.timepay.service.board.dto.FreeBoardDTO;
 import com.capstone.timepay.service.board.service.FreeBoardService;
+import com.capstone.timepay.service.board.service.FreeRegisterService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -10,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -19,6 +23,7 @@ import java.util.Map;
 public class FreeBoardController {
 
     private final FreeBoardService freeBoardService;
+    private final FreeRegisterService freeRegisterService;
 
     @GetMapping("")
     @ApiOperation(value = "전체 자유게시판 조회")
@@ -44,27 +49,29 @@ public class FreeBoardController {
 
     @ApiOperation(value = "자유게시글 작성")
     @PostMapping("/write")
-    public ResponseEntity write(@RequestBody FreeBoardDTO freeBoardDTO)
+    public ResponseEntity write(@RequestBody FreeBoardDTO freeBoardDTO, Principal principal)
     {
-        return new ResponseEntity(freeBoardService.write(freeBoardDTO), HttpStatus.CREATED);
+        return new ResponseEntity(freeBoardService.write(freeBoardDTO, principal.getName()), HttpStatus.CREATED);
     }
 
     @ApiOperation(value = "자유게시글 수정")
     @PutMapping("/update/{id}")
     public ResponseEntity<Map<String, Object>> update(@RequestBody FreeBoardDTO freeBoardDTO,
                                                       @PathVariable("id") Long id,
-                                                      @RequestHeader(name = "uuid") Long uuid)
+                                                      Principal principal)
     {
         try {
             Map<String, Object> updateMap = new HashMap<>();
             FreeBoard freeBoard = freeBoardService.getId(id);
+            String boardEmail = freeRegisterService.getEmail(id);
+
             if (freeBoard == null) {
                 updateMap.put("success", false);
                 updateMap.put("message", "해당 게시글을 찾을 수 없습니다.");
                 return new ResponseEntity<>(updateMap, HttpStatus.NOT_FOUND);
             }
 
-            if (!freeBoard.getUid().equals(uuid)) {
+            if (!principal.getName().equals(boardEmail)) {
                 updateMap.put("success", false);
                 updateMap.put("message", "수정 권한이 없습니다");
                 return new ResponseEntity<>(updateMap, HttpStatus.UNAUTHORIZED);
@@ -86,9 +93,11 @@ public class FreeBoardController {
     @DeleteMapping ("/delete/{id}")
     public ResponseEntity<Map<String, Object>> delete(@RequestBody FreeBoardDTO freeBoardDTO,
                                                       @PathVariable("id") Long id,
-                                                      @RequestHeader(name = "uuid") Long uuid)
+                                                      Principal principal)
     {
         Map<String, Object> deleteMap = new HashMap<>();
+        String boardEmail = freeRegisterService.getEmail(id);
+
         try {
             FreeBoard freeBoard = freeBoardService.getId(id);
             if (freeBoard == null) {
@@ -96,7 +105,7 @@ public class FreeBoardController {
                 deleteMap.put("message", "해당 게시글을 찾을 수 없습니다.");
                 return new ResponseEntity<>(deleteMap, HttpStatus.NOT_FOUND);
             }
-            if (!freeBoard.getUid().equals(uuid)) {
+            if (!principal.getName().equals(boardEmail)) {
                 deleteMap.put("success", false);
                 deleteMap.put("message", "삭제 권한이 없습니다");
                 return new ResponseEntity<>(deleteMap, HttpStatus.UNAUTHORIZED);

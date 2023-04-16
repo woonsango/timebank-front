@@ -26,7 +26,6 @@ public class DealBoardDTO
     private LocalDateTime updatedAt;
     private int pay;
     private boolean isHidden;
-    private Long uid;
 
     public static DealBoardDTO toDealBoardDTO(DealBoard dealBoard)
     {
@@ -42,8 +41,7 @@ public class DealBoardDTO
                 dealBoard.getCreatedAt(),
                 dealBoard.getUpdatedAt(),
                 dealBoard.getPay(),
-                dealBoard.isHidden(),
-                dealBoard.getUid()
+                dealBoard.isHidden()
         );
     }
 }

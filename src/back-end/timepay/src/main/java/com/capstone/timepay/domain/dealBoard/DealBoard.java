@@ -18,7 +18,6 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
-@Setter
 @Entity
 public class DealBoard extends BaseTimeEntity {
     @Id
@@ -45,7 +44,6 @@ public class DealBoard extends BaseTimeEntity {
     private boolean isHidden;
 
     private BoardStatus boardStatus;
-    private Long uid;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")

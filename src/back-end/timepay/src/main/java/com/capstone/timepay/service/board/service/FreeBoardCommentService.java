@@ -30,7 +30,6 @@ public class FreeBoardCommentService {
     {
         FreeBoardComment freeBoardComment = new FreeBoardComment();
         freeBoardComment.setContent(freeBoardCommentDTO.getContent());
-        freeBoardComment.setCreatedAt(LocalDateTime.now());
 
         FreeBoard freeBoard = freeBoardRepository.findById(boardId).orElseThrow(() -> {
             return new IllegalArgumentException("게시판을 찾을 수 없습니다.");
