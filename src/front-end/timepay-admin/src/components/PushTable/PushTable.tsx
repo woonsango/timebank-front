@@ -24,7 +24,7 @@ const PushTable = ({
   setSelectedPushes,
 }: PushTableProps) => {
   const pushSearchValues = useRecoilValue(pushSearchState);
-  const { data } = useGetNotifications(pushSearchValues);
+  const { data, isLoading } = useGetNotifications(pushSearchValues);
 
   const [isOpen, setIsOpen] = useState(false);
   const [currentPush, setCurrentPush] = useState<INotification>();
@@ -124,6 +124,7 @@ const PushTable = ({
         scroll={{ x: 1200 }}
         dataSource={dataSource}
         rowKey="notificationId"
+        loading={isLoading}
       />
       <PushDetailModal
         isOpen={isOpen}
