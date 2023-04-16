@@ -1,7 +1,9 @@
 package com.capstone.timepay.service.user.service;
 
 import com.capstone.timepay.controller.user.request.RequestDTO;
-import com.capstone.timepay.controller.user.response.ResponseDTO;
+import com.capstone.timepay.controller.user.request.UpdateRequestDTO;
+import com.capstone.timepay.controller.user.response.GetResponseDTO;
+import com.capstone.timepay.controller.user.response.UpdateResponseDTO;
 import com.capstone.timepay.domain.user.User;
 import com.capstone.timepay.domain.user.UserRepository;
 import com.capstone.timepay.domain.userProfile.UserProfile;
@@ -10,15 +12,13 @@ import com.capstone.timepay.firebase.FirebaseService;
 import com.google.firebase.auth.FirebaseAuthException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Optional;
 
 
 /* 받은 데이터를 데이터베이스에 저장 */
@@ -28,7 +28,6 @@ public class UserInfoService {
     private final UserRepository userRepository;
     private final UserProfileRepository userProfileRepository;
     private final FirebaseService firebaseService;
-    private final KakaoLoginService kakaoLoginService;
 
     public void createUserInfo(RequestDTO userData){
         /* 유저 프로필 데이터 저장 */
@@ -79,18 +78,18 @@ public class UserInfoService {
         userRepository.save(findUser);
     }
 
-    public void updateUserInfo(RequestDTO userData){
-        Long userUid = userData.getUid();
+    public UpdateResponseDTO updateUserInfo(Authentication auth, UpdateRequestDTO userData) throws IOException, FirebaseAuthException {
+        User user = userRepository.findByEmail(auth.getName()).orElseThrow(IllegalArgumentException::new);
 
-        if(userProfileRepository.findByUid(userUid) == null)
+        if(user.getUserProfile() == null)
         {
             System.out.println("\n존재하지 않는 유저라네요~\n");
 
         } else {
-            UserProfile userProfile = userProfileRepository.findByUid(userUid);
+            UserProfile userProfile = userProfileRepository.findByUid(user.getUid());
 
             /* 코드 재활용을 위한 변수 생성 */
-            String imageUrl = userData.getImageUrl();
+            String imageUrl = imageUpload(userData.getImage());
             String introduction =  userData.getIntroduction();
 
             if(imageUrl != null)
@@ -104,7 +103,7 @@ public class UserInfoService {
         }
 
         /* uid를 매핑하여 user table에 데이터 입력 */
-        User findUser = userRepository.findByUid(userUid).orElseThrow(IllegalArgumentException::new);
+        // User findUser = userRepository.findByUid(userUid).orElseThrow(IllegalArgumentException::new);
 
         /* 코드 재활용을 위한 변수 생성*/
         /* String으로 입력받은 생년월일을 LocalDateTime으로 형변환 */
@@ -112,40 +111,44 @@ public class UserInfoService {
         // DateTimeFormatter format1 = DateTimeFormatter.ofPattern("yyyyMMddHHmm");
         // LocalDateTime birthLocalDateTime = LocalDateTime.parse(birthData, format1);
 
-        String name = userData.getName();
-        String nickname = userData.getNickName();
+        String nickName = userData.getNickName();
         String location = userData.getLocation();
-        String phone = userData.getPhone();
 
 
         /* 여기 아래부터 받은 데이터가 있는 것들만 찾습니다. */
-        if(name != null)
-            findUser.setName(name);
-
-        if(nickname != null)
-            findUser.setNickname(nickname);
+        if(nickName != null)
+            user.setNickname(nickName);
 
         if(location != null)
-            findUser.setLocation(location);
+            user.setLocation(location);
 
-        if(phone != null)
-            findUser.setPhone(phone);
+        /* 불필요한 코드라 임시 주석처리 */
+        /* 추후 필요할 가능성 있을지도 */
+//        if(userData.getBirthday() != null) {
+//            /* String으로 입력받은 생년월일을 LocalDateTime으로 형변환 */
+//            String birthData = userData.getBirthday();
+//            DateTimeFormatter format1 = DateTimeFormatter.ofPattern("yyyyMMddHHmm");
+//            LocalDateTime birthLocalDateTime = LocalDateTime.parse(birthData, format1);
+//            LocalDateTime birthday = birthLocalDateTime;
+//
+//            findUser.setBirthday(birthday); // 생일은 수정 못하게?
+//        }
 
-        if(userData.getBirthday() != null) {
-            /* String으로 입력받은 생년월일을 LocalDateTime으로 형변환 */
-            String birthData = userData.getBirthday();
-            DateTimeFormatter format1 = DateTimeFormatter.ofPattern("yyyyMMddHHmm");
-            LocalDateTime birthLocalDateTime = LocalDateTime.parse(birthData, format1);
-            LocalDateTime birthday = birthLocalDateTime;
+        user.setUpdatedAt(LocalDateTime.now());
+        userRepository.save(user);
 
-            findUser.setBirthday(birthday); // 생일은 수정 못하게?
-        }
-
-        findUser.setUpdatedAt(LocalDateTime.now());
-        userRepository.save(findUser);
+        /* 아래는 return 값을 만들기 위해 데이터 정보 추출 */
+        /* uid, imageUrl,  name, nickName, sex, location, introduction, age(???) */
+        Long uid = user.getUid();
+        String imageUrl = user.getUserProfile().getImageUrl();
+        String name = user.getName();
+        String sex = user.getSex();
+        String introduction = user.getUserProfile().getIntroduction();
+        UpdateResponseDTO updateResponseDTO = new UpdateResponseDTO(uid, imageUrl, name, nickName, sex, location, introduction);
+        return updateResponseDTO;
     }
 
-    public ResponseDTO getUserInfo(Long uid){
+    public GetResponseDTO getUserInfo(Long uid){
         User userData = userRepository.findByUid(uid).orElseThrow(IllegalArgumentException::new);
         UserProfile userProfileData = userProfileRepository.findByUid(uid);
 
@@ -161,8 +164,25 @@ public class UserInfoService {
         int timePay = userProfileData.getTimepay();
 
         /* 생성자를 사용하여 객체 생성 */
-        ResponseDTO responseDTO = new ResponseDTO(uid, nickName, imageUrl, timePay);
-        return responseDTO;
+        GetResponseDTO getResponseDTO = new GetResponseDTO(uid, imageUrl, nickName, timePay);
+        return getResponseDTO;
+    }
+
+    public GetResponseDTO getMyInfo(Authentication auth){
+        String userEmail = auth.getName();
+        User userData = userRepository.findByEmail(userEmail).orElseThrow(IllegalArgumentException::new);
+
+
+        /* 유저 테이블에서 데이터 가져오기 */
+        String nickName = userData.getNickname();
+
+        /* 유저 프로필 테이블에서 데이터 가져오기 */
+        String imageUrl = userData.getUserProfile().getImageUrl();
+        int timePay = userData.getUserProfile().getTimepay();
+
+        /* 생성자를 사용하여 객체 생성 */
+        GetResponseDTO getResponseDTO = new GetResponseDTO(userData.getUid(), imageUrl, nickName, timePay);
+        return getResponseDTO;
     }
 
 //    public void deleteUserInfo2(Long uid){

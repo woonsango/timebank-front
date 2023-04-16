@@ -1,15 +1,14 @@
 package com.capstone.timepay.controller.user;
 
 import com.capstone.timepay.controller.user.request.RequestDTO;
-import com.capstone.timepay.controller.user.response.ResponseDTO;
-import com.capstone.timepay.domain.user.User;
+import com.capstone.timepay.controller.user.request.UpdateRequestDTO;
+import com.capstone.timepay.controller.user.response.GetResponseDTO;
+import com.capstone.timepay.controller.user.response.UpdateResponseDTO;
 import com.capstone.timepay.service.user.service.UserInfoService;
-import com.google.firebase.auth.FirebaseAuthException;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
@@ -18,7 +17,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 
 
 @RestController
@@ -43,16 +41,23 @@ public class ApiController {
     @GetMapping("/get/{uid}")
     @ApiOperation(value="유저 데이터 조회",notes = "주소로 uid를 받아 해당하는 유저 정보를 조회합니다.")
     public ResponseEntity<?> getUserInfo(@PathVariable Long uid){
-        ResponseDTO responseData = userInfoService.getUserInfo(uid);
+        GetResponseDTO responseData = userInfoService.getUserInfo(uid);
+        return ResponseEntity.ok(responseData);
+    }
+    @GetMapping("/get")
+    @ApiOperation(value="유저 데이터 조회",notes = "JWT 토큰에 해당하는 유저의 프로필 정보를 조회합니다.(마이페이지)")
+    public ResponseEntity<?> getMyInfo(){
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        GetResponseDTO responseData = userInfoService.getMyInfo(auth);
         return ResponseEntity.ok(responseData);
     }
 
     @PutMapping("/update")
     @ApiOperation(value="유저 데이터 수정",notes = "uid를 이용하여 유저를 매핑하고 데이터를 수정합니다.")
-    public ResponseEntity<?> putUserInfo(@ModelAttribute RequestDTO requestData, @RequestPart MultipartFile image) throws Exception{
-        requestData.setImageUrl(userInfoService.imageUpload(image));
-        userInfoService.updateUserInfo(requestData);
-        return ResponseEntity.ok(requestData);
+    public ResponseEntity<?> putUserInfo(@ModelAttribute UpdateRequestDTO updateRequestData) throws Exception{
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        return ResponseEntity.ok(userInfoService.updateUserInfo(auth, updateRequestData));
     }
 
     /* 회원탈퇴 기능은 path로 UID를 받는 것이 아니라 */
@@ -92,4 +97,17 @@ public class ApiController {
 
         return ResponseEntity.ok("로그아웃되었습니다.");
     }
+
+    @PostMapping("/report")
+    @ApiOperation(value = "신고 API", notes = "JWT 토큰으로 유저를 구분하여 신고 DB에 작성합니다.")
+    public ResponseEntity<?> report(HttpServletRequest request, HttpServletResponse response) {
+        /* 현재 인증된 사용자의 인증 토큰을 가져온다.*/
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        /* 어떤 정보를 바탕으로 어느 신고인지 구분? */
+
+        return ResponseEntity.ok("로그아웃되었습니다.");
+    }
+
+
 }
