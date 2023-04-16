@@ -38,6 +38,7 @@ const PushManagementPage = () => {
           onClick={() => {
             setIsOpenDeletePushes(true);
           }}
+          disabled={selectedPushes?.length === 0}
         >
           삭제
         </Button>
