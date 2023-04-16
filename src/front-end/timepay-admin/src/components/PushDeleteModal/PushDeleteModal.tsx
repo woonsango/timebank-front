@@ -76,6 +76,13 @@ const PushDeleteModal = ({
           record.admin.adminName,
       },
       {
+        title: '공지 제목',
+        key: 'title',
+        dataIndex: 'title',
+        width: 150,
+        align: 'center',
+      },
+      {
         title: '작성일시',
         key: 'createdAt',
         dataIndex: 'createdAt',
@@ -107,10 +114,10 @@ const PushDeleteModal = ({
       onCancel={onCancel}
       open={isOpen}
       footer={footer}
-      width={1100}
+      width={700}
     >
       {contextHolder}
-      <div className="pushes-info">
+      <div style={{ textAlign: 'right' }}>
         <span>총 {pushes?.length || 0} 개</span>
       </div>
       <Table
