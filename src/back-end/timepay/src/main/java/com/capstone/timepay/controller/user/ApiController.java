@@ -45,7 +45,7 @@ public class ApiController {
         return ResponseEntity.ok(responseData);
     }
     @GetMapping("/get")
-    @ApiOperation(value="유저 데이터 조회",notes = "JWT 토큰에 해당하는 유저의 프로필 정보를 조회합니다.(마이페이지)")
+    @ApiOperation(value="마이페이지 조회",notes = "JWT 토큰에 해당하는 유저의 프로필 정보를 조회합니다.(마이페이지)")
     public ResponseEntity<?> getMyInfo(){
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         GetResponseDTO responseData = userInfoService.getMyInfo(auth);

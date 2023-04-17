@@ -172,7 +172,6 @@ public class UserInfoService {
         String userEmail = auth.getName();
         User userData = userRepository.findByEmail(userEmail).orElseThrow(IllegalArgumentException::new);
 
-
         /* 유저 테이블에서 데이터 가져오기 */
         String nickName = userData.getNickname();
 
