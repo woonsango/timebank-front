@@ -20,12 +20,12 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
-@Setter
 @Entity
+@Builder
 public class FreeBoard extends BaseTimeEntity
 {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long f_boardId;
 
     @Column(nullable = false, length = 100)
@@ -35,6 +35,7 @@ public class FreeBoard extends BaseTimeEntity
     @Column(nullable = false)
     private String content;
     private String category;
+    private String type;
 
     // 숨김처리
     @Column
@@ -45,15 +46,15 @@ public class FreeBoard extends BaseTimeEntity
         유저 정보도 보내야하는것 아닌가?
      */
 
-    @OneToMany(mappedBy = "freeBoard", orphanRemoval = true)
+    @OneToMany(mappedBy = "freeBoard", orphanRemoval = true, fetch = FetchType.LAZY)
     private List<FreeBoardComment> freeBoardComments = new ArrayList<>();
 
-    @OneToMany(mappedBy = "freeBoard", orphanRemoval = true)
+    @OneToMany(mappedBy = "freeBoard", orphanRemoval = true, fetch = FetchType.LAZY)
     private List<FreeAttatchment> freeAttatchments = new ArrayList<>();
 
-    @OneToMany(mappedBy = "freeBoard", orphanRemoval = true)
+    @OneToMany(mappedBy = "freeBoard", orphanRemoval = true, fetch = FetchType.LAZY)
     private List<FreeRegister> freeRegisters = new ArrayList<>();
 
-    @OneToMany(mappedBy = "freeBoard", orphanRemoval = true)
+    @OneToMany(mappedBy = "freeBoard", orphanRemoval = true, fetch = FetchType.LAZY)
     private List<FreeBoardReport> freeBoardReports = new ArrayList<>();
 }

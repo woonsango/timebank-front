@@ -1,11 +1,17 @@
 package com.capstone.timepay.service.admin.dto;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
-@Getter @Setter
-public class ChangePasswordDTO {
+@ToString
+@Getter
+@Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class PasswordChangeDTO {
+
     private String currentPassword;
     private String newPassword;
     private String newPassword2;
+
 }

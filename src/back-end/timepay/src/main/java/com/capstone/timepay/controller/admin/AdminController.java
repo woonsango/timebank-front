@@ -1,9 +1,9 @@
 package com.capstone.timepay.controller.admin;
 
-import com.capstone.timepay.domain.admin.Admin;
+import com.capstone.timepay.controller.admin.request.auth.AdminRegisterRequest;
+import com.capstone.timepay.controller.admin.request.auth.PasswordChangeRequest;
+import com.capstone.timepay.controller.admin.response.auth.AdminInfoResponse;
 import com.capstone.timepay.service.admin.AdminService;
-import com.capstone.timepay.service.admin.dto.ChangePasswordDTO;
-import com.capstone.timepay.service.admin.dto.PostAdminDTO;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -23,8 +23,9 @@ public class AdminController {
 
     @PostMapping("/register")
     @ApiOperation(value = "어드민 생성")
-    public ResponseEntity<Map<String, Object>> createAdmin(@RequestBody PostAdminDTO dto) {
-        Map<String, Object> result = this.adminService.create(dto);
+    public ResponseEntity<Map<String, Object>> createAdmin(@RequestBody AdminRegisterRequest request) {
+        System.out.println(request);
+        Map<String, Object> result = this.adminService.create(request.toServiceDto());
 
         if ((Boolean) result.get("success")) {
             return new ResponseEntity<>(result, HttpStatus.OK);
@@ -47,36 +48,36 @@ public class AdminController {
 
     @PostMapping("/password/change")
     @ApiOperation(value = "비밀번호 변경 api")
-    public ResponseEntity<Map<String, Object>> changePassword(@RequestBody ChangePasswordDTO dto,
+    public ResponseEntity<Map<String, Object>> changePassword(@RequestBody PasswordChangeRequest request,
                                                               Principal principal) {
 
-        Map<String, Object> result = adminService.changePassword(dto, principal.getName());
+        Map<String, Object> result = adminService.changePassword(request.toServiceDto(), principal.getName());
         return ResponseEntity.ok(result);
     }
 
     @GetMapping("")
     @ApiOperation("전체 어드민 리스트 조회")
-    public ResponseEntity<Page<Admin>> getAdmins(
+    public ResponseEntity<Page<AdminInfoResponse>> getAdmins(
             @RequestParam(value = "pagingIndex", defaultValue = "0") int pagingIndex,
             @RequestParam(value = "pagingSize", defaultValue = "50") int pagingSize) {
 
-        Page<Admin> paging = this.adminService.getList(pagingIndex, pagingSize);
-        if (paging.isEmpty()) {
+        Page<AdminInfoResponse> responses = this.adminService.getList(pagingIndex, pagingSize);
+        if (responses.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
 
-        return new ResponseEntity<>(paging, HttpStatus.OK);
+        return new ResponseEntity<>(responses, HttpStatus.OK);
     }
 
     @GetMapping("/{adminId}")
     @ApiOperation("특정 id값 어드민 조회")
-    public ResponseEntity<Admin> getAdmin(@PathVariable Long adminId) {
+    public ResponseEntity<AdminInfoResponse> getAdmin(@PathVariable Long adminId) {
         return new ResponseEntity<>(this.adminService.getOne(adminId).get(), HttpStatus.OK);
     }
 
     @GetMapping("/info")
     @ApiOperation("현재 로그인 되어있는 어드민 조회")
-    public ResponseEntity<Admin> getAdmin(Principal principal) {
-        return new ResponseEntity<>(this.adminService.getOne(principal.getName()), HttpStatus.OK);
+    public ResponseEntity<AdminInfoResponse> getAdmin(Principal principal) {
+        return new ResponseEntity<>(this.adminService.getOne(principal.getName()).get(), HttpStatus.OK);
     }
 }

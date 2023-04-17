@@ -1,4 +1,4 @@
-package com.capstone.timepay.domain.dealCommentReport.model;
+package com.capstone.timepay.model;
 
 import com.capstone.timepay.domain.admin.Admin;
 import com.capstone.timepay.domain.user.User;

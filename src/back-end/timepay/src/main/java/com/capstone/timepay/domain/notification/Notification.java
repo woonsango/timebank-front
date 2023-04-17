@@ -26,7 +26,6 @@ public class Notification extends BaseTimeEntity {
     private String imageUrl;
     private boolean isNotice;
     private String content;
-    private String state;
 
 
     @ManyToOne

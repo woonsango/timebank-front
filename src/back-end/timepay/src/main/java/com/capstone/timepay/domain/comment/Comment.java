@@ -23,7 +23,7 @@ import java.util.List;
 public class Comment extends BaseTimeEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long commentId;
 
     @OneToOne

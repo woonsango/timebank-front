@@ -1,6 +1,7 @@
 package com.capstone.timepay.domain.dealBoard;
 
 import com.capstone.timepay.domain.BaseTimeEntity;
+import com.capstone.timepay.domain.board.BoardStatus;
 import com.capstone.timepay.domain.dealAttatchment.DealAttatchment;
 import com.capstone.timepay.domain.dealBoardComment.DealBoardComment;
 import com.capstone.timepay.domain.dealBoardReport.DealBoardReport;
@@ -17,11 +18,10 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
-@Setter
 @Entity
 public class DealBoard extends BaseTimeEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long d_boardId;
 
     @Column(nullable = false)
@@ -33,6 +33,7 @@ public class DealBoard extends BaseTimeEntity {
     @Lob
     @Column(nullable = false)
     private String content;
+    private String type;
     private String category;
     private String location;
     private LocalDateTime startTime;
@@ -43,19 +44,21 @@ public class DealBoard extends BaseTimeEntity {
     @Column
     private boolean isHidden;
 
+    private BoardStatus boardStatus;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 
-    @OneToMany(mappedBy = "dealBoard", orphanRemoval = true)
+    @OneToMany(mappedBy = "dealBoard", orphanRemoval = true, fetch = FetchType.LAZY)
     private List<DealBoardComment> dealBoardComments = new ArrayList<>();
 
-    @OneToMany(mappedBy = "dealBoard", orphanRemoval = true)
+    @OneToMany(mappedBy = "dealBoard", orphanRemoval = true, fetch = FetchType.LAZY)
     private List<DealAttatchment> dealAttatchments = new ArrayList<>();
 
-    @OneToMany(mappedBy = "dealBoard", orphanRemoval = true)
+    @OneToMany(mappedBy = "dealBoard", orphanRemoval = true, fetch = FetchType.LAZY)
     private List<DealRegister> dealRegisters = new ArrayList<>();
 
-    @OneToMany(mappedBy = "dealBoard", orphanRemoval = true)
+    @OneToMany(mappedBy = "dealBoard", orphanRemoval = true, fetch = FetchType.LAZY)
     private List<DealBoardReport> dealBoardReports = new ArrayList<>();
 }

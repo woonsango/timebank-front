@@ -32,7 +32,6 @@ public class FreeBoardDTO
                 freeBoard.getCreatedAt(),
                 freeBoard.getUpdatedAt(),
                 freeBoard.isHidden()
-                // TODO : 나중에 유저도 넣어줘야함
         );
     }
 }

@@ -17,7 +17,7 @@ import javax.persistence.*;
 @Entity
 public class DealCommentReport extends BaseTimeEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long dc_reportId;
 
     @Column

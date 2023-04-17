@@ -30,14 +30,5 @@ class TimepayApplicationTests {
 	{
 	}
 
-	@Test
-	void test()
-	{
-		FreeBoard freeBoard = new FreeBoard();
-		freeBoard.setTitle("Test 제목입니다1");
-		freeBoard.setContent("Test 내용입니다 111111");
-		freeBoard.setCategory("Test Category");
-		freeBoardService.write(FreeBoardDTO.toFreeBoardDTO(freeBoard));
-	}
 
 }
