@@ -22,5 +22,4 @@ public class UserProfile extends BaseTimeEntity {
     private String imageUrl;
     private String introduction;
     private int timepay;
-    private Long uid;
 }

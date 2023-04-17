@@ -7,7 +7,7 @@ import lombok.Data;
 @Data
 @JsonNaming(value = PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class UpdateResponseDTO {
-    private Long uid;
+    private Long id;
     private String imageUrl;
     private String name;
     private String nickName;
@@ -16,8 +16,8 @@ public class UpdateResponseDTO {
     private String location;
     private String introduction;
 
-    public UpdateResponseDTO(Long uid, String imageUrl, String name, String nickName, String sex, String location, String introduction){
-        this.uid = uid;
+    public UpdateResponseDTO(Long id, String imageUrl, String name, String nickName, String sex, String location, String introduction){
+        this.id = id;
         this.imageUrl = imageUrl;
         this.name = name;
         this.nickName = nickName;

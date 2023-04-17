@@ -33,31 +33,23 @@ public class UserInfoService {
     @Transactional
     public void createUserInfo(RequestDTO userData){
         /* 유저 프로필 데이터 저장 */
-        Long userUid = userData.getUid();
+        User user = userRepository.findById(userData.getId()).orElseThrow(()->new IllegalArgumentException("존재하지 않는 유저입니다."));
 
 
         /* uid값 비교하여 중복된 데이터는 데이터베이스에 저장X */
-        if(userProfileRepository.findByUid(userUid) == null)
+        if(user.getUserProfile() == null)
         {
-            if(userRepository.findByUid(userUid) != null) {
 
-                UserProfile userProfile = new UserProfile();
-                userProfile.setImageUrl(userData.getImageUrl());
-                userProfile.setIntroduction(userData.getIntroduction());
-                userProfile.setUid(userUid);
-                userProfile.setCreatedAt(LocalDateTime.now());
-                userProfile.setUpdatedAt(LocalDateTime.now());
-                userProfileRepository.save(userProfile);
-            } else{
-                System.out.println("\n없는 유저 데이터래요~ 프로필~\n");
-            }
+            UserProfile userProfile = new UserProfile();
+            userProfile.setImageUrl(userData.getImageUrl());
+            userProfile.setIntroduction(userData.getIntroduction());
+            userProfile.setCreatedAt(LocalDateTime.now());
+            userProfile.setUpdatedAt(LocalDateTime.now());
+            user.setUserProfile(userProfileRepository.save(userProfile));
 
         } else {
             System.out.println("\n이미 저장된 데이터래요~\n");
         }
-
-        /* uid를 매핑하여 user table에 데이터 입력 */
-        User findUser = userRepository.findByUid(userUid).orElseThrow(IllegalArgumentException::new);
 
         /* String으로 입력받은 생년월일을 LocalDateTime으로 형변환 */
         /* 만약 SignUpUser 테이블에 존재하지 않으면 에러 발생 */
@@ -66,30 +58,27 @@ public class UserInfoService {
         DateTimeFormatter format1 = DateTimeFormatter.ofPattern("yyyyMMddHHmm");
         LocalDateTime birthLocalDateTime = LocalDateTime.parse(birthData, format1);
 
-        findUser.setName(userData.getName());
-        findUser.setNickname(userData.getNickName());
-        findUser.setLocation(userData.getLocation());
-        findUser.setPhone(userData.getPhone());
-        findUser.setBirthday(birthLocalDateTime);
-        findUser.setCreatedAt(LocalDateTime.now());
-        findUser.setUpdatedAt(LocalDateTime.now());
+        user.setName(userData.getName());
+        user.setNickname(userData.getNickName());
+        user.setLocation(userData.getLocation());
+        user.setPhone(userData.getPhone());
+        user.setBirthday(birthLocalDateTime);
+        user.setCreatedAt(LocalDateTime.now());
+        user.setUpdatedAt(LocalDateTime.now());
 
-        UserProfile saveUserProfile = userProfileRepository.findByUid(userUid);
-        findUser.setUserProfile(saveUserProfile);
-
-        userRepository.save(findUser);
+        userRepository.save(user);
     }
 
     @Transactional
     public UpdateResponseDTO updateUserInfo(Authentication auth, UpdateRequestDTO userData) throws IOException, FirebaseAuthException {
-        User user = userRepository.findByEmail(auth.getName()).orElseThrow(IllegalArgumentException::new);
+        User user = userRepository.findByEmail(auth.getName()).orElseThrow(()->new IllegalArgumentException("존재하지 않는 유저입니다."));
 
         if(user.getUserProfile() == null)
         {
             System.out.println("\n존재하지 않는 유저라네요~\n");
 
         } else {
-            UserProfile userProfile = userProfileRepository.findByUid(user.getUid());
+            UserProfile userProfile = user.getUserProfile();
 
             /* 코드 재활용을 위한 변수 생성 */
             String imageUrl = imageUpload(userData.getImage());
@@ -105,14 +94,6 @@ public class UserInfoService {
             userProfileRepository.save(userProfile);
         }
 
-        /* uid를 매핑하여 user table에 데이터 입력 */
-        // User findUser = userRepository.findByUid(userUid).orElseThrow(IllegalArgumentException::new);
-
-        /* 코드 재활용을 위한 변수 생성*/
-        /* String으로 입력받은 생년월일을 LocalDateTime으로 형변환 */
-        // String birthData = userData.getBirthday();
-        // DateTimeFormatter format1 = DateTimeFormatter.ofPattern("yyyyMMddHHmm");
-        // LocalDateTime birthLocalDateTime = LocalDateTime.parse(birthData, format1);
 
         String nickName = userData.getNickName();
         String location = userData.getLocation();
@@ -125,36 +106,25 @@ public class UserInfoService {
         if(location != null)
             user.setLocation(location);
 
-        /* 불필요한 코드라 임시 주석처리 */
-        /* 추후 필요할 가능성 있을지도 */
-//        if(userData.getBirthday() != null) {
-//            /* String으로 입력받은 생년월일을 LocalDateTime으로 형변환 */
-//            String birthData = userData.getBirthday();
-//            DateTimeFormatter format1 = DateTimeFormatter.ofPattern("yyyyMMddHHmm");
-//            LocalDateTime birthLocalDateTime = LocalDateTime.parse(birthData, format1);
-//            LocalDateTime birthday = birthLocalDateTime;
-//
-//            findUser.setBirthday(birthday); // 생일은 수정 못하게?
-//        }
 
         user.setUpdatedAt(LocalDateTime.now());
         userRepository.save(user);
 
         /* 아래는 return 값을 만들기 위해 데이터 정보 추출 */
         /* uid, imageUrl,  name, nickName, sex, location, introduction, age(???) */
-        Long uid = user.getUid();
+        Long id = user.getUserId();
         String imageUrl = user.getUserProfile().getImageUrl();
         String name = user.getName();
         String sex = user.getSex();
         String introduction = user.getUserProfile().getIntroduction();
-        UpdateResponseDTO updateResponseDTO = new UpdateResponseDTO(uid, imageUrl, name, nickName, sex, location, introduction);
+        UpdateResponseDTO updateResponseDTO = new UpdateResponseDTO(id, imageUrl, name, nickName, sex, location, introduction);
         return updateResponseDTO;
     }
 
     @Transactional(readOnly = true)
-    public GetResponseDTO getUserInfo(Long uid){
-        User userData = userRepository.findByUid(uid).orElseThrow(IllegalArgumentException::new);
-        UserProfile userProfileData = userProfileRepository.findByUid(uid);
+    public GetResponseDTO getUserInfo(Long id){
+        User userData = userRepository.findById(id).orElseThrow(()->new IllegalArgumentException("존재하지 않는 유저입니다."));
+        UserProfile userProfileData = userData.getUserProfile();
 
         /* LocalDateTime을 출력을 위한 String 형변환 */
         // String birthString = userData.getBirthday().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
@@ -168,7 +138,7 @@ public class UserInfoService {
         int timePay = userProfileData.getTimepay();
 
         /* 생성자를 사용하여 객체 생성 */
-        GetResponseDTO getResponseDTO = new GetResponseDTO(uid, imageUrl, nickName, timePay);
+        GetResponseDTO getResponseDTO = new GetResponseDTO(id, imageUrl, nickName, timePay);
         return getResponseDTO;
     }
 
@@ -185,24 +155,9 @@ public class UserInfoService {
         int timePay = userData.getUserProfile().getTimepay();
 
         /* 생성자를 사용하여 객체 생성 */
-        GetResponseDTO getResponseDTO = new GetResponseDTO(userData.getUid(), imageUrl, nickName, timePay);
+        GetResponseDTO getResponseDTO = new GetResponseDTO(userData.getUserId(), imageUrl, nickName, timePay);
         return getResponseDTO;
     }
-
-//    public void deleteUserInfo2(Long uid){
-//        User userData = userRepository.findByUid(uid).orElseThrow(IllegalArgumentException::new); // 중복 사용 많은데 함수로 빼둘지 고민
-//
-//        /* deleteById를 사용하지 않고 에러 메세지를 직접 커스텀 */
-//        if(userData != null) {
-//            UserProfile userProfileData = userProfileRepository.findByUid(uid);
-//            userRepository.delete(userData);
-//            userProfileRepository.delete(userProfileData);
-//
-//        } else{
-//            System.out.println("존재하지 않는 회원이랍니다~");
-//        }
-//
-//    }
 
     @Transactional
     public void deleteUserInfo(Authentication auth){
@@ -211,7 +166,7 @@ public class UserInfoService {
 
         /* deleteById를 사용하지 않고 에러 메세지를 직접 커스텀 */
         if(userData != null) {
-            UserProfile userProfileData = userProfileRepository.findByUid(userData.getUid());
+            UserProfile userProfileData = userData.getUserProfile();
             userRepository.delete(userData);
             userProfileRepository.delete(userProfileData);
 
@@ -235,8 +190,8 @@ public class UserInfoService {
     }
 
     @Transactional
-    public User signUpUser(Long uid){
-        User user = userRepository.findByUid(uid).orElseThrow(IllegalArgumentException::new);
+    public User signUpUser(Long id){
+        User user = userRepository.findById(id).orElseThrow(()->new IllegalArgumentException("존재하지 않는 유저입니다."));
         user.setSignUp(true);
         userRepository.save(user);
         return user;

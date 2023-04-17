@@ -29,7 +29,7 @@ public class ApiController {
     /* 카카오 데이터와 어떻게 매칭해줄지 생각 필요 */
 
     @PostMapping("/create")
-    @ApiOperation(value="유저 데이터 생성",notes = "uid를 이용하여 유저 테이블과 유저 프로필 테이블을 매핑하고, DB에 데이터를 생성합니다.")
+    @ApiOperation(value="유저 데이터 생성",notes = "Email을 이용하여 유저 테이블과 유저 프로필 테이블을 매핑하고, DB에 데이터를 생성합니다.")
     public ResponseEntity<?> postKakaoData(@ModelAttribute RequestDTO requestData, @RequestPart MultipartFile image) throws Exception {
 
         requestData.setImageUrl(userInfoService.imageUpload(image));
@@ -38,10 +38,10 @@ public class ApiController {
         return ResponseEntity.ok(requestData);
     }
 
-    @GetMapping("/get/{uid}")
-    @ApiOperation(value="유저 데이터 조회",notes = "주소로 uid를 받아 해당하는 유저 정보를 조회합니다.")
-    public ResponseEntity<?> getUserInfo(@PathVariable Long uid){
-        GetResponseDTO responseData = userInfoService.getUserInfo(uid);
+    @GetMapping("/get/{id}")
+    @ApiOperation(value="유저 데이터 조회",notes = "주소로 id를 받아 해당하는 유저 정보를 조회합니다.")
+    public ResponseEntity<?> getUserInfo(@PathVariable Long id){
+        GetResponseDTO responseData = userInfoService.getUserInfo(id);
         return ResponseEntity.ok(responseData);
     }
     @GetMapping("/get")
@@ -53,21 +53,12 @@ public class ApiController {
     }
 
     @PutMapping("/update")
-    @ApiOperation(value="유저 데이터 수정",notes = "uid를 이용하여 유저를 매핑하고 데이터를 수정합니다.")
+    @ApiOperation(value="유저 데이터 수정",notes = "Email을 이용하여 유저를 매핑하고 데이터를 수정합니다.")
     public ResponseEntity<?> putUserInfo(@ModelAttribute UpdateRequestDTO updateRequestData) throws Exception{
 
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         return ResponseEntity.ok(userInfoService.updateUserInfo(auth, updateRequestData));
     }
-
-    /* 회원탈퇴 기능은 path로 UID를 받는 것이 아니라 */
-    /* JWT 토큰으로 유저를 판별하여 탈퇴로 변경 */
-//    @DeleteMapping("/delete/{uid}")
-//    @ApiOperation(value="유저 데이터 삭제(회원탈퇴)",notes = "주소로 uid를 받아 해당하는 유저 정보를 삭제합니다.")
-//    public ResponseEntity<?> deleteUserInfo(@PathVariable Long uid) {
-//        userInfoService.deleteUserInfo2(uid);
-//        return ResponseEntity.ok(uid + " Delete Success");
-//    }
 
     @DeleteMapping("/delete")
     @ApiOperation(value="유저 데이터 삭제(회원탈퇴)",notes = "JWT 토큰에 해당하는 유저 정보를 삭제합니다.")
@@ -78,10 +69,10 @@ public class ApiController {
         return ResponseEntity.ok(auth.getName() + " Delete Success");
     }
 
-    @PostMapping("/test/{uid}")
-    @ApiOperation(value="유저 회원가입 승인",notes = "회원가입 대기 목록에서 uid에 해당하는 유저를 회원가입 처리합니다.")
-    public ResponseEntity<?> signUpUser(@PathVariable Long uid) throws Exception{
-        return ResponseEntity.ok(userInfoService.signUpUser(uid));
+    @PostMapping("/test/{id}")
+    @ApiOperation(value="유저 회원가입 승인",notes = "회원가입 대기 목록에서 id에 해당하는 유저를 회원가입 처리합니다.")
+    public ResponseEntity<?> signUpUser(@PathVariable Long id) throws Exception{
+        return ResponseEntity.ok(userInfoService.signUpUser(id));
     }
 
     @PostMapping("/logout")

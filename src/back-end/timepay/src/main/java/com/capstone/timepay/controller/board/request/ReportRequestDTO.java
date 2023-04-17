@@ -7,11 +7,11 @@ import lombok.Data;
 @Data
 @JsonNaming(value = PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class ReportRequestDTO {
-    private Long uid;
+    private Long id;
     private String reportBody;
 
-    public ReportRequestDTO(Long uid, String reportBody){
-        this.uid = uid;
+    public ReportRequestDTO(Long id, String reportBody){
+        this.id = id;
         this.reportBody = reportBody;
     }
 

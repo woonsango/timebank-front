@@ -43,7 +43,6 @@ public class User extends BaseTimeEntity {
     private String phone;
     private String nickname;
     private String email;
-    private Long uid;
     private String encodedPassword;
     private boolean isBanned;
     private boolean isSignUp;

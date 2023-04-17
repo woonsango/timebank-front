@@ -43,6 +43,6 @@ public class KakaoLoginController {
             return ResponseEntity.ok(new AuthenticationResponse(token, user.getRoles()));
         }
 
-        return ResponseEntity.ok("회원가입 신청 완료\n" + user.getUid());
+        return ResponseEntity.ok("회원가입 신청 완료\n" + user.getUserId());
     }
 }

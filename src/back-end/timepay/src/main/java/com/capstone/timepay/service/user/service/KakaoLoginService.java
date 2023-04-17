@@ -81,9 +81,8 @@ public class KakaoLoginService {
         String email = null;
         String sex = null;
         String birthday = null;
-        Long id = null;
-        // KakaoLoginDto user = new KakaoLoginDto();
         User kakaoUser = null;
+        String Key = "A4D47DASDA287964EQ14871ZS44875A";
 
         //access_token을 이용하여 사용자 정보 조회
 
@@ -113,63 +112,71 @@ public class KakaoLoginService {
             JsonParser parser = new JsonParser();
             JsonElement element = parser.parse(result);
 
-            id = element.getAsJsonObject().get("id").getAsLong();
-            String password = Long.toString(id);
+            String password = null;
 
-            kakaoUser = userRepository.findByUid(id).orElse(null);
 
-            /* uid값 비교하여 중복된 데이터는 데이터베이스에 저장X */
-            if (kakaoUser == null) {
-               /* 이메일 제공 여부 확인 및 이메일 가져오기 */
-                boolean hasEmail = element.getAsJsonObject().get("kakao_account").getAsJsonObject().get("has_email").getAsBoolean();
-                if (hasEmail) {
-                    email = element.getAsJsonObject().get("kakao_account").getAsJsonObject().get("email").getAsString();
 
+            boolean hasEmail = element.getAsJsonObject().get("kakao_account").getAsJsonObject().get("has_email").getAsBoolean();
+
+            /* email 값 비교하여 중복된 데이터는 데이터베이스에 저장X */
+            if(hasEmail) {
+                /* 이메일 가져오기 */
+                email = element.getAsJsonObject().get("kakao_account").getAsJsonObject().get("email").getAsString();
+                kakaoUser = userRepository.findByEmail(email).orElse(null);
+                System.out.println("ㅇㅇㅇㅇㅇㅇㅇㅇ" +kakaoUser);
+                System.out.println("ㅅㅅㅅㅅㅅㅅㅅ" + email);
+                password = email + Key;
+                if (kakaoUser == null) {
+
+
+
+                    /* 성별 제공 여부 확인 및 성별 가져오기 */
+                    boolean hasSex = element.getAsJsonObject().get("kakao_account").getAsJsonObject().get("has_gender").getAsBoolean();
+                    if (hasSex) {
+                        sex = element.getAsJsonObject().get("kakao_account").getAsJsonObject().get("gender").getAsString();
+                    } else {
+                        sex = "성별 동의하지 않음";
+                    }
+
+                    /* 생일 제공 여부 확인 및 생일 가져오기 */
+                    boolean hasBirthday = element.getAsJsonObject().get("kakao_account").getAsJsonObject().get("has_birthday").getAsBoolean();
+                    if (hasBirthday) {
+                        birthday = element.getAsJsonObject().get("kakao_account").getAsJsonObject().get("birthday").getAsString();
+                    } else {
+                        birthday = "생일 동의하지 않음";
+                    }
+
+                    String encodedPassword = passwordEncoder.encode(password);
+
+                    User userTmp = createKakaoUsers(email, sex, encodedPassword);
+                    System.out.println("email : " + userTmp.getEmail());
+                    System.out.println("gender : " + userTmp.getSex());
+                    System.out.println("회원가입 ~!!!");
+
+                    return userTmp;
+
+                }
+                if (!kakaoUser.isSignUp()) {
+                    System.out.println("\n이미 회원가입 신청한 계정이래요~\n");
+
+                    User user = userRepository.findByEmail(email).orElseThrow(IllegalArgumentException::new);
+                    System.out.println("id : " + user.getUserId());
+                    System.out.println("email : " + user.getEmail());
+                    System.out.println("gender : " + user.getSex());
+
+                    return user;
                 } else {
-                    email = "이메일 동의하지 않음";
+                    System.out.println("\n이미 가입된 계정이래요~\n");
                 }
 
-                /* 성별 제공 여부 확인 및 성별 가져오기 */
-                boolean hasSex = element.getAsJsonObject().get("kakao_account").getAsJsonObject().get("has_gender").getAsBoolean();
-                if (hasSex) {
-                    sex = element.getAsJsonObject().get("kakao_account").getAsJsonObject().get("gender").getAsString();
-                } else {
-                    sex = "성별 동의하지 않음";
-                }
 
-                /* 생일 제공 여부 확인 및 생일 가져오기 */
-                boolean hasBirthday = element.getAsJsonObject().get("kakao_account").getAsJsonObject().get("has_birthday").getAsBoolean();
-                if (hasBirthday) {
-                    birthday = element.getAsJsonObject().get("kakao_account").getAsJsonObject().get("birthday").getAsString();
-                } else {
-                    birthday = "생일 동의하지 않음";
-                }
-
-                String encodedPassword = passwordEncoder.encode(password);
-
-                User userTmp = createKakaoUsers(id, email, sex, encodedPassword);
-                System.out.println("id : " + userTmp.getUid());
-                System.out.println("email : " + userTmp.getEmail());
-                System.out.println("gender : " + userTmp.getSex());
-                System.out.println("회원가입 ~!!!");
-
-                return userTmp;
-
-            } if(!kakaoUser.isSignUp()) {
-                System.out.println("\n이미 회원가입 신청한 계정이래요~\n");
-
-                User user = userRepository.findByUid(id).orElseThrow(IllegalArgumentException::new);
-                System.out.println("id : " + user.getUid());
-                System.out.println("email : " + user.getEmail());
-                System.out.println("gender : " + user.getSex());
-
-                return user;
-            } else {
-                System.out.println("\n이미 가입된 계정이래요~\n");
+                br.close();
+            } else{
+                /* 이메일 항목을 동의하지 않으면 null 값을 리턴받음 */
+                /* null 값을 리턴받으면 회원가입이 불가능함 */
+                /* 즉 이메일 항목을 동의하지 않으면 회원가입 불가능 */
+                return null;
             }
-
-
-            br.close();
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -180,16 +187,16 @@ public class KakaoLoginService {
 
     @Transactional
     /* 데이터베이스 추가 작업 */
-    public User createKakaoUsers(Long id, String email, String sex, String encodePassword){
-        return userRepository.save(User.builder().
-                uid(id).email(email).sex(sex)
+    public User createKakaoUsers(String email, String sex, String encodePassword){
+        return userRepository.save(User.builder()
+                .email(email).sex(sex)
                 .encodedPassword(encodePassword)
                 .roles(Collections.singletonList("ROLE_USER"))
                 .build());
     }
 
-    public boolean isUser(Long uid){
-        if(userRepository.findByUid(uid).orElseThrow(IllegalArgumentException::new) == null)
+    public boolean isUser(String email){
+        if(userRepository.findByEmail(email).orElse(null) == null)
             return false;
         return true;
     }
