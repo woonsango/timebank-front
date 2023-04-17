@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -29,6 +30,7 @@ public class UserInfoService {
     private final UserProfileRepository userProfileRepository;
     private final FirebaseService firebaseService;
 
+    @Transactional
     public void createUserInfo(RequestDTO userData){
         /* 유저 프로필 데이터 저장 */
         Long userUid = userData.getUid();
@@ -78,6 +80,7 @@ public class UserInfoService {
         userRepository.save(findUser);
     }
 
+    @Transactional
     public UpdateResponseDTO updateUserInfo(Authentication auth, UpdateRequestDTO userData) throws IOException, FirebaseAuthException {
         User user = userRepository.findByEmail(auth.getName()).orElseThrow(IllegalArgumentException::new);
 
@@ -148,6 +151,7 @@ public class UserInfoService {
         return updateResponseDTO;
     }
 
+    @Transactional(readOnly = true)
     public GetResponseDTO getUserInfo(Long uid){
         User userData = userRepository.findByUid(uid).orElseThrow(IllegalArgumentException::new);
         UserProfile userProfileData = userProfileRepository.findByUid(uid);
@@ -168,6 +172,7 @@ public class UserInfoService {
         return getResponseDTO;
     }
 
+    @Transactional(readOnly = true)
     public GetResponseDTO getMyInfo(Authentication auth){
         String userEmail = auth.getName();
         User userData = userRepository.findByEmail(userEmail).orElseThrow(IllegalArgumentException::new);
@@ -199,6 +204,7 @@ public class UserInfoService {
 //
 //    }
 
+    @Transactional
     public void deleteUserInfo(Authentication auth){
         String userEmail = auth.getName();
         User userData = userRepository.findByEmail(userEmail).orElseThrow(IllegalArgumentException::new);
@@ -228,6 +234,7 @@ public class UserInfoService {
         }
     }
 
+    @Transactional
     public User signUpUser(Long uid){
         User user = userRepository.findByUid(uid).orElseThrow(IllegalArgumentException::new);
         user.setSignUp(true);

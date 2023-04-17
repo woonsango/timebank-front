@@ -10,6 +10,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.*;
 import java.net.HttpURLConnection;
@@ -74,6 +75,7 @@ public class KakaoLoginService {
         return access_Token;
     }
 
+    @Transactional
     public User createKakaoUser(String token) { // throws BaseException 오류나와서 보류
         String reqURL = "https://kapi.kakao.com/v2/user/me";
         String email = null;
@@ -176,6 +178,7 @@ public class KakaoLoginService {
         return kakaoUser;
     }
 
+    @Transactional
     /* 데이터베이스 추가 작업 */
     public User createKakaoUsers(Long id, String email, String sex, String encodePassword){
         return userRepository.save(User.builder().
