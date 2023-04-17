@@ -1,4 +1,10 @@
 import { css } from '@emotion/react';
-import { COMMON_COLOR } from '../../styles/constants/colors';
 
-export const cssPushAddContainer = css``;
+export const cssPushAddModalStyle = css`
+  .control-box {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    gap: 10px;
+  }
+`;
