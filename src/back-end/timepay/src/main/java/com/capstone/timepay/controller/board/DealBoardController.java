@@ -80,13 +80,7 @@ public class DealBoardController
     public ResponseEntity<?> report(@PathVariable("boardId") Long boardId, @RequestBody ReportRequestDTO requestDTO) {
         /* 현재 인증된 사용자의 인증 토큰을 가져온다.*/
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        boolean report = reportService.reportBoard(authentication, boardId, requestDTO, "거래신고");
+        return ResponseEntity.ok(reportService.reportBoard(authentication, boardId, requestDTO, "거래신고"));
 
-        if(report)
-            return ResponseEntity.ok(report);
-        else {
-
-            return ResponseEntity.ok(report + "\n잘못된 유형의 신고 또는 없는 유저입니다.");
-        }
     }
 }

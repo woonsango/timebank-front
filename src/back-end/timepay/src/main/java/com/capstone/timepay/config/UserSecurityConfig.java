@@ -29,6 +29,13 @@ public class UserSecurityConfig extends WebSecurityConfigurerAdapter {
             "/api/users/delete/**", // 테스트용
     };
 
+    private static final String[] TIMEPAY_URI = {
+            "/api/deal-boards/comments/**/**/report",
+            "/api/free-boards/comments/**/**/report",
+            "/api/deal-boards/**/report",
+            "/api/free-boards/**/report",
+    };
+
     @Autowired
     private AdminDetailService adminDetailService;
 
@@ -57,6 +64,8 @@ public class UserSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests() // 요청에 대한 사용 권한 체크
                 .antMatchers("/api/admins/**").hasRole("ADMIN")
                 .antMatchers("/api/users/**").hasRole("USER")
+                .antMatchers(TIMEPAY_URI).hasAnyRole("USER", "ADMIN")
+                // .antMatchers(TIMEPAY_URI).access("hasRole('USER') or hasRole('ADMIN')")
                 // .anyRequest().permitAll() 그외 모든 요청 접근 가능, 위 configure을 오버라이딩하여 깔끔하게 해결함
                 .antMatchers(HttpMethod.POST, "/api/notifications/**").authenticated().and()
                 .exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint);
