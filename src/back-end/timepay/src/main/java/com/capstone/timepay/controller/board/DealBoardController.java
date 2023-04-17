@@ -37,6 +37,34 @@ public class DealBoardController
         return new ResponseEntity<>(paging, HttpStatus.OK);
     }
 
+    @ApiOperation(value = "도움주기 게시판 불러오기")
+    @GetMapping("/helper")
+    public ResponseEntity<Page<DealBoardDTO>> getHelperBoards(
+            @RequestParam(value = "pagingIndex", defaultValue = "0") int pagingIndex,
+            @RequestParam(value = "pagingSize", defaultValue = "50") int pagingSize)
+    {
+        Page<DealBoardDTO> paging = dealBoardService.getHelperDealBoard(pagingIndex, pagingSize);
+        if (paging.isEmpty())
+        {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(paging, HttpStatus.OK);
+    }
+
+    @ApiOperation(value = "도움받기 게시판 불러오기")
+    @GetMapping("/help")
+    public ResponseEntity<Page<DealBoardDTO>> getHelpBoards(
+            @RequestParam(value = "pagingIndex", defaultValue = "0") int pagingIndex,
+            @RequestParam(value = "pagingSize", defaultValue = "50") int pagingSize)
+    {
+        Page<DealBoardDTO> paging = dealBoardService.getHelpDealBoard(pagingIndex, pagingSize);
+        if (paging.isEmpty())
+        {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(paging, HttpStatus.OK);
+    }
+
     @ApiOperation(value = "거래게시판 개별 게시판 불러오기")
     @GetMapping("/{id}")
     public ResponseEntity<DealBoardDTO> getBoard(@PathVariable("id") Long id)
@@ -45,17 +73,17 @@ public class DealBoardController
     }
 
     @ApiOperation(value = "거래게시판 도움주기 게시글 작성")
-    @PostMapping("/write")
+    @PostMapping("/write/helper")
     public ResponseEntity helperWrite(@RequestBody DealBoardDTO dealBoardDTO, Principal principal)
     {
         return new ResponseEntity(dealBoardService.write(dealBoardDTO, principal.getName(), "helper"), HttpStatus.OK);
     }
 
     @ApiOperation(value = "거래게시판 도움받기 게시글 작성")
-    @PostMapping("/write")
+    @PostMapping("/write/help")
     public ResponseEntity getHelpWrite(@RequestBody DealBoardDTO dealBoardDTO, Principal principal)
     {
-        return new ResponseEntity(dealBoardService.write(dealBoardDTO, principal.getName(), "getHelp"), HttpStatus.OK);
+        return new ResponseEntity(dealBoardService.write(dealBoardDTO, principal.getName(), "help"), HttpStatus.OK);
     }
 
     @ApiOperation(value = "거래게시판 게시글 수정")

@@ -60,6 +60,30 @@ public class DealBoardService
         return dealBoardDTO;
     }
 
+    // 도움주기 게시물 조회
+    @Transactional(readOnly = true)
+    public Page<DealBoardDTO> getHelperDealBoard(int pagingIndex, int paingSize)
+    {
+        Pageable pageable = PageRequest.of(pagingIndex, paingSize);
+        Page<DealBoard> dealBoardPage = dealBoardRepository.findByCategory(pageable, "helper");
+        List<DealBoardDTO> dealBoardDTOList = dealBoardPage.stream()
+                .map(DealBoardDTO::toDealBoardDTO)
+                .collect(Collectors.toList());
+        return new PageImpl<>(dealBoardDTOList, dealBoardPage.getPageable(), dealBoardPage.getTotalElements());
+    }
+
+    // 도움받기 게시물 조회
+    @Transactional(readOnly = true)
+    public Page<DealBoardDTO> getHelpDealBoard(int pagingIndex, int paingSize)
+    {
+        Pageable pageable = PageRequest.of(pagingIndex, paingSize);
+        Page<DealBoard> dealBoardPage = dealBoardRepository.findByCategory(pageable, "help");
+        List<DealBoardDTO> dealBoardDTOList = dealBoardPage.stream()
+                .map(DealBoardDTO::toDealBoardDTO)
+                .collect(Collectors.toList());
+        return new PageImpl<>(dealBoardDTOList, dealBoardPage.getPageable(), dealBoardPage.getTotalElements());
+    }
+
     // 게시물 작성
     @Transactional
     public DealBoardDTO write(DealBoardDTO dealBoardDTO, String email, String category)
@@ -72,7 +96,7 @@ public class DealBoardService
                 .title(dealBoardDTO.getTitle())
                 .state(dealBoardDTO.getState())
                 .content(dealBoardDTO.getContent())
-                .category(dealBoardDTO.getCategory())
+                .category(category)
                 .location(dealBoardDTO.getLocation())
                 .startTime(dealBoardDTO.getEndTime())
                 .pay(dealBoardDTO.getPay())
