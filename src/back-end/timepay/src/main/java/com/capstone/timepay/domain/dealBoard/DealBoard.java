@@ -33,6 +33,7 @@ public class DealBoard extends BaseTimeEntity {
     @Lob
     @Column(nullable = false)
     private String content;
+    private String type;
     private String category;
     private String location;
     private LocalDateTime startTime;
