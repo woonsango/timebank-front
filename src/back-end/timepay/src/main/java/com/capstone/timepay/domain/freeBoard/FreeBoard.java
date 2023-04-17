@@ -35,6 +35,7 @@ public class FreeBoard extends BaseTimeEntity
     @Column(nullable = false)
     private String content;
     private String category;
+    private String type;
 
     // 숨김처리
     @Column
