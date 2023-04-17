@@ -6,7 +6,6 @@ import com.capstone.timepay.utility.JwtUtils;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -24,7 +23,7 @@ import java.util.Collections;
 import java.util.List;
 
 @Component
-public class AdminJwtFilter extends OncePerRequestFilter {
+public class JwtFilter extends OncePerRequestFilter {
 
     private final JwtUtils jwtUtils;
     private final AdminDetailService adminDetailService;
@@ -33,7 +32,7 @@ public class AdminJwtFilter extends OncePerRequestFilter {
     private final List<String> role_user = new ArrayList<>(Collections.singletonList("ROLE_USER"));
 
     @Autowired
-    public AdminJwtFilter(JwtUtils jwtUtils, AdminDetailService adminDetailService, UserDetailService userDetailService) {
+    public JwtFilter(JwtUtils jwtUtils, AdminDetailService adminDetailService, UserDetailService userDetailService) {
         this.jwtUtils = jwtUtils;
         this.adminDetailService = adminDetailService;
         this.userDetailService = userDetailService;

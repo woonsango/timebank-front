@@ -31,4 +31,10 @@ public class DealBoardReport extends BaseTimeEntity {
     @ManyToOne
     @JoinColumn(name="deal_board_id")
     private DealBoard dealBoard;
+
+    public DealBoardReport(User user, String content, DealBoard dealBoard){
+        this.user = user;
+        this.content = content;
+        this.dealBoard = dealBoard;
+    }
 }

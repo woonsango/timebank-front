@@ -1,16 +1,28 @@
 package com.capstone.timepay.controller.board;
 
+
+import com.capstone.timepay.controller.board.annotation.Response;
+import com.capstone.timepay.controller.board.request.ReportRequestDTO;
+import com.capstone.timepay.service.board.dto.FreeBoardDTO;
+import com.capstone.timepay.service.board.service.FreeBoardService;
+import com.capstone.timepay.service.board.service.ReportService;
+
 import com.capstone.timepay.domain.freeBoard.FreeBoard;
 import com.capstone.timepay.domain.freeRegister.FreeRegister;
 import com.capstone.timepay.domain.freeRegister.FreeRegisterRepository;
 import com.capstone.timepay.service.board.dto.FreeBoardDTO;
 import com.capstone.timepay.service.board.service.FreeBoardService;
 import com.capstone.timepay.service.board.service.FreeRegisterService;
+
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
@@ -23,7 +35,11 @@ import java.util.Map;
 public class FreeBoardController {
 
     private final FreeBoardService freeBoardService;
+
+    private final ReportService reportService;
+
     private final FreeRegisterService freeRegisterService;
+
 
     @GetMapping("")
     @ApiOperation(value = "전체 자유게시판 조회")
@@ -119,5 +135,12 @@ public class FreeBoardController {
             return new ResponseEntity<>(deleteMap, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
+    @PostMapping("/{boardId}/report")
+    @ApiOperation(value = "신고 API", notes = "JWT 토큰으로 유저를 구분하여 신고 DB에 작성합니다.")
+    public ResponseEntity<?> report(@PathVariable("boardId") Long boardId, @RequestBody ReportRequestDTO requestDTO) {
+        /* 현재 인증된 사용자의 인증 토큰을 가져온다.*/
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return ResponseEntity.ok(reportService.reportBoard(authentication, boardId, requestDTO,"일반신고"));
+    }
 }
+

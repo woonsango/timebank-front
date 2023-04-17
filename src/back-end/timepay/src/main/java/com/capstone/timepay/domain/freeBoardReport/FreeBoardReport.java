@@ -31,4 +31,11 @@ public class FreeBoardReport extends BaseTimeEntity {
     @ManyToOne
     @JoinColumn(name="user_id")
     private User user;
+
+    public FreeBoardReport(User user, String content, String process, FreeBoard freeBoard){
+        this.user = user;
+        this.content = content;
+        this.process = process;
+        this.freeBoard = freeBoard;
+    }
 }

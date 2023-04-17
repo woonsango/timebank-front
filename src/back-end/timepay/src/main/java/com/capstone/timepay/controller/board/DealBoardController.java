@@ -1,14 +1,27 @@
 package com.capstone.timepay.controller.board;
 
+
+import com.capstone.timepay.controller.board.annotation.Response;
+import com.capstone.timepay.controller.board.request.ReportRequestDTO;
+import com.capstone.timepay.service.board.dto.DealBoardDTO;
+import com.capstone.timepay.service.board.service.DealBoardService;
+import com.capstone.timepay.service.board.service.ReportService;
+
 import com.capstone.timepay.domain.dealBoard.DealBoard;
 import com.capstone.timepay.service.board.dto.DealBoardDTO;
 import com.capstone.timepay.service.board.service.DealBoardService;
 import com.capstone.timepay.service.board.service.DealRegisterService;
+
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+
+
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
@@ -21,7 +34,11 @@ import java.util.Map;
 public class DealBoardController
 {
     private final DealBoardService dealBoardService;
+
+    private final ReportService reportService;
+
     private final DealRegisterService dealRegisterService;
+
 
     @ApiOperation(value = "거래게시판 모든 게시판 불러오기")
     @GetMapping("")
@@ -174,4 +191,14 @@ public class DealBoardController
         resultMap.put("success", true);
         return resultMap;
     }
+
+    @PostMapping("/{boardId}/report")
+    @ApiOperation(value = "신고 API", notes = "JWT 토큰으로 유저를 구분하여 신고 DB에 작성합니다.")
+    public ResponseEntity<?> report(@PathVariable("boardId") Long boardId, @RequestBody ReportRequestDTO requestDTO) {
+        /* 현재 인증된 사용자의 인증 토큰을 가져온다.*/
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return ResponseEntity.ok(reportService.reportBoard(authentication, boardId, requestDTO, "거래신고"));
+
+    }
 }
+
