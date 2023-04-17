@@ -138,7 +138,7 @@ public class ReportManageService {
         }
     }
 
-    public Page<ReportResponse> dealBoardshowReportsBySearch(ReportSearchDto reportSearchDto) {
+    public Page<ReportResponse> showReportsBySearch(ReportSearchDto reportSearchDto) {
 
         if(!ObjectUtils.isEmpty(reportSearchDto.getReportId()) &&
             ObjectUtils.isEmpty(reportSearchDto.getName()) &&
@@ -159,7 +159,7 @@ public class ReportManageService {
                 ObjectUtils.isEmpty(reportSearchDto.getStartTime()) &&
                 ObjectUtils.isEmpty(reportSearchDto.getEndTime())){
 
-            User user = userRepository.findByName(reportSearchDto.getName()).orElseThrow(IllegalArgumentException::new);
+            User user = userRepository.findByName(reportSearchDto.getName()).orElseThrow(()->new IllegalArgumentException("존재하지 않는 댓글입니다."));
             List<ReportResponse> fcrs = convertFCRToResponse(freeCommentReportRepository.findAllByUser(user));
             List<ReportResponse> fbrs = convertFBRToResponse(freeBoardReportRepository.findAllByUser(user));
             List<ReportResponse> dcrs = convertDCRToResponse(dealCommentReportRepository.findAllByUser(user));

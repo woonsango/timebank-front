@@ -135,7 +135,7 @@ public class CommentManageService {
                 ObjectUtils.isEmpty(commentSearchDto.getStartTime()) &&
                 ObjectUtils.isEmpty(commentSearchDto.getEndTime())){
 
-            User user = userRepository.findByName(commentSearchDto.getName()).orElseThrow(IllegalArgumentException::new);
+            User user = userRepository.findByName(commentSearchDto.getName()).orElseThrow(()->new IllegalArgumentException("존재하지 않는 댓글입니다."));
             List<CommentResponse> fComments = convertFCommentsToResponse(freeBoardCommentRepository.findAllByUser(user));
             List<CommentResponse> dComments = convertDCommentsToResponse(dealBoardCommentRepository.findAllByUser(user));
 
