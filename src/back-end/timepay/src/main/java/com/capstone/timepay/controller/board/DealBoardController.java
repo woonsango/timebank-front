@@ -44,11 +44,18 @@ public class DealBoardController
         return new ResponseEntity(dealBoardService.getDealBoard(id), HttpStatus.OK);
     }
 
-    @ApiOperation(value = "거래게시판 게시글 작성")
+    @ApiOperation(value = "거래게시판 도움주기 게시글 작성")
     @PostMapping("/write")
-    public ResponseEntity write(@RequestBody DealBoardDTO dealBoardDTO, Principal principal)
+    public ResponseEntity helperWrite(@RequestBody DealBoardDTO dealBoardDTO, Principal principal)
     {
-        return new ResponseEntity(dealBoardService.write(dealBoardDTO, principal.getName()), HttpStatus.OK);
+        return new ResponseEntity(dealBoardService.write(dealBoardDTO, principal.getName(), "helper"), HttpStatus.OK);
+    }
+
+    @ApiOperation(value = "거래게시판 도움받기 게시글 작성")
+    @PostMapping("/write")
+    public ResponseEntity getHelpWrite(@RequestBody DealBoardDTO dealBoardDTO, Principal principal)
+    {
+        return new ResponseEntity(dealBoardService.write(dealBoardDTO, principal.getName(), "getHelp"), HttpStatus.OK);
     }
 
     @ApiOperation(value = "거래게시판 게시글 수정")

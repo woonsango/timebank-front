@@ -62,7 +62,7 @@ public class DealBoardService
 
     // 게시물 작성
     @Transactional
-    public DealBoardDTO write(DealBoardDTO dealBoardDTO, String email)
+    public DealBoardDTO write(DealBoardDTO dealBoardDTO, String email, String category)
     {
         User user = userRepository.findByEmail(email).orElseThrow(() -> {
             return new IllegalArgumentException("해당 유저를 찾을 수 없습니다.");
