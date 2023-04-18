@@ -1,17 +1,13 @@
 package com.capstone.timepay.controller.board;
 
 
-import com.capstone.timepay.controller.board.annotation.Response;
+
 import com.capstone.timepay.controller.board.request.ReportRequestDTO;
 import com.capstone.timepay.service.board.dto.FreeBoardDTO;
 import com.capstone.timepay.service.board.service.FreeBoardService;
 import com.capstone.timepay.service.board.service.ReportService;
 
 import com.capstone.timepay.domain.freeBoard.FreeBoard;
-import com.capstone.timepay.domain.freeRegister.FreeRegister;
-import com.capstone.timepay.domain.freeRegister.FreeRegisterRepository;
-import com.capstone.timepay.service.board.dto.FreeBoardDTO;
-import com.capstone.timepay.service.board.service.FreeBoardService;
 import com.capstone.timepay.service.board.service.FreeRegisterService;
 
 import io.swagger.annotations.ApiOperation;
