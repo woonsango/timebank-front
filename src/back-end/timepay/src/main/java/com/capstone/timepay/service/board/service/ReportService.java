@@ -6,14 +6,19 @@ import com.capstone.timepay.domain.dealBoard.DealBoardRepository;
 import com.capstone.timepay.domain.dealBoardComment.DealBoardComment;
 import com.capstone.timepay.domain.dealBoardComment.DealBoardCommentRepository;
 import com.capstone.timepay.domain.dealBoardReport.DealBoardReport;
+import com.capstone.timepay.domain.dealBoardReport.DealBoardReportRepository;
 import com.capstone.timepay.domain.dealCommentReport.DealCommentReport;
+import com.capstone.timepay.domain.dealCommentReport.DealCommentReportRepository;
 import com.capstone.timepay.domain.freeBoard.FreeBoard;
 import com.capstone.timepay.domain.freeBoard.FreeBoardRepository;
 import com.capstone.timepay.domain.freeBoardComment.FreeBoardComment;
 import com.capstone.timepay.domain.freeBoardComment.FreeBoardCommentRepository;
 import com.capstone.timepay.domain.freeBoardReport.FreeBoardReport;
+import com.capstone.timepay.domain.freeBoardReport.FreeBoardReportRepository;
 import com.capstone.timepay.domain.freeCommentReport.FreeCommentReport;
+import com.capstone.timepay.domain.freeCommentReport.FreeCommentReportRepository;
 import com.capstone.timepay.domain.report.Report;
+import com.capstone.timepay.domain.report.ReportRepository;
 import com.capstone.timepay.domain.user.User;
 import com.capstone.timepay.domain.user.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -32,6 +37,12 @@ public class ReportService {
     private final FreeBoardRepository freeBoardRepository;
     private final DealBoardCommentRepository dealBoardCommentRepository;
     private final FreeBoardCommentRepository freeBoardCommentRepository;
+    private final DealBoardReportRepository dealBoardReportRepository;
+    private final FreeBoardReportRepository freeBoardReportRepository;
+    private final DealCommentReportRepository dealCommentReportRepository;
+    private final FreeCommentReportRepository freeCommentReportRepository;
+    private final ReportRepository reportRepository;
+
 
     public Map<String, Object> reportBoard(Authentication auth, Long boardId, ReportRequestDTO reportRequestDTO, String type){
         Map<String, Object> result = new HashMap<>();
@@ -50,6 +61,7 @@ public class ReportService {
                         .process("처리중")
                         .dealBoard(dealBoard)
                         .build();
+                dealBoardReportRepository.save(dealBoardReport);
 
                 Report reportData = Report.builder()
                         .freeBoardReport(null)
@@ -57,6 +69,7 @@ public class ReportService {
                         .freeCommentReport(null)
                         .dealCommentReport(null)
                         .build();
+                reportRepository.save(reportData);
 
                 result.put("success", true);
                 return result;
@@ -69,6 +82,7 @@ public class ReportService {
                         .process("처리중")
                         .freeBoard(freeBoard)
                         .build();
+                freeBoardReportRepository.save(freeBoardReport);
 
                 Report reportData = Report.builder()
                         .freeBoardReport(freeBoardReport)
@@ -76,6 +90,7 @@ public class ReportService {
                         .freeCommentReport(null)
                         .dealCommentReport(null)
                         .build();
+                reportRepository.save(reportData);
 
                 result.put("success", true);
                 return result;
@@ -106,6 +121,7 @@ public class ReportService {
                         .process("처리중")
                         .dealBoardComment(dealBoardComment)
                         .build();
+                dealCommentReportRepository.save(dealCommentReport);
 
                 Report reportData = Report.builder()
                         .freeBoardReport(null)
@@ -113,6 +129,7 @@ public class ReportService {
                         .freeCommentReport(null)
                         .dealCommentReport(dealCommentReport)
                         .build();
+                reportRepository.save(reportData);
 
                 result.put("success", true);
                 return result;
@@ -127,6 +144,7 @@ public class ReportService {
                         .process("처리중")
                         .freeBoardComment(freeBoardComment)
                         .build();
+                freeCommentReportRepository.save(freeCommentReport);
 
                 Report reportData = Report.builder()
                         .freeBoardReport(null)
@@ -134,6 +152,7 @@ public class ReportService {
                         .freeCommentReport(freeCommentReport)
                         .dealCommentReport(null)
                         .build();
+                reportRepository.save(reportData);
 
                 result.put("success", true);
                 return result;
