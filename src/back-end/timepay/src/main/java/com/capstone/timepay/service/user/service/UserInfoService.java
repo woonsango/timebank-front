@@ -4,6 +4,10 @@ import com.capstone.timepay.controller.user.request.RequestDTO;
 import com.capstone.timepay.controller.user.request.UpdateRequestDTO;
 import com.capstone.timepay.controller.user.response.GetResponseDTO;
 import com.capstone.timepay.controller.user.response.UpdateResponseDTO;
+import com.capstone.timepay.domain.dealBoardComment.DealBoardComment;
+import com.capstone.timepay.domain.dealRegister.DealRegister;
+import com.capstone.timepay.domain.freeBoardComment.FreeBoardComment;
+import com.capstone.timepay.domain.freeRegister.FreeRegister;
 import com.capstone.timepay.domain.user.User;
 import com.capstone.timepay.domain.user.UserRepository;
 import com.capstone.timepay.domain.userProfile.UserProfile;
@@ -12,7 +16,6 @@ import com.capstone.timepay.firebase.FirebaseService;
 import com.google.firebase.auth.FirebaseAuthException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -20,6 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 
 /* 받은 데이터를 데이터베이스에 저장 */
@@ -126,19 +130,20 @@ public class UserInfoService {
         User userData = userRepository.findById(id).orElseThrow(()->new IllegalArgumentException("존재하지 않는 유저입니다."));
         UserProfile userProfileData = userData.getUserProfile();
 
-        /* LocalDateTime을 출력을 위한 String 형변환 */
-        // String birthString = userData.getBirthday().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-
 
         /* 유저 테이블에서 데이터 가져오기 */
         String nickName = userData.getNickname();
+        List<FreeRegister> freeRegisters = userData.getFreeRegisters();
+        List<DealRegister> dealRegisters = userData.getDealRegisters();
+        List<FreeBoardComment> freeBoardComments = userData.getFreeBoardComments();
+        List<DealBoardComment> dealBoardComments = userData.getDealBoardComments();
 
         /* 유저 프로필 테이블에서 데이터 가져오기 */
         String imageUrl = userProfileData.getImageUrl();
-        int timePay = userProfileData.getTimepay();
+        int timePay = userData.getUserProfile().getTimepay();
 
         /* 생성자를 사용하여 객체 생성 */
-        GetResponseDTO getResponseDTO = new GetResponseDTO(id, imageUrl, nickName, timePay);
+        GetResponseDTO getResponseDTO = new GetResponseDTO(id, imageUrl, nickName, timePay, freeRegisters, dealRegisters, freeBoardComments, dealBoardComments);
         return getResponseDTO;
     }
 
@@ -149,13 +154,17 @@ public class UserInfoService {
 
         /* 유저 테이블에서 데이터 가져오기 */
         String nickName = userData.getNickname();
+        List<FreeRegister> freeRegisters = userData.getFreeRegisters();
+        List<DealRegister> dealRegisters = userData.getDealRegisters();
+        List<FreeBoardComment> freeBoardComments = userData.getFreeBoardComments();
+        List<DealBoardComment> dealBoardComments = userData.getDealBoardComments();
 
         /* 유저 프로필 테이블에서 데이터 가져오기 */
         String imageUrl = userData.getUserProfile().getImageUrl();
         int timePay = userData.getUserProfile().getTimepay();
 
         /* 생성자를 사용하여 객체 생성 */
-        GetResponseDTO getResponseDTO = new GetResponseDTO(userData.getUserId(), imageUrl, nickName, timePay);
+        GetResponseDTO getResponseDTO = new GetResponseDTO(userData.getUserId(), imageUrl, nickName, timePay, freeRegisters, dealRegisters, freeBoardComments, dealBoardComments);
         return getResponseDTO;
     }
 
