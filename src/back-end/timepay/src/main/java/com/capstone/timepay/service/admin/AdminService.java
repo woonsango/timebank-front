@@ -60,7 +60,6 @@ public class AdminService {
         Admin newAdmin = Admin.builder()
                 .adminName(dto.getAdminName())
                 .password(encodedPassword)
-                .authority(dto.getAuthority())
                 .name(dto.getName())
                 .email(dto.getEmail())
                 .phone(dto.getPhone())
