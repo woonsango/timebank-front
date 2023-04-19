@@ -19,22 +19,21 @@ import java.util.List;
 public class FreeBoardComment extends BaseTimeEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long f_commentId;
 
     @Column // (nullable = false)
     private String content;
-    private Long uid;
     private boolean isHidden;
 
-    @OneToMany(mappedBy = "freeBoardComment", orphanRemoval = true)
+    @OneToMany(mappedBy = "freeBoardComment", orphanRemoval = true, fetch = FetchType.LAZY)
     private List<FreeCommentReport> freeCommentReports = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="f_boardId")
     private FreeBoard freeBoard;
    
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="user_id")
     private User user;
 

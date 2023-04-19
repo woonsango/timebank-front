@@ -1,9 +1,13 @@
 package com.capstone.timepay.service.board.service;
 
+import com.capstone.timepay.domain.comment.Comment;
+import com.capstone.timepay.domain.comment.CommentRepository;
 import com.capstone.timepay.domain.dealBoard.DealBoard;
 import com.capstone.timepay.domain.dealBoard.DealBoardRepository;
 import com.capstone.timepay.domain.dealBoardComment.DealBoardComment;
 import com.capstone.timepay.domain.dealBoardComment.DealBoardCommentRepository;
+import com.capstone.timepay.domain.user.User;
+import com.capstone.timepay.domain.user.UserRepository;
 import com.capstone.timepay.service.board.dto.DealBoardCommentDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,23 +22,32 @@ public class DealBoardCommentService {
 
     private final DealBoardCommentRepository dealBoardCommentRepository;
     private final DealBoardRepository dealBoardRepository;
-
+    private final CommentRepository commentRepository;
+    private final UserRepository userRepository;
     // 댓글 작성하기
     @Transactional
-    public DealBoardCommentDTO writeComment(Long boardId, DealBoardCommentDTO dealBoardCommentDTO, Long uid)
+    public DealBoardCommentDTO writeComment(Long boardId, DealBoardCommentDTO dealBoardCommentDTO,
+                                            String email)
     {
-        DealBoardComment dealBoardComment = new DealBoardComment();
-        dealBoardComment.setContent(dealBoardCommentDTO.getContent());
-
+        User user = userRepository.findByEmail(email).orElse(null);
         DealBoard dealBoard = dealBoardRepository.findById(boardId).orElseThrow(() -> {
             return new IllegalArgumentException("게시판을 찾을 수 없음");
         });
 
-        dealBoardComment.setUid(uid);
-        dealBoardComment.setDealBoard(dealBoard);
-        dealBoardComment.setApplied(false);
-        dealBoardComment.setAdopted(false);
-        // TODO: 유저에 따라 숨김처리 하냐 안하냐 결정
+        DealBoardComment dealBoardComment = DealBoardComment.builder()
+                .content(dealBoardCommentDTO.getContent())
+                .isHidden(dealBoardCommentDTO.isHidden())
+                .isApplied(false)
+                .isApplied(false)
+                .user(user)
+                .dealBoard(dealBoard)
+                .build();
+
+        Comment comment = Comment.builder().
+                freeBoardComment(null).
+                dealBoardComment(dealBoardComment).
+                build();
+        commentRepository.save(comment);
 
         dealBoardCommentRepository.save(dealBoardComment);
 
@@ -54,16 +67,23 @@ public class DealBoardCommentService {
     }
 
     // 삭제
-    @Transactional
-    public String deleteComment(Long commentId)
-    {
+    @Transactional(readOnly = true)
+    public void delete(Long commentId) {
         DealBoardComment dealBoardComment = dealBoardCommentRepository.findById(commentId).orElseThrow(() -> {
-            return new IllegalArgumentException("댓글 Id를 찾을 수 없습니다.");
+            return new IllegalArgumentException("Comment Id를 찾을 수 없습니다");
         });
         dealBoardCommentRepository.deleteById(commentId);
-        return "삭제 완료";
     }
 
+    @Transactional(readOnly = true)
+    public DealBoardComment getCommentId(Long id)
+    {
+        return dealBoardCommentRepository.findById(id).orElse(null);
+    }
 
-
+    public String getEmail(Long commentId) {
+        DealBoardComment dealBoardComment = dealBoardCommentRepository.findById(commentId).orElse(null);
+        User user = dealBoardComment.getUser();
+        return user.getEmail();
+    }
 }

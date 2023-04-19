@@ -2,6 +2,7 @@ package com.capstone.timepay.domain.user;
 
 import com.capstone.timepay.domain.BaseTimeEntity;
 
+import com.capstone.timepay.domain.dealBoardComment.DealBoardComment;
 import com.capstone.timepay.domain.dealBoardReport.DealBoardReport;
 import com.capstone.timepay.domain.dealCommentReport.DealCommentReport;
 import com.capstone.timepay.domain.dealRegister.DealRegister;
@@ -43,9 +44,9 @@ public class User extends BaseTimeEntity {
     private String phone;
     private String nickname;
     private String email;
-    private Long uid;
     private String encodedPassword;
     private boolean isBanned;
+    private boolean isSignUp;
 
     @ElementCollection(fetch = FetchType.EAGER)
     @Builder.Default
@@ -60,8 +61,8 @@ public class User extends BaseTimeEntity {
     @OneToMany(mappedBy = "user", orphanRemoval = true)
     private List<Inquiry> inquiries = new ArrayList<>();
 
-//    @OneToMany(mappedBy = "user", orphanRemoval = true)
-//    private List<DealBoardComment> dealBoardComments = new ArrayList<>();
+    @OneToMany(mappedBy = "user", orphanRemoval = true)
+    private List<DealBoardComment> dealBoardComments = new ArrayList<>();
 
     @OneToMany(mappedBy = "user", orphanRemoval = true)
     private List<DealRegister> dealRegisters = new ArrayList<>();
