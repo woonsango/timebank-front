@@ -9,6 +9,7 @@ import { PATH } from '../../utils/paths';
 
 const KakaoRedirectHandler = () => {
   const [AuthorizationCode, setAuthorizationCode] = useState<string>();
+  const [url, setUrl] = useState<string>();
 
   const navigate = useNavigate(); //history
 
@@ -23,31 +24,12 @@ const KakaoRedirectHandler = () => {
     'code',
   );
 
-  //console.log('인가 코드(Authorization Code): ', authorizationCode);
-
-  const fetchAuthorizationCode = async () => {
-    axios({
-      method: 'post',
-      url: 'http://localhost:8080/code',
-      data: authorizationCode,
-    })
-      .then((res) => {
-        console.log(res); //서버 응답
-        const response = res.data;
-        const code = response.authorizationCode;
-        console.log('서버가 인가코드를 받았답니다. ', code);
-
-        goToJoin(PATH.JOIN);
-      })
-      .catch((err) => {
-        console.log('카카오 로그인 에러', err);
-      });
-  };
+  const GetAuthorizationCode = async () => {};
 
   const handleAuthorization = (props: any) => {
     setAuthorizationCode(props);
 
-    //fetchAuthorizationCode(); //서버 전송 테스트 함수
+    //GetAuthorizationCode(); //서버 전송 테스트 함수
 
     goToJoin(PATH.JOIN); //서버 적용x
   };
@@ -56,7 +38,18 @@ const KakaoRedirectHandler = () => {
     //리다이렉트 페이지 진입 시, 실행
     //서버에 인가 코드 전송(string)
     console.log('Enter Redirect Page!');
+    console.log('인가 코드(Authorization Code): ', authorizationCode);
+
     handleAuthorization(authorizationCode);
+
+    const temp = 'http://localhost:8080/login/code=' + authorizationCode;
+    //setUrl(temp);
+    console.log(temp);
+    console.log('entire: ', new URL(window.location.href));
+
+    //console.log('url 주소: ', url);
+
+    //GET
   }, []);
 
   return <div></div>;
