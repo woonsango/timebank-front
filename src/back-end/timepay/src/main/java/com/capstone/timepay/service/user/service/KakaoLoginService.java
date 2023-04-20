@@ -123,8 +123,6 @@ public class KakaoLoginService {
                 /* 이메일 가져오기 */
                 email = element.getAsJsonObject().get("kakao_account").getAsJsonObject().get("email").getAsString();
                 kakaoUser = userRepository.findByEmail(email).orElse(null);
-                System.out.println("ㅇㅇㅇㅇㅇㅇㅇㅇ" +kakaoUser);
-                System.out.println("ㅅㅅㅅㅅㅅㅅㅅ" + email);
                 password = email + Key;
                 if (kakaoUser == null) {
 
