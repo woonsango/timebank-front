@@ -44,11 +44,11 @@ const JoinPage = () => {
     'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png',
   );
   const [nickName, setNickName] = useState<string>('');
-  const [realName, setRealName] = useState('');
-  const [town, setTown] = useState('');
-  const [birth, setBirth] = useState('');
-  const [phoneNumber, setPhoneNumber] = useState('');
-  const [introduction, setIntroduction] = useState('');
+  const [realName, setRealName] = useState<string>('');
+  //const [town, setTown] = useState<string>('');
+  //const [birth, setBirth] = useState<string>('');
+  const [phoneNumber, setPhoneNumber] = useState<string>('');
+  const [introduction, setIntroduction] = useState<string>('');
 
   const [year, setYear] = useState<string>('연도');
   const [month, setMonth] = useState<string>('월');
@@ -66,7 +66,7 @@ const JoinPage = () => {
 
     const fileReader = new FileReader();
     fileReader.onload = () => {
-      if (fileReader.readyState == 2) {
+      if (fileReader.readyState === 2) {
         if (fileReader.result !== null) {
           setProfileImage(fileReader.result);
         }
@@ -76,32 +76,34 @@ const JoinPage = () => {
   };
 
   /*onChange*/
-  const onChangeProfileImage = (value: any) => {
-    setProfileImage(value);
+  // const onChangeProfileImage = (value: any) => {
+  //   setProfileImage(value);
+  // };
+
+  const onChangeNickName = (e: React.ChangeEvent<HTMLInputElement>) => {
+    console.log('닉네임 바뀜:', e.target.value);
+    setNickName(e.target.value);
   };
 
-  const onChangeNickName = (value: any) => {
-    setNickName(value);
-  };
-
-  const onChangeRealName = (value: any) => {
-    setRealName(value);
+  const onChangeRealName = (e: React.ChangeEvent<HTMLInputElement>) => {
+    console.log('이름 바뀜:', e.target.value);
+    setRealName(e.target.value);
   };
 
   const onChangeGu = (value: DongName) => {
     setGu(dongData[value]);
+    console.log('구 바뀜: ', value.valueOf());
     setGuText(value.valueOf());
   };
 
   const onChangeDong = (value: DongName) => {
     setDong(value);
+    console.log('동 바뀜: ', value.valueOf());
     setDongText(value.valueOf());
-    const town: string = guText + dongText;
-    setTown(town);
   };
 
   const onChangeYear: DatePickerProps['onChange'] = (date, dateString) => {
-    console.log(date, dateString);
+    //console.log(date, dateString);
     setYear(dateString);
   };
 
@@ -111,23 +113,24 @@ const JoinPage = () => {
 
   const onChangeDay = (value: string) => {
     setDay(value);
-    const bitrh: string = year + month + day;
-    setBirth(bitrh);
-  };
-  const onChangePhoneNumber = (value: any) => {
-    setPhoneNumber(value);
   };
 
-  const onChangeIntroduction = (value: any) => {
-    setIntroduction(value);
+  const onChangePhoneNumber = (e: React.ChangeEvent<HTMLInputElement>) => {
+    console.log('전화번호 바뀜:', e.target.value);
+    setPhoneNumber(e.target.value);
+  };
+
+  const onChangeIntroduction = (e: React.ChangeEvent<HTMLInputElement>) => {
+    console.log('자기소개 바뀜:', e.target.value);
+    setIntroduction(e.target.value);
   };
 
   /* 닉네임 유효성 검사 커스텀 */
+  const nickname_regExp = /^[a-zA-Zㄱ-힣0-9]{2,16}$/;
   const rightNickname = (_: any, value: string) => {
-    const nickname_regExp = /^[a-zA-Zㄱ-힣0-9]{2,16}$/;
     if (!value) {
       return Promise.reject(new Error('닉네임을 입력해 주세요.'));
-    } else if (value.search(/\s/) != -1) {
+    } else if (value.search(/\s/) !== -1) {
       return Promise.reject(new Error('닉네임을 공백 없이 입력해 주세요.'));
     }
     if (!nickname_regExp.test(value)) {
@@ -141,19 +144,23 @@ const JoinPage = () => {
   };
 
   /*이름 검사 커스텀 */
+  const realname_regExp = /^[a-zA-Zㄱ-힣]{0,20}$/;
   const rightRealname = (_: any, value: string) => {
     if (!value) {
       return Promise.reject(new Error('이름을 입력해 주세요.'));
+    }
+    if (!realname_regExp.test(value)) {
+      return Promise.reject(new Error('이름은 한글 또는 영어로 입력해주세요.'));
     }
     return Promise.resolve();
   };
 
   /* 전화번호 유효성 검사 커스텀 */
+  const phone_regex = /^[0-9\b -]{9,11}$/;
   const rightPhoneNumber = (_: any, value: string) => {
-    const phone_regex = /^[0-9\b -]{9,11}$/;
     if (!value) {
       return Promise.reject(new Error('전화번호를 입력해 주세요.'));
-    } else if (value.search(/\s/) != -1) {
+    } else if (value.search(/\s/) !== -1) {
       return Promise.reject(new Error('공백 없이 입력해 주세요.'));
     }
     if (value.length < 9 || value.length > 11) {
@@ -177,47 +184,58 @@ const JoinPage = () => {
 
   /*Handle 가입 완료 Btn*/
   const handleSubmitBtn = async () => {
-    console.log(dong);
-    if (year === '연도' || month === '월' || day === '일') {
+    /* 닉네임, 이름, 생년월일, 전화번호를 필수값으로 검사*/
+    if (!nickName || !nickname_regExp.test(nickName)) {
+      console.log('가입 완료 제출: 닉네임 형식 부적합 ');
+    } else if (!realName || !realname_regExp.test(realName)) {
+      console.log('가입 완료 제출: 이름 형식 부적합');
+    } else if (year === '연도' || month === '월' || day === '일') {
+      console.log('가입 완료 제출: 생년월일 형식 부적합');
       warning('생년월일');
-    }
-    if (gu === dongData[guData[0]] || dong === '동') {
-      warning('지역');
+    } else if (
+      !phoneNumber ||
+      phoneNumber.length < 9 ||
+      phoneNumber.length > 11 ||
+      !phone_regex.test(phoneNumber)
+    ) {
+      console.log('가입 완료 제출: 전화번호 형식 부적합');
     } else {
-      let formData = new FormData();
-      formData.append('user', profileImage);
+      console.log('가입 완료 제출: 조건 충족, 가입 완료');
 
-      let d = {
-        realname: realName,
-        nickname: nickName,
-      };
+      /*formData*/
+      const birth: string = year + month + day + '0000';
+      const town: string = '서울특별시 ' + guText + ' ' + dongText;
+      const formData = new FormData();
+      formData.append('profileImage', profileImage);
+      formData.append('nickName', nickName);
+      formData.append('realName', realName);
+      formData.append('birth', birth);
+      formData.append('phoneNumber', phoneNumber);
+      formData.append('town', town);
+      formData.append('introduction', introduction);
+
+      //formData 모든 값 출력
+      for (var value of formData.values()) {
+        console.log(value);
+      }
 
       await axios({
         method: 'post',
-        url: 'http://localhost:8080/info',
+        url: 'http://localhost:8080/api/users/create',
         headers: {
           'Content-Type': 'multipart/form-data',
         },
         data: formData,
       })
         .then((result) => {
-          console.log('서버가 유저 정보를 성공적으로 받았답니다. ');
           console.log(result);
         })
         .catch((error) => {
           console.log(error);
         });
+
       goToFinishJoinPage(PATH.FINISHJOIN);
     }
-  };
-
-  /*From Check*/
-  const onFinishJoin = () => {
-    console.log('회원가입 성공!');
-  };
-
-  const onFinishFailedJoin = () => {
-    console.log('회원가입 실패!');
   };
 
   const navigate = useNavigate(); //history
@@ -232,11 +250,7 @@ const JoinPage = () => {
   return (
     <Space css={topWrapperCSS} align="baseline">
       {contextHolder}
-      <Form
-        name="JoinPage"
-        onFinish={onFinishJoin}
-        onFinishFailed={onFinishFailedJoin}
-      >
+      <Form name="JoinPage">
         <Text
           css={css`
             font-size: 30px;
@@ -313,7 +327,7 @@ const JoinPage = () => {
         </Form.Item>
 
         <Form.Item
-          label="전화번호"
+          label="전화번호(-없이 숫자로만 입력)"
           name="phone"
           rules={[{ validator: rightPhoneNumber }]}
         >

@@ -6,6 +6,7 @@ import { headerTitleState } from '../../states/uiState';
 import { PATH } from '../../utils/paths';
 import './My.css';
 import user from './dummy.json';
+import axios from 'axios';
 
 const MyPage = () => {
   const userInfo = user.user1[0];
@@ -28,20 +29,29 @@ const MyPage = () => {
   const setHeaderTitle = useSetRecoilState(headerTitleState);
   useEffect(() => {
     setHeaderTitle('내정보');
-    /*
-    fetch('http://localhost:5000/user')
-      .then((res) => {
-        return res.json();
-      })
-      .then((data) => {
-        setUserData(data);
-      });*/
+
     setImage(userInfo.img);
     setNickName(userInfo.nickName);
     setTown(userInfo.town);
     setIntroduction(userInfo.introduction);
     setPersonalNum(userInfo.personalNum);
     setTimePay(userInfo.timepay);
+
+    //GET
+    axios
+      .get(
+        'http://localhost:8080/swagger-ui/#/api-controller/getMyInfoUsingGET',
+      )
+      .then(function (response) {
+        console.log(response.data);
+      })
+      .catch(function (error) {
+        // 에러인 경우 실행
+        console.log(error);
+      })
+      .then(function () {
+        // 항상 실행
+      });
   }, []);
 
   return (
