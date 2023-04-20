@@ -16,12 +16,16 @@ import javax.persistence.*;
 public class Category extends BaseTimeEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long categoryId;
 
     @Column
     private String boardType;
     private String categoryName;
     private String useYn;
+
+    public void updateUseYn(String query){
+        this.useYn = query;
+    }
 
 }

@@ -1,5 +1,6 @@
 package com.capstone.timepay.service.board.dto;
 
+import com.capstone.timepay.domain.board.BoardStatus;
 import com.capstone.timepay.domain.dealBoard.DealBoard;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -16,7 +17,7 @@ public class DealBoardDTO
 {
     private Long dealBoardId;
     private String title;
-    private String state;
+    private BoardStatus state;
     private String content;
     private String category;
     private String location;
@@ -32,7 +33,7 @@ public class DealBoardDTO
         return new DealBoardDTO(
                 dealBoard.getD_boardId(),
                 dealBoard.getTitle(),
-                dealBoard.getState(),
+                dealBoard.getBoardStatus(),
                 dealBoard.getContent(),
                 dealBoard.getCategory(),
                 dealBoard.getLocation(),

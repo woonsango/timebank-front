@@ -51,6 +51,7 @@ public class Admin extends BaseTimeEntity {
     @OneToMany(mappedBy = "admin", orphanRemoval = true)
     private List<Notification> notifications = new ArrayList<>();
 
+    @JsonIgnore
     @OneToMany(mappedBy = "admin", orphanRemoval = true)
     private List<InquiryAnswer> inquiryAnswers = new ArrayList<>();
     

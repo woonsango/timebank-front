@@ -180,7 +180,7 @@ public class UserManageService {
                         .boardId(dr.getDealBoard().getD_boardId())
                         .createdAt(dr.getDealBoard().getCreatedAt())
                         .boardType(dr.getDealBoard().getCategory())
-                        .boardState(dr.getDealBoard().getState())
+                        .boardState(dr.getDealBoard().getBoardStatus())
                         .startTime(dr.getDealBoard().getStartTime())
                         .endTime(dr.getDealBoard().getEndTime())
                         .actualStartTime(dr.getDealBoard().getStartTime()) // 일단 원래 시작 시간으로 넣어놓음.

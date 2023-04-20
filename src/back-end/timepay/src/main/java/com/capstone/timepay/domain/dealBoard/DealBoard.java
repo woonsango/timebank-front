@@ -27,9 +27,6 @@ public class DealBoard extends BaseTimeEntity {
     @Column(nullable = false)
     private String title;
 
-    @Column(nullable = false)
-    private String state;
-
     @Lob
     @Column(nullable = false)
     private String content;
@@ -39,16 +36,8 @@ public class DealBoard extends BaseTimeEntity {
     private LocalDateTime startTime;
     private LocalDateTime endTime;
     private int pay;
-
-    // 숨김처리
-    @Column
     private boolean isHidden;
-
     private BoardStatus boardStatus;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private User user;
 
     @OneToMany(mappedBy = "dealBoard", orphanRemoval = true, fetch = FetchType.LAZY)
     private List<DealBoardComment> dealBoardComments = new ArrayList<>();
