@@ -40,15 +40,16 @@ const JoinPage = () => {
   const { Text } = Typography;
   const [messageApi, contextHolder] = message.useMessage();
 
+  /* */
   const [profileImage, setProfileImage]: any = useState(
     'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png',
   );
   const [nickName, setNickName] = useState<string>('');
-  const [realName, setRealName] = useState('');
-  const [town, setTown] = useState('');
-  const [birth, setBirth] = useState('');
-  const [phoneNumber, setPhoneNumber] = useState('');
-  const [introduction, setIntroduction] = useState('');
+  const [realName, setRealName] = useState<string>('');
+  const [birth, setBirth] = useState<string>('');
+  const [phoneNumber, setPhoneNumber] = useState<string>('');
+  const [town, setTown] = useState<string>('');
+  const [introduction, setIntroduction] = useState<string>('');
 
   const [year, setYear] = useState<string>('연도');
   const [month, setMonth] = useState<string>('월');
@@ -62,7 +63,6 @@ const JoinPage = () => {
 
   const handleFileChange = (e: any) => {
     const imageFile = e.target.files[0];
-    console.log(imageFile);
 
     const fileReader = new FileReader();
     fileReader.onload = () => {
@@ -76,10 +76,6 @@ const JoinPage = () => {
   };
 
   /*onChange*/
-  const onChangeProfileImage = (value: any) => {
-    setProfileImage(value);
-  };
-
   const onChangeNickName = (value: any) => {
     setNickName(value);
   };
@@ -96,7 +92,7 @@ const JoinPage = () => {
   const onChangeDong = (value: DongName) => {
     setDong(value);
     setDongText(value.valueOf());
-    const town: string = guText + dongText;
+    const town: string = '서울특별시 ' + guText + ' ' + dongText;
     setTown(town);
   };
 
@@ -111,7 +107,7 @@ const JoinPage = () => {
 
   const onChangeDay = (value: string) => {
     setDay(value);
-    const bitrh: string = year + month + day;
+    const bitrh: string = year + ' ' + month + ' ' + day;
     setBirth(bitrh);
   };
   const onChangePhoneNumber = (value: any) => {
@@ -175,49 +171,36 @@ const JoinPage = () => {
     });
   };
 
+  const formData = new FormData();
+
   /*Handle 가입 완료 Btn*/
   const handleSubmitBtn = async () => {
-    console.log(dong);
     if (year === '연도' || month === '월' || day === '일') {
       warning('생년월일');
     }
     if (gu === dongData[guData[0]] || dong === '동') {
       warning('지역');
     } else {
-      let formData = new FormData();
-      formData.append('user', profileImage);
+      /*사용자가 입력한 정보 DB에 전송 */
+      formData.append('profileImage', profileImage);
+      formData.append('nickName', nickName);
+      formData.append('realName', realName);
+      formData.append('birth', birth);
+      formData.append('phoneNumber', phoneNumber);
+      formData.append('town', town);
+      formData.append('introduction', introduction);
 
-      let d = {
-        realname: realName,
-        nickname: nickName,
-      };
-
-      await axios({
-        method: 'post',
-        url: 'http://localhost:8080/info',
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-        data: formData,
-      })
-        .then((result) => {
-          console.log('서버가 유저 정보를 성공적으로 받았답니다. ');
-          console.log(result);
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-      goToFinishJoinPage(PATH.FINISHJOIN);
+      for (let key of formData.keys()) goToFinishJoinPage(PATH.FINISHJOIN);
     }
   };
 
-  /*From Check*/
+  /*Form Check*/
   const onFinishJoin = () => {
-    console.log('회원가입 성공!');
+    //console.log('회원가입 성공!');
   };
 
   const onFinishFailedJoin = () => {
-    console.log('회원가입 실패!');
+    //console.log('회원가입 실패!');
   };
 
   const navigate = useNavigate(); //history

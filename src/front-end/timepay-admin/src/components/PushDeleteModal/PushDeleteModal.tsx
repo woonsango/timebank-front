@@ -68,12 +68,10 @@ const PushDeleteModal = ({
 
       {
         title: '작성자',
-        key: 'name',
-        dataIndex: 'name',
+        key: 'adminName',
+        dataIndex: 'adminName',
         width: 80,
         align: 'center',
-        render: (_userName: string, record: INotification) =>
-          record.admin.adminName,
       },
       {
         title: '공지 제목',

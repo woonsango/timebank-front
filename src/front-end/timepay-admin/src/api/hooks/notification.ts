@@ -29,7 +29,7 @@ export const useCreateNotifications = () => {
     mutationFn: (data) =>
       apiRequest.post(API_URL.NOTIFICATIONS, {
         ...data,
-        notice: true,
+        isNotice: true,
         imageUrl: null,
       }),
   });
