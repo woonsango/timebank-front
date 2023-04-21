@@ -1,6 +1,7 @@
 package com.capstone.timepay.filter;
 
 import com.capstone.timepay.service.admin.AdminDetailService;
+import com.capstone.timepay.service.organization.OrganizationDetailService;
 import com.capstone.timepay.service.user.service.UserDetailService;
 import com.capstone.timepay.utility.JwtUtils;
 import io.jsonwebtoken.Claims;
@@ -28,14 +29,17 @@ public class JwtFilter extends OncePerRequestFilter {
     private final JwtUtils jwtUtils;
     private final AdminDetailService adminDetailService;
     private final UserDetailService userDetailService;
+    private final OrganizationDetailService organizationDetailService;
     private final List<String> role_admin = new ArrayList<>(Collections.singletonList("ROLE_ADMIN"));
     private final List<String> role_user = new ArrayList<>(Collections.singletonList("ROLE_USER"));
+    private final List<String> role_organization = new ArrayList<>(Collections.singletonList("ROLE_ORGANIZATION"));
 
     @Autowired
-    public JwtFilter(JwtUtils jwtUtils, AdminDetailService adminDetailService, UserDetailService userDetailService) {
+    public JwtFilter(JwtUtils jwtUtils, AdminDetailService adminDetailService, UserDetailService userDetailService, OrganizationDetailService organizationDetailService) {
         this.jwtUtils = jwtUtils;
         this.adminDetailService = adminDetailService;
         this.userDetailService = userDetailService;
+        this.organizationDetailService = organizationDetailService;
     }
 
     @Override
@@ -58,6 +62,8 @@ public class JwtFilter extends OncePerRequestFilter {
 
                     } else if (claims.get("roles").equals(role_user)) {
                         userDetails =  userDetailService.loadUserByUsername(username);
+                    } else if (claims.get("roles").equals(role_organization)) {
+                        userDetails =  organizationDetailService.loadUserByUsername(username);
                     }
 
                     if (jwtUtils.validateToken(token, userDetails)) {

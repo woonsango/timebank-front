@@ -11,6 +11,7 @@ import com.capstone.timepay.domain.freeBoardReport.FreeBoardReport;
 import com.capstone.timepay.domain.freeCommentReport.FreeCommentReport;
 import com.capstone.timepay.domain.freeRegister.FreeRegister;
 import com.capstone.timepay.domain.inquiry.Inquiry;
+import com.capstone.timepay.domain.organization.Organization;
 import com.capstone.timepay.domain.userProfile.UserProfile;
 import com.capstone.timepay.domain.userToken.UserToken;
 import lombok.*;
@@ -48,7 +49,7 @@ public class User extends BaseTimeEntity {
     private boolean isBanned;
     private boolean isSignUp;
 
-    @ElementCollection(fetch = FetchType.EAGER)
+    @ElementCollection(fetch = FetchType.LAZY)
     @Builder.Default
     private List<String> roles = new ArrayList<>();
 
@@ -92,6 +93,10 @@ public class User extends BaseTimeEntity {
     @OneToOne
     @JoinColumn(name = "token_id")
     private UserToken userToken;
+
+    @OneToOne
+    @JoinColumn(name = "organization_id")
+    private Organization organization;
 
 
     public void updateName(String name) {
