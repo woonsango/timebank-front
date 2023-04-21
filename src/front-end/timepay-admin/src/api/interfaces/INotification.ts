@@ -1,4 +1,3 @@
-import { IAdmin } from './IAdmin';
 import { GetPageableData, PageableData } from './ICommon';
 
 export interface INotification {
@@ -8,15 +7,15 @@ export interface INotification {
   title: string;
   imageUrl: any;
   content: string;
-  state: any;
-  admin: IAdmin;
+  adminId: number;
+  adminName: string;
   notice: boolean;
 }
 
 export interface IPostNotificationRequest {
   content: string;
   imageUrl: string;
-  notice: boolean;
+  isNotice: boolean;
   title: string;
 }
 export interface IGetNotificationRequest extends GetPageableData {
