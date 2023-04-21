@@ -37,7 +37,8 @@ public class UserInfoService {
     @Transactional
     public void createUserInfo(RequestDTO userData){
         /* 유저 프로필 데이터 저장 */
-        User user = userRepository.findById(userData.getId()).orElseThrow(()->new IllegalArgumentException("존재하지 않는 유저입니다."));
+        Long uid = Long.getLong(userData.getId());
+        User user = userRepository.findById(uid).orElseThrow(()->new IllegalArgumentException("존재하지 않는 유저입니다."));
 
 
         /* uid값 비교하여 중복된 데이터는 데이터베이스에 저장X */

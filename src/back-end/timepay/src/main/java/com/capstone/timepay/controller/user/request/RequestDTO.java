@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 @Data
 @JsonNaming(value = PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class RequestDTO {
-    private Long id; // 고유식별번호
+    private String id; // 고유식별번호
     private String imageUrl; // 프로필 이미지
     private String name; // 실명
     private String nickName; // 닉네임
