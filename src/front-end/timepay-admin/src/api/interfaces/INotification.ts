@@ -7,7 +7,7 @@ export interface INotification {
   title: string;
   imageUrl: any;
   content: string;
-  state: any;
+  adminId: number;
   adminName: string;
   notice: boolean;
 }

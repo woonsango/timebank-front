@@ -65,7 +65,14 @@ const PushTable = ({
           a.notificationId - b.notificationId,
       },
       {
-        title: '작성자',
+        title: '작성자 번호',
+        key: 'adminId',
+        dataIndex: 'adminId',
+        width: 60,
+        align: 'center',
+      },
+      {
+        title: '작성자 이름',
         key: 'adminName',
         dataIndex: 'adminName',
         width: 100,
