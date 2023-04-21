@@ -55,7 +55,7 @@ const PasswordEditPage = () => {
           name="currentPassword"
           rules={[{ required: true, message: '비밀번호를 입력해주세요' }]}
         >
-          <Input />
+          <Input.Password />
         </Form.Item>
 
         <Form.Item
