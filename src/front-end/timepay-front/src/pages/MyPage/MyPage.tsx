@@ -97,46 +97,42 @@ const MyPage = () => {
         </div>
 
         <div className="MyBlock">
-          <div className="MyPageMoveBox">
-            <button
-              className="MyPageText"
-              onClick={() => handlePageMove(PATH.ACTIVITY)}
-            >
-              활동 기록 {'>'}
-            </button>
-          </div>
-        </div>
+          <div className="MyBlockBox">
+            <div className="MyPageMoveBox">
+              <button
+                className="MyPageText"
+                onClick={() => handlePageMove(PATH.ACTIVITY)}
+              >
+                활동 기록
+              </button>
+            </div>
 
-        <div className="MyBlock">
-          <div className="MyPageMoveBox">
-            <button
-              className="MyPageText"
-              onClick={() => handlePageMove(PATH.REPORT)}
-            >
-              신고 기록 {'>'}
-            </button>
-          </div>
-        </div>
+            <div className="MyPageMoveBox">
+              <button
+                className="MyPageText"
+                onClick={() => handlePageMove(PATH.REPORT)}
+              >
+                신고 기록
+              </button>
+            </div>
 
-        <div className="MyBlock">
-          <div className="MyPageMoveBox">
-            <button
-              className="MyPageText"
-              onClick={() => handlePageMove(PATH.INQUIRE)}
-            >
-              문의하기 {'>'}
-            </button>
-          </div>
-        </div>
+            <div className="MyPageMoveBox">
+              <button
+                className="MyPageText"
+                onClick={() => handlePageMove(PATH.INQUIRE)}
+              >
+                문의하기
+              </button>
+            </div>
 
-        <div className="MyBlock">
-          <div className="MyPageMoveBox">
-            <button
-              className="MyPageText"
-              onClick={() => handlePageMove(PATH.BOOKMARK)}
-            >
-              즐겨찾기 {'>'}
-            </button>
+            <div className="MyPageMoveBox">
+              <button
+                className="MyPageText"
+                onClick={() => handlePageMove(PATH.BOOKMARK)}
+              >
+                즐겨찾기
+              </button>
+            </div>
           </div>
         </div>
       </div>
