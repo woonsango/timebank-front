@@ -15,13 +15,9 @@ import java.time.LocalDateTime;
 public class CommentSearchRequest {
     Long commentId;
     String name;
-    String content;
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
-    LocalDateTime startTime;
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
-    LocalDateTime endTime;
+    String nickname;
 
     public CommentSearchDto toServiceDto(){
-        return CommentSearchDto.of(commentId, name, content, startTime, endTime);
+        return CommentSearchDto.of(commentId, name, nickname);
     }
 }

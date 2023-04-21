@@ -12,11 +12,7 @@ import java.util.List;
 
 public interface FreeBoardCommentRepository extends JpaRepository<FreeBoardComment,Long> {
     List<FreeBoardComment> findAllByFreeBoard(FreeBoard freeBoard);
-
     List<FreeBoardComment> findAllByUser(User user);
     Page<FreeBoardComment> findAllByUser(User user, Pageable pageable);
 
-    List<FreeBoardComment> findByContentContains(String content);
-
-    List<FreeBoardComment> findByCreatedAtLessThanEqualAndCreatedAtGreaterThanEqual(LocalDateTime startTime, LocalDateTime endTime);
 }

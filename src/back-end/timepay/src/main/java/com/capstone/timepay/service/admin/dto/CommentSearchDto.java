@@ -14,12 +14,10 @@ public class CommentSearchDto {
 
     Long commentId;
     String name;
-    String content;
-    LocalDateTime startTime;
-    LocalDateTime endTime;
+    String nickname;
 
-    public static CommentSearchDto of(Long commentId, String name, String content, LocalDateTime startTime, LocalDateTime endTime){
-        return new CommentSearchDto(commentId, name, content, startTime, endTime);
+    public static CommentSearchDto of(Long commentId, String name, String nickname){
+        return new CommentSearchDto(commentId, name, nickname);
     }
 
 }
