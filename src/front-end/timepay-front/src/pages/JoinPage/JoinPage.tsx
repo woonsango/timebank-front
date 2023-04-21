@@ -45,10 +45,9 @@ const JoinPage = () => {
   );
   const [nickName, setNickName] = useState<string>('');
   const [realName, setRealName] = useState<string>('');
-  //const [town, setTown] = useState<string>('');
-  //const [birth, setBirth] = useState<string>('');
   const [phoneNumber, setPhoneNumber] = useState<string>('');
   const [introduction, setIntroduction] = useState<string>('');
+  const [id, setId] = useState<string>('0');
 
   const [year, setYear] = useState<string>('연도');
   const [month, setMonth] = useState<string>('월');
@@ -206,13 +205,14 @@ const JoinPage = () => {
       const birth: string = year + month + day + '0000';
       const town: string = '서울특별시 ' + guText + ' ' + dongText;
       const formData = new FormData();
-      formData.append('profileImage', profileImage);
-      formData.append('nickName', nickName);
-      formData.append('realName', realName);
-      formData.append('birth', birth);
-      formData.append('phoneNumber', phoneNumber);
-      formData.append('town', town);
+      formData.append('birthday', birth);
+      formData.append('id', id);
+      formData.append('imageUrl', profileImage);
       formData.append('introduction', introduction);
+      formData.append('location', town);
+      formData.append('name', realName);
+      formData.append('nickName', nickName);
+      formData.append('phone', phoneNumber);
 
       //formData 모든 값 출력
       for (var value of formData.values()) {
@@ -221,7 +221,7 @@ const JoinPage = () => {
 
       await axios({
         method: 'post',
-        url: 'http://localhost:8080/api/users/create',
+        url: 'http://13.125.119.30/api/users/create',
         headers: {
           'Content-Type': 'multipart/form-data',
         },
