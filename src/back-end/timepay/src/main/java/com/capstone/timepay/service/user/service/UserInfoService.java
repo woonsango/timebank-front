@@ -74,7 +74,7 @@ public class UserInfoService {
     }
 
     @Transactional
-    public UpdateResponseDTO updateUserInfo(Authentication auth, UpdateRequestDTO userData) throws IOException, FirebaseAuthException {
+    public UpdateResponseDTO updateUserInfo(Authentication auth, UpdateRequestDTO userData, MultipartFile image) throws IOException, FirebaseAuthException {
         User user = userRepository.findByEmail(auth.getName()).orElseThrow(()->new IllegalArgumentException("존재하지 않는 유저입니다."));
 
         if(user.getUserProfile() == null)
@@ -85,7 +85,7 @@ public class UserInfoService {
             UserProfile userProfile = user.getUserProfile();
 
             /* 코드 재활용을 위한 변수 생성 */
-            String imageUrl = imageUpload(userData.getImage());
+            String imageUrl = imageUpload(image);
             String introduction =  userData.getIntroduction();
 
             if(imageUrl != null)
@@ -186,14 +186,18 @@ public class UserInfoService {
     }
 
     public String imageUpload(MultipartFile image) throws IOException, FirebaseAuthException {
-        if(image.getSize() != 0) {
-            // 이미지를 업로드하고 해당 url 저장
-            String imageUrl = firebaseService.uploadFiles(image);
-            System.out.println(imageUrl);
+        if (image != null) {
+            if (!image.isEmpty()) {
+                // 이미지를 업로드하고 해당 url 저장
+                String imageUrl = firebaseService.uploadFiles(image);
+                System.out.println(imageUrl);
 
-            return imageUrl;
-        } else {
+                return imageUrl;
+            } else {
 
+                return null;
+            }
+        } else{
             return null;
         }
     }
