@@ -66,12 +66,10 @@ const PushTable = ({
       },
       {
         title: '작성자',
-        key: 'name',
-        dataIndex: 'name',
+        key: 'adminName',
+        dataIndex: 'adminName',
         width: 100,
         align: 'center',
-        render: (_userName: string, record: INotification) =>
-          record.admin.adminName,
       },
       {
         title: '작성일시',

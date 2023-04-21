@@ -1,4 +1,3 @@
-import { IAdmin } from './IAdmin';
 import { GetPageableData, PageableData } from './ICommon';
 
 export interface INotification {
@@ -9,7 +8,7 @@ export interface INotification {
   imageUrl: any;
   content: string;
   state: any;
-  admin: IAdmin;
+  adminName: string;
   notice: boolean;
 }
 
