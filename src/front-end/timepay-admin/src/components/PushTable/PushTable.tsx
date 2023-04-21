@@ -7,12 +7,15 @@ import {
   cssPushTableStyle,
 } from './PushTable.styles';
 import PushDetailModal from '../PushDetailModal';
-import { IPush, IPushType } from '../../api/interfaces/IPush';
+import { useGetNotifications } from '../../api/hooks/notification';
+import { useRecoilValue } from 'recoil';
+import { pushSearchState } from '../../states/pushSearchState';
+import { INotification } from '../../api/interfaces/INotification';
 
 interface PushTableProps {
   selectedPushIds?: React.Key[];
   setSelectedPushIds: (args?: React.Key[]) => void;
-  setSelectedPushes: (args?: IPush[]) => void;
+  setSelectedPushes: (args?: INotification[]) => void;
 }
 
 const PushTable = ({
@@ -20,10 +23,13 @@ const PushTable = ({
   setSelectedPushIds,
   setSelectedPushes,
 }: PushTableProps) => {
-  const [isOpen, setIsOpen] = useState(false);
-  const [currentPush, setCurrentPush] = useState<IPush>();
+  const pushSearchValues = useRecoilValue(pushSearchState);
+  const { data, isLoading } = useGetNotifications(pushSearchValues);
 
-  const handleOnShowDetailPush = useCallback((push: IPush) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const [currentPush, setCurrentPush] = useState<INotification>();
+
+  const handleOnShowDetailPush = useCallback((push: INotification) => {
     setCurrentPush(push);
     setIsOpen(true);
   }, []);
@@ -32,64 +38,40 @@ const PushTable = ({
     setCurrentPush(undefined);
     setIsOpen(false);
   }, []);
-  const pushTypes: IPushType[] = ['notice', 'activity', 'comment', 'bookmark'];
 
-  const dummyDataSource: IPush[] = [];
-  for (let i = 0; i < 100; i++) {
-    dummyDataSource.push({
-      pushId: i,
-      type: pushTypes[i % 4],
-      name: `일반관리자1`,
-      createdAt: `2023-12-34 12:34`,
-      title: `공지 제목 ${i}`,
-      content: `공지 내용 ${i}`,
-    });
-  }
+  const dataSource = useMemo(() => {
+    if (pushSearchValues) {
+      return data?.data.content || [];
+    }
+    return [];
+  }, [pushSearchValues, data]);
+
   const rowSelection = {
-    onChange: (selectedRowKeys: React.Key[], selectedRows: IPush[]) => {
-      console.log(
-        `selectedRowKeys: ${selectedRowKeys}`,
-        'selectedRows: ',
-        selectedRows,
-      );
+    onChange: (selectedRowKeys: React.Key[], selectedRows: INotification[]) => {
       setSelectedPushIds(selectedRowKeys);
       setSelectedPushes(selectedRows);
     },
   };
 
   // @ts-ignore
-  const columns: ColumnsType<IPush> = useMemo(() => {
+  const columns: ColumnsType<INotification> = useMemo(() => {
     return [
       {
         title: '공지 번호',
-        key: 'pushId',
-        dataIndex: 'pushId',
-        width: 90,
-        sorter: (a: IPush, b: IPush) => a.pushId - b.pushId,
+        key: 'notificationId',
+        dataIndex: 'notificationId',
+        width: 80,
+        sorter: (a: INotification, b: INotification) =>
+          a.notificationId - b.notificationId,
       },
-      {
-        title: '공지 유형',
-        key: 'type',
-        dataIndex: 'type',
-        width: 100,
-        align: 'center',
-        filters: [
-          { text: 'notice', value: 'notice' },
-          { text: 'activity', value: 'activity' },
-          { text: 'comment', value: 'comment' },
-          { text: 'bookmark', value: 'bookmark' },
-        ],
-        onFilter: (value: string, record: IPush) =>
-          record.type.indexOf(value) === 0,
-      },
-
       {
         title: '작성자',
         key: 'name',
         dataIndex: 'name',
         width: 100,
         align: 'center',
-        render: (_userName: string, record: IPush) => record.name,
+        render: (_userName: string, record: INotification) =>
+          record.admin.adminName,
       },
       {
         title: '작성일시',
@@ -97,8 +79,11 @@ const PushTable = ({
         dataIndex: 'createdAt',
         width: 140,
         align: 'center',
-        sorter: (a: IPush, b: IPush) =>
-          dayjs(a.createdAt).isAfter(dayjs(b.createdAt)),
+        render: (createAt: string) =>
+          (createAt || '').split('.')[0].replaceAll('T', ' '),
+        sorter: (a: INotification, b: INotification) =>
+          dayjs(a.createdAt, 'YYYY-MM-DDTHH:mm:ss').unix() -
+          dayjs(b.createdAt, 'YYYY-MM-DDTHH:mm:ss').unix(),
       },
       {
         title: '공지 제목',
@@ -106,12 +91,6 @@ const PushTable = ({
         dataIndex: 'title',
         width: 150,
         align: 'center',
-
-        render: (_: string, record: IPush) => (
-          <Button type="link" onClick={() => handleOnShowDetailPush(record)}>
-            더보기
-          </Button>
-        ),
       },
       {
         title: '공지 내용',
@@ -119,7 +98,7 @@ const PushTable = ({
         dataIndex: 'content',
         width: 150,
         align: 'center',
-        render: (_: string, record: IPush) => (
+        render: (_: string, record: INotification) => (
           <Button type="link" onClick={() => handleOnShowDetailPush(record)}>
             더보기
           </Button>
@@ -134,15 +113,16 @@ const PushTable = ({
         {selectedPushIds && selectedPushIds.length > 0
           ? `${selectedPushIds.length} 개 선택 / `
           : ''}
-        총 {dummyDataSource.length} 개
+        총 {data?.data.totalElements || 0} 개
       </div>
       <Table
         css={cssPushTableStyle}
         rowSelection={rowSelection}
         columns={columns}
-        scroll={{ x: 1500 }}
-        dataSource={dummyDataSource}
-        rowKey="pushId"
+        scroll={{ x: 1200 }}
+        dataSource={dataSource}
+        rowKey="notificationId"
+        loading={isLoading}
       />
       <PushDetailModal
         isOpen={isOpen}

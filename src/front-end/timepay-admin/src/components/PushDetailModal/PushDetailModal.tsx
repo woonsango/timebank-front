@@ -1,10 +1,10 @@
 import { Button, Modal } from 'antd';
 import { useMemo } from 'react';
-import { IPush } from '../../api/interfaces/IPush';
+import { INotification } from '../../api/interfaces/INotification';
 import { cssPushDetailModalStyle } from './PushDetailModal.styles';
 
 interface PushDetailModalProps {
-  push?: IPush;
+  push?: INotification;
   isOpen: boolean;
   onCancel: () => void;
 }

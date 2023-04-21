@@ -18,7 +18,7 @@ request.interceptors.request.use((config) => {
     'Authorization',
     !HEADER_NOT_REQUIRED_URLS.includes(config.url!)
       ? token
-        ? `Baerer ${token}`
+        ? `Bearer ${token}`
         : undefined
       : undefined,
   );
@@ -32,5 +32,5 @@ export const apiRequest = {
   post: (url: string, data: unknown) => request.post(url, data),
   patch: (url: string, data: unknown) => request.patch(url, data),
   put: (url: string, data: unknown) => request.put(url, data),
-  delete: (url: string) => request.delete(url),
+  delete: (url: string, data?: any) => request.delete(url, data),
 };
