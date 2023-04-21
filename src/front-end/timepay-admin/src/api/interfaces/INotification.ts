@@ -15,7 +15,7 @@ export interface INotification {
 export interface IPostNotificationRequest {
   content: string;
   imageUrl: string;
-  notice: boolean;
+  isNotice: boolean;
   title: string;
 }
 export interface IGetNotificationRequest extends GetPageableData {
