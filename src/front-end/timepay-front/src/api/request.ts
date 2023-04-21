@@ -8,7 +8,7 @@ const request = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
-  // baseURL: 'http://localhost:8080/',
+  // baseURL: 'http://13.125.119.30/',
 });
 
 request.interceptors.request.use((config) => {

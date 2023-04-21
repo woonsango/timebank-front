@@ -3,6 +3,8 @@ export const API_URL = {
   COMMENTS: 'api/admins/reports/main', // 전체 댓글 리스트 조회
   ADMIN_PASSWORD_CHANGE: '/api/admins/password/change', //첫로그인시 비밀번호 변경
   ADMIN_LOGOUT: '/api/admins/logout',
+  NOTIFICATIONS: 'api/notifications',
+  NOTIFICATIONS__SEARCH: 'api/notifications/search',
 };
 
 /** 토큰을 넣지 않아도 되는 api url 모음 */
