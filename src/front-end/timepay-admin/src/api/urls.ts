@@ -2,7 +2,7 @@ export const API_URL = {
   ADMIN_LOGIN: '/api/admins/login',
   COMMENTS: 'api/admins/comments/main',
   COMMENTS__SEARCH: 'api/admins/comments/search',
-  COMMENTS: 'api/admins/reports/main', // 전체 댓글 리스트 조회
+  COMMENTS__HIDE: '/api/admins/comments/hide',
   NOTIFICATIONS: 'api/notifications',
   NOTIFICATIONS__SEARCH: 'api/notifications/search',
 };

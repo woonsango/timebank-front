@@ -10,7 +10,6 @@ import { apiRequest } from '../request';
 import { API_URL } from '../urls';
 
 export const useGetComments = (params?: IGetCommentRequest) => {
-  console.log(params);
   return useQuery<AxiosResponse<IGetCommentResponse>, AxiosError>({
     queryKey: ['useGetComments', params],
     queryFn: () =>
@@ -35,9 +34,12 @@ export const useGetComments = (params?: IGetCommentRequest) => {
   });
 };
 
-export const useGetComments = () => {
-  return useQuery({
-    queryKey: 'comment',
-    queryFn: () => apiRequest.get(API_URL.COMMENTS),
+export const usePatchComment = () => {
+  return useMutation<AxiosResponse<string>, AxiosError, IPatchCommentRequest>({
+    mutationKey: 'usePatchComment',
+    mutationFn: (data) =>
+      apiRequest.patch(API_URL.COMMENTS__HIDE, {
+        ...data,
+      }),
   });
 };

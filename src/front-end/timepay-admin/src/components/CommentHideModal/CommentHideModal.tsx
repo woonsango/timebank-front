@@ -1,9 +1,11 @@
-import { Button, message, Modal, Table } from 'antd';
+import { Button, Form, message, Modal, Table } from 'antd';
 import type { ColumnType } from 'antd/es/table';
 import { useCallback, useMemo } from 'react';
 import dayjs from 'dayjs';
 import { cssCommentHideModalStyle } from './CommentHideModal.styles';
 import { IComment } from '../../api/interfaces/IComment';
+import { useQueryClient } from 'react-query';
+import { usePatchComment } from '../../api/hooks/comment';
 
 export interface CommentHideModalProps {
   comments?: IComment[];
@@ -15,6 +17,10 @@ const CommentHideModal = ({
   isOpen,
   onCancel,
 }: CommentHideModalProps) => {
+  const queryClient = useQueryClient();
+  const patchCommentMutation = usePatchComment();
+
+  const [form] = Form.useForm();
   const [messageApi, contextHolder] = message.useMessage();
 
   // @ts-ignore
@@ -72,13 +78,38 @@ const CommentHideModal = ({
       content: '정말 숨김 처리하시겠습니까?',
       okText: '확인',
       cancelText: '취소',
-      onOk: () =>
-        messageApi.open({
-          type: 'success',
-          content: '숨김 처리 완료되었습니다.',
-        }),
+      onOk: async () => {
+        if (comments && comments.length > 0)
+          await patchCommentMutation.mutateAsync(
+            { commentIds: comments?.map((comment) => comment.commentId) },
+            {
+              onSuccess: async (data) => {
+                messageApi.open({
+                  type: 'success',
+                  content: '숨김 처리 완료되었습니다.',
+                });
+                await queryClient.invalidateQueries('useGetComments');
+              },
+              onError: (err) => {
+                messageApi.open({
+                  type: 'error',
+                  content: (
+                    <>
+                      오류 발생: <br />
+                      {err}
+                    </>
+                  ),
+                });
+              },
+              onSettled: () => {
+                onCancel();
+                form.resetFields();
+              },
+            },
+          );
+      },
     });
-  }, [messageApi]);
+  }, [form, onCancel, queryClient, messageApi, comments, patchCommentMutation]);
 
   const footer = useMemo(() => {
     return (

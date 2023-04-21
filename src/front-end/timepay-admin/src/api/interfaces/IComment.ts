@@ -28,4 +28,6 @@ export interface IGetCommentResponse extends PageableData {
   content: IComment[];
 }
 
+export interface IPatchCommentRequest {
+  commentIds: number[];
 }
