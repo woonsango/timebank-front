@@ -1,4 +1,4 @@
-import { Button, Form, message, Modal, Table } from 'antd';
+import { Button, message, Modal, Table } from 'antd';
 import type { ColumnType } from 'antd/es/table';
 import { useCallback, useMemo } from 'react';
 import dayjs from 'dayjs';
@@ -20,7 +20,6 @@ const CommentHideModal = ({
   const queryClient = useQueryClient();
   const patchCommentMutation = usePatchComment();
 
-  const [form] = Form.useForm();
   const [messageApi, contextHolder] = message.useMessage();
 
   // @ts-ignore
@@ -103,13 +102,12 @@ const CommentHideModal = ({
               },
               onSettled: () => {
                 onCancel();
-                form.resetFields();
               },
             },
           );
       },
     });
-  }, [form, onCancel, queryClient, messageApi, comments, patchCommentMutation]);
+  }, [onCancel, queryClient, messageApi, comments, patchCommentMutation]);
 
   const footer = useMemo(() => {
     return (
