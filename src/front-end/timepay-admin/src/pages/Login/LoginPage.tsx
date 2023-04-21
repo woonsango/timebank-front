@@ -1,5 +1,4 @@
-import React, { useCallback } from 'react';
-import { Button, Checkbox, Form, Input, message } from 'antd';
+import { Button, Form, Input, message } from 'antd';
 import { ReactComponent as Logo } from '../../assets/images/timepay-logo.svg';
 import { COMMON_COLOR } from '../../styles/constants/colors';
 import { useNavigate } from 'react-router-dom';
