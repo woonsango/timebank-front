@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react';
-import { Button, Checkbox, Form, Input } from 'antd';
+import { Button, Checkbox, Form, Input, message } from 'antd';
 import { ReactComponent as Logo } from '../../assets/images/timepay-logo.svg';
 import { COMMON_COLOR } from '../../styles/constants/colors';
 import { useNavigate } from 'react-router-dom';
@@ -18,6 +18,7 @@ const PasswordEditPage = () => {
   const [form] = Form.useForm();
   const navigate = useNavigate();
   const passwordChangeMutation = usePasswordChange();
+  const [messageApi, contextHolder] = message.useMessage();
 
   const handleOnClickChangeBtn = async (values: any) => {
     await passwordChangeMutation.mutateAsync(
@@ -28,7 +29,20 @@ const PasswordEditPage = () => {
       },
       {
         onSuccess: (result) => {
-          navigate(`/post-management`);
+          if (result.data.success === true) {
+            messageApi.open({
+              type: 'success',
+              content: '패스워드 변경 성공',
+            });
+            setTimeout(function () {
+              navigate(`/post-management`);
+            }, 500);
+          } else {
+            messageApi.open({
+              type: 'error',
+              content: '다시 입력해주세요',
+            });
+          }
         },
         onError: (err) => {
           console.log(err.response?.status);
@@ -50,6 +64,7 @@ const PasswordEditPage = () => {
         autoComplete="off"
         layout="vertical"
       >
+        {contextHolder}
         <Form.Item
           label="현재 비밀번호"
           name="currentPassword"
