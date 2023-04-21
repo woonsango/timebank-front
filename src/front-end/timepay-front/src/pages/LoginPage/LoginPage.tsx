@@ -26,7 +26,6 @@ const LoginPage = () => {
     [navigate],
   );
 
-  //const iconimg = <img width={300} src={kakao_login_logo}></img>;
   const { Text } = Typography;
 
   return (
