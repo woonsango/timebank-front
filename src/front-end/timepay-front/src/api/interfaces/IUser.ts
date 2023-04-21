@@ -12,3 +12,10 @@ export interface IUser {
   accountEmail: string;
   isAdmin: boolean; // 관리자 여부
 }
+
+export interface IGetUserInformationResponse {
+  id: number;
+  image_url: string;
+  nick_name: string;
+  time_pay: number;
+}

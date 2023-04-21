@@ -6,8 +6,13 @@ import { headerTitleState } from '../../states/uiState';
 import { PATH } from '../../utils/paths';
 import './My.css';
 import user from './dummy.json';
+import { useGetUserInfomation } from '../../api/hooks/user';
 
 const MyPage = () => {
+  const { data } = useGetUserInfomation(2);
+  useEffect(() => {
+    console.log(data);
+  }, []);
   const userInfo = user.user1[0];
   const [image, setImage]: any = useState();
   const [nickName, setNickName]: any = useState();
@@ -28,14 +33,7 @@ const MyPage = () => {
   const setHeaderTitle = useSetRecoilState(headerTitleState);
   useEffect(() => {
     setHeaderTitle('내정보');
-    /*
-    fetch('http://localhost:5000/user')
-      .then((res) => {
-        return res.json();
-      })
-      .then((data) => {
-        setUserData(data);
-      });*/
+
     setImage(userInfo.img);
     setNickName(userInfo.nickName);
     setTown(userInfo.town);
