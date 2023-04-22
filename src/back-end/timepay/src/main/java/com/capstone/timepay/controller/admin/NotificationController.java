@@ -100,4 +100,10 @@ public class NotificationController {
     public ResponseEntity<NotificationInfoResponse> getNotification(@PathVariable Long notificationId) {
         return new ResponseEntity<>(this.notificationService.getOne(notificationId).get(), HttpStatus.OK);
     }
+
+    @PutMapping("/{notificationId}")
+    @ApiOperation("특정 id값 공지사항 isViewed속성 true로 처리")
+    public ResponseEntity<?> viewNotification(@PathVariable Long notificationId) {
+        return new ResponseEntity<>(notificationService.viewNotification(notificationId), HttpStatus.OK);
+    }
 }

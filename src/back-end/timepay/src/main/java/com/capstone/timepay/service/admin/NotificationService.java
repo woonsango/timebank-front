@@ -58,6 +58,7 @@ public class NotificationService {
                 .imageUrl(dto.getImageUrl())
                 .isNotice(dto.isNotice())
                 .content(dto.getContent())
+                .isViewed(false)
                 .admin(admin).build();
 
         this.notificationRepository.save(notification);
@@ -98,6 +99,17 @@ public class NotificationService {
         }
 
         return resultMap;
+    }
+
+    public boolean viewNotification(Long notificationId) {
+        Optional<Notification> notice = notificationRepository.findById(notificationId);
+        if (!notice.isPresent()) {
+            return false;
+        }
+
+        notice.get().setViewed(true);
+        notificationRepository.save(notice.get());
+        return true;
     }
 
     public Map<String, Object> delete(List<String> notificationIds) {

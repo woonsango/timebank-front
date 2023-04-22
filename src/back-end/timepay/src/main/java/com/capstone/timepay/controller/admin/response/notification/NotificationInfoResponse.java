@@ -18,6 +18,7 @@ public class NotificationInfoResponse {
     private String imageUrl;
     private boolean isNotice;
     private String content;
+    private boolean isViewed;
 
     private Long adminId;
     private String adminName;
