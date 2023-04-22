@@ -3,6 +3,7 @@ package com.capstone.timepay.service.admin;
 import com.capstone.timepay.domain.board.Board;
 import com.capstone.timepay.domain.board.BoardRepository;
 import com.capstone.timepay.domain.board.BoardSearch;
+import com.capstone.timepay.domain.board.BoardStatus;
 import com.capstone.timepay.domain.dealBoard.DealBoard;
 import com.capstone.timepay.domain.freeBoard.FreeBoard;
 import com.capstone.timepay.service.admin.dto.AdminBoardDTO;
@@ -89,5 +90,39 @@ public class AdminBoardService {
         }
 
         return boardRepository.findAll(spec);
+    }
+
+    public boolean setHidden(List<Long> ids) {
+        try {
+            for (Long id :
+                    ids) {
+                Board board = boardRepository.findById(id).get();
+                if (board.getDealBoard() != null) {
+                    board.getDealBoard().setHidden(true);
+                } else {
+                    board.getFreeBoard().setHidden(true);
+                }
+                boardRepository.save(board);
+            }
+        } catch (Exception e) {
+            return false;
+        }
+        return true;
+    }
+
+    public boolean setStatus(List<Long> ids, BoardStatus status) {
+        try {
+            for (Long id :
+                    ids) {
+                Board board = boardRepository.findById(id).get();
+                if (board.getDealBoard() != null) {
+                    board.getDealBoard().setBoardStatus(status);
+                }
+                boardRepository.save(board);
+            }
+        } catch (Exception e) {
+            return false;
+        }
+        return true;
     }
 }

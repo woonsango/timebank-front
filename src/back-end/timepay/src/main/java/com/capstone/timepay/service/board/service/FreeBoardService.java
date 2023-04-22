@@ -17,8 +17,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -72,6 +70,7 @@ public class FreeBoardService
                 .category(freeBoardDTO.getCategory())
                 .isHidden(freeBoardDTO.isHidden())
                 .build();
+        freeBoardRepository.save(freeBoard);
 
         Board board = Board.builder().
                 freeBoard(freeBoard).
