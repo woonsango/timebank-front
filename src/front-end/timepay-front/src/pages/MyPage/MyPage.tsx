@@ -9,7 +9,7 @@ import user from './dummy.json';
 import { useGetUserInfomation } from '../../api/hooks/user';
 
 const MyPage = () => {
-  const { data } = useGetUserInfomation(2);
+  const { data } = useGetUserInfomation(0);
   useEffect(() => {
     console.log(data);
   }, []);
