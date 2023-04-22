@@ -190,7 +190,7 @@ const JoinPage = () => {
       formData.append('town', town);
       formData.append('introduction', introduction);
 
-      for (let key of formData.keys()) goToFinishJoinPage(PATH.FINISHJOIN);
+      for (let key in formData.keys()) goToFinishJoinPage(PATH.FINISHJOIN);
     }
   };
 
