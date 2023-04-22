@@ -10,6 +10,7 @@ import com.capstone.timepay.domain.freeBoardReport.FreeBoardReport;
 import com.capstone.timepay.domain.freeCommentReport.FreeCommentReport;
 import com.capstone.timepay.domain.freeRegister.FreeRegister;
 import com.capstone.timepay.domain.inquiry.Inquiry;
+import com.capstone.timepay.domain.organization.Organization;
 import com.capstone.timepay.domain.userProfile.UserProfile;
 import com.capstone.timepay.domain.userToken.UserToken;
 import lombok.AllArgsConstructor;
@@ -34,7 +35,7 @@ import java.util.stream.Collectors;
 public class User extends BaseTimeEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userId;
 
     @Column
@@ -52,7 +53,7 @@ public class User extends BaseTimeEntity {
     @Column(unique = true)
     private String deviceToken;
 
-    @ElementCollection(fetch = FetchType.EAGER)
+    @ElementCollection(fetch = FetchType.LAZY)
     @Builder.Default
     private List<String> roles = new ArrayList<>();
 
@@ -96,6 +97,10 @@ public class User extends BaseTimeEntity {
     @OneToOne
     @JoinColumn(name = "token_id")
     private UserToken userToken;
+
+    @OneToOne
+    @JoinColumn(name = "organization_id")
+    private Organization organization;
 
 
     public void updateName(String name) {

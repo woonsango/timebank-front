@@ -2,6 +2,7 @@ package com.capstone.timepay.service.board.service;
 
 import com.capstone.timepay.domain.board.Board;
 import com.capstone.timepay.domain.board.BoardRepository;
+import com.capstone.timepay.domain.freeAttatchment.FreeAttatchment;
 import com.capstone.timepay.domain.freeBoard.FreeBoard;
 import com.capstone.timepay.domain.freeBoard.FreeBoardRepository;
 import com.capstone.timepay.domain.freeRegister.FreeRegister;
@@ -16,6 +17,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.stream.Collectors;

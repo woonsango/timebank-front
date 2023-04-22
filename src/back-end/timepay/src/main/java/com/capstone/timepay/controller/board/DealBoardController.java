@@ -2,25 +2,18 @@ package com.capstone.timepay.controller.board;
 
 
 import com.capstone.timepay.controller.board.request.ReportRequestDTO;
-import com.capstone.timepay.service.board.dto.DealBoardDTO;
-import com.capstone.timepay.service.board.service.DealBoardService;
-import com.capstone.timepay.service.board.service.ReportService;
-
 import com.capstone.timepay.domain.dealBoard.DealBoard;
 import com.capstone.timepay.service.board.dto.DealBoardDTO;
 import com.capstone.timepay.service.board.service.DealBoardService;
 import com.capstone.timepay.service.board.service.DealRegisterService;
-
+import com.capstone.timepay.service.board.service.ReportService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-
-
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;

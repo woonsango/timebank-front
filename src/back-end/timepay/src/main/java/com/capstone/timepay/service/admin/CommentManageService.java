@@ -35,8 +35,7 @@ public class CommentManageService {
 
     private final CommentRepository commentRepository;
     private final FreeBoardCommentRepository freeBoardCommentRepository;
-    private final FreeBoardRepository freeBoardRepository;
-    private final DealBoardReportRepository dealBoardReportRepository;
+
     private final DealBoardCommentRepository dealBoardCommentRepository;
     private final UserRepository userRepository;
 
@@ -58,6 +57,9 @@ public class CommentManageService {
                             .writerName(comment.getFreeBoardComment().getUser().getName())
                             .writtenTime(comment.getFreeBoardComment().getCreatedAt())
                             .originWriterYN(false)
+                            .writerNickname(comment.getFreeBoardComment().getUser().getNickname())
+                            .isHidden(comment.getFreeBoardComment().isHidden())
+                            .updatedTime(comment.getFreeBoardComment().getUpdatedAt())
                             .build();
                 }
                 else{
@@ -73,6 +75,9 @@ public class CommentManageService {
                             .writerName(comment.getDealBoardComment().getUser().getName())
                             .writtenTime(comment.getDealBoardComment().getCreatedAt())
                             .originWriterYN(false)
+                            .writerNickname(comment.getFreeBoardComment().getUser().getNickname())
+                            .isHidden(comment.getFreeBoardComment().isHidden())
+                            .updatedTime(comment.getFreeBoardComment().getUpdatedAt())
                             .build();
                 }
 
@@ -110,10 +115,8 @@ public class CommentManageService {
     public Page<CommentResponse> showCommentsBySearch(CommentSearchDto commentSearchDto) {
 
         if(!ObjectUtils.isEmpty(commentSearchDto.getCommentId()) &&
-            ObjectUtils.isEmpty(commentSearchDto.getName()) &&
-            ObjectUtils.isEmpty(commentSearchDto.getContent()) &&
-            ObjectUtils.isEmpty(commentSearchDto.getStartTime()) &&
-            ObjectUtils.isEmpty(commentSearchDto.getEndTime())){
+                ObjectUtils.isEmpty(commentSearchDto.getName()) &&
+                ObjectUtils.isEmpty(commentSearchDto.getNickname())){
 
             Comment comment = commentRepository.findByCommentId(commentSearchDto.getCommentId()).orElseThrow(()->new IllegalArgumentException("존재하지 않는 댓글입니다."));
             List<CommentResponse> response = new ArrayList<>();
@@ -131,11 +134,9 @@ public class CommentManageService {
         }
         else if(ObjectUtils.isEmpty(commentSearchDto.getCommentId()) &&
                 !ObjectUtils.isEmpty(commentSearchDto.getName()) &&
-                ObjectUtils.isEmpty(commentSearchDto.getContent()) &&
-                ObjectUtils.isEmpty(commentSearchDto.getStartTime()) &&
-                ObjectUtils.isEmpty(commentSearchDto.getEndTime())){
+                ObjectUtils.isEmpty(commentSearchDto.getNickname())){
 
-            User user = userRepository.findByName(commentSearchDto.getName()).orElseThrow(()->new IllegalArgumentException("존재하지 않는 댓글입니다."));
+            User user = userRepository.findByName(commentSearchDto.getName()).orElseThrow(()->new IllegalArgumentException("존재하지 않는 회원입니다."));
             List<CommentResponse> fComments = convertFCommentsToResponse(freeBoardCommentRepository.findAllByUser(user));
             List<CommentResponse> dComments = convertDCommentsToResponse(dealBoardCommentRepository.findAllByUser(user));
 
@@ -147,30 +148,12 @@ public class CommentManageService {
         }
         else if(ObjectUtils.isEmpty(commentSearchDto.getCommentId()) &&
                 ObjectUtils.isEmpty(commentSearchDto.getName()) &&
-                !ObjectUtils.isEmpty(commentSearchDto.getContent()) &&
-                ObjectUtils.isEmpty(commentSearchDto.getStartTime()) &&
-                ObjectUtils.isEmpty(commentSearchDto.getEndTime())){
+                !ObjectUtils.isEmpty(commentSearchDto.getNickname())){
 
-            List<CommentResponse> fComments = convertFCommentsToResponse(freeBoardCommentRepository.findByContentContains(commentSearchDto.getContent()));
-            List<CommentResponse> dComments = convertDCommentsToResponse(dealBoardCommentRepository.findByContentContains(commentSearchDto.getContent()));
-
-            List<CommentResponse> commentResponses = new ArrayList<>();
-            commentResponses.addAll(fComments);
-            commentResponses.addAll(dComments);
-
-            return new PageImpl<>(commentResponses);
-        }
-        else if(ObjectUtils.isEmpty(commentSearchDto.getCommentId()) &&
-                ObjectUtils.isEmpty(commentSearchDto.getName()) &&
-                ObjectUtils.isEmpty(commentSearchDto.getContent()) &&
-                !ObjectUtils.isEmpty(commentSearchDto.getStartTime()) &&
-                !ObjectUtils.isEmpty(commentSearchDto.getEndTime())){
-
-            List<CommentResponse> fComments =
-                    convertFCommentsToResponse(freeBoardCommentRepository.findByCreatedAtLessThanEqualAndCreatedAtGreaterThanEqual(commentSearchDto.getEndTime(),commentSearchDto.getStartTime()));
-            List<CommentResponse> dComments =
-                    convertDCommentsToResponse(dealBoardCommentRepository.findByCreatedAtLessThanEqualAndCreatedAtGreaterThanEqual(commentSearchDto.getEndTime(),commentSearchDto.getStartTime()));
-
+            User user = userRepository.findByNicknameContains(commentSearchDto.getNickname()).orElseThrow(()->new IllegalArgumentException("존재하지 않는 회원입니다."));
+            List<FreeBoardComment> users = freeBoardCommentRepository.findAllByUser(user);
+            List<CommentResponse> fComments = convertFCommentsToResponse(users);
+            List<CommentResponse> dComments = convertDCommentsToResponse(dealBoardCommentRepository.findAllByUser(user));
             List<CommentResponse> commentResponses = new ArrayList<>();
             commentResponses.addAll(fComments);
             commentResponses.addAll(dComments);
@@ -191,10 +174,13 @@ public class CommentManageService {
                                 .applyYN(false)
                                 .selectYN(false)
                                 .content(freeBoardComment.getContent())
-                                .writerId(freeBoardComment.getUser().getUserId())
-                                .writerName(freeBoardComment.getUser().getName())
+                                .writerId(freeBoardComment.getUser().getUserId()) //freeBoardComment.getUser().getUserId()
+                                .writerName(freeBoardComment.getUser().getName())//freeBoardComment.getUser().getName()
                                 .writtenTime(freeBoardComment.getCreatedAt())
                                 .originWriterYN(false)
+                                .writerNickname(freeBoardComment.getUser().getNickname()) //freeBoardComment.getUser().getNickname()
+                                .isHidden(freeBoardComment.isHidden())
+                                .updatedTime(freeBoardComment.getUpdatedAt())
                                 .build())
                 .collect(Collectors.toList());
     }
@@ -209,10 +195,13 @@ public class CommentManageService {
                                 .applyYN(dealBoardComment.isApplied())
                                 .selectYN(dealBoardComment.isAdopted())
                                 .content(dealBoardComment.getContent())
-                                .writerId(dealBoardComment.getUser().getUserId())
-                                .writerName(dealBoardComment.getUser().getName())
+                                .writerId(dealBoardComment.getUser().getUserId())// dealBoardComment.getUser().getUserId()
+                                .writerName(dealBoardComment.getUser().getName()) //dealBoardComment.getUser().getName()
                                 .writtenTime(dealBoardComment.getCreatedAt())
                                 .originWriterYN(false)
+                                .writerNickname(dealBoardComment.getUser().getNickname()) //dealBoardComment.getUser().getNickname()
+                                .isHidden(dealBoardComment.isHidden())
+                                .updatedTime(dealBoardComment.getUpdatedAt())
                                 .build())
                 .collect(Collectors.toList());
     }

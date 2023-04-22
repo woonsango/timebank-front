@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
 public class Admin extends BaseTimeEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long adminId;   // 식별자
 
     @Column
@@ -50,6 +50,7 @@ public class Admin extends BaseTimeEntity {
     @OneToMany(mappedBy = "admin", orphanRemoval = true)
     private List<Notification> notifications = new ArrayList<>();
 
+    @JsonIgnore
     @OneToMany(mappedBy = "admin", orphanRemoval = true)
     private List<InquiryAnswer> inquiryAnswers = new ArrayList<>();
     

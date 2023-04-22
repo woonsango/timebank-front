@@ -20,7 +20,7 @@ import javax.persistence.*;
 public class InquiryAnswer extends BaseTimeEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long inquiryAnswerId;
 
     private String content;

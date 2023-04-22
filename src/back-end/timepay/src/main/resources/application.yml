@@ -15,6 +15,7 @@ spring:
         show_sql: true
         format_sql: false
         default_batch_fetch_size: 1000
+    open-in-view: true
   servlet:
     multipart:
       max-file-size: 30MB
@@ -25,3 +26,4 @@ jwt:
 app:
   firebase-configuration-file: ./serviceAccountKey.json
   firebase-bucket: timepay-79a6f.appspot.com
+

@@ -94,6 +94,7 @@ public class DealBoardService
 
         DealBoard dealBoard = DealBoard.builder()
                 .title(dealBoardDTO.getTitle())
+                .boardStatus(dealBoardDTO.getState())
                 .content(dealBoardDTO.getContent())
                 .category(category)
                 .location(dealBoardDTO.getLocation())
@@ -128,6 +129,7 @@ public class DealBoardService
 
         dealBoard = DealBoard.builder()
                 .title(boardDto.getTitle())
+                .boardStatus(boardDto.getState())
                 .content(boardDto.getContent())
                 .category(boardDto.getCategory())
                 .location(boardDto.getLocation())

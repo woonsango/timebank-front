@@ -37,11 +37,7 @@ public class DealBoard extends BaseTimeEntity {
     private LocalDateTime startTime;
     private LocalDateTime endTime;
     private int pay;
-
-    // 숨김처리
-    @Column
     private boolean isHidden;
-
     private BoardStatus boardStatus;
 
     @OneToMany(mappedBy = "dealBoard", orphanRemoval = true, fetch = FetchType.LAZY)
