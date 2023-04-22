@@ -18,7 +18,7 @@ import javax.persistence.*;
 @Entity
 public class FreeCommentReport extends BaseTimeEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long fc_reportId;
 
     @Column

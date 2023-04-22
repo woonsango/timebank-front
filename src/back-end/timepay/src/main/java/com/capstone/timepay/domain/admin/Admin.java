@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
 public class Admin extends BaseTimeEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long adminId;   // 식별자
 
     @Column

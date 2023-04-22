@@ -22,7 +22,7 @@ import javax.persistence.*;
 public class Report extends BaseTimeEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long reportId;
 
     @OneToOne

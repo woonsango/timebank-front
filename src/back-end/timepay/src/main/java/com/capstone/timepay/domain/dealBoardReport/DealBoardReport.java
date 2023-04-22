@@ -17,7 +17,7 @@ import javax.persistence.*;
 @Entity
 public class DealBoardReport extends BaseTimeEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long db_reportId;
 
     @Column

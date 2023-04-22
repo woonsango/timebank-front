@@ -1,6 +1,7 @@
 package com.capstone.timepay.domain.organization;
 
 import com.capstone.timepay.domain.BaseTimeEntity;
+import com.capstone.timepay.domain.user.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -32,6 +33,8 @@ public class Organization extends BaseTimeEntity {
     private String account;
     private String pw;
     private String authority;
+    private String imageUrl;
+    private String certificationUrl;
     @ElementCollection(fetch = FetchType.EAGER)
     @Builder.Default
     private List<String> roles = new ArrayList<>();

@@ -17,7 +17,7 @@ import javax.persistence.*;
 @Entity
 public class FreeBoardReport extends BaseTimeEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long fb_reportId;
 
     @Column
