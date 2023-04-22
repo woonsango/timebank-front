@@ -1,7 +1,6 @@
 package com.capstone.timepay.domain.user;
 
 import com.capstone.timepay.domain.BaseTimeEntity;
-
 import com.capstone.timepay.domain.dealBoardComment.DealBoardComment;
 import com.capstone.timepay.domain.dealBoardReport.DealBoardReport;
 import com.capstone.timepay.domain.dealCommentReport.DealCommentReport;
@@ -13,10 +12,12 @@ import com.capstone.timepay.domain.freeRegister.FreeRegister;
 import com.capstone.timepay.domain.inquiry.Inquiry;
 import com.capstone.timepay.domain.userProfile.UserProfile;
 import com.capstone.timepay.domain.userToken.UserToken;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -47,6 +48,9 @@ public class User extends BaseTimeEntity {
     private String encodedPassword;
     private boolean isBanned;
     private boolean isSignUp;
+
+    @Column(unique = true)
+    private String deviceToken;
 
     @ElementCollection(fetch = FetchType.EAGER)
     @Builder.Default

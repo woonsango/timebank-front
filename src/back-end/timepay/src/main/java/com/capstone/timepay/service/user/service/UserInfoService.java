@@ -71,6 +71,8 @@ public class UserInfoService {
         user.setCreatedAt(LocalDateTime.now());
         user.setUpdatedAt(LocalDateTime.now());
 
+        user.setDeviceToken(userData.getDeviceToken()); // firebase device token
+
         userRepository.save(user);
     }
 

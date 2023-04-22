@@ -24,7 +24,6 @@ public class AdminController {
     @PostMapping("/register")
     @ApiOperation(value = "어드민 생성")
     public ResponseEntity<Map<String, Object>> createAdmin(@RequestBody AdminRegisterRequest request) {
-        System.out.println(request);
         Map<String, Object> result = this.adminService.create(request.toServiceDto());
 
         if ((Boolean) result.get("success")) {

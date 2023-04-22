@@ -1,11 +1,8 @@
 package com.capstone.timepay.controller.user.request;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.Data;
-
-import java.time.LocalDateTime;
 
 @Data
 @JsonNaming(value = PropertyNamingStrategy.SnakeCaseStrategy.class)
@@ -18,5 +15,7 @@ public class RequestDTO {
     private String phone; // 전화번호
     private String introduction; // 소개글
     private String birthday; // 생일, 데이터 타입 변경 가능성 있음
+
+    private String deviceToken; // firebase device token
 }
 
