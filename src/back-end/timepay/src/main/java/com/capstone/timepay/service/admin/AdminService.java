@@ -60,10 +60,10 @@ public class AdminService {
         Admin newAdmin = Admin.builder()
                 .adminName(dto.getAdminName())
                 .password(encodedPassword)
-                .authority(dto.getAuthority())
                 .name(dto.getName())
                 .email(dto.getEmail())
                 .phone(dto.getPhone())
+                .isFirst(true)
                 .roles(Collections.singletonList("ROLE_ADMIN"))
                 .build();
 
@@ -85,7 +85,8 @@ public class AdminService {
                 result.put("success", false);
                 result.put("message", "비밀번호1과 비밀번호2가 일치하지 않습니다.");
             } else {
-                Admin admin = this.getAdmin(adminName).update(passwordEncoder.encode(dto.getNewPassword()));
+                Admin admin = this.getAdmin(adminName).updatePassword(passwordEncoder.encode(dto.getNewPassword()))
+                        .updateFirst(false);
                 adminRepository.save(admin);
                 result.put("success", true);
                 result.put("message", "비밀번호가 성공적으로 변경되었습니다.");

@@ -2,12 +2,7 @@ package com.capstone.timepay.domain.notification;
 
 import com.capstone.timepay.domain.BaseTimeEntity;
 import com.capstone.timepay.domain.admin.Admin;
-import com.capstone.timepay.domain.freeBoard.FreeBoard;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 
@@ -15,6 +10,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
+@Setter
 @Entity
 public class Notification extends BaseTimeEntity {
     @Id
@@ -26,6 +22,7 @@ public class Notification extends BaseTimeEntity {
     private String imageUrl;
     private boolean isNotice;
     private String content;
+    private boolean isViewed;
 
 
     @ManyToOne

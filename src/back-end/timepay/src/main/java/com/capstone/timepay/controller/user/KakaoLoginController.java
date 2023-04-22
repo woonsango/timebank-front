@@ -31,7 +31,7 @@ public class KakaoLoginController {
     private UserDetailService userDetailService;
 
     /* 카카오 로그인 */
-    @GetMapping("/login")
+    @GetMapping("/oauth/redirect/kakao")
     @ApiOperation(value = "카카오 간편 로그인 콜백 함수", notes = "리다이렉션 URI로 실행되는 함수입니다. 따로 사용 X")
     public ResponseEntity<?> kakaoCallback(@RequestParam String code) throws Exception {
         String access_Token = kakaoLoginService.getKaKaoAccessToken(code);

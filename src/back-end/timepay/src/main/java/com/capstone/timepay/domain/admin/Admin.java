@@ -1,7 +1,6 @@
 package com.capstone.timepay.domain.admin;
 
 import com.capstone.timepay.domain.BaseTimeEntity;
-import com.capstone.timepay.domain.freeBoardComment.FreeBoardComment;
 import com.capstone.timepay.domain.inquiryAnswer.InquiryAnswer;
 import com.capstone.timepay.domain.notification.Notification;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -32,10 +31,10 @@ public class Admin extends BaseTimeEntity {
     @Column
     private String adminName;   // 로그인 할 때 쓰는 아이디
     private String password;
-    private String authority;
     private String name;    // 관리자 이름
     private String email;
     private String phone;
+    private boolean isFirst;
 
     @ElementCollection(fetch = FetchType.EAGER)
     @Builder.Default
@@ -55,8 +54,13 @@ public class Admin extends BaseTimeEntity {
     @OneToMany(mappedBy = "admin", orphanRemoval = true)
     private List<InquiryAnswer> inquiryAnswers = new ArrayList<>();
     
-    public Admin update(String password) {
+    public Admin updatePassword(String password) {
         this.password = password;
+        return this;
+    }
+
+    public Admin updateFirst(boolean isFirst) {
+        this.isFirst = isFirst;
         return this;
     }
 }

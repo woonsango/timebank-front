@@ -19,8 +19,6 @@ public class AdminRegisterRequest {
     @NotNull
     private String password;
 
-    private String authority;
-
     @NotNull
     private String name;    // 관리자 이름
 

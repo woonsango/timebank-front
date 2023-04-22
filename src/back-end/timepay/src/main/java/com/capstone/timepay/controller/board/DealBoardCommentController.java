@@ -70,7 +70,7 @@ public class DealBoardCommentController {
         return deleteMap;
     }
 
-    @PostMapping("/comments/{boardId}/{commentId}/report")
+    @PostMapping("/{boardId}/{commentId}/report")
     @ApiOperation(value = "신고 API", notes = "JWT 토큰으로 유저를 구분하여 신고 DB에 작성합니다.")
     public ResponseEntity<?> report(@PathVariable("boardId") Long boardId, @PathVariable("commentId") Long commentId, @RequestBody ReportRequestDTO requestDTO) {
         /* 현재 인증된 사용자의 인증 토큰을 가져온다.*/

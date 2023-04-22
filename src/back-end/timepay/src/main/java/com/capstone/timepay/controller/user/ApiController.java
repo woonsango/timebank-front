@@ -30,7 +30,7 @@ public class ApiController {
 
     @PostMapping("/create")
     @ApiOperation(value="유저 데이터 생성",notes = "Email을 이용하여 유저 테이블과 유저 프로필 테이블을 매핑하고, DB에 데이터를 생성합니다.")
-    public ResponseEntity<?> postKakaoData(@ModelAttribute RequestDTO requestData, @RequestPart MultipartFile image) throws Exception {
+    public ResponseEntity<?> postKakaoData(@ModelAttribute RequestDTO requestData, @RequestPart(required = false) MultipartFile image) throws Exception {
 
         requestData.setImageUrl(userInfoService.imageUpload(image));
         userInfoService.createUserInfo(requestData);
@@ -54,10 +54,10 @@ public class ApiController {
 
     @PutMapping("/update")
     @ApiOperation(value="유저 데이터 수정",notes = "Email을 이용하여 유저를 매핑하고 데이터를 수정합니다.")
-    public ResponseEntity<?> putUserInfo(@ModelAttribute UpdateRequestDTO updateRequestData) throws Exception{
+    public ResponseEntity<?> putUserInfo(@ModelAttribute UpdateRequestDTO updateRequestData, @RequestPart(required = false) MultipartFile image) throws Exception{
 
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        return ResponseEntity.ok(userInfoService.updateUserInfo(auth, updateRequestData));
+        return ResponseEntity.ok(userInfoService.updateUserInfo(auth, updateRequestData, image));
     }
 
     @DeleteMapping("/delete")

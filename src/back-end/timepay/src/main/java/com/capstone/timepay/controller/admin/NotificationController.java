@@ -6,13 +6,16 @@ import com.capstone.timepay.domain.admin.Admin;
 import com.capstone.timepay.service.admin.AdminService;
 import com.capstone.timepay.service.admin.NotificationService;
 import com.capstone.timepay.service.admin.dto.DeleteNotificationDTO;
+import com.google.firebase.auth.FirebaseAuthException;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.security.Principal;
 import java.util.Map;
 
@@ -25,10 +28,14 @@ public class NotificationController {
     private final AdminService adminService;
 
     @PostMapping("")
-    @ApiOperation(value = "공지사항 생성")
-    public ResponseEntity<Boolean> createNotification(@RequestBody NotificationPostRequest request,
-                                                      Principal principal) {
+    @ApiOperation(value = "공지사항 생성 및 푸쉬알림 전송")
+    public ResponseEntity<Boolean> createNotification(@ModelAttribute NotificationPostRequest request,
+                                                      @RequestPart(value = "image", required = false) MultipartFile image,
+                                                      Principal principal) throws IOException, FirebaseAuthException {
         Admin admin = this.adminService.getAdmin(principal.getName());
+        if (image != null) {
+            request.setImageUrl(notificationService.imageUpload(image));
+        }
         boolean success = this.notificationService.create(request.toServiceDto(), admin);
         return new ResponseEntity<>(success, HttpStatus.OK);
     }
@@ -92,5 +99,11 @@ public class NotificationController {
     @ApiOperation("특정 id값 공지사항 조회")
     public ResponseEntity<NotificationInfoResponse> getNotification(@PathVariable Long notificationId) {
         return new ResponseEntity<>(this.notificationService.getOne(notificationId).get(), HttpStatus.OK);
+    }
+
+    @PutMapping("/{notificationId}")
+    @ApiOperation("특정 id값 공지사항 isViewed속성 true로 처리")
+    public ResponseEntity<?> viewNotification(@PathVariable Long notificationId) {
+        return new ResponseEntity<>(notificationService.viewNotification(notificationId), HttpStatus.OK);
     }
 }
