@@ -6,10 +6,11 @@ import {
   cssCommentTableRowCountStyle,
   cssCommentTableStyle,
 } from './CommentTable.styles';
-import { IComment } from '../../api/interfaces/IComment';
+import { IComment, IGetCommentRequest } from '../../api/interfaces/IComment';
 import { commentSearchState } from '../../states/commentSearchState';
-import { useRecoilValue } from 'recoil';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { useGetComments } from '../../api/hooks/comment';
+import { customPaginationProps } from '../../utils/pagination';
 
 interface CommentTableProps {
   selectedCommentIds?: React.Key[];
@@ -23,6 +24,8 @@ const CommentTable = ({
   setSelectedComments,
 }: CommentTableProps) => {
   const commentSearchValues = useRecoilValue(commentSearchState);
+  const setCommentSearch = useSetRecoilState(commentSearchState);
+
   const { data, isLoading } = useGetComments(commentSearchValues);
 
   const dataSource = useMemo(() => {
@@ -201,6 +204,11 @@ const CommentTable = ({
         dataSource={dataSource}
         rowKey="commentId"
         loading={isLoading}
+        pagination={customPaginationProps<IGetCommentRequest>({
+          totalElements: data?.data.totalElements,
+          currentSearchValues: commentSearchValues,
+          setSearchValues: setCommentSearch,
+        })}
       />
     </>
   );
