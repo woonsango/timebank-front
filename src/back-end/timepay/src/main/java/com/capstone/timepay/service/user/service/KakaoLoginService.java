@@ -42,7 +42,7 @@ public class KakaoLoginService {
             StringBuilder sb = new StringBuilder();
             sb.append("grant_type=authorization_code");
             sb.append("&client_id=79587b639a3a9ca1c9433fa63bc55863");
-            sb.append("&redirect_uri=http://localhost:8080/login");
+            sb.append("&redirect_uri=http://localhost:8080/oauth/redirect/kakao");
             sb.append("&code=" + code);
             bw.write(sb.toString());
             bw.flush();
@@ -123,8 +123,6 @@ public class KakaoLoginService {
                 /* 이메일 가져오기 */
                 email = element.getAsJsonObject().get("kakao_account").getAsJsonObject().get("email").getAsString();
                 kakaoUser = userRepository.findByEmail(email).orElse(null);
-                System.out.println("ㅇㅇㅇㅇㅇㅇㅇㅇ" +kakaoUser);
-                System.out.println("ㅅㅅㅅㅅㅅㅅㅅ" + email);
                 password = email + Key;
                 if (kakaoUser == null) {
 

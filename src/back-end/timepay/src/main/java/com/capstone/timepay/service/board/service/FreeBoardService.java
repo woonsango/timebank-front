@@ -72,12 +72,13 @@ public class FreeBoardService
                 .category(freeBoardDTO.getCategory())
                 .isHidden(freeBoardDTO.isHidden())
                 .build();
+        freeBoardRepository.save(freeBoard);
 
         Board board = Board.builder().
                 freeBoard(freeBoard).
                 dealBoard(null).
                 build();
-        boardRepository.save(board);
+       boardRepository.save(board);
 
         FreeRegister freeRegister = FreeRegister.builder().
                 f_registerId(freeBoard.getF_boardId()).

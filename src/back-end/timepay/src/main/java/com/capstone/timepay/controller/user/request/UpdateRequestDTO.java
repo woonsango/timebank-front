@@ -11,7 +11,6 @@ import java.time.LocalDateTime;
 @Data
 @JsonNaming(value = PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class UpdateRequestDTO {
-    private MultipartFile image;
     private String nickName;
     private String location;
     private String introduction;

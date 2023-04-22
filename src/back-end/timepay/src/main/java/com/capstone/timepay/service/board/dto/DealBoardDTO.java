@@ -16,7 +16,6 @@ public class DealBoardDTO
 {
     private Long dealBoardId;
     private String title;
-    private String state;
     private String content;
     private String category;
     private String location;
@@ -32,7 +31,6 @@ public class DealBoardDTO
         return new DealBoardDTO(
                 dealBoard.getD_boardId(),
                 dealBoard.getTitle(),
-                dealBoard.getState(),
                 dealBoard.getContent(),
                 dealBoard.getCategory(),
                 dealBoard.getLocation(),
