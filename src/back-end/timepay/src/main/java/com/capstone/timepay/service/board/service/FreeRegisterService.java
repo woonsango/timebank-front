@@ -5,6 +5,7 @@ import com.capstone.timepay.domain.freeRegister.FreeRegisterRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -23,5 +24,13 @@ public class FreeRegisterService {
     {
         FreeRegister freeRegister = freeRegisterRepository.findById(boardId).orElse(null);
         return freeRegister.getUser().getEmail();
+    }
+
+    public FreeRegister getFreeRegisterById(Long id) {
+        return freeRegisterRepository.findById(id).orElse(null);
+    }
+
+    public List<FreeRegister> getAllFreeRegisters() {
+        return freeRegisterRepository.findAll();
     }
 }

@@ -3,13 +3,18 @@ package com.capstone.timepay.service.board.service;
 import com.capstone.timepay.domain.board.Board;
 import com.capstone.timepay.domain.board.BoardRepository;
 import com.capstone.timepay.domain.board.BoardStatus;
+import com.capstone.timepay.domain.dealAttatchment.DealAttatchment;
+import com.capstone.timepay.domain.dealAttatchment.DealAttatchmentRepository;
 import com.capstone.timepay.domain.dealBoard.DealBoard;
 import com.capstone.timepay.domain.dealBoard.DealBoardRepository;
+import com.capstone.timepay.domain.dealBoardComment.DealBoardComment;
 import com.capstone.timepay.domain.dealRegister.DealRegister;
 import com.capstone.timepay.domain.dealRegister.DealRegisterRepository;
 import com.capstone.timepay.domain.user.User;
 import com.capstone.timepay.domain.user.UserRepository;
+import com.capstone.timepay.firebase.FirebaseService;
 import com.capstone.timepay.service.board.dto.DealBoardDTO;
+import com.google.firebase.auth.FirebaseAuthException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -17,7 +22,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -31,6 +38,8 @@ public class DealBoardService
     private final BoardRepository boardRepository;
     private final DealRegisterRepository dealRegisterRepository;
     private final UserRepository userRepository;
+    private final FirebaseService firebaseService;
+    private final DealAttatchmentRepository dealAttatchmentRepository;
 
     public DealBoard getId(Long id)
     {
@@ -86,17 +95,30 @@ public class DealBoardService
 
     // 게시물 작성
     @Transactional
-    public DealBoardDTO write(DealBoardDTO dealBoardDTO, String email, String category)
+    public DealBoardDTO write(DealBoardDTO dealBoardDTO, String email, String category,
+                              List<MultipartFile> images) throws IOException, FirebaseAuthException
     {
         User user = userRepository.findByEmail(email).orElseThrow(() -> {
             return new IllegalArgumentException("해당 유저를 찾을 수 없습니다.");
         });
+
+        List<DealAttatchment> dealAttatchments = new ArrayList<>();
+        for (MultipartFile image : images)
+        {
+            String imageUrl = firebaseService.uploadFiles(image);
+            DealAttatchment dealAttatchment = DealAttatchment.builder()
+                    .imageUrl(imageUrl)
+                    .build();
+            dealAttatchments.add(dealAttatchment);
+            dealAttatchmentRepository.save(dealAttatchment);
+        }
 
         DealBoard dealBoard = DealBoard.builder()
                 .title(dealBoardDTO.getTitle())
                 .boardStatus(dealBoardDTO.getState())
                 .content(dealBoardDTO.getContent())
                 .category(category)
+                .boardStatus(BoardStatus.MATCHING_IN_PROGRESS)
                 .location(dealBoardDTO.getLocation())
                 .startTime(dealBoardDTO.getEndTime())
                 .pay(dealBoardDTO.getPay())
@@ -154,15 +176,31 @@ public class DealBoardService
     }
 
     @Transactional
-    public DealBoardDTO modifyStatus(Long boardId, DealBoardDTO boardDto)
+    public DealBoardDTO modifyMatchingFinish(Long boardId)
     {
         DealBoard dealBoard = dealBoardRepository.findById(boardId).orElseThrow(() -> {
             return new IllegalArgumentException("Board Id를 찾을 수 없습니다");
         });
 
-        dealBoard = DealBoard.builder()
-                .boardStatus(BoardStatus.MATCHING_COMPLETE)
-                .build();
+        dealBoard.setBoardStatus(BoardStatus.MATCHING_COMPLETE);
         return DealBoardDTO.toDealBoardDTO(dealBoard);
+    }
+
+    @Transactional
+    public DealBoardDTO modifyActivityFinsih(Long boardId)
+    {
+        DealBoard dealBoard = dealBoardRepository.findById(boardId).orElseThrow(() -> {
+            return new IllegalArgumentException("Board Id를 찾을 수 없습니다");
+        });
+
+        dealBoard.setBoardStatus(BoardStatus.ACTIVITY_COMPLETE);
+        return DealBoardDTO.toDealBoardDTO(dealBoard);
+    }
+
+    @Transactional
+    public void insertComment(Long boardId, DealBoardComment dealBoardComment)
+    {
+        DealBoard dealBoard = dealBoardRepository.findById(boardId).orElse(null);
+        dealBoard.getDealBoardComments().add(dealBoardComment);
     }
 }

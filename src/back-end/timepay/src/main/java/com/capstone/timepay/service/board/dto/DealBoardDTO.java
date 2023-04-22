@@ -1,6 +1,7 @@
 package com.capstone.timepay.service.board.dto;
 
 import com.capstone.timepay.domain.board.BoardStatus;
+import com.capstone.timepay.domain.dealAttatchment.DealAttatchment;
 import com.capstone.timepay.domain.dealBoard.DealBoard;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -8,6 +9,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
@@ -23,10 +25,9 @@ public class DealBoardDTO
     private String location;
     private LocalDateTime startTime;
     private LocalDateTime endTime;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
     private int pay;
     private boolean isHidden;
+    private List<DealAttatchment> images;
 
     public static DealBoardDTO toDealBoardDTO(DealBoard dealBoard)
     {
@@ -39,10 +40,9 @@ public class DealBoardDTO
                 dealBoard.getLocation(),
                 dealBoard.getStartTime(),
                 dealBoard.getEndTime(),
-                dealBoard.getCreatedAt(),
-                dealBoard.getUpdatedAt(),
                 dealBoard.getPay(),
-                dealBoard.isHidden()
+                dealBoard.isHidden(),
+                dealBoard.getDealAttatchments()
         );
     }
 }
