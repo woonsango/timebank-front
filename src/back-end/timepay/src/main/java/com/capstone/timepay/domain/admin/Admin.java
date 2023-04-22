@@ -34,6 +34,7 @@ public class Admin extends BaseTimeEntity {
     private String name;    // 관리자 이름
     private String email;
     private String phone;
+    private boolean isFirst;
 
     @ElementCollection(fetch = FetchType.EAGER)
     @Builder.Default
@@ -52,8 +53,13 @@ public class Admin extends BaseTimeEntity {
     @OneToMany(mappedBy = "admin", orphanRemoval = true)
     private List<InquiryAnswer> inquiryAnswers = new ArrayList<>();
     
-    public Admin update(String password) {
+    public Admin updatePassword(String password) {
         this.password = password;
+        return this;
+    }
+
+    public Admin updateFirst(boolean isFirst) {
+        this.isFirst = isFirst;
         return this;
     }
 }

@@ -3,6 +3,7 @@ package com.capstone.timepay.controller.admin.response.auth;
 import com.capstone.timepay.domain.admin.Admin;
 import lombok.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @ToString
@@ -19,6 +20,10 @@ public class AdminInfoResponse {
     private String name;    // 관리자 이름
     private String email;
     private String phone;
+    private boolean isFirst;
+
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 
     private List<String> roles;
 
@@ -29,6 +34,9 @@ public class AdminInfoResponse {
         this.name = admin.getName();
         this.email = admin.getEmail();
         this.phone = admin.getPhone();
+        this.isFirst = admin.isFirst();
+        this.createdAt = admin.getCreatedAt();
+        this.updatedAt = admin.getUpdatedAt();
         this.roles = admin.getRoles();
     }
 
