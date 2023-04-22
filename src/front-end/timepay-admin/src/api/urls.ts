@@ -3,6 +3,7 @@ export const API_URL = {
   COMMENTS: 'api/admins/reports/main', // 전체 댓글 리스트 조회
   NOTIFICATIONS: 'api/notifications',
   NOTIFICATIONS__SEARCH: 'api/notifications/search',
+  ADMIN_REGISTER: '/api/admins/register', //관리자 가입
 };
 
 /** 토큰을 넣지 않아도 되는 api url 모음 */

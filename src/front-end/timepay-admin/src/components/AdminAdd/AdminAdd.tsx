@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { Button, Modal, Form, Input, InputNumber } from 'antd';
+import { Button, Modal, Form, Input, InputNumber, message } from 'antd';
 import { cssAddModal, cssAdminAdd, cssBox } from './AdminAdd.style';
+import { useAdminRegister } from '../../api/hooks/admin';
 
 const layout = {
   labelCol: { span: 6 },
@@ -16,11 +17,35 @@ const validateMessages = {
 const AdminAdd = () => {
   const [form] = Form.useForm();
   const [isOpenModal, setIsOpenModal] = useState(false);
+  const adminRegister = useAdminRegister();
+  const [messageApi, contextHolder] = message.useMessage();
+
   const onClickCancel = () => {
     setIsOpenModal(false);
   };
-  const onFinish = (values: any) => {
-    console.log(values);
+  const onFinish = async (values: any) => {
+    await adminRegister.mutateAsync(
+      {
+        adminName: values.adminName,
+        authority: values.authority,
+        email: values.email,
+        name: values.name,
+        password: values.password,
+        phone: values.phone,
+      },
+      {
+        onSuccess: (result) => {
+          messageApi.open({
+            type: 'success',
+            content: '새관리자가 추가되었습니다.',
+          });
+          form.resetFields();
+        },
+        onError: (err) => {
+          console.log(err.response?.status);
+        },
+      },
+    );
   };
 
   const content = (
@@ -34,8 +59,15 @@ const AdminAdd = () => {
     >
       <Form.Item
         name={['adminName']}
-        label="이름"
-        rules={[{ required: true, message: '이름을 입력해주세요' }]}
+        label="아이디"
+        rules={[{ required: true, message: '아이디를 입력해주세요' }]}
+      >
+        <Input />
+      </Form.Item>
+      <Form.Item
+        name={['authority']}
+        label="직책"
+        rules={[{ required: true, message: '직책을 입력해주세요' }]}
       >
         <Input />
       </Form.Item>
@@ -50,8 +82,8 @@ const AdminAdd = () => {
       </Form.Item>
       <Form.Item
         name={['name']}
-        label="아이디"
-        rules={[{ required: true, message: '아이디를 입력해주세요' }]}
+        label="이름"
+        rules={[{ required: true, message: '이름을 입력해주세요' }]}
       >
         <Input />
       </Form.Item>
@@ -89,6 +121,7 @@ const AdminAdd = () => {
       >
         관리자 추가
       </Button>
+      {contextHolder}
       <Modal
         title="관리자 추가"
         centered
