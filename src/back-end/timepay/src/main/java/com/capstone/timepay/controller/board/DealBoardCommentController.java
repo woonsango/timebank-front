@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 
@@ -76,6 +77,12 @@ public class DealBoardCommentController {
         /* 현재 인증된 사용자의 인증 토큰을 가져온다.*/
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         return ResponseEntity.ok(reportService.reportComment(authentication, boardId, commentId, requestDTO, "거래댓글신고"));
+    }
+
+    @ApiOperation(value = "현재 게시판에서 지원한 사람들의 목록 가져오기")
+    @GetMapping("/{boardId}/applied")
+    public List<DealBoardCommentDTO> getAppliedComments(@PathVariable("boardId") Long boardId) {
+        return dealBoardCommentService.getAppliedComments(boardId);
     }
 }
 
