@@ -57,10 +57,14 @@ const CommentSearchForm = () => {
           >
             <Input placeholder="작성자 정보 입력" />
           </Form.Item>
+          <Button
+            type="primary"
+            htmlType="submit"
+            style={{ marginLeft: 'auto' }}
+          >
+            검색
+          </Button>
         </Row>
-        <Button type="primary" htmlType="submit">
-          검색
-        </Button>
       </Form>
       {contextHolder}
     </div>
