@@ -37,7 +37,7 @@ public class UserInfoService {
     @Transactional
     public void createUserInfo(RequestDTO userData){
         /* 유저 프로필 데이터 저장 */
-        Long uid = Long.getLong(userData.getId());
+        Long uid = Long.parseLong(userData.getId());
         User user = userRepository.findById(uid).orElseThrow(()->new IllegalArgumentException("존재하지 않는 유저입니다."));
 
 
