@@ -48,6 +48,7 @@ public class BoardService {
                 DealBoardDTO dealBoardDTO = DealBoardDTO.toDealBoardDTO(dealBoard);
                 boardDTO.setDealBoardDTO(dealBoardDTO);
             }
+            boardDTO.setBoardId(boardDTO.getBoardId());
 
             boardDTOs.add(boardDTO);
         }
