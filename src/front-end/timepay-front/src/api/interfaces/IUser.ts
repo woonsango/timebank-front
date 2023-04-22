@@ -15,7 +15,11 @@ export interface IUser {
 
 export interface IGetUserInformationResponse {
   id: number;
-  image_url: string;
+  image_url: any;
   nick_name: string;
   time_pay: number;
+  free_register: any[];
+  deal_register: any[];
+  free_board_comment: any[];
+  deal_board_comment: any[];
 }
