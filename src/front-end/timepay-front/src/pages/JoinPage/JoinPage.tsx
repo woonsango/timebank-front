@@ -188,10 +188,10 @@ const JoinPage = () => {
     });
   };
 
-  const formData = new FormData();
-
   /*Handle 가입 완료 Btn*/
   const handleSubmitBtn = async () => {
+    const formData = new FormData();
+
     /* 닉네임, 이름, 생년월일, 전화번호를 필수값으로 검사*/
     if (!nickName || !nickname_regExp.test(nickName)) {
       console.log('가입 완료 제출: 닉네임 형식 부적합 ');
@@ -210,10 +210,10 @@ const JoinPage = () => {
     } else {
       console.log('가입 완료 제출: 조건 충족, 가입 완료');
 
+      for (let key in formData.keys()) goToFinishJoinPage(PATH.FINISHJOIN);
       /*formData*/
       const birth: string = year + month + day + '0000';
       const town: string = '서울특별시 ' + guText + ' ' + dongText;
-      const formData = new FormData();
       formData.append('birthday', birth);
       formData.append('id', id);
       formData.append('imageUrl', profileImage);
@@ -233,7 +233,7 @@ const JoinPage = () => {
       goToFinishJoinPage(PATH.FINISHJOIN);
     }
   };
-  
+
   const navigate = useNavigate(); //history
 
   const goToFinishJoinPage = useCallback(

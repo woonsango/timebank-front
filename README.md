@@ -1,77 +1,88 @@
-[![Open in Visual Studio Code](https://classroom.github.com/assets/open-in-vscode-c66648af7eb3fe8bc4f294546bfd86ef473780cde1dea487d3c4ff354943c9ae.svg)](https://classroom.github.com/online_ide?assignment_repo_id=10323066&assignment_repo_type=AssignmentRepo)
-# Welcome to GitHub
+# 타임페이 커뮤니티 (2023 다학제간캡스톤디자인 9팀)
 
-캡스톤 팀 생성을 축하합니다.
-
-## 팀소개 및 페이지를 꾸며주세요.
-
-- 프로젝트 소개
-  - 프로젝트 설치방법 및 데모, 사용방법, 프리뷰등을 readme.md에 작성.
-  - Api나 사용방법등 내용이 많을경우 wiki에 꾸미고 링크 추가.
-
-- 팀페이지 꾸미기
-  - 프로젝트 소개 및 팀원 소개
-  - index.md 예시보고 수정.
-
-- GitHub Pages 리파지토리 Settings > Options > GitHub Pages 
-  - Source를 marster branch
-  - Theme Chooser에서 태마선택
-  - 수정후 팀페이지 확인하여 점검.
-
-**팀페이지 주소** -> https://kookmin-sw.github.io/ '{{자신의 리파지토리 아이디}}'
-
-**예시)** 2023년 0조  https://kookmin-sw.github.io/capstone-2023-00/
+# :loudspeaker: 프로젝트 소개
+![Rogo1](https://user-images.githubusercontent.com/54920331/228437271-e60bb141-a33e-4dba-877f-504ced3551d6.png)
 
 
-## 내용에 아래와 같은 내용들을 추가하세요.
-
-### 1. 프로잭트 소개
-
-프로젝트
-
-### 2. 소개 영상
-
-프로젝트 소개하는 영상을 추가하세요
-
-### 3. 팀 소개
-
-팀을 소개하세요.
-
-팀원정보 및 담당이나 사진 및 SNS를 이용하여 소개하세요.
-
-### 4. 사용법
-
-소스코드제출시 설치법이나 사용법을 작성하세요.
-
-### 5. 기타
-
-추가적인 내용은 자유롭게 작성하세요.
 
 
-## Markdown을 사용하여 내용꾸미기
+# :movie_camera: 소개 영상    
 
-Markdown은 작문을 스타일링하기위한 가볍고 사용하기 쉬운 구문입니다. 여기에는 다음을위한 규칙이 포함됩니다.
+# :paperclip: 소개 자료
 
-```markdown
-Syntax highlighted code block
+링크 걸어둘 예정   
+- Timepay Community 회의록 
+- Timepay Community 중간 발표 자료 PDF
+- Timepay Community 중간 보고서 PDF
+- Timepay Community 최종 발표 PDF
+- Timepay Community 최종 보고서 PDF
+- Timepay Community 수행결과보고서 PDF
+- Timepay Community 포스터 PDF
 
-# Header 1
-## Header 2
-### Header 3
 
-- Bulleted
-- List
 
-1. Numbered
-2. List
+# :runner: 팀 소개
+### 한수연 (팀장)
+- student ID: ****1687
+- E-mail: suyunup57@gmail.com
+- Role: 화면 디자인, Frontend
 
-**Bold** and _Italic_ and `Code` text
+### 김명환
+- student ID: ****1582
+- E-mail: myeonghwan2@kookmin.ac.kr
+- Role: Backend
 
-[Link](url) and ![Image](src)
-```
+### 김준영
+- student ID: ****3049
+- E-mail: mrgentle1@kookmin.ac.kr
+- Role: Backend
 
-자세한 내용은 [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
+### 김하연
+- student ID: ****1581
+- E-mail: iioo3356@gmail.com
+- Role: Frontend
 
-### Support or Contact
+### 서준원
+- student ID: ****3384
+- E-mail: wnsdnjs700@gmail.com
+- Role: Backend
 
-readme 파일 생성에 추가적인 도움이 필요하면 [도움말](https://help.github.com/articles/about-readmes/) 이나 [contact support](https://github.com/contact) 을 이용하세요.
+### 이용훈
+- student ID: ****5301
+- E-mail: cjswl1357@kookmin.ac.kr
+- Role: Backend
+
+### 이진
+- student ID: ****1648
+- E-mail: leejin684@gmail.com
+- Role: Frontend
+
+### 황세윤
+- student ID: ****3167
+- E-mail: yoony0193@kookmin.ac.kr
+- Role: Frontend
+
+# :computer: 사용법
+
+# 기술 스택
+### 📚 Frontend
+
+### 📚 Backend
+|역할|종류|
+|-|-|
+|Framework|<img alt="RED" src ="https://img.shields.io/badge/SPRING-6DB33F.svg?&style=for-the-badge&logo=Spring&logoColor=white"/> <img alt="RED" src ="https://img.shields.io/badge/SPRING Boot-6DB33F.svg?&style=for-the-badge&logo=SpringBoot&logoColor=white"/>|
+|Database|<img alt="RED" src ="https://img.shields.io/badge/Mysql-4479A1.svg?&style=for-the-badge&logo=Mysql&logoColor=white"/>|
+|Programming Language|<img alt="RED" src ="https://img.shields.io/badge/JAVA-F7DF1E.svg?&style=for-the-badge&logo=Jameson&logoColor=white"/>|
+|API|![REST](https://img.shields.io/badge/Rest-0066B3?style=for-the-badge&logo=rest&logoColor=white)                                     
+<br />
+
+### 📚 Common
+|역할|종류|
+|-|-|
+|협업 관리|<img alt="RED" src ="https://img.shields.io/badge/Notion-000000.svg?&style=for-the-badge&logo=Notion&logoColor=white"/> |
+|디자인|<img alt="RED" src ="https://img.shields.io/badge/Figma-F24E1E.svg?&style=for-the-badge&logo=Figma&logoColor=white"/>|
+|Version Control|![Git](https://img.shields.io/badge/git-E6484F.svg?style=for-the-badge&logo=git&logoColor=white) ![GitHub](https://img.shields.io/badge/github-%23121011.svg?style=for-the-badge&logo=github&logoColor=white) |
+<br />
+
+
+
