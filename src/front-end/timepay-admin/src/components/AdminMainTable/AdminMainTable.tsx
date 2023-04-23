@@ -27,7 +27,7 @@ const AdminMainTable = () => {
   const [searchText, setSearchText] = useState('');
   const [searchedColumn, setSearchedColumn] = useState('');
   const searchInput = useRef<InputRef>(null);
-  const { data } = useGetAdmins();
+  const { data, isLoading } = useGetAdmins();
   const deleteAdminsMutation = useDeleteAdmins();
   const queryClient = useQueryClient();
 
@@ -195,7 +195,12 @@ const AdminMainTable = () => {
   return (
     <div css={cssAdminMainTable}>
       <Form form={form} component={false}>
-        <Table bordered dataSource={dataSource} columns={columns} />
+        <Table
+          bordered
+          dataSource={dataSource}
+          columns={columns}
+          loading={isLoading}
+        />
       </Form>
     </div>
   );
