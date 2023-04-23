@@ -171,7 +171,7 @@ const ActivityRecordPage = () => {
         key: ACTIVITY_TAB_KEYS.POST,
         label: ACTIVITY_TAB_KEYS.POST,
         children: (
-          <div>
+          <div style={{ width: '100%' }}>
             <Form form={postForm} css={cssHorizontalForm} layout="horizontal">
               <Form.Item name="type" style={{ width: 120 }} noStyle>
                 <Select placeholder="유형 선택">
@@ -206,7 +206,7 @@ const ActivityRecordPage = () => {
         key: ACTIVITY_TAB_KEYS.COMMENT,
         label: ACTIVITY_TAB_KEYS.COMMENT,
         children: (
-          <div>
+          <div style={{ width: '100%' }}>
             <Form
               form={commentForm}
               css={cssHorizontalForm}

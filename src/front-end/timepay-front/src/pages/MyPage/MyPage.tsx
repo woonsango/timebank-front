@@ -107,7 +107,7 @@ const MyPage = () => {
             <div className="MyPageMoveBox">
               <button
                 className="MyPageText"
-                onClick={() => handlePageMove(PATH.ACTIVITY)}
+                onClick={() => handlePageMove(PATH.MY_ACTIVITY_RECORD)}
               >
                 활동 기록
               </button>
@@ -131,14 +131,14 @@ const MyPage = () => {
               </button>
             </div>
 
-            <div className="MyPageMoveBox">
+            {/* <div className="MyPageMoveBox">
               <button
                 className="MyPageText"
                 onClick={() => handlePageMove(PATH.BOOKMARK)}
               >
                 즐겨찾기
               </button>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>
