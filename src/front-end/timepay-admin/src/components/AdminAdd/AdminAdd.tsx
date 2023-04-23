@@ -13,16 +13,18 @@ const validateMessages = {
   },
 };
 
-const onFinish = (values: any) => {
+const handleOnClickAdminAdd = (values: any) => {
   console.log(values);
 };
 
 const AdminAdd = () => {
+  const [form] = Form.useForm();
   const [isOpenModal, setIsOpenModal] = useState(false);
   const content = (
     <Form
+      form={form}
       {...layout}
-      onFinish={onFinish}
+      onFinish={handleOnClickAdminAdd}
       style={{ maxWidth: 600 }}
       validateMessages={validateMessages}
     >
