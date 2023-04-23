@@ -18,6 +18,7 @@ import { cssBaseLayoutStyle } from './BaseLayout.styles';
 import { ReactComponent as Logo } from '../../assets/images/timepay-logo.svg';
 import { COMMON_COLOR } from '../../styles/constants/colors';
 import { useLogout } from '../../api/hooks/login';
+import { setTokenToCookie } from '../../utils/token';
 
 const BaseLayout = () => {
   const [collapsed, setCollapsed] = useState(false);
@@ -29,7 +30,8 @@ const BaseLayout = () => {
     await logoutMutation.mutateAsync(
       {},
       {
-        onSuccess: () => {
+        onSuccess: (result) => {
+          setTokenToCookie(result.data.jwt, 0);
           messageApi
             .open({
               type: 'success',
