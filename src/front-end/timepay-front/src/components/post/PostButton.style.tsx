@@ -22,27 +22,17 @@ export const cssPostButton = css`
   }
   &.start {
     width: 95%;
-    background-color: #ffa621;
-  }
-  &.delayed {
-    width: 65%;
     background-color: #ff7a00;
   }
   &.completed {
-    width: 65%;
+    width: 45%;
     background-color: #ff4910;
+    margin-right: 6px;
   }
-  &.end {
-    width: 65%;
+  &.deleted {
+    width: 45%;
     background-color: #6c6363;
-  }
-  &.pause {
-    width: 65%;
-    background-color: #6c6363;
-  }
-  &.review {
-    width: 95%;
-    background-color: ${COMMON_COLOR.NEON_GREEN};
+    margin-left: 6px;
   }
   &.theEnd {
     width: 95%;
@@ -50,10 +40,5 @@ export const cssPostButton = css`
     background-color: ${COMMON_COLOR.WHITE};
     font-weight: 400;
     letter-spacing: 1.5px;
-  }
-  &.goBack {
-    width: 30%;
-    margin-right: 10px;
-    background-color: ${COMMON_COLOR.FONT4};
   }
 `;
