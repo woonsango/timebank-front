@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Button, Modal, Form, Input, InputNumber, message } from 'antd';
 import { cssAddModal, cssAdminAdd, cssBox } from './AdminAdd.style';
 import { useAdminRegister } from '../../api/hooks/admin';
+import { useQueryClient } from 'react-query';
 
 const layout = {
   labelCol: { span: 6 },
@@ -19,6 +20,7 @@ const AdminAdd = () => {
   const [isOpenModal, setIsOpenModal] = useState(false);
   const adminRegister = useAdminRegister();
   const [messageApi, contextHolder] = message.useMessage();
+  const queryClient = useQueryClient();
 
   const onClickCancel = () => {
     setIsOpenModal(false);
@@ -38,6 +40,9 @@ const AdminAdd = () => {
           messageApi.open({
             type: 'success',
             content: '새관리자가 추가되었습니다.',
+          });
+          queryClient.invalidateQueries({
+            queryKey: ['useGetAdmins'],
           });
           form.resetFields();
         },
