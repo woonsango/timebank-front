@@ -53,7 +53,7 @@ public class User extends BaseTimeEntity {
     @Column(unique = true)
     private String deviceToken;
 
-    @ElementCollection(fetch = FetchType.EAGER)
+    @ElementCollection(fetch = FetchType.LAZY)
     @Builder.Default
     private List<String> roles = new ArrayList<>();
 

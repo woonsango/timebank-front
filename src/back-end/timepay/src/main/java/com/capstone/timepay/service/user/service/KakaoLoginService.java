@@ -85,6 +85,12 @@ public class KakaoLoginService {
         User kakaoUser = null;
         String Key = "A4D47DASDA287964EQ14871ZS44875A";
 
+        String a = null;
+        if (a.toString() == null)
+        {
+            System.out.println("해결완료씈");
+        }
+
         //access_token을 이용하여 사용자 정보 조회
 
         try {
@@ -132,18 +138,23 @@ public class KakaoLoginService {
                     /* 성별 제공 여부 확인 및 성별 가져오기 */
                     boolean hasSex = element.getAsJsonObject().get("kakao_account").getAsJsonObject().get("has_gender").getAsBoolean();
                     if (hasSex) {
-                        sex = element.getAsJsonObject().get("kakao_account").getAsJsonObject().get("gender").getAsString();
+                        if(element.getAsJsonObject().get("kakao_account").getAsJsonObject().get("gender_needs_agreement").getAsBoolean())
+                            sex = "성별 동의하지 않음";
+                        else
+                            sex = element.getAsJsonObject().get("kakao_account").getAsJsonObject().get("gender").getAsString();
+
                     } else {
-                        sex = "성별 동의하지 않음";
+                        sex = "성별 데이터가 없음";
                     }
 
                     /* 생일 제공 여부 확인 및 생일 가져오기 */
-                    boolean hasBirthday = element.getAsJsonObject().get("kakao_account").getAsJsonObject().get("has_birthday").getAsBoolean();
-                    if (hasBirthday) {
-                        birthday = element.getAsJsonObject().get("kakao_account").getAsJsonObject().get("birthday").getAsString();
-                    } else {
-                        birthday = "생일 동의하지 않음";
-                    }
+                    /* 생년월일은 회원가입 폼에서 받기로 함 */
+//                    boolean hasBirthday = element.getAsJsonObject().get("kakao_account").getAsJsonObject().get("has_birthday").getAsBoolean();
+//                    if (hasBirthday) {
+//                        birthday = element.getAsJsonObject().get("kakao_account").getAsJsonObject().get("birthday").getAsString();
+//                    } else {
+//                        birthday = "생일 동의하지 않음";
+//                    }
 
                     String encodedPassword = passwordEncoder.encode(password);
 
