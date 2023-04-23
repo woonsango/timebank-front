@@ -33,16 +33,18 @@ const LoginPage = () => {
       },
       {
         onSuccess: (result) => {
-          messageApi.open({
-            type: 'success',
-            content: '로그인 성공!',
-          });
           setTokenToCookie(result.data.jwt, 1);
-          setTimeout(function () {
-            firstLogin
-              ? navigate('/password-edit')
-              : navigate(`/post-management`);
-          }, 500);
+          messageApi
+            .open({
+              type: 'success',
+              content: '로그인 성공!',
+              duration: 1,
+            })
+            .then(function () {
+              firstLogin
+                ? navigate('/password-edit')
+                : navigate(`/post-management`);
+            });
         },
         onError: (err) => {
           messageApi.open({
@@ -53,8 +55,6 @@ const LoginPage = () => {
         },
       },
     );
-
-    // firstLogin ? navigate('/password-edit') : navigate(`/post-management`);
   };
 
   return (

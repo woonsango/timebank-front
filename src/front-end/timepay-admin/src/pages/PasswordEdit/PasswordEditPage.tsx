@@ -27,27 +27,21 @@ const PasswordEditPage = () => {
       },
       {
         onSuccess: (result) => {
-          if (result.data.success === true) {
-            messageApi.open({
+          messageApi
+            .open({
               type: 'success',
               content: '패스워드 변경 성공',
+              duration: 1,
+            })
+            .then(function () {
+              navigate('/post-management');
             });
-            setTimeout(function () {
-              navigate(`/post-management`);
-            }, 500);
-          } else {
-            messageApi.open({
-              type: 'error',
-              content: '다시 입력해주세요',
-            });
-          }
         },
         onError: (err) => {
           console.log(err.response?.status);
         },
       },
     );
-    // navigate(`/post-management`);
   };
 
   return (

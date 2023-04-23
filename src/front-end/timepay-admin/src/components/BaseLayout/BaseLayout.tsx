@@ -17,7 +17,7 @@ import { PATH } from '../../utils/paths';
 import { cssBaseLayoutStyle } from './BaseLayout.styles';
 import { ReactComponent as Logo } from '../../assets/images/timepay-logo.svg';
 import { COMMON_COLOR } from '../../styles/constants/colors';
-import { useLogout } from '../../api/hooks/logout';
+import { useLogout } from '../../api/hooks/login';
 
 const BaseLayout = () => {
   const [collapsed, setCollapsed] = useState(false);
@@ -30,13 +30,15 @@ const BaseLayout = () => {
       {},
       {
         onSuccess: () => {
-          messageApi.open({
-            type: 'success',
-            content: '로그아웃 완료!',
-          });
-          setTimeout(function () {
-            navigate('/');
-          }, 500);
+          messageApi
+            .open({
+              type: 'success',
+              content: '로그아웃 완료!',
+              duration: 1,
+            })
+            .then(function () {
+              navigate('/');
+            });
         },
         onError: (err) => {
           console.log(err.response?.status);
