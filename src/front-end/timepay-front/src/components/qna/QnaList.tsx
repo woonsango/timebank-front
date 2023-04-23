@@ -17,7 +17,7 @@ const QnaList = ({ qna }: QnaListProps) => {
       : `${COMMON_COLOR.FONT3}`;
 
   const handlePageChange = () => {
-    navigate(`/qna/${qna?.qnaId}`, {
+    navigate(`/inquire/${qna?.qnaId}`, {
       state: {
         title: qna?.title,
         content: qna?.content,

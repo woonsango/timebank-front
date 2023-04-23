@@ -17,10 +17,18 @@ import ImageUpload from '../../components/register/ImageUpload';
 import { useRecoilState } from 'recoil';
 import { selectedTagsQnaState } from '../../states/register';
 
+import { useCreateInquiry } from '../../api/hooks/inquiry';
+import { useQueryClient } from 'react-query';
+
 const { Header, Content, Footer } = Layout;
 const { TextArea } = Input;
 
 const QnaRegisterPage = () => {
+  const queryclient = useQueryClient();
+  const useCreateInquiryMutation = useCreateInquiry();
+
+  const subject = 'subject';
+  const week = '4';
   const [title, setTitle] = useState<string>('');
   const [content, setContent] = useState<string>('');
   // 태그
@@ -43,8 +51,23 @@ const QnaRegisterPage = () => {
     setContent(event.target.value);
   };
   const handleSubmit = () => {
-    // 게시글 작성 완료 처리
-    console.log('문의글 등록');
+    useCreateInquiryMutation.mutateAsync(
+      { title, content, subject, week },
+      {
+        onSuccess: (data) => {
+          console.log('success');
+          // 새로고침 안해도 값이 추가되면 값이 바로 추가되게 하는 코드. (queryclient 변수와)
+          queryclient.invalidateQueries('');
+        },
+        onError(error) {
+          console.log('error');
+        },
+        onSettled: (data) => {
+          console.log('dddddd');
+        },
+      },
+    );
+
     navigate(-1);
   };
 
