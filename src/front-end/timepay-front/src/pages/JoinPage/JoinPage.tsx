@@ -46,6 +46,7 @@ const JoinPage = () => {
   const [messageApi, contextHolder] = message.useMessage();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
+  /* */
   const [profileImage, setProfileImage]: any = useState(
     'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png',
   );
@@ -54,6 +55,8 @@ const JoinPage = () => {
   const [phoneNumber, setPhoneNumber] = useState<string>('');
   const [introduction, setIntroduction] = useState<string>('');
   const [id, setId] = useState<string>('0');
+  const [birth, setBirth] = useState<string>('');
+  const [town, setTown] = useState<string>('');
 
   const [year, setYear] = useState<string>('연도');
   const [month, setMonth] = useState<string>('월');
@@ -67,7 +70,6 @@ const JoinPage = () => {
 
   const handleFileChange = (e: any) => {
     const imageFile = e.target.files[0];
-    console.log(imageFile);
 
     const fileReader = new FileReader();
     fileReader.onload = () => {
@@ -79,11 +81,6 @@ const JoinPage = () => {
     };
     fileReader.readAsDataURL(imageFile); //setImage
   };
-
-  /*onChange*/
-  // const onChangeProfileImage = (value: any) => {
-  //   setProfileImage(value);
-  // };
 
   const onChangeNickName = (e: React.ChangeEvent<HTMLInputElement>) => {
     console.log('닉네임 바뀜:', e.target.value);
@@ -105,6 +102,8 @@ const JoinPage = () => {
     setDong(value);
     console.log('동 바뀜: ', value.valueOf());
     setDongText(value.valueOf());
+    const town: string = '서울특별시 ' + guText + ' ' + dongText;
+    setTown(town);
   };
 
   const onChangeYear: DatePickerProps['onChange'] = (date, dateString) => {
@@ -118,6 +117,8 @@ const JoinPage = () => {
 
   const onChangeDay = (value: string) => {
     setDay(value);
+    const bitrh: string = year + ' ' + month + ' ' + day;
+    setBirth(bitrh);
   };
 
   const onChangePhoneNumber = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -187,6 +188,8 @@ const JoinPage = () => {
     });
   };
 
+  const formData = new FormData();
+
   /*Handle 가입 완료 Btn*/
   const handleSubmitBtn = async () => {
     /* 닉네임, 이름, 생년월일, 전화번호를 필수값으로 검사*/
@@ -230,7 +233,7 @@ const JoinPage = () => {
       goToFinishJoinPage(PATH.FINISHJOIN);
     }
   };
-
+  
   const navigate = useNavigate(); //history
 
   const goToFinishJoinPage = useCallback(

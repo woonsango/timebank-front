@@ -6,9 +6,33 @@ import { headerTitleState } from '../../states/uiState';
 import { PATH } from '../../utils/paths';
 import './My.css';
 import user from './dummy.json';
-import axios from 'axios';
+import { useGetUserInfomation } from '../../api/hooks/user';
 
 const MyPage = () => {
+  const setHeaderTitle = useSetRecoilState(headerTitleState);
+  const { data } = useGetUserInfomation(2); //parameter: uid, 추후 uid 쿠키 토큰에 저장해둘 필요 있음, api url 수정해야 함
+  useEffect(() => {
+    setHeaderTitle('내정보');
+
+    console.log(data);
+
+    // setImage(data?.data.image_url);
+    // setNickName(data?.data.nick_name);
+    // setTown('업데이트 예정');
+    // setIntroduction('업데이트 예정');
+    // setPersonalNum(data?.data.id);
+    // setTimePay(data?.data.time_pay);
+
+    setImage(
+      'https://images.pexels.com/photos/2023384/pexels-photo-2023384.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
+    );
+    setNickName('User1');
+    setTown('서울특별시 성북구 정릉2동');
+    setIntroduction('안녕하세요.');
+    setPersonalNum('17');
+    setTimePay('500');
+  }, [data]);
+
   const userInfo = user.user1[0];
   const [image, setImage]: any = useState();
   const [nickName, setNickName]: any = useState();
@@ -25,34 +49,6 @@ const MyPage = () => {
     },
     [navigate],
   );
-
-  const setHeaderTitle = useSetRecoilState(headerTitleState);
-  useEffect(() => {
-    setHeaderTitle('내정보');
-
-    setImage(userInfo.img);
-    setNickName(userInfo.nickName);
-    setTown(userInfo.town);
-    setIntroduction(userInfo.introduction);
-    setPersonalNum(userInfo.personalNum);
-    setTimePay(userInfo.timepay);
-
-    //GET
-    axios
-      .get(
-        'http://localhost:8080/swagger-ui/#/api-controller/getMyInfoUsingGET',
-      )
-      .then(function (response) {
-        console.log(response.data);
-      })
-      .catch(function (error) {
-        // 에러인 경우 실행
-        console.log(error);
-      })
-      .then(function () {
-        // 항상 실행
-      });
-  }, []);
 
   return (
     <div className="MyPage">
@@ -107,46 +103,42 @@ const MyPage = () => {
         </div>
 
         <div className="MyBlock">
-          <div className="MyPageMoveBox">
-            <button
-              className="MyPageText"
-              onClick={() => handlePageMove(PATH.ACTIVITY)}
-            >
-              활동 기록 {'>'}
-            </button>
-          </div>
-        </div>
+          <div className="MyBlockBox">
+            <div className="MyPageMoveBox">
+              <button
+                className="MyPageText"
+                onClick={() => handlePageMove(PATH.ACTIVITY)}
+              >
+                활동 기록
+              </button>
+            </div>
 
-        <div className="MyBlock">
-          <div className="MyPageMoveBox">
-            <button
-              className="MyPageText"
-              onClick={() => handlePageMove(PATH.REPORT)}
-            >
-              신고 기록 {'>'}
-            </button>
-          </div>
-        </div>
+            <div className="MyPageMoveBox">
+              <button
+                className="MyPageText"
+                onClick={() => handlePageMove(PATH.REPORT)}
+              >
+                신고 기록
+              </button>
+            </div>
 
-        <div className="MyBlock">
-          <div className="MyPageMoveBox">
-            <button
-              className="MyPageText"
-              onClick={() => handlePageMove(PATH.INQUIRE)}
-            >
-              문의하기 {'>'}
-            </button>
-          </div>
-        </div>
+            <div className="MyPageMoveBox">
+              <button
+                className="MyPageText"
+                onClick={() => handlePageMove(PATH.INQUIRE)}
+              >
+                문의하기
+              </button>
+            </div>
 
-        <div className="MyBlock">
-          <div className="MyPageMoveBox">
-            <button
-              className="MyPageText"
-              onClick={() => handlePageMove(PATH.BOOKMARK)}
-            >
-              즐겨찾기 {'>'}
-            </button>
+            <div className="MyPageMoveBox">
+              <button
+                className="MyPageText"
+                onClick={() => handlePageMove(PATH.BOOKMARK)}
+              >
+                즐겨찾기
+              </button>
+            </div>
           </div>
         </div>
       </div>

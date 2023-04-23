@@ -1,15 +1,33 @@
-import { IUser } from './IUser';
+import { GetPageableData, PageableData } from './ICommon';
 
 export interface IComment {
-  postId: number; // 게시글 번호
+  originBoardId: number; // 게시글 번호
   commentId: number; // 댓글 번호
-  user: IUser; // 작성자 정보
-  parentCommentId?: number | null; // 부모 댓글 번호
-  isApply: boolean; // 지원 여부
-  isSelected: boolean; // 선정 여부
-  isAuthorOfPost: boolean; // 게시글 작성자 여부
-  isHidden: boolean; // 댓글 숨김 여부
-  createdAt: string; // 작성 날짜
-  updatedAt?: string; // 수정 날짜
+  originCommentId: number; // 부모 댓글 번호
+  writerName: string; // 작성자 이름
+  writerId: number; // 작성자 회원번호
+  writerNickname: string; // 작성자 닉네임
+  applyYN: boolean; // 지원여부
+  selectYN: boolean; // 선정여부
+  originWriterYN: boolean; // 게시글 작성자 여부
+  writtenTime: any; // 작성 날짜
   content: string; // 댓글 내용
+  isHidden: boolean; // 댓글 숨김 여부
+  updatedAt?: string; // 수정 날짜
+}
+
+export interface IGetCommentRequest extends GetPageableData {
+  originBoardId?: number;
+  writerName?: string;
+  writerNickname?: string;
+  writerSearchKeyword?: string;
+  writerSearchValue?: string;
+}
+
+export interface IGetCommentResponse extends PageableData {
+  content: IComment[];
+}
+
+export interface IPatchCommentRequest {
+  commentIds: number[];
 }
