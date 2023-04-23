@@ -10,18 +10,27 @@ import { useGetUserInfomation } from '../../api/hooks/user';
 
 const MyPage = () => {
   const setHeaderTitle = useSetRecoilState(headerTitleState);
-  const { data } = useGetUserInfomation(2); //parameter: uid, 추후 uid 쿠키 토큰에 저장해둘 필요 있음
+  const { data } = useGetUserInfomation(2); //parameter: uid, 추후 uid 쿠키 토큰에 저장해둘 필요 있음, api url 수정해야 함
   useEffect(() => {
     setHeaderTitle('내정보');
 
     console.log(data);
 
-    setImage(data?.data.image_url);
-    setNickName(data?.data.nick_name);
-    setTown('업데이트 예정');
-    setIntroduction('업데이트 예정');
-    setPersonalNum(data?.data.id);
-    setTimePay(data?.data.time_pay);
+    // setImage(data?.data.image_url);
+    // setNickName(data?.data.nick_name);
+    // setTown('업데이트 예정');
+    // setIntroduction('업데이트 예정');
+    // setPersonalNum(data?.data.id);
+    // setTimePay(data?.data.time_pay);
+
+    setImage(
+      'https://images.pexels.com/photos/2023384/pexels-photo-2023384.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
+    );
+    setNickName('User1');
+    setTown('서울특별시 성북구 정릉2동');
+    setIntroduction('안녕하세요.');
+    setPersonalNum('17');
+    setTimePay('500');
   }, [data]);
 
   const userInfo = user.user1[0];
