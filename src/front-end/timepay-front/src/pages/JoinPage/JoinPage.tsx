@@ -255,47 +255,47 @@ const JoinPage = () => {
     [navigate],
   );
 
-  const showModal = () => {
-    setIsModalOpen(true);
-  };
+  // const showModal = () => {
+  //   setIsModalOpen(true);
+  // };
 
-  const handleOk = () => {
-    setIsModalOpen(false);
-  };
+  // const handleOk = () => {
+  //   setIsModalOpen(false);
+  // };
 
-  const handleCancel = () => {
-    setIsModalOpen(false);
-  };
+  // const handleCancel = () => {
+  //   setIsModalOpen(false);
+  // };
 
-  const handleImageSelect1 = () => {
-    setProfileImage(
-      'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png',
-    );
-  };
+  // const handleImageSelect1 = () => {
+  //   setProfileImage(
+  //     'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png',
+  //   );
+  // };
 
-  const handleImageSelect2 = () => {
-    setProfileImage(
-      'https://image.ytn.co.kr/general/jpg/2022/1223/202212231020527831_d.jpg',
-    );
-  };
+  // const handleImageSelect2 = () => {
+  //   setProfileImage(
+  //     'https://image.ytn.co.kr/general/jpg/2022/1223/202212231020527831_d.jpg',
+  //   );
+  // };
 
-  const handleImageSelect3 = () => {
-    setProfileImage(
-      'https://images.pexels.com/photos/1166869/pexels-photo-1166869.jpeg',
-    );
-  };
+  // const handleImageSelect3 = () => {
+  //   setProfileImage(
+  //     'https://images.pexels.com/photos/1166869/pexels-photo-1166869.jpeg',
+  //   );
+  // };
 
-  const handleImageSelect4 = () => {
-    setProfileImage(
-      'https://images.pexels.com/photos/3361739/pexels-photo-3361739.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
-    );
-  };
+  // const handleImageSelect4 = () => {
+  //   setProfileImage(
+  //     'https://images.pexels.com/photos/3361739/pexels-photo-3361739.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
+  //   );
+  // };
 
-  const handleImageSelect5 = () => {
-    setProfileImage(
-      'https://images.pexels.com/photos/1661179/pexels-photo-1661179.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
-    );
-  };
+  // const handleImageSelect5 = () => {
+  //   setProfileImage(
+  //     'https://images.pexels.com/photos/1661179/pexels-photo-1661179.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
+  //   );
+  // };
 
   return (
     <Space css={topWrapperCSS} align="baseline">
@@ -321,10 +321,16 @@ const JoinPage = () => {
               className="EditprofileImage"
             />
             <div className="EditprofileImageWrap">
-              <Button type="primary" onClick={showModal}>
+              <label htmlFor="image_guide">
                 프로필 사진 설정하기
-              </Button>
-              <Modal
+                <input
+                  type="file"
+                  id="image_guide"
+                  accept="image/*"
+                  onChange={handleFileChange}
+                />
+              </label>
+              {/* <Modal
                 title="프로필 사진 선택"
                 open={isModalOpen}
                 onOk={handleOk}
@@ -373,7 +379,7 @@ const JoinPage = () => {
                     />
                   }
                 </Button>
-              </Modal>
+              </Modal> */}
             </div>
           </Space>
         </Form.Item>
