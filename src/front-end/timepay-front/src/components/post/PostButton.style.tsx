@@ -22,7 +22,7 @@ export const cssPostButton = css`
   }
   &.start {
     width: 95%;
-    background-color: #ff7a00;
+    background-color: ${COMMON_COLOR.MAIN1};
   }
   &.completed {
     width: 45%;
