@@ -31,7 +31,7 @@ const AdminMainTable = () => {
   const deleteAdminsMutation = useDeleteAdmins();
   const queryClient = useQueryClient();
 
-  const dataSource = data?.data.content;
+  const dataSource = data?.data.content || [];
 
   const handleDelete = async (adminId: number) => {
     await deleteAdminsMutation.mutateAsync(adminId, {
