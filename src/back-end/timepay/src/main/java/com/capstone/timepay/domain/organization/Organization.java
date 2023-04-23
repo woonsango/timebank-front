@@ -35,7 +35,7 @@ public class Organization extends BaseTimeEntity {
     private String authority;
     private String imageUrl;
     private String certificationUrl;
-    @ElementCollection(fetch = FetchType.EAGER)
+    @ElementCollection(fetch = FetchType.LAZY)
     @Builder.Default
     private List<String> roles = new ArrayList<>();
     public Collection<? extends GrantedAuthority> getAuthorities() {

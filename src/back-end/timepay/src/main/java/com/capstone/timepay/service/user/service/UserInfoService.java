@@ -133,7 +133,6 @@ public class UserInfoService {
         User userData = userRepository.findById(id).orElseThrow(()->new IllegalArgumentException("존재하지 않는 유저입니다."));
         UserProfile userProfileData = userData.getUserProfile();
 
-
         /* 유저 테이블에서 데이터 가져오기 */
         String nickName = userData.getNickname();
         List<FreeRegister> freeRegisters = userData.getFreeRegisters();
