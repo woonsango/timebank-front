@@ -19,7 +19,8 @@ public class AdminDealBoardDTO {
 
     private Long dealBoardId;
     private String title;
-    private BoardStatus state;
+    private BoardStatus boardState;
+
     private String content;
     private String category;
     private String location;
