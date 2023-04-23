@@ -6,8 +6,24 @@ import { headerTitleState } from '../../states/uiState';
 import { PATH } from '../../utils/paths';
 import './My.css';
 import user from './dummy.json';
+import { useGetUserInfomation } from '../../api/hooks/user';
 
 const MyPage = () => {
+  const setHeaderTitle = useSetRecoilState(headerTitleState);
+  const { data } = useGetUserInfomation(2); //parameter: uid, 추후 uid 쿠키 토큰에 저장해둘 필요 있음
+  useEffect(() => {
+    setHeaderTitle('내정보');
+
+    console.log(data);
+
+    setImage(data?.data.image_url);
+    setNickName(data?.data.nick_name);
+    setTown('업데이트 예정');
+    setIntroduction('업데이트 예정');
+    setPersonalNum(data?.data.id);
+    setTimePay(data?.data.time_pay);
+  }, [data]);
+
   const userInfo = user.user1[0];
   const [image, setImage]: any = useState();
   const [nickName, setNickName]: any = useState();
@@ -24,25 +40,6 @@ const MyPage = () => {
     },
     [navigate],
   );
-
-  const setHeaderTitle = useSetRecoilState(headerTitleState);
-  useEffect(() => {
-    setHeaderTitle('내정보');
-    /*
-    fetch('http://localhost:5000/user')
-      .then((res) => {
-        return res.json();
-      })
-      .then((data) => {
-        setUserData(data);
-      });*/
-    setImage(userInfo.img);
-    setNickName(userInfo.nickName);
-    setTown(userInfo.town);
-    setIntroduction(userInfo.introduction);
-    setPersonalNum(userInfo.personalNum);
-    setTimePay(userInfo.timepay);
-  }, []);
 
   return (
     <div className="MyPage">
@@ -97,46 +94,42 @@ const MyPage = () => {
         </div>
 
         <div className="MyBlock">
-          <div className="MyPageMoveBox">
-            <button
-              className="MyPageText"
-              onClick={() => handlePageMove(PATH.ACTIVITY)}
-            >
-              활동 기록 {'>'}
-            </button>
-          </div>
-        </div>
+          <div className="MyBlockBox">
+            <div className="MyPageMoveBox">
+              <button
+                className="MyPageText"
+                onClick={() => handlePageMove(PATH.ACTIVITY)}
+              >
+                활동 기록
+              </button>
+            </div>
 
-        <div className="MyBlock">
-          <div className="MyPageMoveBox">
-            <button
-              className="MyPageText"
-              onClick={() => handlePageMove(PATH.REPORT)}
-            >
-              신고 기록 {'>'}
-            </button>
-          </div>
-        </div>
+            <div className="MyPageMoveBox">
+              <button
+                className="MyPageText"
+                onClick={() => handlePageMove(PATH.REPORT)}
+              >
+                신고 기록
+              </button>
+            </div>
 
-        <div className="MyBlock">
-          <div className="MyPageMoveBox">
-            <button
-              className="MyPageText"
-              onClick={() => handlePageMove(PATH.INQUIRE)}
-            >
-              문의하기 {'>'}
-            </button>
-          </div>
-        </div>
+            <div className="MyPageMoveBox">
+              <button
+                className="MyPageText"
+                onClick={() => handlePageMove(PATH.INQUIRE)}
+              >
+                문의하기
+              </button>
+            </div>
 
-        <div className="MyBlock">
-          <div className="MyPageMoveBox">
-            <button
-              className="MyPageText"
-              onClick={() => handlePageMove(PATH.BOOKMARK)}
-            >
-              즐겨찾기 {'>'}
-            </button>
+            <div className="MyPageMoveBox">
+              <button
+                className="MyPageText"
+                onClick={() => handlePageMove(PATH.BOOKMARK)}
+              >
+                즐겨찾기
+              </button>
+            </div>
           </div>
         </div>
       </div>

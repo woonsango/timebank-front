@@ -4,6 +4,8 @@ import { useCallback, useMemo } from 'react';
 import dayjs from 'dayjs';
 import { cssCommentHideModalStyle } from './CommentHideModal.styles';
 import { IComment } from '../../api/interfaces/IComment';
+import { useQueryClient } from 'react-query';
+import { usePatchComment } from '../../api/hooks/comment';
 
 export interface CommentHideModalProps {
   comments?: IComment[];
@@ -15,6 +17,9 @@ const CommentHideModal = ({
   isOpen,
   onCancel,
 }: CommentHideModalProps) => {
+  const queryClient = useQueryClient();
+  const patchCommentMutation = usePatchComment();
+
   const [messageApi, contextHolder] = message.useMessage();
 
   // @ts-ignore
@@ -29,35 +34,33 @@ const CommentHideModal = ({
       },
       {
         title: '게시글 번호',
-        key: 'postId',
-        dataIndex: 'postId',
+        key: 'originBoardId',
+        dataIndex: 'originBoardId',
         width: 70,
-        sorter: (a: IComment, b: IComment) => b.postId - a.postId,
+        sorter: (a: IComment, b: IComment) => b.originBoardId - a.originBoardId,
       },
       {
         title: '작성자 이름',
-        key: 'userName',
-        dataIndex: 'userName',
+        key: 'writerName',
+        dataIndex: 'writerName',
         width: 100,
         align: 'center',
-        render: (_userName: string, record: IComment) => record.user.name,
       },
       {
         title: '작성자 회원번호',
-        key: 'userPk',
-        dataIndex: 'userPk',
+        key: 'writerId',
+        dataIndex: 'writerId',
         width: 110,
-        sorter: (a: IComment, b: IComment) => b.user.userPk - a.user.userPk,
-        render: (_userPk: string, record: IComment) => record.user.userPk,
+        sorter: (a: IComment, b: IComment) => b.writerId - a.writerId,
       },
       {
         title: '작성일시',
-        key: 'createdAt',
-        dataIndex: 'createdAt',
+        key: 'writtenTime',
+        dataIndex: 'writtenTime',
         width: 140,
         align: 'center',
         sorter: (a: IComment, b: IComment) =>
-          dayjs(a.createdAt).isAfter(dayjs(b.createdAt)),
+          dayjs(a.writtenTime).isAfter(dayjs(b.writtenTime)),
       },
       {
         title: '제목',
@@ -74,13 +77,37 @@ const CommentHideModal = ({
       content: '정말 숨김 처리하시겠습니까?',
       okText: '확인',
       cancelText: '취소',
-      onOk: () =>
-        messageApi.open({
-          type: 'success',
-          content: '숨김 처리 완료되었습니다.',
-        }),
+      onOk: async () => {
+        if (comments && comments.length > 0)
+          await patchCommentMutation.mutateAsync(
+            { commentIds: comments?.map((comment) => comment.commentId) },
+            {
+              onSuccess: async (data) => {
+                messageApi.open({
+                  type: 'success',
+                  content: '숨김 처리 완료되었습니다.',
+                });
+                await queryClient.invalidateQueries('useGetComments');
+              },
+              onError: (err) => {
+                messageApi.open({
+                  type: 'error',
+                  content: (
+                    <>
+                      오류 발생: <br />
+                      {err}
+                    </>
+                  ),
+                });
+              },
+              onSettled: () => {
+                onCancel();
+              },
+            },
+          );
+      },
     });
-  }, [messageApi]);
+  }, [onCancel, queryClient, messageApi, comments, patchCommentMutation]);
 
   const footer = useMemo(() => {
     return (

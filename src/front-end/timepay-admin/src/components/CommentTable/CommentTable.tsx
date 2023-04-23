@@ -6,7 +6,11 @@ import {
   cssCommentTableRowCountStyle,
   cssCommentTableStyle,
 } from './CommentTable.styles';
-import { IComment } from '../../api/interfaces/IComment';
+import { IComment, IGetCommentRequest } from '../../api/interfaces/IComment';
+import { commentSearchState } from '../../states/commentSearchState';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { useGetComments } from '../../api/hooks/comment';
+import { customPaginationProps } from '../../utils/pagination';
 
 interface CommentTableProps {
   selectedCommentIds?: React.Key[];
@@ -19,40 +23,20 @@ const CommentTable = ({
   setSelectedCommentIds,
   setSelectedComments,
 }: CommentTableProps) => {
-  const dummyDataSource: IComment[] = [];
+  const commentSearchValues = useRecoilValue(commentSearchState);
+  const setCommentSearch = useSetRecoilState(commentSearchState);
 
-  for (let i = 0; i < 100; i++) {
-    dummyDataSource.push({
-      commentId: i,
-      postId: i % 3,
-      user: {
-        userPk: i * 1000 + 1,
-        name: `사용자 ${i}`,
-        birthday: '2000-01-15 11:00:00',
-        createdAt: '2023-01-15 11:00:00',
-        sex: 'W',
-        nickname: '하연',
-        region: '광진구',
-        phoneNumber: '01023860370',
-        accountEmail: 'iioo3356@gmail.com',
-        isAdmin: true,
-      },
-      createdAt: `2023-02-18 ${(i % 12).toString()}:00:00`,
-      content: `댓글 내용 ${i}`,
-      parentCommentId: i % 6 > 3 ? i % 6 : null,
-      isApply: i % 2 === 0,
-      isSelected: i % 4 === 0,
-      isAuthorOfPost: i % 20 === 0,
-      isHidden: false,
-    });
-  }
+  const { data, isLoading } = useGetComments(commentSearchValues);
+
+  const dataSource = useMemo(() => {
+    if (commentSearchValues) {
+      return data?.data.content || [];
+    }
+    return [];
+  }, [commentSearchValues, data]);
+
   const rowSelection = {
     onChange: (selectedRowKeys: React.Key[], selectedRows: IComment[]) => {
-      console.log(
-        `selectedRowKeys: ${selectedRowKeys}`,
-        'selectedRows: ',
-        selectedRows,
-      );
       setSelectedCommentIds(selectedRowKeys);
       setSelectedComments(selectedRows);
     },
@@ -70,53 +54,49 @@ const CommentTable = ({
       },
       {
         title: '게시글 번호',
-        key: 'postId',
-        dataIndex: 'postId',
+        key: 'originBoardId',
+        dataIndex: 'originBoardId',
         width: 90,
-        sorter: (a: IComment, b: IComment) => b.postId - a.postId,
+        sorter: (a: IComment, b: IComment) => b.originBoardId - a.originBoardId,
       },
       {
         title: '부모 댓글 번호',
-        key: 'parentCommentId',
-        dataIndex: 'parentCommentId',
+        key: 'originCommentId',
+        dataIndex: 'originCommentId',
         width: 90,
         sorter: (a: IComment, b: IComment) =>
-          (b.parentCommentId || 0) - (a.parentCommentId || 0),
+          (b.originCommentId || 0) - (a.originCommentId || 0),
         render: (text: string) => text || '-',
       },
       {
         title: '작성자 회원번호',
-        key: 'userPk',
-        dataIndex: 'userPk',
+        key: 'writerId',
+        dataIndex: 'writerId',
         width: 110,
-        sorter: (a: IComment, b: IComment) => b.user.userPk - a.user.userPk,
-        render: (_userPk: string, record: IComment) => record.user.userPk,
+        sorter: (a: IComment, b: IComment) => b.writerId - a.writerId,
       },
       {
         title: '작성자 이름',
-        key: 'userName',
-        dataIndex: 'userName',
+        key: 'writerName',
+        dataIndex: 'writerName',
         width: 100,
         align: 'center',
-        render: (_userName: string, record: IComment) => record.user.name,
       },
       {
         title: '작성자 닉네임',
-        key: 'nickname',
-        dataIndex: 'nickname',
+        key: 'writerNickname',
+        dataIndex: 'writerNickname',
         width: 100,
         align: 'center',
-        render: (_userNickname: string, record: IComment) =>
-          record.user.nickname,
       },
       {
         title: '작성일시',
-        key: 'createdAt',
-        dataIndex: 'createdAt',
+        key: 'writtenTime',
+        dataIndex: 'writtenTime',
         width: 140,
         align: 'center',
         sorter: (a: IComment, b: IComment) =>
-          dayjs(a.createdAt).isAfter(dayjs(b.createdAt)),
+          dayjs(a.writtenTime).isAfter(dayjs(b.writtenTime)),
       },
       {
         title: '수정일시',
@@ -130,8 +110,8 @@ const CommentTable = ({
       },
       {
         title: '지원여부',
-        key: 'isApply',
-        dataIndex: 'isApply',
+        key: 'applyYN',
+        dataIndex: 'applyYN',
         width: 140,
         align: 'center',
         filters: [
@@ -139,13 +119,13 @@ const CommentTable = ({
           { text: 'N', value: false },
         ],
         onFilter: (value: boolean, record: IComment) =>
-          record.isApply === value,
-        render: (isApply: boolean) => (isApply ? 'Y' : 'N'),
+          record.applyYN === value,
+        render: (applyYN: boolean) => (applyYN ? 'Y' : 'N'),
       },
       {
         title: '선정여부',
-        key: 'isSelected',
-        dataIndex: 'isSelected',
+        key: 'selectYN',
+        dataIndex: 'selectYN',
         width: 140,
         align: 'center',
         filters: [
@@ -153,13 +133,13 @@ const CommentTable = ({
           { text: 'N', value: false },
         ],
         onFilter: (value: boolean, record: IComment) =>
-          record.isSelected === value,
-        render: (isSelected: boolean) => (isSelected ? 'Y' : 'N'),
+          record.selectYN === value,
+        render: (selectYN: boolean) => (selectYN ? 'Y' : 'N'),
       },
       {
         title: '게시글 작성자 본인 여부',
-        key: 'isAuthorOfPost',
-        dataIndex: 'isAuthorOfPost',
+        key: 'originWriterYN',
+        dataIndex: 'originWriterYN',
         width: 120,
         align: 'center',
         filters: [
@@ -167,8 +147,8 @@ const CommentTable = ({
           { text: 'N', value: false },
         ],
         onFilter: (value: boolean, record: IComment) =>
-          record.isAuthorOfPost === value,
-        render: (isAuthorOfPost: boolean) => (isAuthorOfPost ? 'Y' : 'N'),
+          record.originWriterYN === value,
+        render: (originWriterYN: boolean) => (originWriterYN ? 'Y' : 'N'),
       },
       {
         title: '숨김여부',
@@ -214,15 +194,21 @@ const CommentTable = ({
         {selectedCommentIds && selectedCommentIds.length > 0
           ? `${selectedCommentIds.length} 개 선택 / `
           : ''}
-        총 {dummyDataSource.length} 개
+        총 {data?.data.totalElements} 개
       </div>
       <Table
         css={cssCommentTableStyle}
         rowSelection={rowSelection}
         columns={columns}
         scroll={{ x: 1500 }}
-        dataSource={dummyDataSource}
+        dataSource={dataSource}
         rowKey="commentId"
+        loading={isLoading}
+        pagination={customPaginationProps<IGetCommentRequest>({
+          totalElements: data?.data.totalElements,
+          currentSearchValues: commentSearchValues,
+          setSearchValues: setCommentSearch,
+        })}
       />
     </>
   );
