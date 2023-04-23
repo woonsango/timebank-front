@@ -21,7 +21,13 @@ export const useGetComments = (params?: IGetCommentRequest) => {
               writerSearchValue: null,
             },
           })
-        : apiRequest.get(API_URL.COMMENTS),
+        : apiRequest.get(API_URL.COMMENTS, {
+            params: {
+              ...params,
+              writerSearchKeyword: null,
+              writerSearchValue: null,
+            },
+          }),
     refetchOnWindowFocus: false,
     retry: false, // api 호출 실패해도 계속 호출하지 않음
     onError: (err: any) => {

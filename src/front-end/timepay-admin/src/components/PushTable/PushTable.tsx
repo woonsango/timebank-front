@@ -8,9 +8,13 @@ import {
 } from './PushTable.styles';
 import PushDetailModal from '../PushDetailModal';
 import { useGetNotifications } from '../../api/hooks/notification';
-import { useRecoilValue } from 'recoil';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { pushSearchState } from '../../states/pushSearchState';
-import { INotification } from '../../api/interfaces/INotification';
+import {
+  IGetNotificationRequest,
+  INotification,
+} from '../../api/interfaces/INotification';
+import { customPaginationProps } from '../../utils/pagination';
 
 interface PushTableProps {
   selectedPushIds?: React.Key[];
@@ -24,6 +28,8 @@ const PushTable = ({
   setSelectedPushes,
 }: PushTableProps) => {
   const pushSearchValues = useRecoilValue(pushSearchState);
+  const setPushSearch = useSetRecoilState(pushSearchState);
+
   const { data, isLoading } = useGetNotifications(pushSearchValues);
 
   const [isOpen, setIsOpen] = useState(false);
@@ -128,6 +134,11 @@ const PushTable = ({
         dataSource={dataSource}
         rowKey="notificationId"
         loading={isLoading}
+        pagination={customPaginationProps<IGetNotificationRequest>({
+          totalElements: data?.data.totalElements,
+          currentSearchValues: pushSearchValues,
+          setSearchValues: setPushSearch,
+        })}
       />
       <PushDetailModal
         isOpen={isOpen}
