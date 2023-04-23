@@ -32,10 +32,6 @@ const PostStatusTag = ({ status }: { status?: IPostState }) => {
           pointColor: COMMON_COLOR.FONT2,
           backgroundColor: COMMON_COLOR.FONT1,
         };
-      case '활동지연':
-        return {
-          pointColor: COMMON_COLOR.CORAL,
-        };
       default:
         return {
           pointColor: COMMON_COLOR.FONT2,

@@ -4,47 +4,35 @@ import { cssPostButton, cssPostButtons } from './PostButton.style';
 
 const PostButton = () => {
   const [buttonState, setButtonState] = useState<string>('start');
-  const [prevButtonState, setPrevButtonState] = useState<string[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const buttonText = useMemo(() => {
     switch (buttonState) {
       case 'start':
         return '활동시작';
-      case 'delayed':
-        return '활동지연';
       case 'completed':
         return '활동완료';
-      case 'end':
-      case 'pause':
-        return '종료';
-      case 'review':
-        return '후기';
+      case 'deleted':
+        return '활동취소';
       case 'theEnd':
-        return '모든 활동이 끝난 게시글입니다 :)';
+        return '활동이 종료된 게시글입니다 :)';
       default:
         return '';
     }
   }, [buttonState]);
 
   const onClickButton = (): void => {
-    setPrevButtonState((prevState: string[]) => [...prevState, buttonState]);
-
     switch (buttonState) {
       case 'start':
-        setButtonState('delayed');
-        break;
-      case 'delayed':
         setButtonState('completed');
         break;
       case 'completed':
-        setButtonState('end');
-        break;
-      case 'end':
-        setButtonState('pause');
-        break;
-      case 'review':
         setButtonState('theEnd');
+        break;
+      case 'deleted':
+        setButtonState('theEnd');
+        break;
+      case 'theEnd':
         break;
       default:
         break;
@@ -52,67 +40,81 @@ const PostButton = () => {
   };
 
   const showModal = () => {
-    if (buttonState === 'end') {
+    if (buttonState === 'start') {
       setIsModalOpen(true);
-      return;
     }
   };
 
   const handleOk = () => {
-    setButtonState('review');
+    setButtonState('completed');
     setIsModalOpen(false);
   };
 
   const handleCancel = () => {
-    setButtonState('end');
+    setButtonState('start');
     setIsModalOpen(false);
-  };
-
-  const onClickPrevButton = (): void => {
-    const prevButtonStateCopy: string[] = [...prevButtonState];
-    const prevState: string | undefined = prevButtonStateCopy.pop();
-    setPrevButtonState(prevButtonStateCopy);
-    setButtonState(prevState!);
   };
 
   return (
     <>
       <div css={cssPostButtons}>
-        {prevButtonState.length > 0 &&
-          buttonState !== 'review' &&
-          buttonState !== 'theEnd' && (
+        {buttonState === 'start' ? (
+          <button
+            css={cssPostButton}
+            onClick={() => {
+              onClickButton();
+              showModal();
+            }}
+            className={`${buttonState}`}
+          >
+            {buttonText}
+          </button>
+        ) : buttonState === 'completed' || buttonState === 'deleted' ? (
+          <>
             <button
-              className="goBack"
               css={cssPostButton}
-              onClick={onClickPrevButton}
+              onClick={() => {
+                setButtonState('theEnd');
+              }}
+              className="completed"
             >
-              이전
+              활동완료
             </button>
-          )}
-
-        <button
-          css={cssPostButton}
-          onClick={() => {
-            onClickButton();
-            showModal();
-          }}
-          className={`${buttonState}`}
-        >
-          {buttonText}
-        </button>
+            <button
+              css={cssPostButton}
+              onClick={() => {
+                setButtonState('theEnd');
+              }}
+              className="deleted"
+            >
+              활동종료
+            </button>
+          </>
+        ) : (
+          <button
+            css={cssPostButton}
+            onClick={() => {
+              onClickButton();
+              showModal();
+            }}
+            className={`${buttonState}`}
+          >
+            {buttonText}
+          </button>
+        )}
       </div>
       <Modal
-        title="정말 종료로 상태를 변경하시겠습니까?"
         open={isModalOpen}
         onOk={handleOk}
         onCancel={handleCancel}
         okText="확인"
         cancelText="취소"
       >
-        <p>확인 버튼을 누르시면, 타임페이가 교환됩니다.</p>
-        <p>
-          버튼을 누르시면 이전 상태로 되돌아갈 수 없으니 신중하게 눌러주세요.
-        </p>
+        <h2>
+          🔆 버튼을 누르시면 이전 상태로 되돌아갈 수 없으니 신중하게 눌러주세요!
+          🔆
+        </h2>
+        <h3>확인 버튼을 누르시면, 타임페이가 교환됩니다.</h3>
       </Modal>
     </>
   );
