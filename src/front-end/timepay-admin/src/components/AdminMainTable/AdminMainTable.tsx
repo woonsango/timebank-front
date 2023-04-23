@@ -15,75 +15,36 @@ import type { ColumnType } from 'antd/es/table';
 import type { FilterConfirmProps } from 'antd/es/table/interface';
 import Highlighter from 'react-highlight-words';
 import { cssAdminMainTable } from './AdminMainTable.style';
-import { Item } from '../../interfaces/AdminItem';
-import { EditableCell } from '../EditableCell/AdminEditableCell';
+import { IAdmin } from '../../api/interfaces/IAdmin';
 
-type DataIndex = keyof Item;
+type DataIndex = keyof IAdmin;
 
-const originData: Item[] = [];
+const originData: IAdmin[] = [];
 for (let i = 0; i < 100; i++) {
   originData.push({
-    key: i,
+    adminId: i,
     name: `수연 ${i}`,
     email: 'test@test.com',
-    id: `HSY ${i}`,
+    adminName: `HSY ${i}`,
     password: '123123',
-    passwordEdit: 'Y',
+    phone: '010-1234-5678',
+    createdAt: '2021-12-34',
+    authority: '관리자',
+    inquiryAnswers: [],
   });
 }
 
 const AdminMainTable = () => {
   const [form] = Form.useForm();
   const [data, setData] = useState(originData);
-  const [editingKey, setEditingKey] = useState<number>();
   const [searchText, setSearchText] = useState('');
   const [searchedColumn, setSearchedColumn] = useState('');
   const searchInput = useRef<InputRef>(null);
 
-  const isEditing = (record: Item) => record.key === editingKey;
-
-  const edit = (record: Partial<Item> & { key: number }) => {
-    form.setFieldsValue({
-      name: '',
-      email: '',
-      id: '',
-      password: '',
-      passwordEdit: undefined,
-      ...record,
-    });
-    setEditingKey(record.key);
-  };
-
-  const cancel = () => {
-    setEditingKey(undefined);
-  };
-
-  const save = async (key: number) => {
-    try {
-      const row = (await form.validateFields()) as Item;
-
-      const newData = [...data];
-      const index = newData.findIndex((item) => key === item.key);
-      if (index > -1) {
-        const item = newData[index];
-        newData.splice(index, 1, {
-          ...item,
-          ...row,
-        });
-        setData(newData);
-        setEditingKey(undefined);
-      } else {
-        newData.push(row);
-        setData(newData);
-        setEditingKey(undefined);
-      }
-    } catch (errInfo) {
-      console.log('Validate Failed:', errInfo);
-    }
-  };
-
-  const handleDelete = (key: number) => {
-    const newData = data.filter((item: { key: number }) => item.key !== key);
+  const handleDelete = (adminId: number) => {
+    const newData = data.filter(
+      (item: { adminId: number }) => item.adminId !== adminId,
+    );
     setData(newData);
   };
   const handleSearch = (
@@ -180,128 +141,60 @@ const AdminMainTable = () => {
   });
 
   const columns = [
-    //관리자 번호 , 이름, 이메일, 아이디, 비밀번호, 초기 비밀번호 수정여부
     {
       title: '관리자 번호',
-      dataIndex: 'key',
+      dataIndex: 'adminId',
       width: '10%',
       editable: false,
     },
     {
-      title: '이름',
-      dataIndex: 'name',
+      title: '아이디',
+      dataIndex: 'adminName',
       width: '10%',
       editable: true,
-      ...getColumnSearchProps('name'),
+      // ...getColumnSearchProps('adminName'),
+    },
+    {
+      title: '직책',
+      dataIndex: 'authority',
+      width: '10%',
     },
     {
       title: '이메일',
       dataIndex: 'email',
       width: '10%',
-      editable: true,
     },
     {
-      title: '아이디',
-      dataIndex: 'id',
+      title: '이름',
+      dataIndex: 'name',
       width: '10%',
-      editable: true,
     },
 
     {
-      title: '비밀번호',
-      dataIndex: 'password',
+      title: '전화번호',
+      dataIndex: 'phone',
       width: '10%',
-      editable: true,
-    },
-    {
-      title: '초기 비밀번호 수정여부',
-      dataIndex: 'passwordEdit',
-      width: '10%',
-      editable: true,
-      filters: [
-        { text: 'Y', value: 'Y' },
-        { text: 'N', value: 'N' },
-      ],
-      onFilter: (value: string, record: Item) => record.passwordEdit === value,
-    },
-    {
-      title: '수정',
-      dataIndex: 'operation',
-      width: '10%',
-      render: (_: any, record: Item) => {
-        const editable = isEditing(record);
-        return editable ? (
-          <span>
-            <Typography.Link
-              onClick={() => save(record.key)}
-              style={{ marginRight: 8 }}
-            >
-              Save
-            </Typography.Link>
-            <Popconfirm title="취소하시겠습니까?" onConfirm={cancel}>
-              <a>Cancel</a>
-            </Popconfirm>
-          </span>
-        ) : (
-          <Typography.Link
-            disabled={editingKey !== undefined}
-            onClick={() => edit(record)}
-          >
-            Edit
-          </Typography.Link>
-        );
-      },
     },
     {
       title: '삭제',
       dataIndex: 'operation',
       width: '10%',
-      render: (_: any, record: { key: number }) =>
+      render: (_: any, record: { adminId: number }) =>
         originData.length >= 1 ? (
           <Popconfirm
             title="삭제하시겠습니까?"
-            onConfirm={() => handleDelete(record.key)}
+            onConfirm={() => handleDelete(record.adminId)}
           >
-            <a>Delete</a>
+            <a>삭제</a>
           </Popconfirm>
         ) : null,
     },
   ];
 
-  const mergedColumns = columns.map((col) => {
-    if (!col.editable) {
-      return col;
-    }
-    return {
-      ...col,
-      onCell: (record: Item) => ({
-        record,
-        inputType: col.dataIndex === 'age' ? 'number' : 'text',
-        dataIndex: col.dataIndex,
-        title: col.title,
-        editing: isEditing(record),
-      }),
-    };
-  });
-
   return (
     <div css={cssAdminMainTable}>
       <Form form={form} component={false}>
-        <Table
-          components={{
-            body: {
-              cell: EditableCell,
-            },
-          }}
-          bordered
-          dataSource={data}
-          // @ts-ignore
-          columns={mergedColumns}
-          rowClassName="editable-row"
-          pagination={{
-            onChange: cancel,
-          }}
-        />
+        <Table bordered dataSource={data} columns={columns} />
       </Form>
     </div>
   );
