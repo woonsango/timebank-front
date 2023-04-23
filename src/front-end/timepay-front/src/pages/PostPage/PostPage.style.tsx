@@ -124,6 +124,7 @@ export const cssPostDetailPay = css`
   font-size: 18px;
   font-weight: 500;
   background-color: ${COMMON_COLOR.MAIN3};
+  color: ${COMMON_COLOR.WHITE};
   border-radius: 10px;
   padding: 5px;
 `;
