@@ -13,30 +13,42 @@ import {
   cssPostFooterStyle,
 } from './RegisterFreePage.style';
 import { FlagFilled } from '@ant-design/icons';
-import { TagRequestSelect } from '../../components/register/TagSelect';
 import { KoDatePicker } from '../../components/register/KoDatePicker';
 import TimeSelct from '../../components/register/TimeSelect';
 import ImageUpload from '../../components/register/ImageUpload';
 import { useRecoilState } from 'recoil';
-import {
-  selectedTagsRequestState,
-  DateRange,
-  startTime,
-  endTime,
-} from '../../states/register';
+import { DateRange, startTime, endTime } from '../../states/register';
+import axios from 'axios';
 
 const { Header, Content, Footer } = Layout;
 const { TextArea } = Input;
 
 const RegisterRequestPage = () => {
   const timepay = 1000;
+  const category = 'serve';
+  const state = '게시완료';
   const [title, setTitle] = useState<string>('');
-  const [place, setPlace] = useState<string>('');
+  const [location, setLocation] = useState<string>('');
   const [content, setContent] = useState<string>('');
-  // 태그
-  const [selectedTags, setSelectedTags] = useRecoilState(
-    selectedTagsRequestState,
-  );
+  const [selectedCategory, setSelectedCategory] = useState<string>('');
+  const categories = [
+    '산책',
+    '봉사',
+    '교육',
+    '친목',
+    '생활',
+    '건강',
+    '도와주세요',
+  ];
+
+  const handleCategoryClick = (category: string) => {
+    setSelectedCategory((prevCategory) =>
+      prevCategory === category ? '' : category,
+    );
+    console.log(category);
+    console.log(typeof category);
+  };
+
   // 날짜
   const [dates, setDates] = useState<DateRange>([null, null]);
   const handleDatesChange = (value: DateRange) => {
@@ -65,12 +77,17 @@ const RegisterRequestPage = () => {
 
   // 버튼 활성화 관련
   const isDisabled =
-    !title || !content || !place || !dates[0] || !dates[1] || !selectedTags[0];
+    !title ||
+    !content ||
+    !location ||
+    !dates[0] ||
+    !dates[1] ||
+    !selectedCategory;
   const handleTitleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setTitle(event.target.value);
   };
-  const handlePlaceChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setPlace(event.target.value);
+  const handleLocationChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setLocation(event.target.value);
   };
   const handleContentChange = (
     event: React.ChangeEvent<HTMLTextAreaElement>,
@@ -78,8 +95,24 @@ const RegisterRequestPage = () => {
     setContent(event.target.value);
   };
   const handleSubmit = () => {
-    // 게시글 작성 완료 처리
-    console.log('도움받기게시글 등록');
+    axios
+      .post('/api/deal-boards/write/help', {
+        category,
+        title,
+        content,
+        location,
+        state,
+      })
+      .then((response) => {
+        // 요청이 성공적으로 처리되었을 때 실행될 코드 작성
+        console.log('게시글 등록!');
+        // 등록 후에는 홈 화면으로 이동
+        navigate(PATH.HOME);
+      })
+      .catch((error) => {
+        // 요청이 실패했을 때 실행될 코드 작성
+        console.error('게시글 등록 실패애애', error);
+      });
   };
 
   return (
@@ -99,7 +132,19 @@ const RegisterRequestPage = () => {
           />
           <div css={cssLineStyle} />
           <h6>카테고리 설정</h6>
-          <TagRequestSelect />
+          <div className="category-container">
+            {categories.map((category) => (
+              <button
+                key={category}
+                className={`category ${
+                  selectedCategory === category ? 'selected' : ''
+                }`}
+                onClick={() => handleCategoryClick(category)}
+              >
+                {category}
+              </button>
+            ))}
+          </div>
           <div css={cssLineStyle} />
           <h6>날짜</h6>
           <KoDatePicker value={dates} onChange={handleDatesChange} />
@@ -114,7 +159,7 @@ const RegisterRequestPage = () => {
             placeholder="희망하는 장소를 입력하세요 :)"
             style={{ marginLeft: '20px', paddingLeft: '15px', width: '280px' }}
             prefix={<FlagFilled style={{ marginRight: '5px' }} />}
-            onChange={handlePlaceChange}
+            onChange={handleLocationChange}
           />
           <div css={cssLineStyle} />
           <TextArea

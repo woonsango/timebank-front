@@ -1,4 +1,4 @@
-import { Layout, Input, Button } from 'antd';
+import { Layout, Input, Button, Image } from 'antd';
 import { useNavigate, Link } from 'react-router-dom';
 import { PATH } from '../../utils/paths';
 import { useCallback, useState } from 'react';
@@ -12,16 +12,39 @@ import {
   cssPostBtnStyle,
   cssPostFooterStyle,
 } from './RegisterFreePage.style';
-import ImageUpload from '../../components/register/ImageUpload';
+
+import axios from 'axios';
 
 const { Header, Content, Footer } = Layout;
 const { TextArea } = Input;
 
+const MAX_IMAGES = 5;
+
 const RegisterFreePage = () => {
   const [title, setTitle] = useState<string>('');
   const [content, setContent] = useState<string>('');
+  const [images, setImages] = useState<File[]>([]);
+  const [previewUrls, setPreviewUrls] = useState<string[]>([]);
 
   const navigate = useNavigate();
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files as FileList);
+    const urls = files.map((file) => URL.createObjectURL(file));
+    // 최대 5개의 이미지를 업로드할 수 있도록 하고 이미지가 5개가 넘을 경우 추가로 업로드하지 못하도록 합니다.
+    if (images.length + files.length > MAX_IMAGES) {
+      alert(`최대 ${MAX_IMAGES}개의 이미지까지 업로드할 수 있습니다.`);
+      return;
+    }
+    setImages([...images, ...files]);
+    setPreviewUrls([...previewUrls, ...urls]);
+  };
+
+  const handleDeleteImage = (index: number) => {
+    setImages((prevState) => prevState.filter((_, i) => i !== index));
+    setPreviewUrls((prevState) => prevState.filter((_, i) => i !== index));
+  };
+
   // 뒤로 가기
   const handleClickBack = useCallback(() => {
     navigate(-1);
@@ -38,10 +61,77 @@ const RegisterFreePage = () => {
   ) => {
     setContent(event.target.value);
   };
+  // 이미지 업로드 핸들러
+  const handleImageChange = (
+    event: React.ChangeEvent<HTMLInputElement>,
+    index: number,
+  ) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    // 이미지 파일만 업로드 가능하도록 체크합니다.
+    if (!file.type.startsWith('image/')) {
+      alert('이미지 파일만 업로드 가능합니다.');
+      return;
+    }
+
+    const newImages = [...images];
+    const newPreviewUrls = [...previewUrls];
+    newImages[index] = file;
+    newPreviewUrls[index] = URL.createObjectURL(file);
+
+    setImages(newImages);
+    setPreviewUrls(newPreviewUrls);
+  };
+
+  const handlePostSubmit = async () => {
+    try {
+      const formData = new FormData();
+      formData.append('title', title);
+      formData.append('content', content);
+      images.forEach((image) => {
+        formData.append('images', image);
+      });
+      await axios.post('/api/posts', formData);
+      alert('게시글 등록 성공!');
+      navigate(PATH.HOME);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   const handleSubmit = () => {
-    // 게시글 작성 완료 처리
-    console.log('자유게시글 등록');
+    const formData = new FormData();
+    formData.append('title', title);
+    formData.append('content', content);
+    images.forEach((image) => formData.append('images', image));
+    axios
+      .post('/api/free-boards/write', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      })
+      .then((response) => {
+        console.log('게시글이 등록🤩');
+        navigate(PATH.HOME);
+      })
+      .catch((error) => {
+        console.error('게시글 등록 실패🥹', error);
+      });
+    /* 실행되는 코드!
+      axios
+      .post('/api/free-boards/write', { title, content })
+      .then((response) => {
+        // 요청이 성공적으로 처리되었을 때 실행될 코드 작성
+        console.log('게시글이 성공적으로 등록되었습니다.');
+        // 등록 후에는 홈 화면으로 이동
+        navigate(PATH.HOME);
+      })
+      .catch((error) => {
+        // 요청이 실패했을 때 실행될 코드 작성
+        console.error('게시글 등록에 실패했습니다.', error);
+      });
+      */
   };
 
   return (
@@ -70,7 +160,57 @@ const RegisterFreePage = () => {
             onChange={handleContentChange}
           />
           <div css={cssLineStyle} />
-          <ImageUpload />
+          <div className="image-container">
+            <div className="imageFont">사진 ({images.length} / 5)</div>
+
+            {previewUrls.length < MAX_IMAGES && (
+              <div className="cssImageWrapper1">
+                <div className="cssImagePlaceholder">
+                  <label htmlFor="upload">
+                    <div className="uploadBtn">
+                      📷 <br />
+                      사진 추가
+                    </div>
+                  </label>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleFileChange}
+                    id="upload"
+                  />
+                </div>
+              </div>
+            )}
+
+            <div className="images-container">
+              {previewUrls.map((url, index) => (
+                <div className="cssImageWrapper2" key={index}>
+                  <img src={url} className="cssSelectedImage" alt="uploaded" />
+                  <div className="cssImages">
+                    <div className="cssImagePlaceholder2">
+                      <label htmlFor="change">
+                        <div className="changeBtn">사진 변경</div>
+                      </label>
+                      <input
+                        className="fileButton"
+                        type="file"
+                        accept="image/*"
+                        onChange={(e) => handleImageChange(e, index)}
+                        id="change"
+                      />
+                    </div>
+                    <Button
+                      danger
+                      className="deleteBtn"
+                      onClick={() => handleDeleteImage(index)}
+                    >
+                      삭제
+                    </Button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
         </Content>
       </div>
       <Footer css={cssPostFooterStyle}>
