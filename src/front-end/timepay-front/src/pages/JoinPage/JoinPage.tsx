@@ -223,24 +223,9 @@ const JoinPage = () => {
       console.log(profileImage);
 
       //formData 모든 값 출력
-      for (var value of formData.values()) {
+      for (var value in formData.values()) {
         console.log(value);
       }
-
-      await axios({
-        method: 'post',
-        url: 'http://13.125.119.30/api/users/create',
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-        data: formData,
-      })
-        .then((result) => {
-          console.log(result);
-        })
-        .catch((error) => {
-          console.log(error);
-        });
 
       goToFinishJoinPage(PATH.FINISHJOIN);
     }
