@@ -7,12 +7,16 @@ import {
 import { Collapse } from 'antd';
 import { useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { IPush } from '../../api/interfaces/IPush';
+import { INotification, IPush } from '../../api/interfaces/IPush';
 import { cssPushCollapseStyle, cssPushPanelStyle } from './PushCollapse.styles';
 
-const PushCollapse = ({ pushes }: { pushes: IPush[] }) => {
+const PushCollapse = ({
+  pushes,
+}: {
+  pushes: IPush[] | INotification[] | undefined;
+}) => {
   const navigate = useNavigate();
-  const getIcon = useCallback((push: IPush) => {
+  const getIcon = useCallback((push: IPush | INotification) => {
     switch (push.type) {
       case 'bookmark':
         return <HeartOutlined />;
@@ -25,7 +29,7 @@ const PushCollapse = ({ pushes }: { pushes: IPush[] }) => {
     }
   }, []);
 
-  const getTitle = useCallback((push: IPush) => {
+  const getTitle = useCallback((push: IPush | INotification) => {
     if (push.type === 'comment')
       return (
         <>
@@ -51,7 +55,7 @@ const PushCollapse = ({ pushes }: { pushes: IPush[] }) => {
   }, []);
 
   const handleOnClickHeader = useCallback(
-    (push: IPush) => {
+    (push: IPush | INotification) => {
       if (push.type !== 'notice' && push.link) {
         navigate(push.link);
       }
@@ -60,7 +64,7 @@ const PushCollapse = ({ pushes }: { pushes: IPush[] }) => {
   );
 
   const getHeader = useCallback(
-    (push: IPush) => {
+    (push: IPush | INotification) => {
       return (
         <div className="push-header" onClick={() => handleOnClickHeader(push)}>
           <span className="icon">{getIcon(push)}</span>
@@ -77,11 +81,11 @@ const PushCollapse = ({ pushes }: { pushes: IPush[] }) => {
       expandIconPosition="end"
       bordered={false}
     >
-      {pushes.map((push) => (
+      {pushes?.map((push, index) => (
         <Collapse.Panel
           className={push.isAlreadyRead ? 'is-already-read' : 'not-read'}
           css={cssPushPanelStyle}
-          key={push.pushId.toString()}
+          key={index}
           header={getHeader(push)}
           showArrow={false}
           collapsible={push.type === 'notice' ? 'header' : 'disabled'}

@@ -1,6 +1,5 @@
 import { Button, Card } from 'antd';
 import { useCallback, useState } from 'react';
-import { useGetComments } from '../../api/hooks/comment';
 import { IComment } from '../../api/interfaces/IComment';
 import CommentHandleModal from '../../components/CommentHideModal';
 import CommentSearchForm from '../../components/CommentSearchForm';
@@ -8,7 +7,6 @@ import CommentTable from '../../components/CommentTable';
 import { cssCommentManagementPageStyle } from './CommentManagementPage.styles';
 
 const CommentManagementPage = () => {
-  const { data } = useGetComments();
   const [isOpenHideModal, setIsOpenHideModal] = useState(false);
 
   const [selectedCommentIds, setSelectedCommentIds] = useState<React.Key[]>();

@@ -10,6 +10,7 @@ import { guData } from '../JoinPage/Data/GUDATA';
 import { dongData } from '../JoinPage/Data/DONGDATA';
 import { PATH } from '../../utils/paths';
 import user from './dummy.json';
+import { COMMON_COLOR } from '../../styles/constants/colors';
 import './MyEdit_imageSet.css';
 
 /*행정동 타입 선언*/
