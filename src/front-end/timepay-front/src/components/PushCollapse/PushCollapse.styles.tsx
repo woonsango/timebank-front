@@ -6,6 +6,8 @@ export const cssPushCollapseStyle = css`
   flex-direction: column;
   gap: 5px;
   margin-top: 5px;
+  width: 100%;
+  background-color: ${COMMON_COLOR.WARM_GRAY};
 `;
 export const cssPushPanelStyle = css`
   &.not-read {

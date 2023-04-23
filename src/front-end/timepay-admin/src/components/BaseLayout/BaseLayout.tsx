@@ -10,16 +10,44 @@ import {
   UserSwitchOutlined,
   OrderedListOutlined,
 } from '@ant-design/icons';
-import { Layout, Menu, MenuProps } from 'antd';
+import { Button, Layout, Menu, MenuProps, message } from 'antd';
 import { useMemo, useState } from 'react';
-import { Link, Outlet } from 'react-router-dom';
+import { Link, Outlet, useNavigate } from 'react-router-dom';
 import { PATH } from '../../utils/paths';
 import { cssBaseLayoutStyle } from './BaseLayout.styles';
 import { ReactComponent as Logo } from '../../assets/images/timepay-logo.svg';
 import { COMMON_COLOR } from '../../styles/constants/colors';
+import { useLogout } from '../../api/hooks/login';
+import { setTokenToCookie } from '../../utils/token';
 
 const BaseLayout = () => {
   const [collapsed, setCollapsed] = useState(false);
+  const logoutMutation = useLogout();
+  const navigate = useNavigate();
+  const [messageApi, contextHolder] = message.useMessage();
+
+  const onClickLogout = async (values: any) => {
+    await logoutMutation.mutateAsync(
+      {},
+      {
+        onSuccess: (result) => {
+          setTokenToCookie(result.data.jwt, 0);
+          messageApi
+            .open({
+              type: 'success',
+              content: '로그아웃 완료!',
+              duration: 1,
+            })
+            .then(function () {
+              navigate('/');
+            });
+        },
+        onError: (err) => {
+          console.log(err.response?.status);
+        },
+      },
+    );
+  };
 
   const items: Required<MenuProps>['items'] = useMemo(() => {
     return [
@@ -107,6 +135,7 @@ const BaseLayout = () => {
           height="34"
           className={`logo ${collapsed ? 'collapsed' : 'no-collapsed'}`}
         />
+        {contextHolder}
         <Menu
           defaultSelectedKeys={[window.location.pathname]}
           mode="inline"
@@ -115,12 +144,19 @@ const BaseLayout = () => {
       </Layout.Sider>
       <Layout>
         <Layout.Header>
-          <div
-            className="menu-collapse-trigger-btn"
-            onClick={() => setCollapsed(!collapsed)}
-          >
-            {collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
-          </div>
+          <Menu theme="dark" mode="horizontal">
+            <div
+              className="menu-collapse-trigger-btn"
+              onClick={() => setCollapsed(!collapsed)}
+            >
+              {collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+            </div>
+            <div className="logoutBtn">
+              <Button ghost onClick={onClickLogout}>
+                로그아웃
+              </Button>
+            </div>
+          </Menu>
         </Layout.Header>
         <Layout.Content>
           <Outlet />
