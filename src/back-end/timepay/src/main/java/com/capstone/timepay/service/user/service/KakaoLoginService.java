@@ -131,7 +131,7 @@ public class KakaoLoginService {
                     /* 성별 제공 여부 확인 및 성별 가져오기 */
                     boolean hasSex = element.getAsJsonObject().get("kakao_account").getAsJsonObject().get("has_gender").getAsBoolean();
                     if (hasSex) {
-                        sex = "성별 동의하지 않음"; //element.getAsJsonObject().get("kakao_account").getAsJsonObject().get("gender").getAsString();
+                        sex = element.getAsJsonObject().get("kakao_account").getAsJsonObject().get("gender").getAsString();
                     } else {
                         sex = "성별 동의하지 않음";
                     }
@@ -139,7 +139,7 @@ public class KakaoLoginService {
                     /* 생일 제공 여부 확인 및 생일 가져오기 */
                     boolean hasBirthday = element.getAsJsonObject().get("kakao_account").getAsJsonObject().get("has_birthday").getAsBoolean();
                     if (hasBirthday) {
-                        birthday = "생일 동의하지 않음"; //element.getAsJsonObject().get("kakao_account").getAsJsonObject().get("birthday").getAsString();
+                        birthday = element.getAsJsonObject().get("kakao_account").getAsJsonObject().get("birthday").getAsString();
                     } else {
                         birthday = "생일 동의하지 않음";
                     }
