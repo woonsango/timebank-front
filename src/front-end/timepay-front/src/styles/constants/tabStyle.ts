@@ -10,6 +10,18 @@ export const cssTabStyle = css`
   .ant-tabs-tab {
     padding: 10px 30px;
   }
+  .ant-tabs-tabpane-active {
+    display: flex;
+    width: 100%;
+    height: 100%;
+  }
+  .ant-spin {
+    width: 100%;
+    padding: 30px;
+  }
+  .ant-tabs-content {
+    display: flex;
+  }
   .ant-tabs-tab-btn {
     font-style: normal;
     font-weight: 700;
@@ -29,7 +41,7 @@ export const cssTabStyle = css`
 
   .ant-tabs-content-holder {
     height: 100%;
-    background-color: #f7f7f7;
+    background-color: ${COMMON_COLOR.WARM_GRAY};
     padding-bottom: 10px;
   }
 `;

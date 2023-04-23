@@ -23,3 +23,14 @@ export interface IGetUserInformationResponse {
   free_board_comment: any[];
   deal_board_comment: any[];
 }
+
+export interface IPostUserInformationResponse {
+  id: number;
+  image_url: string;
+  name: string;
+  nick_name: string;
+  location: string;
+  phone: string;
+  introduction: string;
+  birthday: string;
+}

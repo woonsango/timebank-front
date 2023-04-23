@@ -55,6 +55,7 @@ const AdminAdd = () => {
 
   const content = (
     <Form
+      form={form}
       {...layout}
       form={form}
       onFinish={onFinish}
