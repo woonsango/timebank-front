@@ -42,8 +42,8 @@ public class KakaoLoginService {
             StringBuilder sb = new StringBuilder();
             sb.append("grant_type=authorization_code");
             sb.append("&client_id=79587b639a3a9ca1c9433fa63bc55863");
-            sb.append("&redirect_uri=http://localhost:8080/oauth/redirect/kakao");
-            //sb.append("&redirect_uri=http://13.125.119.30/oauth/redirect/kakao");
+            sb.append("&redirect_uri=http://localhost:8080/oauth/redirect/kakao"); // 로컬 테스트용
+            //sb.append("&redirect_uri=http://13.125.119.30/oauth/redirect/kakao"); // 배포할 때 이 코드 사용
             sb.append("&code=" + code);
             bw.write(sb.toString());
             bw.flush();
@@ -81,7 +81,6 @@ public class KakaoLoginService {
         String reqURL = "https://kapi.kakao.com/v2/user/me";
         String email = null;
         String sex = null;
-        String birthday = null;
         User kakaoUser = null;
         String Key = "A4D47DASDA287964EQ14871ZS44875A";
 

@@ -4,10 +4,16 @@ import com.capstone.timepay.controller.user.request.RequestDTO;
 import com.capstone.timepay.controller.user.request.UpdateRequestDTO;
 import com.capstone.timepay.controller.user.response.GetResponseDTO;
 import com.capstone.timepay.controller.user.response.UpdateResponseDTO;
+import com.capstone.timepay.domain.board.Board;
+import com.capstone.timepay.domain.board.BoardRepository;
+import com.capstone.timepay.domain.comment.Comment;
+import com.capstone.timepay.domain.comment.CommentRepository;
 import com.capstone.timepay.domain.dealBoardComment.DealBoardComment;
 import com.capstone.timepay.domain.dealRegister.DealRegister;
+import com.capstone.timepay.domain.freeBoard.FreeBoardRepository;
 import com.capstone.timepay.domain.freeBoardComment.FreeBoardComment;
 import com.capstone.timepay.domain.freeRegister.FreeRegister;
+import com.capstone.timepay.domain.freeRegister.FreeRegisterRepository;
 import com.capstone.timepay.domain.user.User;
 import com.capstone.timepay.domain.user.UserRepository;
 import com.capstone.timepay.domain.userProfile.UserProfile;
@@ -15,6 +21,9 @@ import com.capstone.timepay.domain.userProfile.UserProfileRepository;
 import com.capstone.timepay.firebase.FirebaseService;
 import com.google.firebase.auth.FirebaseAuthException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,6 +42,10 @@ public class UserInfoService {
     private final UserRepository userRepository;
     private final UserProfileRepository userProfileRepository;
     private final FirebaseService firebaseService;
+    private final FreeBoardRepository freeBoardRepository;
+    private final FreeRegisterRepository freeRegisterRepository;
+    private final BoardRepository boardRepository;
+    private final CommentRepository commentRepository;
 
     @Transactional
     public void createUserInfo(RequestDTO userData){
@@ -90,6 +103,7 @@ public class UserInfoService {
             /* 코드 재활용을 위한 변수 생성 */
             String imageUrl = imageUpload(image);
             String introduction =  userData.getIntroduction();
+            String location = userData.getLocation();
 
             if(imageUrl != null)
                 userProfile.setImageUrl(imageUrl);
@@ -97,7 +111,11 @@ public class UserInfoService {
             if(introduction != null)
                 userProfile.setIntroduction(introduction);
 
+            if(location != null)
+                user.setLocation(location);
+
             userProfile.setUpdatedAt(LocalDateTime.now());
+            userRepository.save(user);
             userProfileRepository.save(userProfile);
         }
 
@@ -129,13 +147,19 @@ public class UserInfoService {
     }
 
     @Transactional(readOnly = true)
-    public GetResponseDTO getUserInfo(Long id){
+    public GetResponseDTO getUserInfo(Long id, int pageIndex, int pageSize){
         User userData = userRepository.findById(id).orElseThrow(()->new IllegalArgumentException("존재하지 않는 유저입니다."));
         UserProfile userProfileData = userData.getUserProfile();
+        Pageable pageable = PageRequest.of(pageIndex, pageSize);
 
 
         /* 유저 테이블에서 데이터 가져오기 */
         String nickName = userData.getNickname();
+        String location = userData.getLocation();
+        Page<Board> boards = boardRepository.findAll(pageable);
+        Page<Comment> comments = commentRepository.findAll(pageable);
+
+
         List<FreeRegister> freeRegisters = userData.getFreeRegisters();
         List<DealRegister> dealRegisters = userData.getDealRegisters();
         List<FreeBoardComment> freeBoardComments = userData.getFreeBoardComments();
@@ -143,10 +167,12 @@ public class UserInfoService {
 
         /* 유저 프로필 테이블에서 데이터 가져오기 */
         String imageUrl = userProfileData.getImageUrl();
+        String introduction = userProfileData.getIntroduction();
         int timePay = userData.getUserProfile().getTimepay();
 
         /* 생성자를 사용하여 객체 생성 */
-        GetResponseDTO getResponseDTO = new GetResponseDTO(id, imageUrl, nickName, timePay, freeRegisters, dealRegisters, freeBoardComments, dealBoardComments);
+        // GetResponseDTO getResponseDTO = new GetResponseDTO(id, imageUrl, nickName, location, introduction, timePay, freeRegisters, dealRegisters, freeBoardComments, dealBoardComments);
+        GetResponseDTO getResponseDTO = new GetResponseDTO(id, imageUrl, nickName, location, introduction, timePay, boards, comments);
         return getResponseDTO;
     }
 
@@ -157,6 +183,7 @@ public class UserInfoService {
 
         /* 유저 테이블에서 데이터 가져오기 */
         String nickName = userData.getNickname();
+        String location = userData.getLocation();
         List<FreeRegister> freeRegisters = userData.getFreeRegisters();
         List<DealRegister> dealRegisters = userData.getDealRegisters();
         List<FreeBoardComment> freeBoardComments = userData.getFreeBoardComments();
@@ -164,10 +191,11 @@ public class UserInfoService {
 
         /* 유저 프로필 테이블에서 데이터 가져오기 */
         String imageUrl = userData.getUserProfile().getImageUrl();
+        String introcudtion = userData.getUserProfile().getIntroduction();
         int timePay = userData.getUserProfile().getTimepay();
 
         /* 생성자를 사용하여 객체 생성 */
-        GetResponseDTO getResponseDTO = new GetResponseDTO(userData.getUserId(), imageUrl, nickName, timePay, freeRegisters, dealRegisters, freeBoardComments, dealBoardComments);
+        GetResponseDTO getResponseDTO = new GetResponseDTO(userData.getUserId(), imageUrl, nickName, location, introcudtion, timePay, freeRegisters, dealRegisters, freeBoardComments, dealBoardComments);
         return getResponseDTO;
     }
 
