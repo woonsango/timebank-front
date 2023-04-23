@@ -1,3 +1,5 @@
+import { GetPageableData, PageableData } from './ICommon';
+
 export interface IAdmin {
   createdAt: string;
   updatedA?: string;
@@ -9,4 +11,10 @@ export interface IAdmin {
   email: string;
   phone: string;
   inquiryAnswers: any[];
+}
+export interface IGetAdminRequest extends GetPageableData {
+  adminId?: string;
+}
+export interface IGetAdminResponse extends PageableData {
+  content: IAdmin[];
 }

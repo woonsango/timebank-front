@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useMemo, useRef, useState } from 'react';
 import {
   Form,
   Input,
@@ -16,37 +16,36 @@ import type { FilterConfirmProps } from 'antd/es/table/interface';
 import Highlighter from 'react-highlight-words';
 import { cssAdminMainTable } from './AdminMainTable.style';
 import { IAdmin } from '../../api/interfaces/IAdmin';
+import { useDeleteAdmins, useGetAdmins } from '../../api/hooks/admin';
+import { useQueryClient } from 'react-query';
+import { COMMON_COLOR } from '../../styles/constants/colors';
 
 type DataIndex = keyof IAdmin;
 
-const originData: IAdmin[] = [];
-for (let i = 0; i < 100; i++) {
-  originData.push({
-    adminId: i,
-    name: `수연 ${i}`,
-    email: 'test@test.com',
-    adminName: `HSY ${i}`,
-    password: '123123',
-    phone: '010-1234-5678',
-    createdAt: '2021-12-34',
-    authority: '관리자',
-    inquiryAnswers: [],
-  });
-}
-
 const AdminMainTable = () => {
   const [form] = Form.useForm();
-  const [data, setData] = useState(originData);
   const [searchText, setSearchText] = useState('');
   const [searchedColumn, setSearchedColumn] = useState('');
   const searchInput = useRef<InputRef>(null);
+  const { data } = useGetAdmins();
+  const deleteAdminsMutation = useDeleteAdmins();
+  const queryClient = useQueryClient();
 
-  const handleDelete = (adminId: number) => {
-    const newData = data.filter(
-      (item: { adminId: number }) => item.adminId !== adminId,
-    );
-    setData(newData);
+  const dataSource = data?.data.content;
+
+  const handleDelete = async (adminId: number) => {
+    await deleteAdminsMutation.mutateAsync(adminId, {
+      onSuccess: (result) => {
+        queryClient.invalidateQueries({
+          queryKey: ['useGetAdmins'],
+        });
+      },
+      onError: (err) => {
+        console.log(err.response?.status);
+      },
+    });
   };
+
   const handleSearch = (
     selectedKeys: string[],
     confirm: (param?: FilterConfirmProps) => void,
@@ -115,7 +114,9 @@ const AdminMainTable = () => {
       </div>
     ),
     filterIcon: (filtered: boolean) => (
-      <SearchOutlined style={{ color: filtered ? '#1890ff' : undefined }} />
+      <SearchOutlined
+        style={{ color: filtered ? COMMON_COLOR.BLUE : undefined }}
+      />
     ),
     onFilter: (value, record) =>
       record[dataIndex]
@@ -130,7 +131,7 @@ const AdminMainTable = () => {
     render: (text) =>
       searchedColumn === dataIndex ? (
         <Highlighter
-          highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
+          highlightStyle={{ backgroundColor: COMMON_COLOR.MAIN1, padding: 0 }}
           searchWords={[searchText]}
           autoEscape
           textToHighlight={text ? text.toString() : ''}
@@ -152,7 +153,7 @@ const AdminMainTable = () => {
       dataIndex: 'adminName',
       width: '10%',
       editable: true,
-      // ...getColumnSearchProps('adminName'),
+      ...getColumnSearchProps('adminName'),
     },
     {
       title: '직책',
@@ -180,7 +181,7 @@ const AdminMainTable = () => {
       dataIndex: 'operation',
       width: '10%',
       render: (_: any, record: { adminId: number }) =>
-        originData.length >= 1 ? (
+        dataSource ? (
           <Popconfirm
             title="삭제하시겠습니까?"
             onConfirm={() => handleDelete(record.adminId)}
@@ -194,7 +195,7 @@ const AdminMainTable = () => {
   return (
     <div css={cssAdminMainTable}>
       <Form form={form} component={false}>
-        <Table bordered dataSource={data} columns={columns} />
+        <Table bordered dataSource={dataSource} columns={columns} />
       </Form>
     </div>
   );
