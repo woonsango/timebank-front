@@ -7,6 +7,7 @@ import com.capstone.timepay.domain.dealBoardComment.DealBoardComment;
 import com.capstone.timepay.domain.dealBoardReport.DealBoardReport;
 import com.capstone.timepay.domain.dealRegister.DealRegister;
 import com.capstone.timepay.domain.user.User;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
@@ -40,15 +41,19 @@ public class DealBoard extends BaseTimeEntity {
     private boolean isHidden;
     private BoardStatus boardStatus;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "dealBoard", orphanRemoval = true, fetch = FetchType.LAZY)
     private List<DealBoardComment> dealBoardComments = new ArrayList<>();
 
+    @JsonIgnore
     @OneToMany(mappedBy = "dealBoard", orphanRemoval = true, fetch = FetchType.LAZY)
     private List<DealAttatchment> dealAttatchments = new ArrayList<>();
 
+    @JsonIgnore
     @OneToMany(mappedBy = "dealBoard", orphanRemoval = true, fetch = FetchType.LAZY)
     private List<DealRegister> dealRegisters = new ArrayList<>();
 
+    @JsonIgnore
     @OneToMany(mappedBy = "dealBoard", orphanRemoval = true, fetch = FetchType.LAZY)
     private List<DealBoardReport> dealBoardReports = new ArrayList<>();
 }

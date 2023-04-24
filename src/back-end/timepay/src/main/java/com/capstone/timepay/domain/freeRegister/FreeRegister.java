@@ -3,6 +3,7 @@ package com.capstone.timepay.domain.freeRegister;
 import com.capstone.timepay.domain.BaseTimeEntity;
 import com.capstone.timepay.domain.freeBoard.FreeBoard;
 import com.capstone.timepay.domain.user.User;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -24,6 +25,7 @@ public class FreeRegister extends BaseTimeEntity {
     @JoinColumn(name="free_board_id")
     private FreeBoard freeBoard;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name="user_id")
     private User user;

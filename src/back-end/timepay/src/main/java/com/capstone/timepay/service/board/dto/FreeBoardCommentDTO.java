@@ -17,18 +17,14 @@ public class FreeBoardCommentDTO {
 
     private Long freeBoardCommentId;
     private String content;
-    private User user;
     private boolean isHidden;
-    private FreeBoard freeBoard;
 
     public static FreeBoardCommentDTO toFreeBoardCommentDTO(FreeBoardComment freeBoardComment)
     {
         return new FreeBoardCommentDTO(
                 freeBoardComment.getF_commentId(),
                 freeBoardComment.getContent(),
-                freeBoardComment.getUser(),
-                freeBoardComment.isHidden(),
-                freeBoardComment.getFreeBoard()
+                freeBoardComment.isHidden()
         );
     }
 }

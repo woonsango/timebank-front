@@ -4,6 +4,7 @@ import com.capstone.timepay.domain.BaseTimeEntity;
 import com.capstone.timepay.domain.freeBoard.FreeBoard;
 import com.capstone.timepay.domain.freeCommentReport.FreeCommentReport;
 import com.capstone.timepay.domain.user.User;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
@@ -29,10 +30,12 @@ public class FreeBoardComment extends BaseTimeEntity {
     @OneToMany(mappedBy = "freeBoardComment", orphanRemoval = true, fetch = FetchType.LAZY)
     private List<FreeCommentReport> freeCommentReports = new ArrayList<>();
 
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="f_boardId")
     private FreeBoard freeBoard;
-   
+
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="user_id")
     private User user;
