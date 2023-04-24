@@ -29,9 +29,7 @@ public class GetResponseDTO {
 
     private int timePay; // 타임페이, userProfile에서 가져옴
 
-    private Page<FreeRegister> freeRegisters;
     private Page<DealRegister> dealRegisters;
-    private Page<FreeBoardComment> freeBoardComments;
     private Page<DealBoardComment> dealBoardComments;
 
     private Page<Board> boards;
@@ -39,27 +37,15 @@ public class GetResponseDTO {
 
 
     /* 타유저 프로필 정보 조회를 위한 DTO */
-    public GetResponseDTO(Long id, String imageUrl, String nickName, String location, String intoroduction, int timePay, Page<Board> boards, Page<Comment> comments){
-        this.id = id;
-        this.imageUrl = imageUrl;
-        this.nickName = nickName;
-        this.location = location;
-        this.introduction = intoroduction;
-        this.timePay = timePay;
-        this.boards = boards;
-        this.comments = comments;
-    }
     public GetResponseDTO(Long id, String imageUrl, String nickName, String location, String intoroduction, int timePay,
-                          Page<FreeRegister> freeRegisters, Page<DealRegister> dealRegisters, Page<FreeBoardComment> freeBoardComments, Page<DealBoardComment> dealBoardComments){
+                           Page<DealRegister> dealRegisters, Page<DealBoardComment> dealBoardComments){
         this.id = id;
         this.imageUrl = imageUrl;
         this.nickName = nickName;
         this.location = location;
         this.introduction = intoroduction;
         this.timePay = timePay;
-        this.freeRegisters = freeRegisters;
         this.dealRegisters = dealRegisters;
-        this.freeBoardComments = freeBoardComments;
         this.dealBoardComments = dealBoardComments;
     }
 }

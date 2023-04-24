@@ -26,6 +26,7 @@ public class DealRegister extends BaseTimeEntity {
     @JoinColumn(name="user_id")
     private User user;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name="deal_board_id")
     private DealBoard dealBoard;

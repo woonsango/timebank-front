@@ -31,9 +31,11 @@ public class DealBoardComment extends BaseTimeEntity {
     // 비공개여부
     private boolean isHidden;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "dealBoardComment", orphanRemoval = true, fetch = FetchType.LAZY)
     private List<DealCommentReport> dealCommentReports = new ArrayList<>();
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="d_boardId")
     @OnDelete(action = OnDeleteAction.CASCADE)

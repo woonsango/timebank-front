@@ -8,4 +8,5 @@ import java.util.List;
 
 public interface FreeBoardRepository extends JpaRepository<FreeBoard,Long> {
     Page<FreeBoard> findByIsHiddenFalse(Pageable pageable);
+    FreeBoard findByType(String type);
 }
