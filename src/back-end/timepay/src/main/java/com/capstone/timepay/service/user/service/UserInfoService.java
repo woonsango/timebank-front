@@ -147,7 +147,8 @@ public class UserInfoService {
     }
 
     @Transactional(readOnly = true)
-    public GetResponseDTO getUserInfo(Long id, int pageIndex, int pageSize){
+    public GetResponseDTO getUserInfo(Long id, String boardType, String boardStatus,
+                                      String commentStatus, int pageIndex, int pageSize){
         User userData = userRepository.findById(id).orElseThrow(()->new IllegalArgumentException("존재하지 않는 유저입니다."));
         UserProfile userProfileData = userData.getUserProfile();
         Pageable pageable = PageRequest.of(pageIndex, pageSize);
@@ -155,6 +156,9 @@ public class UserInfoService {
         /* 유저 테이블에서 데이터 가져오기 */
         String nickName = userData.getNickname();
         String location = userData.getLocation();
+
+        /* 아래 페이지들은 User가 작성한 객체가 아닌, 모든 객체를 불러옴 */
+        /* 따라서 수정 필요함 */
         Page<Board> boards = boardRepository.findAll(pageable);
         Page<Comment> comments = commentRepository.findAll(pageable);
 
@@ -162,6 +166,62 @@ public class UserInfoService {
         String imageUrl = userProfileData.getImageUrl();
         String introduction = userProfileData.getIntroduction();
         int timePay = userData.getUserProfile().getTimepay();
+
+        /* 아래는 구현해보려고 시도한 내용 */
+        /* 댓글 상태 쿼리값이 비어있지 않으면 -> 댓글 조회 */
+        if(commentStatus != null)
+        {
+
+            /* 자유 게시판 댓글 */
+            if(commentStatus.equals("free"))
+            {
+                //코드
+            }
+
+            /* 거래 게시판 댓글 */
+            else if(commentStatus.equals("deal"))
+            {
+                //코드
+            }
+        }
+        /* User가 작성한 모든 댓글(자유, 거래 포함) */
+        else
+        {
+            // 코드
+        }
+
+        /* 게시글 유형 값이 비어있지 않다면 */
+        if(boardType != null)
+        {
+            /* 게시글 상태 값이 비어있다면 */
+            if(boardStatus == null)
+            {
+                // 유저가 작성한 게시글의 게시글 유형만 필터링
+            }
+
+            /* 게시글 상태가 비어있지 않다면 */
+            else if(boardStatus != null)
+            {
+                // 유저가 작성한 게시글의 게시글 유형 필터링
+                // 그 후, 유저가 작성한 게시글의 게시글 상태 필터링
+            }
+        }
+
+        /* 게시글 유형이 비어있다면 */
+        else if (boardType == null)
+        {
+            /* 게시글 상태 값이 비어있다면 */
+            if(boardStatus == null)
+            {
+                // 유저가 작성한 모든 게시글
+            }
+
+            /* 게시글 상태가 비어있지 않다면 */
+            else if(boardStatus != null)
+            {
+                // 유저가 작성한 게시글의 상태만 필터링
+            }
+        }
 
         /* 생성자를 사용하여 객체 생성 */
         GetResponseDTO getResponseDTO = new GetResponseDTO(id, imageUrl, nickName, location, introduction, timePay, boards, comments);

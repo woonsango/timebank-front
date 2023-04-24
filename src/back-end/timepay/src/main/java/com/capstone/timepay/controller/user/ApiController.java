@@ -42,9 +42,12 @@ public class ApiController {
     @Transactional(readOnly = true)
     @GetMapping("/get/{id}")
     @ApiOperation(value="유저 데이터 조회",notes = "주소로 id를 받아 해당하는 유저 정보를 조회합니다.")
-    public ResponseEntity<?> getUserInfo(@PathVariable Long id, @RequestParam(defaultValue = "0") int pageIndex,
+    public ResponseEntity<?> getUserInfo(@PathVariable Long id, @RequestParam(required = false) String boardType,
+                                         @RequestParam(required = false) String boardStatus,
+                                         @RequestParam(required = false) String commentType,
+                                         @RequestParam(defaultValue = "0") int pageIndex,
                                          @RequestParam(defaultValue = "50") int pageSize){
-        GetResponseDTO responseData = userInfoService.getUserInfo(id, pageIndex, pageSize);
+        GetResponseDTO responseData = userInfoService.getUserInfo(id, boardType, boardStatus, commentType, pageIndex, pageSize);
         return ResponseEntity.ok(responseData);
     }
 
