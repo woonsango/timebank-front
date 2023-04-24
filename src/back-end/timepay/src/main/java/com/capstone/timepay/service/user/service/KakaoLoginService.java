@@ -84,12 +84,6 @@ public class KakaoLoginService {
         User kakaoUser = null;
         String Key = "A4D47DASDA287964EQ14871ZS44875A";
 
-        String a = null;
-        if (a.toString() == null)
-        {
-            System.out.println("해결완료씈");
-        }
-
         //access_token을 이용하여 사용자 정보 조회
 
         try {
