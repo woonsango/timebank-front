@@ -152,7 +152,6 @@ public class UserInfoService {
         UserProfile userProfileData = userData.getUserProfile();
         Pageable pageable = PageRequest.of(pageIndex, pageSize);
 
-
         /* 유저 테이블에서 데이터 가져오기 */
         String nickName = userData.getNickname();
         String location = userData.getLocation();
