@@ -22,6 +22,7 @@ import com.capstone.timepay.firebase.FirebaseService;
 import com.google.firebase.auth.FirebaseAuthException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
@@ -237,8 +238,13 @@ public class UserInfoService {
         /* 유저 테이블에서 데이터 가져오기 */
         String nickName = userData.getNickname();
         String location = userData.getLocation();
-        Page<Board> boards = boardRepository.findAll(pageable);
-        Page<Comment> comments = commentRepository.findAll(pageable);
+        // Page<Board> boards = boardRepository.findAll(pageable);
+        // Page<Comment> comments = commentRepository.findAll(pageable);
+
+        Page<FreeRegister> freeRegisters = new PageImpl<>(userData.getFreeRegisters(), pageable, userData.getFreeRegisters().size());
+        Page<DealRegister> dealRegisters = new PageImpl<>(userData.getDealRegisters(), pageable, userData.getDealRegisters().size());
+        Page<FreeBoardComment> freeBoardComments  = new PageImpl<>(userData.getFreeBoardComments(), pageable, userData.getFreeBoardComments().size());
+        Page<DealBoardComment> dealBoardComments  = new PageImpl<>(userData.getDealBoardComments(), pageable, userData.getDealBoardComments().size());
 
 
         /* 유저 프로필 테이블에서 데이터 가져오기 */
@@ -247,7 +253,7 @@ public class UserInfoService {
         int timePay = userData.getUserProfile().getTimepay();
 
         /* 생성자를 사용하여 객체 생성 */
-        GetResponseDTO getResponseDTO = new GetResponseDTO(userData.getUserId(), imageUrl, nickName, location, introcudtion, timePay, boards, comments);
+        GetResponseDTO getResponseDTO = new GetResponseDTO(userData.getUserId(), imageUrl, nickName, location, introcudtion, timePay, freeRegisters, dealRegisters, freeBoardComments, dealBoardComments);
         return getResponseDTO;
     }
 
