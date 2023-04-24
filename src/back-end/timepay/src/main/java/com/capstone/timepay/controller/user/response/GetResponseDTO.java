@@ -32,27 +32,8 @@ public class GetResponseDTO {
     private Page<Board> boards;
     private Page<Comment> comments;
 
-    /* 아래는 타유저 프로필 정보 조회를 위해 생성된 데이터 */
-    private List<FreeRegister> freeRegister;
-    private List<DealRegister> dealRegister;
-    private List<FreeBoardComment> freeBoardComment;
-    private List<DealBoardComment> dealBoardComment;
-
 
     /* 타유저 프로필 정보 조회를 위한 DTO */
-    public GetResponseDTO(Long id, String imageUrl, String nickName, String location, String intoroduction, int timePay, List<FreeRegister> freeRegister, List<DealRegister> dealRegister, List<FreeBoardComment> freeBoardComment, List<DealBoardComment> dealBoardComment){
-        this.id = id;
-        this.imageUrl = imageUrl;
-        this.nickName = nickName;
-        this.location = location;
-        this.introduction = intoroduction;
-        this.timePay = timePay;
-        this.freeRegister = freeRegister;
-        this.dealRegister = dealRegister;
-        this.freeBoardComment = freeBoardComment;
-        this.dealBoardComment = dealBoardComment;
-    }
-
     public GetResponseDTO(Long id, String imageUrl, String nickName, String location, String intoroduction, int timePay, Page<Board> boards, Page<Comment> comments){
         this.id = id;
         this.imageUrl = imageUrl;

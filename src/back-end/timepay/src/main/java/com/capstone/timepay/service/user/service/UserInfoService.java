@@ -158,35 +158,28 @@ public class UserInfoService {
         Page<Board> boards = boardRepository.findAll(pageable);
         Page<Comment> comments = commentRepository.findAll(pageable);
 
-
-        List<FreeRegister> freeRegisters = userData.getFreeRegisters();
-        List<DealRegister> dealRegisters = userData.getDealRegisters();
-        List<FreeBoardComment> freeBoardComments = userData.getFreeBoardComments();
-        List<DealBoardComment> dealBoardComments = userData.getDealBoardComments();
-
         /* 유저 프로필 테이블에서 데이터 가져오기 */
         String imageUrl = userProfileData.getImageUrl();
         String introduction = userProfileData.getIntroduction();
         int timePay = userData.getUserProfile().getTimepay();
 
         /* 생성자를 사용하여 객체 생성 */
-        // GetResponseDTO getResponseDTO = new GetResponseDTO(id, imageUrl, nickName, location, introduction, timePay, freeRegisters, dealRegisters, freeBoardComments, dealBoardComments);
         GetResponseDTO getResponseDTO = new GetResponseDTO(id, imageUrl, nickName, location, introduction, timePay, boards, comments);
         return getResponseDTO;
     }
 
     @Transactional(readOnly = true)
-    public GetResponseDTO getMyInfo(Authentication auth){
+    public GetResponseDTO getMyInfo(Authentication auth, int pageIndex, int pageSize){
         String userEmail = auth.getName();
         User userData = userRepository.findByEmail(userEmail).orElseThrow(IllegalArgumentException::new);
+        Pageable pageable = PageRequest.of(pageIndex, pageSize);
 
         /* 유저 테이블에서 데이터 가져오기 */
         String nickName = userData.getNickname();
         String location = userData.getLocation();
-        List<FreeRegister> freeRegisters = userData.getFreeRegisters();
-        List<DealRegister> dealRegisters = userData.getDealRegisters();
-        List<FreeBoardComment> freeBoardComments = userData.getFreeBoardComments();
-        List<DealBoardComment> dealBoardComments = userData.getDealBoardComments();
+        Page<Board> boards = boardRepository.findAll(pageable);
+        Page<Comment> comments = commentRepository.findAll(pageable);
+
 
         /* 유저 프로필 테이블에서 데이터 가져오기 */
         String imageUrl = userData.getUserProfile().getImageUrl();
@@ -194,7 +187,7 @@ public class UserInfoService {
         int timePay = userData.getUserProfile().getTimepay();
 
         /* 생성자를 사용하여 객체 생성 */
-        GetResponseDTO getResponseDTO = new GetResponseDTO(userData.getUserId(), imageUrl, nickName, location, introcudtion, timePay, freeRegisters, dealRegisters, freeBoardComments, dealBoardComments);
+        GetResponseDTO getResponseDTO = new GetResponseDTO(userData.getUserId(), imageUrl, nickName, location, introcudtion, timePay, boards, comments);
         return getResponseDTO;
     }
 
@@ -212,7 +205,6 @@ public class UserInfoService {
         } else{
             System.out.println("존재하지 않는 회원이랍니다~");
         }
-
     }
 
     public String imageUpload(MultipartFile image) throws IOException, FirebaseAuthException {
