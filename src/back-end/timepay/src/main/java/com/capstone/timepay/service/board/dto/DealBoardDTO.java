@@ -20,6 +20,7 @@ public class DealBoardDTO
     private Long dealBoardId;
     private String title;
     private BoardStatus state;
+    private String type;
     private String content;
     private String category;
     private String location;
@@ -35,6 +36,7 @@ public class DealBoardDTO
                 dealBoard.getD_boardId(),
                 dealBoard.getTitle(),
                 dealBoard.getBoardStatus(),
+                dealBoard.getType(),
                 dealBoard.getContent(),
                 dealBoard.getCategory(),
                 dealBoard.getLocation(),

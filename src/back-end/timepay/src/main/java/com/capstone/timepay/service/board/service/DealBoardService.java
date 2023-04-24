@@ -74,7 +74,7 @@ public class DealBoardService
     public Page<DealBoardDTO> getHelperDealBoard(int pagingIndex, int paingSize)
     {
         Pageable pageable = PageRequest.of(pagingIndex, paingSize);
-        Page<DealBoard> dealBoardPage = dealBoardRepository.findByCategory(pageable, "helper");
+        Page<DealBoard> dealBoardPage = dealBoardRepository.findByType(pageable, "helper");
         List<DealBoardDTO> dealBoardDTOList = dealBoardPage.stream()
                 .map(DealBoardDTO::toDealBoardDTO)
                 .collect(Collectors.toList());
@@ -86,7 +86,7 @@ public class DealBoardService
     public Page<DealBoardDTO> getHelpDealBoard(int pagingIndex, int paingSize)
     {
         Pageable pageable = PageRequest.of(pagingIndex, paingSize);
-        Page<DealBoard> dealBoardPage = dealBoardRepository.findByCategory(pageable, "help");
+        Page<DealBoard> dealBoardPage = dealBoardRepository.findByType(pageable, "help");
         List<DealBoardDTO> dealBoardDTOList = dealBoardPage.stream()
                 .map(DealBoardDTO::toDealBoardDTO)
                 .collect(Collectors.toList());
@@ -95,7 +95,7 @@ public class DealBoardService
 
     // 게시물 작성
     @Transactional
-    public DealBoardDTO write(DealBoardDTO dealBoardDTO, String email, String category,
+    public DealBoardDTO write(DealBoardDTO dealBoardDTO, String email, String type,
                               List<MultipartFile> images) throws IOException, FirebaseAuthException
     {
         User user = userRepository.findByEmail(email).orElseThrow(() -> {
@@ -117,7 +117,8 @@ public class DealBoardService
                 .title(dealBoardDTO.getTitle())
                 .boardStatus(dealBoardDTO.getState())
                 .content(dealBoardDTO.getContent())
-                .category(category)
+                .category(dealBoardDTO.getCategory())
+                .type(type)
                 .boardStatus(BoardStatus.MATCHING_IN_PROGRESS)
                 .location(dealBoardDTO.getLocation())
                 .startTime(dealBoardDTO.getEndTime())
@@ -149,16 +150,14 @@ public class DealBoardService
             return new IllegalArgumentException("Board Id를 찾을 수 없습니다");
         });
 
-        dealBoard = DealBoard.builder()
-                .title(boardDto.getTitle())
-                .boardStatus(boardDto.getState())
-                .content(boardDto.getContent())
-                .category(boardDto.getCategory())
-                .location(boardDto.getLocation())
-                .startTime(boardDto.getEndTime())
-                .pay(boardDto.getPay())
-                .isHidden(boardDto.isHidden())
-                .build();
+        dealBoard.setTitle(boardDto.getTitle());
+        dealBoard.setBoardStatus(boardDto.getState());
+        dealBoard.setContent(boardDto.getContent());
+        dealBoard.setCategory(boardDto.getCategory());
+        dealBoard.setLocation(boardDto.getLocation());
+        dealBoard.setStartTime(boardDto.getEndTime());
+        dealBoard.setPay(boardDto.getPay());
+        dealBoard.setHidden(boardDto.isHidden());
 
         return DealBoardDTO.toDealBoardDTO(dealBoard);
     }
