@@ -40,7 +40,7 @@ public class KakaoLoginController {
         if(user.isSignUp()) {
             final UserDetails userDetails = userDetailService.loadUserByUsername(user.getEmail());
             final String token = jwtUtils.createToken(userDetails.getUsername(), user.getRoles());
-            return ResponseEntity.ok(new AuthenticationResponse(token, user.getRoles()));
+            return ResponseEntity.ok(new AuthenticationResponse(token, user.getRoles(), user.getUserId()));
         }
 
         return ResponseEntity.ok("회원가입 신청 완료\n" + user.getUserId());
