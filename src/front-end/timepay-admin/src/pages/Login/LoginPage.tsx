@@ -1,5 +1,4 @@
-import React, { useCallback } from 'react';
-import { Button, Checkbox, Form, Input } from 'antd';
+import { Button, Form, Input, message } from 'antd';
 import { ReactComponent as Logo } from '../../assets/images/timepay-logo.svg';
 import { COMMON_COLOR } from '../../styles/constants/colors';
 import { useNavigate } from 'react-router-dom';
@@ -11,14 +10,18 @@ import {
 import { usePostLogin } from '../../api/hooks/login';
 import { setTokenToCookie } from '../../utils/token';
 
-const onFinishFailed = (errorInfo: any) => {
-  console.log('Failed:', errorInfo);
-};
-
 const LoginPage = () => {
   const [form] = Form.useForm();
   const navigate = useNavigate();
   const loginMutation = usePostLogin();
+  const [messageApi, contextHolder] = message.useMessage();
+  const onFinishFailed = (errorInfo: any) => {
+    messageApi.open({
+      type: 'error',
+      content: '로그인 실패!',
+    });
+    console.log('Failed:', errorInfo);
+  };
 
   const handleOnClickLoginBtn = async (values: any) => {
     /*첫로그인 검증후 비밀번호 변경 페이지 접근 제어 추가예정*/
@@ -31,23 +34,34 @@ const LoginPage = () => {
       {
         onSuccess: (result) => {
           setTokenToCookie(result.data.jwt, 1);
-          firstLogin
-            ? navigate('/password-edit')
-            : navigate(`/post-management`);
+          messageApi
+            .open({
+              type: 'success',
+              content: '로그인 성공!',
+              duration: 1,
+            })
+            .then(function () {
+              firstLogin
+                ? navigate('/password-edit')
+                : navigate(`/post-management`);
+            });
         },
         onError: (err) => {
+          messageApi.open({
+            type: 'error',
+            content: '로그인 실패!',
+          });
           console.log(err.response?.status);
         },
       },
     );
-
-    // firstLogin ? navigate('/password-edit') : navigate(`/post-management`);
   };
 
   return (
     <div css={cssLoginOuterBox}>
       <div css={cssLoginInnerBox}>
         <Logo fill={COMMON_COLOR.LOGO1} width="378px" height="128.01px" />
+        {contextHolder}
         <Form
           form={form}
           name="basic"

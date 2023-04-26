@@ -9,7 +9,6 @@ import {
   message,
 } from 'antd';
 import { useState } from 'react';
-import sampleImg from '../../assets/images/timepayLogo.png';
 import { siData } from './Data/SIDATA';
 import { guData } from './Data/GUDATA';
 import { dongData } from './Data/DONGDATA';
@@ -28,7 +27,9 @@ const EditModal = () => {
   };
 
   /*회원 정보 수정 모달 onChange 함수 - 프로필 이미지, 닉네임, 지역, 소개글*/
-  const [editProfileImg, setEditProfileImg] = useState(sampleImg);
+  const [editProfileImg, setEditProfileImg] = useState(
+    'https://images.pexels.com/photos/4666665/pexels-photo-4666665.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
+  );
   const [editNickName, setEditNickName] = useState('');
   const [editTown, setEditTown] = useState('');
   const [editIntroduction, setEditIntroduction] = useState('');
@@ -114,7 +115,9 @@ const EditModal = () => {
 
   const handleCancelEdit = () => {
     setModalEdit(false);
-    setEditProfileImg(sampleImg);
+    setEditProfileImg(
+      'https://images.pexels.com/photos/4666665/pexels-photo-4666665.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
+    );
     setEditNickName('');
     setGu(dongData[guData[0]]);
     setDong(dongData[guData[0]][0]);

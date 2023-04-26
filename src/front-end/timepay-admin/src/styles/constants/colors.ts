@@ -8,4 +8,5 @@ export const COMMON_COLOR = {
   LOGO1: '#FFC700',
   FONT3: '#858585',
   SILVER_GRAY: '#CDCDCD',
+  BLUE: '#74B4FF',
 };

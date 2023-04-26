@@ -1,11 +1,13 @@
-import { Button, message, Modal, Select, Table } from 'antd';
+import { Button, message, Modal, Table } from 'antd';
 import type { ColumnType } from 'antd/es/table';
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useMemo } from 'react';
 import dayjs from 'dayjs';
-import { IPush } from '../../api/interfaces/IPush';
+import { INotification } from '../../api/interfaces/INotification';
+import { useQueryClient } from 'react-query';
+import { useDeleteNotifications } from '../../api/hooks/notification';
 
 export interface PushDeleteModalProps {
-  pushes?: IPush[];
+  pushes?: INotification[];
   isOpen: boolean;
   onCancel: () => void;
 }
@@ -14,39 +16,69 @@ const PushDeleteModal = ({
   isOpen,
   onCancel,
 }: PushDeleteModalProps) => {
-  // @ts-ignore
-  const columns: ColumnType<IPush> = useMemo(() => {
+  const queryClient = useQueryClient();
+  const deleteNotificationMutation = useDeleteNotifications();
+
+  const [messageApi, contextHolder] = message.useMessage();
+
+  const handleOnDeleteNotifications = useCallback(() => {
+    if (pushes) {
+      deleteNotificationMutation.mutateAsync(
+        pushes?.map((push) => push.notificationId),
+        {
+          onSuccess: (result) => {
+            messageApi.open({
+              type: 'success',
+              content: '공지가 삭제되었습니다.',
+            });
+          },
+          onError: (err) => {
+            messageApi.open({
+              type: 'error',
+              content: (
+                <>
+                  오류 발생: <br />
+                  {err}
+                </>
+              ),
+            });
+          },
+          onSettled: async (data) => {
+            onCancel();
+            await queryClient.invalidateQueries({
+              queryKey: ['useGetNotifications'],
+            });
+          },
+        },
+      );
+    }
+  }, [pushes, onCancel, messageApi, queryClient, deleteNotificationMutation]);
+
+  //@ts-ignore
+  const columns: ColumnType<INotification> = useMemo(() => {
     return [
       {
         title: '공지 번호',
-        key: 'pushId',
-        dataIndex: 'pushId',
+        key: 'notificationId',
+        dataIndex: 'notificationId',
         width: 50,
-        sorter: (a: IPush, b: IPush) => a.pushId - b.pushId,
-      },
-      {
-        title: '공지 유형',
-        key: 'type',
-        dataIndex: 'type',
-        width: 80,
-        align: 'center',
-        filters: [
-          { text: 'notice', value: 'notice' },
-          { text: 'activity', value: 'activity' },
-          { text: 'comment', value: 'comment' },
-          { text: 'bookmark', value: 'bookmark' },
-        ],
-        onFilter: (value: string, record: IPush) =>
-          record.type.indexOf(value) === 0,
+        sorter: (a: INotification, b: INotification) =>
+          a.notificationId - b.notificationId,
       },
 
       {
         title: '작성자',
-        key: 'name',
-        dataIndex: 'name',
+        key: 'adminName',
+        dataIndex: 'adminName',
         width: 80,
         align: 'center',
-        render: (_userName: string, record: IPush) => record.name,
+      },
+      {
+        title: '공지 제목',
+        key: 'title',
+        dataIndex: 'title',
+        width: 150,
+        align: 'center',
       },
       {
         title: '작성일시',
@@ -54,8 +86,11 @@ const PushDeleteModal = ({
         dataIndex: 'createdAt',
         width: 100,
         align: 'center',
-        sorter: (a: IPush, b: IPush) =>
-          dayjs(a.createdAt).isAfter(dayjs(b.createdAt)),
+        render: (createAt: string) =>
+          (createAt || '').split('.')[0].replaceAll('T', ' '),
+        sorter: (a: INotification, b: INotification) =>
+          dayjs(a.createdAt, 'YYYY-MM-DDTHH:mm:ss').unix() -
+          dayjs(b.createdAt, 'YYYY-MM-DDTHH:mm:ss').unix(),
       },
     ];
   }, []);
@@ -64,12 +99,12 @@ const PushDeleteModal = ({
     return (
       <>
         <Button onClick={onCancel}>취소</Button>
-        <Button onClick={onCancel} type="primary">
+        <Button onClick={handleOnDeleteNotifications} type="primary">
           삭제
         </Button>
       </>
     );
-  }, [onCancel]);
+  }, [onCancel, handleOnDeleteNotifications]);
 
   return (
     <Modal
@@ -77,17 +112,18 @@ const PushDeleteModal = ({
       onCancel={onCancel}
       open={isOpen}
       footer={footer}
-      width={1100}
+      width={700}
     >
-      <div className="pushes-info">
-        <span>총 {pushes?.length} 개</span>
+      {contextHolder}
+      <div style={{ textAlign: 'right' }}>
+        <span>총 {pushes?.length || 0} 개</span>
       </div>
       <Table
         //@ts-ignore
         columns={columns}
-        rowKey="pushId"
+        rowKey="notificationId"
         dataSource={pushes}
-        scroll={{ x: 1000, y: 300 }}
+        scroll={{ x: 300, y: 300 }}
         pagination={false}
       />
     </Modal>
