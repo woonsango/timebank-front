@@ -34,7 +34,9 @@ const topWrapperCSS = css`
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 100vh;
+  padding-left: 10%;
+  padding-right: 10%;
+  padding-top: 5%;
 `;
 
 const profileCSS = css`
@@ -223,7 +225,14 @@ const JoinPage = () => {
       formData.append('nickName', nickName);
       formData.append('phone', phoneNumber);
 
-      console.log(profileImage);
+      console.log('birthday', birth);
+      console.log('id', id);
+      console.log('imageUrl', profileImage);
+      console.log('introduction', introduction);
+      console.log('location', town);
+      console.log('name', realName);
+      console.log('nickName', nickName);
+      console.log('phone', phoneNumber);
 
       //formData 모든 값 출력
       for (var value in formData.values()) {
@@ -297,10 +306,7 @@ const JoinPage = () => {
         >
           회원가입
         </Text>
-        <Form.Item
-          name="profileImage"
-          style={{ textAlign: 'center', marginTop: 30 }}
-        >
+        <Form.Item name="profileImage" style={{ textAlign: 'center' }}>
           <Space direction="vertical">
             <Image
               src={profileImage}
@@ -375,7 +381,6 @@ const JoinPage = () => {
         <Form.Item
           label="닉네임"
           name="nickName"
-          style={{ marginTop: 60 }}
           rules={[{ validator: rightNickname }]}
         >
           <Input onChange={onChangeNickName} />
@@ -399,7 +404,6 @@ const JoinPage = () => {
                 label: month,
                 value: month,
               }))}
-              style={{ width: 100 }}
             />
 
             <Select
@@ -409,7 +413,6 @@ const JoinPage = () => {
                 label: day,
                 value: day,
               }))}
-              style={{ width: 100 }}
             />
           </Space>
         </Form.Item>
@@ -440,14 +443,12 @@ const JoinPage = () => {
                 label: province,
                 value: province,
               }))}
-              style={{ width: 100 }}
             />
 
             <Select
               value={dong as DongName}
               onChange={onChangeDong}
               options={gu.map((city) => ({ label: city, value: city }))}
-              style={{ width: 100 }}
             />
           </Space>
         </Form.Item>
@@ -466,10 +467,8 @@ const JoinPage = () => {
             onClick={handleSubmitBtn}
             htmlType="submit"
             css={css`
-              font-size: 17px;
               width: 180px;
-              height: 35px;
-              margin-bottom: 40px;
+              height: 40px;
             `}
           >
             가입 완료

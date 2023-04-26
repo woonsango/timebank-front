@@ -9,7 +9,6 @@ export const cssQnaListStyle = css`
   align-items: center;
   padding: 20px;
 
-
   background-color: ${COMMON_COLOR.WHITE};
   .qnaStatus {
     font-size: 20px;
@@ -29,7 +28,6 @@ export const cssQnaListStyle = css`
     font-size: 18px;
     font-weight: 500;
   }
-  .
 `;
 
 export const cssLineStyle = css`
