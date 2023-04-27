@@ -84,22 +84,6 @@ const RegisterFreePage = () => {
     setPreviewUrls(newPreviewUrls);
   };
 
-  const handlePostSubmit = async () => {
-    try {
-      const formData = new FormData();
-      formData.append('title', title);
-      formData.append('content', content);
-      images.forEach((image) => {
-        formData.append('images', image);
-      });
-      await axios.post('/api/posts', formData);
-      alert('게시글 등록 성공!');
-      navigate(PATH.HOME);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
   const handleSubmit = () => {
     const formData = new FormData();
     formData.append('title', title);
@@ -113,7 +97,6 @@ const RegisterFreePage = () => {
       })
       .then((response) => {
         console.log('게시글이 등록🤩');
-        navigate(PATH.HOME);
       })
       .catch((error) => {
         console.error('게시글 등록 실패🥹', error);
@@ -214,7 +197,7 @@ const RegisterFreePage = () => {
         </Content>
       </div>
       <Footer css={cssPostFooterStyle}>
-        <Link to={PATH.HOME}>
+        {isDisabled ? (
           <Button
             css={cssPostBtnStyle}
             onClick={handleSubmit}
@@ -222,7 +205,17 @@ const RegisterFreePage = () => {
           >
             작성완료
           </Button>
-        </Link>
+        ) : (
+          <Link to={PATH.HOME}>
+            <Button
+              css={cssPostBtnStyle}
+              onClick={handleSubmit}
+              disabled={isDisabled}
+            >
+              작성완료
+            </Button>
+          </Link>
+        )}
       </Footer>
     </Layout>
   );
