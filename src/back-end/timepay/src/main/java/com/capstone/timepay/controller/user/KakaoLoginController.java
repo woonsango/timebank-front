@@ -8,15 +8,16 @@ import com.capstone.timepay.utility.JwtUtils;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
 import java.util.Collections;
 
 @RestController
@@ -31,9 +32,9 @@ public class KakaoLoginController {
     private UserDetailService userDetailService;
 
     /* 카카오 로그인 */
-    @GetMapping("/oauth/redirect/kakao")
-    @ApiOperation(value = "카카오 간편 로그인 콜백 함수", notes = "리다이렉션 URI로 실행되는 함수입니다. 따로 사용 X")
-    public ResponseEntity<?> kakaoCallback(@RequestParam String code) throws Exception {
+    @GetMapping ("/oauth/redirect/kakao")
+    @ApiOperation(value = "카카오 간편 로그인", notes = "?code={인가코드}를 받아 작동합니다.")
+    public ResponseEntity<?> kakaoCallback(@RequestParam("code") String code) throws Exception {
         String access_Token = kakaoLoginService.getKaKaoAccessToken(code);
         User user = kakaoLoginService.createKakaoUser(access_Token);
 
