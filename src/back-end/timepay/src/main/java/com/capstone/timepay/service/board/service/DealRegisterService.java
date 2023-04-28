@@ -7,6 +7,8 @@ import com.capstone.timepay.domain.freeRegister.FreeRegisterRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class DealRegisterService {
@@ -23,5 +25,9 @@ public class DealRegisterService {
     {
         DealRegister dealRegister = dealRegisterRepository.findById(boardId).orElse(null);
         return dealRegister.getUser().getEmail();
+    }
+
+    public List<DealRegister> getAllDealRegisters() {
+        return dealRegisterRepository.findAll();
     }
 }

@@ -7,6 +7,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -26,5 +29,15 @@ public class DealBoardCommentDTO {
                 dealBoardComment.isAdopted(),
                 dealBoardComment.isHidden()
         );
+    }
+
+    public static List<DealBoardCommentDTO> toDealBoardCommentDTOs(List<DealBoardComment> comments) {
+        List<DealBoardCommentDTO> commentDTOS = new ArrayList<>();
+
+        comments.stream()
+                .filter(DealBoardComment::isApplied)
+                .forEach(comment -> commentDTOS.add(toDealBoardCommentDTO(comment)));
+
+        return commentDTOS;
     }
 }
