@@ -29,6 +29,8 @@ public class DealBoardCommentController {
 
     private final DealBoardCommentService dealBoardCommentService;
     private final DealBoardRepository dealBoardRepository;
+    private final DealBoardController dealBoardController;
+
     private final ReportService reportService;
 
     @ApiOperation(value = "거래게시글 게시판의 모든 댓글 불러오기")
@@ -47,9 +49,11 @@ public class DealBoardCommentController {
         DealBoard dealBoard = dealBoardRepository.findById(boardId).orElseThrow(() -> {
             return new IllegalArgumentException("게시판을 찾을 수 없음");
         });
-        if(dealBoardCommentDTO.isApplied()) { // 지원 댓글이고
-            if(dealBoard.isAuto()){ // 자동 매칭 True이면
-
+        if(dealBoardCommentDTO.isApplied()) // 지원 댓글이고
+        {
+            if(dealBoard.isAuto()) // 자동 매칭 True이면
+            {
+                dealBoardController.activityFinish(boardId, principal);
             }
         }
         return new ResponseEntity(dealBoardCommentService.writeComment(boardId, dealBoardCommentDTO, principal.getName()), HttpStatus.OK);
