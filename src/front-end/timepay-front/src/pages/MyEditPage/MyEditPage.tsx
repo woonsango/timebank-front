@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Button, Form, Input, Select, Space, message, Image } from 'antd';
-import { css } from '@emotion/react';
 import { useNavigate } from 'react-router-dom';
 import { headerTitleState } from '../../states/uiState';
 import { useSetRecoilState } from 'recoil';
@@ -8,72 +7,80 @@ import { useSetRecoilState } from 'recoil';
 import { siData } from '../JoinPage/Data/SIDATA';
 import { guData } from '../JoinPage/Data/GUDATA';
 import { dongData } from '../JoinPage/Data/DONGDATA';
+
 import { PATH } from '../../utils/paths';
-import user from './dummy.json';
-import { COMMON_COLOR } from '../../styles/constants/colors';
 import './MyEdit_imageSet.css';
+import { getTokenFromCookie } from '../../utils/token';
+import axios from 'axios';
+import {
+  cssMyEditCenter,
+  cssMyEditSubmitBtn,
+  topWrapperCSS,
+} from './MyEdit.styles';
 
 /*행정동 타입 선언*/
 type DongName = keyof typeof dongData;
 
-/*수직 수평 중앙 정렬*/
-const topWrapperCSS = css`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 80vh;
-`;
-
 const MyEditPage: React.FC = () => {
-  const userInfo = user.user1[0];
-
   const [messageApi, contextHolder] = message.useMessage();
 
-  const [profileImage, setProfileImage]: any = useState(userInfo.img);
-  const [nickName, setNickName] = useState<string>('test');
-  const [day, setDay] = useState<string>('일');
+  const [profileImage, setProfileImage]: any = useState();
+  const [finalProfileImage, setfinalProfileImage]: any = useState();
+
+  const [nickName, setNickName] = useState<string>('');
+  const [town, setTown] = useState<string>();
+  const [introduction, setIntroduction]: any = useState();
+
   const [gu, setGu] = useState(dongData[guData[0]]);
-  const [userGu, setUserGu] = useState<string>('구테스트');
-  const [userDong, setUserDong] = useState<string>('동테스트');
   const [dong, setDong] = useState(dongData[guData[0]][0]);
-  const [introduction, setIntroduction]: any = useState(userInfo.introduction);
+
+  const [guText, setGuText] = useState<string>('');
+  const [dongText, setDongText] = useState<string>('');
 
   const handleFileChange = (e: any) => {
     const imageFile = e.target.files[0];
-    console.log(imageFile);
 
     const fileReader = new FileReader();
     fileReader.onload = () => {
-      if (fileReader.readyState == 2) {
+      if (fileReader.readyState === 2) {
         if (fileReader.result !== null) {
           setProfileImage(fileReader.result);
+          setfinalProfileImage(imageFile);
         }
       }
     };
-    fileReader.readAsDataURL(imageFile); //setImage
+    fileReader.readAsDataURL(imageFile);
   };
 
-  const onChangeProfileImage = (value: any) => {
-    setProfileImage(value);
+  const navigate = useNavigate(); //history
+
+  const handlePageMove = useCallback(
+    (path: string) => {
+      navigate(path);
+    },
+    [navigate],
+  );
+
+  const onChangeNickName = (e: React.ChangeEvent<HTMLInputElement>) => {
+    console.log('닉네임 바뀜:', e.target.value);
+    setNickName(e.target.value);
   };
 
-  const onChangeNickName = (value: any) => {
-    setNickName(value);
+  const onChangeGu = (value: DongName) => {
+    setGu(dongData[value]);
+    console.log('구 바뀜: ', value.valueOf());
+    setGuText(value.valueOf());
   };
 
-  const onChangeGu = (val: DongName) => {
-    setGu(dongData[val]);
-    const gu: string = val.valueOf();
-    setUserGu(gu);
-  };
-  const onChangeDong = (val: DongName) => {
-    setDong(val);
-    const dong: string = val.valueOf();
-    setUserDong(dong);
+  const onChangeDong = (value: DongName) => {
+    setDong(value);
+    console.log('동 바뀜: ', value.valueOf());
+    setDongText(value.valueOf());
   };
 
-  const onChangeIntroduction = (value: any) => {
-    setIntroduction(value);
+  const onChangeIntroduction = (e: React.ChangeEvent<HTMLInputElement>) => {
+    console.log('자기소개 바뀜:', e.target.value);
+    setIntroduction(e.target.value);
   };
 
   /* 닉네임 유효성 검사 커스텀 */
@@ -105,16 +112,6 @@ const MyEditPage: React.FC = () => {
     });
   };
 
-  /*Handle 가입 완료 Btn*/
-  const handleSubmitBtn = () => {
-    console.log(dong);
-    if (gu === dongData[guData[0]] || dong === '동') {
-      warning('지역');
-    } else {
-      handlePageMove(PATH.MY);
-    }
-  };
-
   /*From Check*/
   const onFinishJoin = () => {
     console.log('수정 성공!');
@@ -124,29 +121,60 @@ const MyEditPage: React.FC = () => {
     console.log('수정 실패!');
   };
 
-  const navigate = useNavigate(); //history
+  /*Handle 가입 완료 Btn*/
+  const handleSubmitBtn = () => {
+    /*formData, put */
+    const townText: string = '서울특별시 ' + guText + ' ' + dongText;
 
-  const handlePageMove = useCallback(
-    (path: string) => {
-      navigate(path);
-    },
-    [navigate],
-  );
+    const formData = new FormData();
+    formData.append('image', finalProfileImage);
+    formData.append('nickName', nickName);
+    formData.append('location', townText);
+    formData.append('introduction', introduction);
+
+    /*토큰으로 put*/
+    const userToken = getTokenFromCookie();
+
+    axios.defaults.headers.common['Authorization'] = `Bearer ${userToken}`;
+    axios
+      .put('/api/users/update', formData, {
+        headers: {
+          'Contest-Type': 'multipart/form-data',
+        },
+      })
+      .then((res) => {
+        console.log(res);
+        handlePageMove(PATH.MY);
+      })
+      .catch((err) => {
+        console.log('PUT 실패');
+      });
+  };
 
   const setHeaderTitle = useSetRecoilState(headerTitleState);
   useEffect(() => {
+    console.log('enter edit page');
     setHeaderTitle('내 정보 수정');
-    /*
-    fetch('http://localhost:5000/user')
+
+    /*토큰으로 get*/
+    const userToken = getTokenFromCookie();
+
+    console.log(userToken);
+
+    axios.defaults.headers.common['Authorization'] = `Bearer ${userToken}`;
+    axios
+      .get('/api/users/get')
       .then((res) => {
-        return res.json();
+        console.log(res);
+
+        setProfileImage(res.data.image_url);
+        setNickName(res.data.nick_name);
+        setTown(res.data.location);
+        setIntroduction(res.data.introduction);
       })
-      .then((data) => {
-        setUserData(data);
-      });*/
-    //setProfileImage(userInfo.img);
-    setNickName(userInfo.nickName);
-    setIntroduction(userInfo.introduction);
+      .catch((error) => {
+        console.error('Error sending GET request:', error);
+      });
   }, []);
 
   return (
@@ -154,10 +182,10 @@ const MyEditPage: React.FC = () => {
       {contextHolder}
       <Form
         name="EditMyPage"
-        onFinish={onFinishJoin}
+        onFinish={handleSubmitBtn}
         onFinishFailed={onFinishFailedJoin}
       >
-        <Form.Item name="profileImage" style={{ textAlign: 'center' }}>
+        <Form.Item name="profileImage" css={cssMyEditCenter}>
           <Space direction="vertical">
             <Image
               src={profileImage}
@@ -182,7 +210,6 @@ const MyEditPage: React.FC = () => {
         <Form.Item
           label="닉네임"
           name="nickName"
-          style={{ marginTop: 60 }}
           rules={[{ validator: rightNickname }]}
         >
           <Input onChange={onChangeNickName} defaultValue={nickName} />
@@ -223,24 +250,11 @@ const MyEditPage: React.FC = () => {
           name="introduction"
           rules={[{ required: false, message: '' }]}
         >
-          <Input
-            onChange={onChangeIntroduction}
-            defaultValue={userInfo.introduction}
-          />
+          <Input onChange={onChangeIntroduction} />
         </Form.Item>
 
         <Form.Item name="submit" style={{ textAlign: 'center' }}>
-          <Button
-            type="primary"
-            onClick={handleSubmitBtn}
-            htmlType="submit"
-            css={css`
-              font-size: 17px;
-              width: 180px;
-              height: 35px;
-              margin-bottom: 40px;
-            `}
-          >
+          <Button type="primary" htmlType="submit" css={cssMyEditSubmitBtn}>
             수정 완료
           </Button>
         </Form.Item>

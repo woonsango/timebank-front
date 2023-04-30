@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useCallback } from 'react';
 import {
   Button,
   Form,
@@ -8,7 +8,6 @@ import {
   Space,
   message,
   Image,
-  Modal,
 } from 'antd';
 
 import { MONTH } from './Data/months';
@@ -19,42 +18,50 @@ import { dongData } from './Data/DONGDATA';
 
 import type { DatePickerProps } from 'antd';
 import { DatePicker } from 'antd';
-import { css } from '@emotion/react';
 import { useNavigate } from 'react-router-dom';
 import { PATH } from '../../utils/paths';
 import './Join_imageSet.css';
 
+import { save } from '../LoginPage/saveUid';
+
 import axios from 'axios';
+import {
+  cssJoinNickname,
+  cssJoinSubmitBtn,
+  cssJoinText,
+  cssJoinProfileImg,
+  topWrapperCSS,
+  cssJoinSubmitBtnBox,
+  cssJoinNick,
+} from './Join.styles';
 
 /*행정동 타입 선언*/
 type DongName = keyof typeof dongData;
 
-/*수직 수평 중앙 정렬*/
-const topWrapperCSS = css`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 100vh;
-`;
-
-const profileCSS = css`
-  height: max-content;
-`;
-
 const JoinPage = () => {
+  console.log('JoinPage.tsx');
+  console.log('getUid: ', save);
+
   const { Text } = Typography;
   const [messageApi, contextHolder] = message.useMessage();
-  const [isModalOpen, setIsModalOpen] = useState(false);
 
-  /* */
+  const onFinishFailed = (errorInfo: any) => {
+    messageApi.open({
+      type: 'error',
+      content: '로그인 실패!',
+    });
+    console.log('Failed:', errorInfo);
+  };
+
   const [profileImage, setProfileImage]: any = useState(
     'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png',
   );
+  const [finalProfileImage, setfinalProfileImage]: any = useState();
   const [nickName, setNickName] = useState<string>('');
   const [realName, setRealName] = useState<string>('');
   const [phoneNumber, setPhoneNumber] = useState<string>('');
   const [introduction, setIntroduction] = useState<string>('');
-  const [id, setId] = useState<string>('0');
+  const [id, setId] = useState<string>(save.toString());
   const [birth, setBirth] = useState<string>('');
   const [town, setTown] = useState<string>('');
 
@@ -68,6 +75,15 @@ const JoinPage = () => {
   const [guText, setGuText] = useState<string>('');
   const [dongText, setDongText] = useState<string>('');
 
+  const navigate = useNavigate();
+
+  const goTo = useCallback(
+    (path: string) => {
+      navigate(path);
+    },
+    [navigate],
+  );
+
   const handleFileChange = (e: any) => {
     const imageFile = e.target.files[0];
 
@@ -76,10 +92,11 @@ const JoinPage = () => {
       if (fileReader.readyState === 2) {
         if (fileReader.result !== null) {
           setProfileImage(fileReader.result);
+          setfinalProfileImage(imageFile);
         }
       }
     };
-    fileReader.readAsDataURL(imageFile); //setImage
+    fileReader.readAsDataURL(imageFile);
   };
 
   const onChangeNickName = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -102,12 +119,9 @@ const JoinPage = () => {
     setDong(value);
     console.log('동 바뀜: ', value.valueOf());
     setDongText(value.valueOf());
-    const town: string = '서울특별시 ' + guText + ' ' + dongText;
-    setTown(town);
   };
 
   const onChangeYear: DatePickerProps['onChange'] = (date, dateString) => {
-    //console.log(date, dateString);
     setYear(dateString);
   };
 
@@ -190,8 +204,6 @@ const JoinPage = () => {
 
   /*Handle 가입 완료 Btn*/
   const handleSubmitBtn = async () => {
-    const formData = new FormData();
-
     /* 닉네임, 이름, 생년월일, 전화번호를 필수값으로 검사*/
     if (!nickName || !nickname_regExp.test(nickName)) {
       console.log('가입 완료 제출: 닉네임 형식 부적합 ');
@@ -210,97 +222,51 @@ const JoinPage = () => {
     } else {
       console.log('가입 완료 제출: 조건 충족, 가입 완료');
 
-      for (let key in formData.keys()) goToFinishJoinPage(PATH.FINISHJOIN);
       /*formData*/
-      const birth: string = year + month + day + '0000';
-      const town: string = '서울특별시 ' + guText + ' ' + dongText;
-      formData.append('birthday', birth);
+      const birthText: string = year + month + day + '0000';
+      const townText: string = '서울특별시 ' + guText + ' ' + dongText;
+
+      const formData = new FormData();
+
+      formData.append('birthday', birthText);
       formData.append('id', id);
-      formData.append('imageUrl', profileImage);
+      formData.append('imageUrl', '');
+      formData.append('image', finalProfileImage);
       formData.append('introduction', introduction);
-      formData.append('location', town);
+      formData.append('location', townText);
       formData.append('name', realName);
       formData.append('nickName', nickName);
       formData.append('phone', phoneNumber);
+      formData.append('deviceToken', 'testToken');
 
-      console.log(profileImage);
+      /*POST*/
+      axios
+        .post('/api/users/create', formData, {
+          headers: {
+            'Contest-Type': 'multipart/form-data',
+          },
+        })
+        .then((res) => {
+          console.log(res);
+        })
+        .catch((err) => {
+          console.log('POST 실패');
+        });
 
-      //formData 모든 값 출력
-      for (var value in formData.values()) {
-        console.log(value);
-      }
-
-      goToFinishJoinPage(PATH.FINISHJOIN);
+      goTo(PATH.FINISHJOIN);
     }
   };
-
-  const navigate = useNavigate(); //history
-
-  const goToFinishJoinPage = useCallback(
-    (path: string) => {
-      navigate(path);
-    },
-    [navigate],
-  );
-
-  // const showModal = () => {
-  //   setIsModalOpen(true);
-  // };
-
-  // const handleOk = () => {
-  //   setIsModalOpen(false);
-  // };
-
-  // const handleCancel = () => {
-  //   setIsModalOpen(false);
-  // };
-
-  // const handleImageSelect1 = () => {
-  //   setProfileImage(
-  //     'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png',
-  //   );
-  // };
-
-  // const handleImageSelect2 = () => {
-  //   setProfileImage(
-  //     'https://image.ytn.co.kr/general/jpg/2022/1223/202212231020527831_d.jpg',
-  //   );
-  // };
-
-  // const handleImageSelect3 = () => {
-  //   setProfileImage(
-  //     'https://images.pexels.com/photos/1166869/pexels-photo-1166869.jpeg',
-  //   );
-  // };
-
-  // const handleImageSelect4 = () => {
-  //   setProfileImage(
-  //     'https://images.pexels.com/photos/3361739/pexels-photo-3361739.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
-  //   );
-  // };
-
-  // const handleImageSelect5 = () => {
-  //   setProfileImage(
-  //     'https://images.pexels.com/photos/1661179/pexels-photo-1661179.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
-  //   );
-  // };
 
   return (
     <Space css={topWrapperCSS} align="baseline">
       {contextHolder}
-      <Form name="JoinPage">
-        <Text
-          css={css`
-            font-size: 30px;
-            font-weight: bold;
-          `}
-        >
-          회원가입
-        </Text>
-        <Form.Item
-          name="profileImage"
-          style={{ textAlign: 'center', marginTop: 30 }}
-        >
+      <Form
+        name="JoinPage"
+        onFinish={handleSubmitBtn}
+        onFinishFailed={onFinishFailed}
+      >
+        <Text css={cssJoinText}>회원가입</Text>
+        <Form.Item name="profileImage" css={cssJoinProfileImg}>
           <Space direction="vertical">
             <Image
               src={profileImage}
@@ -318,56 +284,6 @@ const JoinPage = () => {
                   onChange={handleFileChange}
                 />
               </label>
-              {/* <Modal
-                title="프로필 사진 선택"
-                open={isModalOpen}
-                onOk={handleOk}
-                onCancel={handleCancel}
-              >
-                <Button block onClick={handleImageSelect1} css={profileCSS}>
-                  <img
-                    width={100}
-                    height="auto"
-                    src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
-                  />
-                </Button>
-                <Button block onClick={handleImageSelect2} css={profileCSS}>
-                  {
-                    <img
-                      width={100}
-                      height="auto"
-                      src="https://image.ytn.co.kr/general/jpg/2022/1223/202212231020527831_d.jpg"
-                    />
-                  }
-                </Button>
-                <Button block onClick={handleImageSelect3} css={profileCSS}>
-                  {
-                    <img
-                      width={100}
-                      height="auto"
-                      src="https://images.pexels.com/photos/1166869/pexels-photo-1166869.jpeg"
-                    />
-                  }
-                </Button>
-                <Button block onClick={handleImageSelect4} css={profileCSS}>
-                  {
-                    <img
-                      width={100}
-                      height="auto"
-                      src="https://images.pexels.com/photos/3361739/pexels-photo-3361739.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
-                    />
-                  }
-                </Button>
-                <Button block onClick={handleImageSelect5} css={profileCSS}>
-                  {
-                    <img
-                      width={100}
-                      height="auto"
-                      src="https://images.pexels.com/photos/1661179/pexels-photo-1661179.jpeg"
-                    />
-                  }
-                </Button>
-              </Modal> */}
             </div>
           </Space>
         </Form.Item>
@@ -375,10 +291,13 @@ const JoinPage = () => {
         <Form.Item
           label="닉네임"
           name="nickName"
-          style={{ marginTop: 60 }}
+          css={cssJoinNickname}
           rules={[{ validator: rightNickname }]}
         >
           <Input onChange={onChangeNickName} />
+          <Button type="primary" css={cssJoinNick}>
+            닉네임 중복 확인
+          </Button>
         </Form.Item>
 
         <Form.Item
@@ -460,18 +379,8 @@ const JoinPage = () => {
           <Input onChange={onChangeIntroduction} />
         </Form.Item>
 
-        <Form.Item name="submit" style={{ textAlign: 'center' }}>
-          <Button
-            type="primary"
-            onClick={handleSubmitBtn}
-            htmlType="submit"
-            css={css`
-              font-size: 17px;
-              width: 180px;
-              height: 35px;
-              margin-bottom: 40px;
-            `}
-          >
+        <Form.Item name="submit" css={cssJoinSubmitBtnBox}>
+          <Button type="primary" htmlType="submit" css={cssJoinSubmitBtn}>
             가입 완료
           </Button>
         </Form.Item>
