@@ -32,10 +32,8 @@ public class UserSecurityConfig extends WebSecurityConfigurerAdapter {
     };
 
     private static final String[] TIMEPAY_URI = {
-            "/api/deal-boards/comments/**/**/report",
-            "/api/free-boards/comments/**/**/report",
-            "/api/deal-boards/**/report",
-            "/api/free-boards/**/report",
+            "/api/deal-boards/**",
+            "/api/free-boards/**",
     };
 
     @Autowired

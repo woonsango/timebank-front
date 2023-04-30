@@ -3,6 +3,7 @@ package com.capstone.timepay.controller.user.request;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.Data;
+import org.springframework.web.multipart.MultipartFile;
 
 @Data
 @JsonNaming(value = PropertyNamingStrategy.SnakeCaseStrategy.class)
