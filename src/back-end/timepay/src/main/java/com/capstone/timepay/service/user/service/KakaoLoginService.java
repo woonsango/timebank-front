@@ -195,7 +195,7 @@ public class KakaoLoginService {
     public User createKakaoUsers(String email, String sex, String encodePassword){
         return userRepository.save(User.builder()
                 .email(email).sex(sex)
-                .isSignUp(true) // 우선 회원가입 승인 확인 X, 무조건 회원가입하도록
+                //.isSignUp(true) // 우선 회원가입 승인 확인 X, 무조건 회원가입하도록
                 .encodedPassword(encodePassword)
                 .roles(Collections.singletonList("ROLE_USER"))
                 .build());
