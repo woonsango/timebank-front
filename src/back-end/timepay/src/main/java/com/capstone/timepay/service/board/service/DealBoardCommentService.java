@@ -24,6 +24,7 @@ public class DealBoardCommentService {
     private final DealBoardRepository dealBoardRepository;
     private final CommentRepository commentRepository;
     private final UserRepository userRepository;
+    private final DealBoardService dealBoardService;
     // 댓글 작성하기
     @Transactional
     public DealBoardCommentDTO writeComment(Long boardId, DealBoardCommentDTO dealBoardCommentDTO,
@@ -37,11 +38,12 @@ public class DealBoardCommentService {
         DealBoardComment dealBoardComment = DealBoardComment.builder()
                 .content(dealBoardCommentDTO.getContent())
                 .isHidden(dealBoardCommentDTO.isHidden())
-                .isApplied(false)
-                .isApplied(false)
+                .isAdopted(false)
+                .isApplied(dealBoardCommentDTO.isApplied())
                 .user(user)
                 .dealBoard(dealBoard)
                 .build();
+        dealBoardService.insertComment(boardId, dealBoardComment);
 
         Comment comment = Comment.builder().
                 freeBoardComment(null).
@@ -86,4 +88,11 @@ public class DealBoardCommentService {
         User user = dealBoardComment.getUser();
         return user.getEmail();
     }
+
+    public List<DealBoardCommentDTO> getAppliedComments(Long boardId) {
+        DealBoard dealBoard = dealBoardRepository.findById(boardId).get();
+        List<DealBoardComment> comments = dealBoardCommentRepository.findAllByDealBoardAndIsAppliedTrue(dealBoard);
+        return DealBoardCommentDTO.toDealBoardCommentDTOs(comments);
+    }
+
 }

@@ -11,13 +11,16 @@ import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.security.Principal;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RequiredArgsConstructor
@@ -82,17 +85,21 @@ public class DealBoardController
     }
 
     @ApiOperation(value = "거래게시판 도움주기 게시글 작성")
-    @PostMapping("/write/helper")
-    public ResponseEntity helperWrite(@RequestBody DealBoardDTO dealBoardDTO, Principal principal)
+    @PostMapping(value = "/write/helper", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
+    public ResponseEntity helperWrite(@RequestPart DealBoardDTO dealBoardDTO,
+                                      @RequestPart(required = false) List<MultipartFile> images,
+                                      Principal principal) throws Exception
     {
-        return new ResponseEntity(dealBoardService.write(dealBoardDTO, principal.getName(), "helper"), HttpStatus.OK);
+        return new ResponseEntity(dealBoardService.write(dealBoardDTO, principal.getName(), "helper", images), HttpStatus.OK);
     }
 
     @ApiOperation(value = "거래게시판 도움받기 게시글 작성")
-    @PostMapping("/write/help")
-    public ResponseEntity getHelpWrite(@RequestBody DealBoardDTO dealBoardDTO, Principal principal)
+    @PostMapping(value = "/write/help", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
+    public ResponseEntity getHelpWrite(@RequestPart DealBoardDTO dealBoardDTO,
+                                       @RequestPart(required = false) List<MultipartFile> images,
+                                       Principal principal) throws Exception
     {
-        return new ResponseEntity(dealBoardService.write(dealBoardDTO, principal.getName(), "help"), HttpStatus.OK);
+        return new ResponseEntity(dealBoardService.write(dealBoardDTO, principal.getName(), "help", images), HttpStatus.OK);
     }
 
     @ApiOperation(value = "거래게시판 게시글 수정")
@@ -157,8 +164,7 @@ public class DealBoardController
     // == 글 작성 후 로직 == //
     @ApiOperation(value = "모집중에서 모집완료로 변경시키는 컨트롤러")
     @PutMapping("/{boardId}/start")
-    public Map<String, Object> readyToStart(@RequestBody DealBoardDTO dealBoardDTO,
-                                            @PathVariable("boardId") Long boardId,
+    public Map<String, Object> readyToStart(@PathVariable("boardId") Long boardId,
                                             Principal principal)
     {
         Map<String, Object> resultMap = new HashMap<>();
@@ -179,7 +185,35 @@ public class DealBoardController
             return resultMap;
         }
 
-        dealBoardService.modifyStatus(boardId, dealBoardDTO);
+        dealBoardService.modifyMatchingFinish(boardId);
+        resultMap.put("success", true);
+        return resultMap;
+    }
+
+    @ApiOperation(value = "활동완료로로 변경시키는 컨트롤러")
+    @PutMapping("/{boardId}/finish")
+    public Map<String, Object> activityFinish(@PathVariable("boardId") Long boardId,
+                                              Principal principal)
+    {
+        Map<String, Object> resultMap = new HashMap<>();
+        DealBoard dealBoard  = dealBoardService.getId(boardId);
+        String boardEmail = dealRegisterService.getEmail(boardId);
+
+        if (dealBoard == null)
+        {
+            resultMap.put("success", false);
+            resultMap.put("message", "해당 게시글을 찾을 수 없습니다");
+            return resultMap;
+        }
+
+        if (!principal.getName().equals(boardEmail))
+        {
+            resultMap.put("success", false);
+            resultMap.put("message", "상태를 수정할 권한이 없습니다");
+            return resultMap;
+        }
+
+        dealBoardService.modifyActivityFinsih(boardId);
         resultMap.put("success", true);
         return resultMap;
     }
