@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -38,17 +39,25 @@ public class ApiController {
         return ResponseEntity.ok(requestData);
     }
 
+    @Transactional(readOnly = true)
     @GetMapping("/get/{id}")
     @ApiOperation(value="유저 데이터 조회",notes = "주소로 id를 받아 해당하는 유저 정보를 조회합니다.")
-    public ResponseEntity<?> getUserInfo(@PathVariable Long id){
-        GetResponseDTO responseData = userInfoService.getUserInfo(id);
+    public ResponseEntity<?> getUserInfo(@PathVariable Long id, @RequestParam(required = false) String boardType,
+                                         @RequestParam(required = false) String boardStatus,
+                                         @RequestParam(required = false) String commentType,
+                                         @RequestParam(defaultValue = "0") int pageIndex,
+                                         @RequestParam(defaultValue = "50") int pageSize){
+        GetResponseDTO responseData = userInfoService.getUserInfo(id, boardType, boardStatus, commentType, pageIndex, pageSize);
         return ResponseEntity.ok(responseData);
     }
+
+    @Transactional(readOnly = true)
     @GetMapping("/get")
     @ApiOperation(value="마이페이지 조회",notes = "JWT 토큰에 해당하는 유저의 프로필 정보를 조회합니다.(마이페이지)")
-    public ResponseEntity<?> getMyInfo(){
+    public ResponseEntity<?> getMyInfo(@RequestParam(defaultValue = "0") int pageIndex,
+                                       @RequestParam(defaultValue = "50") int pageSize){
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        GetResponseDTO responseData = userInfoService.getMyInfo(auth);
+        GetResponseDTO responseData = userInfoService.getMyInfo(auth, pageIndex, pageSize);
         return ResponseEntity.ok(responseData);
     }
 

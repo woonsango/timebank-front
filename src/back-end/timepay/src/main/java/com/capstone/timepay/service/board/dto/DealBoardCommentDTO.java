@@ -7,6 +7,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -16,8 +19,6 @@ public class DealBoardCommentDTO {
     private boolean isApplied;
     private boolean isAdopted;
     private boolean isHidden;
-    private User user;
-    private DealBoard dealBoard;
 
     public static DealBoardCommentDTO toDealBoardCommentDTO(DealBoardComment dealBoardComment)
     {
@@ -26,9 +27,17 @@ public class DealBoardCommentDTO {
                 dealBoardComment.getContent(),
                 dealBoardComment.isApplied(),
                 dealBoardComment.isAdopted(),
-                dealBoardComment.isHidden(),
-                dealBoardComment.getUser(),
-                dealBoardComment.getDealBoard()
+                dealBoardComment.isHidden()
         );
+    }
+
+    public static List<DealBoardCommentDTO> toDealBoardCommentDTOs(List<DealBoardComment> comments) {
+        List<DealBoardCommentDTO> commentDTOS = new ArrayList<>();
+
+        comments.stream()
+                .filter(DealBoardComment::isApplied)
+                .forEach(comment -> commentDTOS.add(toDealBoardCommentDTO(comment)));
+
+        return commentDTOS;
     }
 }

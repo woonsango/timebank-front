@@ -5,6 +5,7 @@ import com.capstone.timepay.domain.freeAttatchment.FreeAttatchment;
 import com.capstone.timepay.domain.freeBoardComment.FreeBoardComment;
 import com.capstone.timepay.domain.freeBoardReport.FreeBoardReport;
 import com.capstone.timepay.domain.freeRegister.FreeRegister;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
@@ -41,15 +42,19 @@ public class FreeBoard extends BaseTimeEntity
         유저 정보도 보내야하는것 아닌가?
      */
 
+    @JsonIgnore
     @OneToMany(mappedBy = "freeBoard", orphanRemoval = true, fetch = FetchType.LAZY)
     private List<FreeBoardComment> freeBoardComments = new ArrayList<>();
 
+    @JsonIgnore
     @OneToMany(mappedBy = "freeBoard", orphanRemoval = true, fetch = FetchType.LAZY)
     private List<FreeAttatchment> freeAttatchments = new ArrayList<>();
 
+    @JsonIgnore
     @OneToMany(mappedBy = "freeBoard", orphanRemoval = true, fetch = FetchType.LAZY)
     private List<FreeRegister> freeRegisters = new ArrayList<>();
 
+    @JsonIgnore
     @OneToMany(mappedBy = "freeBoard", orphanRemoval = true, fetch = FetchType.LAZY)
     private List<FreeBoardReport> freeBoardReports = new ArrayList<>();
 }

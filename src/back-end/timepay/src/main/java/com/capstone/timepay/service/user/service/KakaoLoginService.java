@@ -42,7 +42,10 @@ public class KakaoLoginService {
             StringBuilder sb = new StringBuilder();
             sb.append("grant_type=authorization_code");
             sb.append("&client_id=79587b639a3a9ca1c9433fa63bc55863");
-            sb.append("&redirect_uri=http://localhost:8080/oauth/redirect/kakao");
+            //sb.append("&redirect_uri=http://localhost:8080/oauth/redirect/kakao"); // 서버 로컬 테스트용
+            sb.append("&redirect_uri=http://localhost:3000/oauth/redirect/kakao"); // 프론트 로컬 테스트용
+            //sb.append("&redirect_uri=http://54.180.107.93:3000/oauth/redirect/kakao"); // 배포할 때 이 코드 사용
+
             sb.append("&code=" + code);
             bw.write(sb.toString());
             bw.flush();
@@ -80,7 +83,6 @@ public class KakaoLoginService {
         String reqURL = "https://kapi.kakao.com/v2/user/me";
         String email = null;
         String sex = null;
-        String birthday = null;
         User kakaoUser = null;
         String Key = "A4D47DASDA287964EQ14871ZS44875A";
 
@@ -131,18 +133,23 @@ public class KakaoLoginService {
                     /* 성별 제공 여부 확인 및 성별 가져오기 */
                     boolean hasSex = element.getAsJsonObject().get("kakao_account").getAsJsonObject().get("has_gender").getAsBoolean();
                     if (hasSex) {
-                        sex = element.getAsJsonObject().get("kakao_account").getAsJsonObject().get("gender").getAsString();
+                        if(element.getAsJsonObject().get("kakao_account").getAsJsonObject().get("gender_needs_agreement").getAsBoolean())
+                            sex = "성별 동의하지 않음";
+                        else
+                            sex = element.getAsJsonObject().get("kakao_account").getAsJsonObject().get("gender").getAsString();
+
                     } else {
-                        sex = "성별 동의하지 않음";
+                        sex = "성별 데이터가 없음";
                     }
 
                     /* 생일 제공 여부 확인 및 생일 가져오기 */
-                    boolean hasBirthday = element.getAsJsonObject().get("kakao_account").getAsJsonObject().get("has_birthday").getAsBoolean();
-                    if (hasBirthday) {
-                        birthday = element.getAsJsonObject().get("kakao_account").getAsJsonObject().get("birthday").getAsString();
-                    } else {
-                        birthday = "생일 동의하지 않음";
-                    }
+                    /* 생년월일은 회원가입 폼에서 받기로 함 */
+//                    boolean hasBirthday = element.getAsJsonObject().get("kakao_account").getAsJsonObject().get("has_birthday").getAsBoolean();
+//                    if (hasBirthday) {
+//                        birthday = element.getAsJsonObject().get("kakao_account").getAsJsonObject().get("birthday").getAsString();
+//                    } else {
+//                        birthday = "생일 동의하지 않음";
+//                    }
 
                     String encodedPassword = passwordEncoder.encode(password);
 

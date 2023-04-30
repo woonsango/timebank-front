@@ -4,6 +4,7 @@ import com.capstone.timepay.domain.BaseTimeEntity;
 import com.capstone.timepay.domain.dealBoard.DealBoard;
 import com.capstone.timepay.domain.dealCommentReport.DealCommentReport;
 import com.capstone.timepay.domain.user.User;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
@@ -30,14 +31,17 @@ public class DealBoardComment extends BaseTimeEntity {
     // 비공개여부
     private boolean isHidden;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "dealBoardComment", orphanRemoval = true, fetch = FetchType.LAZY)
     private List<DealCommentReport> dealCommentReports = new ArrayList<>();
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="d_boardId")
     @OnDelete(action = OnDeleteAction.CASCADE)
     private DealBoard dealBoard;
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="user_id")
     @OnDelete(action = OnDeleteAction.CASCADE)

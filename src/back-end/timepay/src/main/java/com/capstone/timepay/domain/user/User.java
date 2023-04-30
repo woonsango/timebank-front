@@ -13,6 +13,7 @@ import com.capstone.timepay.domain.inquiry.Inquiry;
 import com.capstone.timepay.domain.organization.Organization;
 import com.capstone.timepay.domain.userProfile.UserProfile;
 import com.capstone.timepay.domain.userToken.UserToken;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -53,7 +54,7 @@ public class User extends BaseTimeEntity {
     @Column(unique = true)
     private String deviceToken;
 
-    @ElementCollection(fetch = FetchType.LAZY)
+    @ElementCollection(fetch = FetchType.EAGER)
     @Builder.Default
     private List<String> roles = new ArrayList<>();
 
@@ -62,31 +63,35 @@ public class User extends BaseTimeEntity {
                 .map(SimpleGrantedAuthority::new)
                 .collect(Collectors.toList());
     }
-
+    @JsonIgnore
     @OneToMany(mappedBy = "user", orphanRemoval = true)
     private List<Inquiry> inquiries = new ArrayList<>();
 
+    @JsonIgnore
     @OneToMany(mappedBy = "user", orphanRemoval = true)
     private List<DealBoardComment> dealBoardComments = new ArrayList<>();
 
+    @JsonIgnore
     @OneToMany(mappedBy = "user", orphanRemoval = true)
     private List<DealRegister> dealRegisters = new ArrayList<>();
 
+    @JsonIgnore
     @OneToMany(mappedBy = "user", orphanRemoval = true)
     private List<DealBoardReport> dealBoardReports = new ArrayList<>();
-
+    @JsonIgnore
     @OneToMany(mappedBy = "user", orphanRemoval = true)
     private List<FreeBoardReport> freeBoardReports = new ArrayList<>();
-
+    @JsonIgnore
     @OneToMany(mappedBy = "user", orphanRemoval = true)
     private List<DealCommentReport> dealCommentReports = new ArrayList<>();
 
     @OneToMany(mappedBy = "user", orphanRemoval = true)
     private List<FreeCommentReport> freeCommentReports = new ArrayList<>();
-
+    @JsonIgnore
     @OneToMany(mappedBy = "user", orphanRemoval = true)
     private List<FreeBoardComment> freeBoardComments = new ArrayList<>();
 
+    @JsonIgnore
     @OneToMany(mappedBy = "user", orphanRemoval = true)
     private List<FreeRegister> freeRegisters = new ArrayList<>();
 
