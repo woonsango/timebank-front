@@ -18,7 +18,7 @@ public class TimeStamp {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "time_table_id")
     private TimeTable timeTable;
-
+    private Long userId; // 임시
     private String startTime;
     private String endTime;
     private boolean isAdopted;
