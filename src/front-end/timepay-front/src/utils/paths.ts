@@ -21,4 +21,5 @@ export const PATH = {
   REPORT: '/report', //신고기록
   INQUIRE: '/inquire', //문의기록
   BOOKMARK: '/bookmark', //즐겨찾기
+  AGENCY_SIGN_IN: '/agency/sign-in',
 };

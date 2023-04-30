@@ -22,7 +22,10 @@ function App() {
             path={PATH.FINISHJOIN}
             element={<PageRoutes.FinishJoinPage />}
           />
-
+          <Route
+            path={PATH.AGENCY_SIGN_IN}
+            element={<PageRoutes.AgencySignInPage />}
+          />
           <Route element={<BaseLayout />}>
             <Route path={PATH.HOME} element={<PageRoutes.HomePage />} />
             <Route path={PATH.SEARCH} element={<PageRoutes.SearchPage />} />
