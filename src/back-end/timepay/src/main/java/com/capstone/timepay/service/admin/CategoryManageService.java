@@ -11,6 +11,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.function.Function;
 
@@ -67,5 +69,12 @@ public class CategoryManageService {
             category.updateUseYn(query);
             categoryRepository.save(category);
         }
+    }
+
+    public List<CategoryResponse> showPossibleCategories(String type, String useYn) {
+
+        List<Category> categories = categoryRepository.findAllByBoardTypeAndUseYn(type,useYn);
+
+        return new ArrayList<>();
     }
 }

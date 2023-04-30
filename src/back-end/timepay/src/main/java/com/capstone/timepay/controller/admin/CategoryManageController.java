@@ -8,6 +8,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/admins/categories")
@@ -21,6 +23,15 @@ public class CategoryManageController {
                                   @RequestParam(defaultValue = "50") int pageSize){
 
         Page<CategoryResponse> responses = categoryManageService.showAllCategories(pageIndex, pageSize);
+
+        return ResponseEntity.ok(responses);
+    }
+
+    @ApiOperation(value = "전체 카테고리 항목 조회")
+    @GetMapping("/main")
+    public ResponseEntity<?> main(@RequestParam String type, @RequestParam String useYn){
+
+        List<CategoryResponse> responses = categoryManageService.showPossibleCategories(type, useYn);
 
         return ResponseEntity.ok(responses);
     }
