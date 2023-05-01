@@ -205,6 +205,7 @@ const AgencySignUpPage = () => {
             listType="picture-circle"
             multiple={false}
             beforeUpload={() => false}
+            accept="image/png, image/jpg, image/jpeg"
           >
             {imgFileList.length === 1 ? null : uploadButton}
           </Upload>
