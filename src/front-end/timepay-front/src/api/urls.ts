@@ -5,7 +5,8 @@ export const API_URL = {
   INQUIRY_WRITE: '/api/inquiry-boards/write',
   INQUIRY: 'api/inquiry-boards',
   NOTIFICATIONS: 'api/notifications',
-  USERS_INFO: '/api/users/get/',
+  USER_INFO: '/api/users/get/',
+  USER_INFO_POST: '/api/users/create/',
 };
 
 // 토큰 필요 없는 애들

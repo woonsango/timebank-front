@@ -26,15 +26,15 @@ const FinishJoinPage = () => {
     <Result
       status="success"
       title="회원가입 완료! 타임페이 커뮤니티 가입을 환영합니다 :)"
-      subTitle="Order number: 2017182818828182881 Cloud server configuration takes 1-5 minutes, please wait."
+      //subTitle="Order number: 2017182818828182881 Cloud server configuration takes 1-5 minutes, please wait."
       extra={[
         <Button
           type="primary"
           onClick={() => {
-            goToHome(PATH.HOME);
+            goToHome(PATH.LOGIN);
           }}
         >
-          홈으로 가기
+          로그인 하기
         </Button>,
       ]}
     />
