@@ -7,6 +7,8 @@ const request = axios.create({
   timeout: 1000000,
   headers: {
     'Content-Type': 'application/json',
+    'Access-Control-Allow-Origin': `http://localhost:3000`,
+    'Access-Control-Allow-Credentials': 'true',
   },
   // baseURL: 'http://13.125.119.30/',
 });

@@ -5,7 +5,6 @@ import { customTheme } from './styles/constants/customTheme';
 import PageRoutes from './pages';
 import { PATH } from './utils/paths';
 import { RecoilRoot } from 'recoil';
-
 function App() {
   return (
     <RecoilRoot>

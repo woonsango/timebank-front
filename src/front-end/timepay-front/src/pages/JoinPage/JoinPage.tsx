@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useCallback } from 'react';
 import {
   Button,
   Form,
@@ -8,7 +8,6 @@ import {
   Space,
   message,
   Image,
-  Modal,
 } from 'antd';
 
 import { MONTH } from './Data/months';
@@ -19,44 +18,47 @@ import { dongData } from './Data/DONGDATA';
 
 import type { DatePickerProps } from 'antd';
 import { DatePicker } from 'antd';
-import { css } from '@emotion/react';
 import { useNavigate } from 'react-router-dom';
 import { PATH } from '../../utils/paths';
 import './Join_imageSet.css';
 
+import { save } from '../LoginPage/saveUid';
+
 import axios from 'axios';
+import {
+  cssJoinSubmitBtn,
+  cssJoinText,
+  cssJoinProfileImg,
+  topWrapperCSS,
+  cssJoinSubmitBtnBox,
+  cssJoinNick,
+  cssJoinMargin,
+} from './Join.styles';
+import { overlap } from './overlapNickname';
 
 /*행정동 타입 선언*/
 type DongName = keyof typeof dongData;
 
-/*수직 수평 중앙 정렬*/
-const topWrapperCSS = css`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding-left: 10%;
-  padding-right: 10%;
-  padding-top: 5%;
-`;
-
-const profileCSS = css`
-  height: max-content;
-`;
 
 const JoinPage = () => {
+  console.log('JoinPage.tsx');
+
   const { Text } = Typography;
   const [messageApi, contextHolder] = message.useMessage();
-  const [isModalOpen, setIsModalOpen] = useState(false);
 
-  /* */
+  const onFinishFailed = (errorInfo: any) => {
+    console.log('회원가입 실패: ', errorInfo);
+  };
+
   const [profileImage, setProfileImage]: any = useState(
     'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png',
   );
+  const [finalProfileImage, setfinalProfileImage]: any = useState();
   const [nickName, setNickName] = useState<string>('');
   const [realName, setRealName] = useState<string>('');
   const [phoneNumber, setPhoneNumber] = useState<string>('');
   const [introduction, setIntroduction] = useState<string>('');
-  const [id, setId] = useState<string>('0');
+  const [id, setId] = useState<string>(save.toString());
   const [birth, setBirth] = useState<string>('');
   const [town, setTown] = useState<string>('');
 
@@ -70,6 +72,15 @@ const JoinPage = () => {
   const [guText, setGuText] = useState<string>('');
   const [dongText, setDongText] = useState<string>('');
 
+  const navigate = useNavigate();
+
+  const goTo = useCallback(
+    (path: string) => {
+      navigate(path);
+    },
+    [navigate],
+  );
+
   const handleFileChange = (e: any) => {
     const imageFile = e.target.files[0];
 
@@ -78,38 +89,37 @@ const JoinPage = () => {
       if (fileReader.readyState === 2) {
         if (fileReader.result !== null) {
           setProfileImage(fileReader.result);
+          setfinalProfileImage(imageFile);
         }
       }
     };
-    fileReader.readAsDataURL(imageFile); //setImage
+    fileReader.readAsDataURL(imageFile);
   };
 
   const onChangeNickName = (e: React.ChangeEvent<HTMLInputElement>) => {
-    console.log('닉네임 바뀜:', e.target.value);
+    //console.log('닉네임 바뀜:', e.target.value);
     setNickName(e.target.value);
   };
 
   const onChangeRealName = (e: React.ChangeEvent<HTMLInputElement>) => {
-    console.log('이름 바뀜:', e.target.value);
+    //console.log('이름 바뀜:', e.target.value);
     setRealName(e.target.value);
   };
 
   const onChangeGu = (value: DongName) => {
     setGu(dongData[value]);
-    console.log('구 바뀜: ', value.valueOf());
+    setDong(dongData[guData[0]][0]);
+    //console.log('구 바뀜: ', value.valueOf());
     setGuText(value.valueOf());
   };
 
   const onChangeDong = (value: DongName) => {
     setDong(value);
-    console.log('동 바뀜: ', value.valueOf());
+    //console.log('동 바뀜: ', value.valueOf());
     setDongText(value.valueOf());
-    const town: string = '서울특별시 ' + guText + ' ' + dongText;
-    setTown(town);
   };
 
   const onChangeYear: DatePickerProps['onChange'] = (date, dateString) => {
-    //console.log(date, dateString);
     setYear(dateString);
   };
 
@@ -124,12 +134,12 @@ const JoinPage = () => {
   };
 
   const onChangePhoneNumber = (e: React.ChangeEvent<HTMLInputElement>) => {
-    console.log('전화번호 바뀜:', e.target.value);
+    //console.log('전화번호 바뀜:', e.target.value);
     setPhoneNumber(e.target.value);
   };
 
   const onChangeIntroduction = (e: React.ChangeEvent<HTMLInputElement>) => {
-    console.log('자기소개 바뀜:', e.target.value);
+    //console.log('자기소개 바뀜:', e.target.value);
     setIntroduction(e.target.value);
   };
 
@@ -186,14 +196,26 @@ const JoinPage = () => {
   const warning = (value: string) => {
     messageApi.open({
       type: 'warning',
-      content: value + '을 입력해 주세요.',
+      content: value,
     });
+  };
+
+  /*닉네임 중복 검사*/
+  const overlapNickname = () => {
+    /*get*/
+    //   axios
+    //     .get('url 넣기', nickName)
+    //     .then((res) => {
+    //       console.log('닉네임 중복 검사 성공');
+    //       console.log(res);
+    //     })
+    //     .catch((err) => {
+    //       console.log('닉네임 중복 검사 실패');
+    //     });
   };
 
   /*Handle 가입 완료 Btn*/
   const handleSubmitBtn = async () => {
-    const formData = new FormData();
-
     /* 닉네임, 이름, 생년월일, 전화번호를 필수값으로 검사*/
     if (!nickName || !nickname_regExp.test(nickName)) {
       console.log('가입 완료 제출: 닉네임 형식 부적합 ');
@@ -201,7 +223,7 @@ const JoinPage = () => {
       console.log('가입 완료 제출: 이름 형식 부적합');
     } else if (year === '연도' || month === '월' || day === '일') {
       console.log('가입 완료 제출: 생년월일 형식 부적합');
-      warning('생년월일');
+      warning('생년월일을 입력해 주세요.');
     } else if (
       !phoneNumber ||
       phoneNumber.length < 9 ||
@@ -209,104 +231,74 @@ const JoinPage = () => {
       !phone_regex.test(phoneNumber)
     ) {
       console.log('가입 완료 제출: 전화번호 형식 부적합');
-    } else {
-      console.log('가입 완료 제출: 조건 충족, 가입 완료');
+    }
+    //else if (overlap === false) {
+    //   console.log('가입 완료 제출: 닉네임 중복 여부 확인되지 않음');
+    //   warning('닉네임 중복 여부를 검사해 주세요.');
+    // }
+    else {
+      console.log('가입 완료 제출: 조건 충족');
 
-      for (let key in formData.keys()) goToFinishJoinPage(PATH.FINISHJOIN);
       /*formData*/
-      const birth: string = year + month + day + '0000';
-      const town: string = '서울특별시 ' + guText + ' ' + dongText;
-      formData.append('birthday', birth);
+      const birthText: string = year + month + day + '0000';
+      const townText: string = '서울특별시 ' + guText + ' ' + dongText;
+
+      console.log('birthday: ', birthText);
+      console.log('id: ', id);
+      console.log('imageUrl: ', '');
+      console.log('image: ', finalProfileImage);
+      console.log('introduction: ', introduction);
+      console.log('location: ', townText);
+      console.log('name: ', realName);
+      console.log('nickName: ', nickName);
+      console.log('phone: ', phoneNumber);
+      //console.log('deviceToken: ', 'testToken');
+
+      const formData = new FormData();
+
+      formData.append('birthday', birthText);
       formData.append('id', id);
-      formData.append('imageUrl', profileImage);
+      formData.append('imageUrl', '');
+      formData.append('image', finalProfileImage);
       formData.append('introduction', introduction);
-      formData.append('location', town);
+      formData.append('location', townText);
       formData.append('name', realName);
       formData.append('nickName', nickName);
       formData.append('phone', phoneNumber);
 
-      console.log('birthday', birth);
-      console.log('id', id);
-      console.log('imageUrl', profileImage);
-      console.log('introduction', introduction);
-      console.log('location', town);
-      console.log('name', realName);
-      console.log('nickName', nickName);
-      console.log('phone', phoneNumber);
+      //formData.append('deviceToken', 'testToken2');
 
-      //formData 모든 값 출력
-      for (var value in formData.values()) {
-        console.log(value);
-      }
+      /*POST*/
+      axios
+        .post('/api/users/create', formData, {
+          headers: {
+            'Contest-Type': 'multipart/form-data',
+          },
+        })
+        .then((res) => {
+          console.log('POST 성공');
+          console.log(res);
+        })
+        .catch((err) => {
+          console.log('POST 실패');
+        });
 
-      goToFinishJoinPage(PATH.FINISHJOIN);
+      goTo(PATH.FINISHJOIN);
+
     }
   };
-
-  const navigate = useNavigate(); //history
-
-  const goToFinishJoinPage = useCallback(
-    (path: string) => {
-      navigate(path);
-    },
-    [navigate],
-  );
-
-  // const showModal = () => {
-  //   setIsModalOpen(true);
-  // };
-
-  // const handleOk = () => {
-  //   setIsModalOpen(false);
-  // };
-
-  // const handleCancel = () => {
-  //   setIsModalOpen(false);
-  // };
-
-  // const handleImageSelect1 = () => {
-  //   setProfileImage(
-  //     'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png',
-  //   );
-  // };
-
-  // const handleImageSelect2 = () => {
-  //   setProfileImage(
-  //     'https://image.ytn.co.kr/general/jpg/2022/1223/202212231020527831_d.jpg',
-  //   );
-  // };
-
-  // const handleImageSelect3 = () => {
-  //   setProfileImage(
-  //     'https://images.pexels.com/photos/1166869/pexels-photo-1166869.jpeg',
-  //   );
-  // };
-
-  // const handleImageSelect4 = () => {
-  //   setProfileImage(
-  //     'https://images.pexels.com/photos/3361739/pexels-photo-3361739.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
-  //   );
-  // };
-
-  // const handleImageSelect5 = () => {
-  //   setProfileImage(
-  //     'https://images.pexels.com/photos/1661179/pexels-photo-1661179.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
-  //   );
-  // };
 
   return (
     <Space css={topWrapperCSS} align="baseline">
       {contextHolder}
-      <Form name="JoinPage">
-        <Text
-          css={css`
-            font-size: 30px;
-            font-weight: bold;
-          `}
-        >
-          회원가입
-        </Text>
-        <Form.Item name="profileImage" style={{ textAlign: 'center' }}>
+
+      <Form
+        name="JoinPage"
+        onFinish={handleSubmitBtn}
+        onFinishFailed={onFinishFailed}
+      >
+        <Text css={cssJoinText}>회원가입</Text>
+        <Form.Item name="profileImage" css={cssJoinProfileImg}>
           <Space direction="vertical">
             <Image
               src={profileImage}
@@ -324,56 +316,6 @@ const JoinPage = () => {
                   onChange={handleFileChange}
                 />
               </label>
-              {/* <Modal
-                title="프로필 사진 선택"
-                open={isModalOpen}
-                onOk={handleOk}
-                onCancel={handleCancel}
-              >
-                <Button block onClick={handleImageSelect1} css={profileCSS}>
-                  <img
-                    width={100}
-                    height="auto"
-                    src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
-                  />
-                </Button>
-                <Button block onClick={handleImageSelect2} css={profileCSS}>
-                  {
-                    <img
-                      width={100}
-                      height="auto"
-                      src="https://image.ytn.co.kr/general/jpg/2022/1223/202212231020527831_d.jpg"
-                    />
-                  }
-                </Button>
-                <Button block onClick={handleImageSelect3} css={profileCSS}>
-                  {
-                    <img
-                      width={100}
-                      height="auto"
-                      src="https://images.pexels.com/photos/1166869/pexels-photo-1166869.jpeg"
-                    />
-                  }
-                </Button>
-                <Button block onClick={handleImageSelect4} css={profileCSS}>
-                  {
-                    <img
-                      width={100}
-                      height="auto"
-                      src="https://images.pexels.com/photos/3361739/pexels-photo-3361739.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
-                    />
-                  }
-                </Button>
-                <Button block onClick={handleImageSelect5} css={profileCSS}>
-                  {
-                    <img
-                      width={100}
-                      height="auto"
-                      src="https://images.pexels.com/photos/1661179/pexels-photo-1661179.jpeg"
-                    />
-                  }
-                </Button>
-              </Modal> */}
             </div>
           </Space>
         </Form.Item>
@@ -381,15 +323,24 @@ const JoinPage = () => {
         <Form.Item
           label="닉네임"
           name="nickName"
+          css={cssJoinMargin}
+
           rules={[{ validator: rightNickname }]}
         >
           <Input onChange={onChangeNickName} />
+        </Form.Item>
+
+        <Form.Item name="닉네임 중복 검사">
+          <Button type="primary" css={cssJoinNick} onClick={overlapNickname}>
+            닉네임 중복 검사
+          </Button>
         </Form.Item>
 
         <Form.Item
           label="이름"
           name="realName"
           rules={[{ validator: rightRealname }]}
+          css={cssJoinMargin}
         >
           <Input onChange={onChangeRealName} />
         </Form.Item>
@@ -461,16 +412,10 @@ const JoinPage = () => {
           <Input onChange={onChangeIntroduction} />
         </Form.Item>
 
-        <Form.Item name="submit" style={{ textAlign: 'center' }}>
-          <Button
-            type="primary"
-            onClick={handleSubmitBtn}
-            htmlType="submit"
-            css={css`
-              width: 180px;
-              height: 40px;
-            `}
-          >
+
+        <Form.Item name="submit" css={cssJoinSubmitBtnBox}>
+          <Button type="primary" htmlType="submit" css={cssJoinSubmitBtn}>
+
             가입 완료
           </Button>
         </Form.Item>
