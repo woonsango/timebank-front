@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { usePostAgencyLogin } from '../../api/hooks/agency';
 import agencyLogo from '../../assets/images/icons/agency-logo.png';
 import { PATH } from '../../utils/paths';
+import { passwordRegex } from '../../utils/regex';
 import { getTokenFromCookie, setTokenToCookie } from '../../utils/token';
 import { cssAgencySignInPaeStyle } from './AgencySignInPage.styles';
 
@@ -16,6 +17,16 @@ const AgencySignInPage = () => {
   const handleOnLinkAgencySignUp = useCallback(() => {
     navigate(PATH.AGENCY_SIGN_UP);
   }, [navigate]);
+
+  const passwordRegexRule = (_: any, value: string) => {
+    if (!value) {
+      return Promise.reject(new Error('비밀번호를 입력해 주세요.'));
+    }
+    if (!passwordRegex.test(value)) {
+      return Promise.reject(new Error('비밀번호 형식에 맞게 입력해주세요.'));
+    }
+    return Promise.resolve();
+  };
 
   const handleOnFinishLogin = useCallback(
     async (values: any) => {
@@ -72,7 +83,10 @@ const AgencySignInPage = () => {
         </Form.Item>
         <Form.Item
           name="pw"
-          rules={[{ required: true, message: '비밀번호를 입력해주세요' }]}
+          rules={[
+            { required: true, message: '' },
+            { validator: passwordRegexRule },
+          ]}
         >
           <Input
             style={{ width: 216 }}
