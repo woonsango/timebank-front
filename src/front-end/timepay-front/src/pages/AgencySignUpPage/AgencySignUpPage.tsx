@@ -2,7 +2,7 @@ import { cssAgencySignUpPageStyle } from './AgencySignUpPage.styles';
 import { headerTitleState } from '../../states/uiState';
 import { useSetRecoilState } from 'recoil';
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { Button, Form, Input, Modal, Upload, UploadFile } from 'antd';
+import { Button, Form, Input, message, Modal, Upload, UploadFile } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
 import { RcFile, UploadChangeParam, UploadProps } from 'antd/es/upload';
 import dummyProfileImg from '../../assets/images/icons/dummy-profile-img.png';
@@ -14,14 +14,23 @@ import {
   passwordRegex,
   phoneRegex,
 } from '../../utils/regex';
+import { usePostAgencyRegister } from '../../api/hooks/agency';
+import { useNavigate } from 'react-router-dom';
+import { PATH } from '../../utils/paths';
 
 const AgencySignUpPage = () => {
+  const navigate = useNavigate();
+
   const [form] = Form.useForm();
   const [imgFileList, setImgFileList] = useState<UploadFile[]>([]);
   const [previewImage, setPreviewImage] = useState('');
   const [previewOpen, setPreviewOpen] = useState(false);
 
+  const postAgencyRegisterMutation = usePostAgencyRegister();
   const setHeaderTitle = useSetRecoilState(headerTitleState);
+
+  const [messageApi, contextHolder] = message.useMessage();
+
   const normFile = (e: any) => {
     console.log('Upload event:', e);
     if (Array.isArray(e)) {
@@ -122,9 +131,56 @@ const AgencySignUpPage = () => {
 
   const handleCancelPreview = useCallback(() => setPreviewOpen(false), []);
 
-  const handleOnSubmit = useCallback((values: any) => {
-    console.log(values);
-  }, []);
+  const handleOnSubmit = useCallback(
+    async (values: any) => {
+      let formData = new FormData();
+      if (values.profileImage && values.profileImage.length > 0) {
+        formData.append('image', values.profileImage[0].originFileObj);
+      }
+      if (values.volunteerFile && values.volunteerFile.length > 0) {
+        formData.append('certification', values.volunteerFile[0].originFileObj);
+      }
+      const newAgency = {
+        ...values,
+        employeeNum: parseInt(values.employeeNum),
+        checkPw: null,
+        profileImage: null,
+        volunteerFile: null,
+        timepay: parseInt(values.employeeNum) * 600,
+      };
+
+      formData.append(
+        'request',
+        new Blob([JSON.stringify(newAgency)], { type: 'application/json' }),
+      );
+
+      await postAgencyRegisterMutation.mutateAsync(formData, {
+        onSuccess: (result) => {
+          messageApi.open({
+            type: 'success',
+            content: '회원가입을 성공했습니다.',
+            duration: 1,
+            onClose: () => {
+              navigate(PATH.AGENCY_SIGN_IN);
+            },
+          });
+        },
+        onError: (err) => {
+          console.log(err);
+          messageApi.open({
+            type: 'error',
+            content: (
+              <>
+                오류 발생: <br />
+                {err}
+              </>
+            ),
+          });
+        },
+      });
+    },
+    [messageApi, navigate, postAgencyRegisterMutation],
+  );
 
   const uploadButton = useMemo(() => {
     return <img width="100%" height="100%" src={dummyProfileImg} alt="+" />;
@@ -136,6 +192,7 @@ const AgencySignUpPage = () => {
 
   return (
     <div css={cssAgencySignUpPageStyle}>
+      {contextHolder}
       <Form onFinish={handleOnSubmit} form={form}>
         <Form.Item
           name="profileImage"

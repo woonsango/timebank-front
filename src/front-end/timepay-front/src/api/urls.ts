@@ -6,7 +6,11 @@ export const API_URL = {
   INQUIRY: 'api/inquiry-boards',
   NOTIFICATIONS: 'api/notifications',
   USERS_INFO: '/api/users/get/',
+  ORGANIZATIONS_REGISTER: '/api/organizations/register',
 };
 
 // 토큰 필요 없는 애들
 export const HEADER_NOT_REQUIRED_URLS = [API_URL.DEAL_BOARDS];
+
+// form data로 전송 필요한 url
+export const FORM_DATA_REQUIRED_URLS = [API_URL.ORGANIZATIONS_REGISTER];
