@@ -1,8 +1,16 @@
 import { AxiosError, AxiosResponse } from 'axios';
 import { useMutation } from 'react-query';
+import { IAgencyLoginRequest } from '../interfaces/IAgency';
 import { apiRequest } from '../request';
 import { API_URL } from '../urls';
 
+export const usePostAgencyLogin = () => {
+  return useMutation<AxiosResponse<any>, AxiosError, IAgencyLoginRequest>({
+    mutationKey: 'usePostAgencyLogin',
+    mutationFn: (data) =>
+      apiRequest.post(API_URL.ORGANIZATIONS_LOGIN, { ...data }),
+  });
+};
 export const usePostAgencyRegister = () => {
   return useMutation<AxiosResponse<any>, AxiosError, FormData>({
     mutationKey: 'usePostAgencyRegister',

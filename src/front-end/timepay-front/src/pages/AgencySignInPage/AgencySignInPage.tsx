@@ -1,23 +1,59 @@
-import { Button, Form, Input, Typography } from 'antd';
-import { useCallback } from 'react';
+import { Button, Form, Input, message, Typography } from 'antd';
+import { useCallback, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { usePostAgencyLogin } from '../../api/hooks/agency';
 import agencyLogo from '../../assets/images/icons/agency-logo.png';
 import { PATH } from '../../utils/paths';
+import { getTokenFromCookie, setTokenToCookie } from '../../utils/token';
 import { cssAgencySignInPaeStyle } from './AgencySignInPage.styles';
 
 const AgencySignInPage = () => {
   const navigate = useNavigate();
+  const [messageApi, contextHolder] = message.useMessage();
+
+  const postAgencyLoginMutation = usePostAgencyLogin();
 
   const handleOnLinkAgencySignUp = useCallback(() => {
     navigate(PATH.AGENCY_SIGN_UP);
   }, [navigate]);
 
-  const handleOnFinishLogin = useCallback((values: any) => {
-    console.log(values);
+  const handleOnFinishLogin = useCallback(
+    async (values: any) => {
+      await postAgencyLoginMutation.mutateAsync(values, {
+        onSuccess: (result) => {
+          setTokenToCookie(result.data.jwt, 1);
+          messageApi.open({
+            type: 'success',
+            content: '로그인 성공했습니다.',
+            duration: 1,
+            onClose: () => navigate(PATH.HOME),
+          });
+        },
+        onError: (err) => {
+          console.log(err);
+          messageApi.open({
+            type: 'error',
+            content: (
+              <>
+                오류 발생: <br />
+                {err}
+              </>
+            ),
+          });
+        },
+      });
+    },
+    [postAgencyLoginMutation, messageApi, navigate],
+  );
+
+  useEffect(() => {
+    // 이미 토큰이 있다면 자동 로그인
+    if (getTokenFromCookie()) navigate(PATH.HOME);
   }, []);
 
   return (
     <div css={cssAgencySignInPaeStyle}>
+      {contextHolder}
       <div className="title">
         <Typography.Text>모두에게 동일한 시간</Typography.Text>
         <Typography.Text>시간을 거래하는 타임페이</Typography.Text>
