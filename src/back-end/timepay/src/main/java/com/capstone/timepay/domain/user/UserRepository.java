@@ -1,6 +1,7 @@
 package com.capstone.timepay.domain.user;
 
 
+import com.capstone.timepay.domain.organization.Organization;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -23,4 +24,6 @@ public interface UserRepository extends JpaRepository<User,Long> {
 
 
     Optional<User> findByNicknameContains(String nickname);
+
+    Optional<User> findByOrganization(Organization organization);
 }

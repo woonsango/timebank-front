@@ -111,6 +111,9 @@ public class User extends BaseTimeEntity {
     public void updateName(String name) {
         this.name = name;
     }
+    public void updatePhone(String phone) {
+        this.phone = phone;
+    }
     public void updateBirth(LocalDateTime birth) {
         this.birthday = birth;
     }

@@ -1,5 +1,6 @@
 package com.capstone.timepay.service.organization;
 
+import com.capstone.timepay.controller.organization.request.OrgaUpdateRequest;
 import com.capstone.timepay.domain.admin.Admin;
 import com.capstone.timepay.domain.organization.Organization;
 import com.capstone.timepay.domain.organization.OrganizationRepository;
@@ -20,6 +21,7 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -101,5 +103,22 @@ public class OrganizationUserService {
         }
 
         return resultMap;
+    }
+
+    public void updateInfo(OrgaUpdateRequest request, MultipartFile image, MultipartFile certification, String account) throws IOException, FirebaseAuthException {
+        Organization organization = organizationRepository.findByAccount(account).orElseThrow(()->new IllegalArgumentException("존재하지 않는 계정입니다."));
+        User user = userRepository.findByOrganization(organization).orElseThrow(()->new IllegalArgumentException("존재하지 않는 계정입니다."));
+        if(!Objects.isNull(request.getManagerName())) user.updateName(request.getManagerName());
+        if(!Objects.isNull(request.getManagerPhone())) user.updatePhone(request.getManagerPhone());
+        if(!Objects.isNull(image)){
+            String imageUrl = firebaseService.uploadFiles(image);
+            organization.updateImageUrl(imageUrl);
+        }
+        if(!Objects.isNull(certification)){
+            String certificationUrl = firebaseService.uploadFiles(certification);
+            organization.updateCertificationUrl(certificationUrl);
+        }
+        organizationRepository.save(organization);
+        userRepository.save(user);
     }
 }
