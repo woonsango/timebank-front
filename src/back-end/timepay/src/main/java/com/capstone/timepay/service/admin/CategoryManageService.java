@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -75,6 +76,17 @@ public class CategoryManageService {
 
         List<Category> categories = categoryRepository.findAllByBoardTypeAndUseYn(type,useYn);
 
-        return new ArrayList<>();
+        return convertCategoryList(categories);
+    }
+
+    public List<CategoryResponse> convertCategoryList(List<Category> categories){
+        return categories.stream()
+                .map(category -> CategoryResponse.builder()
+                        .categoryId(category.getCategoryId())
+                        .boardType(category.getBoardType())
+                        .categoryName(category.getCategoryName())
+                        .useYn(category.getUseYn())
+                        .build())
+                .collect(Collectors.toList());
     }
 }

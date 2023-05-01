@@ -27,15 +27,6 @@ public class CategoryManageController {
         return ResponseEntity.ok(responses);
     }
 
-    @ApiOperation(value = "전체 카테고리 항목 조회")
-    @GetMapping("/main")
-    public ResponseEntity<?> main(@RequestParam String type, @RequestParam String useYn){
-
-        List<CategoryResponse> responses = categoryManageService.showPossibleCategories(type, useYn);
-
-        return ResponseEntity.ok(responses);
-    }
-
     @ApiOperation(value = "카테고리 항목 추가")
     @PostMapping("/create")
     public ResponseEntity<?> createNewCategory(@RequestParam String categoryName, @RequestParam String boardType){
