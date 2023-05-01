@@ -25,7 +25,8 @@ const BaseLayout = () => {
     location.pathname === PATH.Qna_List ||
     location.pathname === PATH.Qna_Register ||
     location.pathname.includes('/post/') ||
-    location.pathname.includes('/edit/');
+    location.pathname.includes('/edit/') ||
+    location.pathname === PATH.AGENCY_SIGN_UP;
 
   const isSearch = useMemo(() => {
     return location.pathname === PATH.SEARCH;

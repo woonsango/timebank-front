@@ -66,6 +66,10 @@ function App() {
             />
             <Route path={PATH.MY} element={<PageRoutes.MyPage />} />
             <Route path={PATH.MY_EDIT} element={<PageRoutes.MyEditPage />} />
+            <Route
+              path={PATH.AGENCY_SIGN_UP}
+              element={<PageRoutes.AgencySignUpPage />}
+            />
           </Route>
         </Routes>
       </ConfigProvider>

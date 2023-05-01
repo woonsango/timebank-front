@@ -1,9 +1,17 @@
 import { Button, Form, Input, Typography } from 'antd';
 import { useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 import agencyLogo from '../../assets/images/icons/agency-logo.png';
+import { PATH } from '../../utils/paths';
 import { cssAgencySignInPaeStyle } from './AgencySignInPage.styles';
 
 const AgencySignInPage = () => {
+  const navigate = useNavigate();
+
+  const handleOnLinkAgencySignUp = useCallback(() => {
+    navigate(PATH.AGENCY_SIGN_UP);
+  }, [navigate]);
+
   const handleOnFinishLogin = useCallback((values: any) => {
     console.log(values);
   }, []);
@@ -40,7 +48,9 @@ const AgencySignInPage = () => {
           로그인
         </Button>
       </Form>
-      <Button type="link">회원가입 바로가기</Button>
+      <Button type="link" onClick={handleOnLinkAgencySignUp}>
+        회원가입 바로가기
+      </Button>
     </div>
   );
 };
