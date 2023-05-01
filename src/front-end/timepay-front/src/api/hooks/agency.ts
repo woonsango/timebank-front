@@ -11,6 +11,15 @@ export const usePostAgencyLogin = () => {
       apiRequest.post(API_URL.ORGANIZATIONS_LOGIN, { ...data }),
   });
 };
+
+export const useAgencyLogout = () => {
+  return useMutation<AxiosResponse<any>, AxiosError, any>({
+    mutationKey: 'useAgencyLogout',
+    mutationFn: (data) =>
+      apiRequest.post(API_URL.ORGANIZATIONS_LOGOUT, { ...data }),
+  });
+};
+
 export const usePostAgencyRegister = () => {
   return useMutation<AxiosResponse<any>, AxiosError, FormData>({
     mutationKey: 'usePostAgencyRegister',
