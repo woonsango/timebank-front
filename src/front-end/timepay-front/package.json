@@ -2,7 +2,7 @@
   "name": "timepay-front",
   "version": "0.1.0",
   "private": true,
-  "proxy": "http://13.125.119.30",
+  "proxy": "http://10.30.112.173:8080",
   "dependencies": {
     "@ant-design/icons": "^5.0.1",
     "@emotion/react": "^11.10.6",

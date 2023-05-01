@@ -230,10 +230,12 @@ const JoinPage = () => {
       !phone_regex.test(phoneNumber)
     ) {
       console.log('가입 완료 제출: 전화번호 형식 부적합');
-    } else if (overlap === false) {
-      console.log('가입 완료 제출: 닉네임 중복 여부 확인되지 않음');
-      warning('닉네임 중복 여부를 검사해 주세요.');
-    } else {
+    }
+    //else if (overlap === false) {
+    //   console.log('가입 완료 제출: 닉네임 중복 여부 확인되지 않음');
+    //   warning('닉네임 중복 여부를 검사해 주세요.');
+    // }
+    else {
       console.log('가입 완료 제출: 조건 충족');
 
       /*formData*/
@@ -249,7 +251,7 @@ const JoinPage = () => {
       console.log('name: ', realName);
       console.log('nickName: ', nickName);
       console.log('phone: ', phoneNumber);
-      console.log('deviceToken: ', 'testToken');
+      //console.log('deviceToken: ', 'testToken');
 
       const formData = new FormData();
 
@@ -262,7 +264,7 @@ const JoinPage = () => {
       formData.append('name', realName);
       formData.append('nickName', nickName);
       formData.append('phone', phoneNumber);
-      formData.append('deviceToken', 'testToken');
+      //formData.append('deviceToken', 'testToken2');
 
       /*POST*/
       axios

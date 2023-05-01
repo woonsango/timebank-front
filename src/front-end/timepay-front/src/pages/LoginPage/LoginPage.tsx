@@ -28,14 +28,17 @@ const LoginPage = () => {
     [navigate],
   );
 
-  console.log('토큰 값 확인:', getTokenFromCookie());
-  var userToken = getTokenFromCookie();
+  useEffect(() => {
+    console.log('토큰 값 확인:', getTokenFromCookie());
+    var userToken = getTokenFromCookie();
 
-  if (!!userToken) {
-    //토큰이 존재하면
-    console.log('토큰 존재: ', userToken);
-    goTo(PATH.HOME);
-  }
+    if (!!userToken) {
+      //토큰이 존재하면
+      console.log('토큰 존재: ', userToken);
+      console.log('go home');
+      goTo(PATH.HOME);
+    }
+  }, []);
 
   return (
     <Space

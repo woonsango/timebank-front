@@ -50,9 +50,9 @@ const MyEditPage: React.FC = () => {
   const [guText, setGuText] = useState<string>('');
   const [dongText, setDongText] = useState<string>('');
 
-  var viewNickname: string = '';
-  var viewTown: string = '';
-  var viewIntroduction: string = '';
+  const [viewNickname, setViewNickname] = useState<string>('');
+  const [viewTown, setViewTown] = useState<string>('');
+  const [viewIntroduction, setViewIntroduction] = useState<string>('');
 
   const handleFileChange = (e: any) => {
     const imageFile = e.target.files[0];
@@ -164,10 +164,10 @@ const MyEditPage: React.FC = () => {
       warning('지역을 입력해 주세요.');
     }
 
-    if (!(nickName === viewNickname)) {
-      console.log('닉네임 중복 여부 확인되지 않음');
-      warning('닉네임 중복 여부를 검사해 주세요.');
-    }
+    // if (!(nickName === viewNickname)) {
+    //   console.log('닉네임 중복 여부 확인되지 않음');
+    //   warning('닉네임 중복 여부를 검사해 주세요.');
+    // }
 
     console.log('PUT할 데이터');
     console.log('프로필 이미지: ', finalProfileImage);
@@ -223,9 +223,9 @@ const MyEditPage: React.FC = () => {
         console.log('지역: ', res.data.location);
         console.log('소개: ', res.data.introduction);
 
-        viewNickname = res.data.nick_name;
-        viewTown = res.data.location;
-        viewIntroduction = res.data.introduction;
+        setViewNickname(res.data.nick_name);
+        setViewTown(res.data.location);
+        setViewIntroduction(res.data.introduction);
 
         setfinalProfileImage(res.data.image_url);
         setProfileImage(res.data.image_url);
