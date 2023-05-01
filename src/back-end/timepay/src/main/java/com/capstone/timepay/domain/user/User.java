@@ -1,6 +1,7 @@
 package com.capstone.timepay.domain.user;
 
 import com.capstone.timepay.domain.BaseTimeEntity;
+import com.capstone.timepay.domain.certification.Certification;
 import com.capstone.timepay.domain.dealBoardComment.DealBoardComment;
 import com.capstone.timepay.domain.dealBoardReport.DealBoardReport;
 import com.capstone.timepay.domain.dealCommentReport.DealCommentReport;
@@ -18,6 +19,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
@@ -106,6 +109,10 @@ public class User extends BaseTimeEntity {
     @OneToOne
     @JoinColumn(name = "organization_id")
     private Organization organization;
+
+    @ManyToOne
+    @JoinColumn(name="certification_id")
+    private Certification certification;
 
 
     public void updateName(String name) {
