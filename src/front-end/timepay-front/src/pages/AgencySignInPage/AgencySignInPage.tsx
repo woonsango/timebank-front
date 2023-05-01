@@ -1,8 +1,10 @@
 import { Button, Form, Input, message, Typography } from 'antd';
 import { useCallback, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useSetRecoilState } from 'recoil';
 import { usePostAgencyLogin } from '../../api/hooks/agency';
 import agencyLogo from '../../assets/images/icons/agency-logo.png';
+import { agencyState, userState } from '../../states/user';
 import { PATH } from '../../utils/paths';
 import { passwordRegex } from '../../utils/regex';
 import { getTokenFromCookie, setTokenToCookie } from '../../utils/token';
@@ -10,6 +12,9 @@ import { cssAgencySignInPaeStyle } from './AgencySignInPage.styles';
 
 const AgencySignInPage = () => {
   const navigate = useNavigate();
+  const setUserState = useSetRecoilState(userState);
+  const setAgencyState = useSetRecoilState(agencyState);
+
   const [messageApi, contextHolder] = message.useMessage();
 
   const postAgencyLoginMutation = usePostAgencyLogin();
@@ -33,6 +38,8 @@ const AgencySignInPage = () => {
       await postAgencyLoginMutation.mutateAsync(values, {
         onSuccess: (result) => {
           setTokenToCookie(result.data.jwt, 1);
+          setAgencyState(result.data.organization);
+          setUserState(null);
           messageApi.open({
             type: 'success',
             content: '로그인 성공했습니다.',
@@ -54,7 +61,13 @@ const AgencySignInPage = () => {
         },
       });
     },
-    [postAgencyLoginMutation, messageApi, navigate],
+    [
+      postAgencyLoginMutation,
+      messageApi,
+      navigate,
+      setAgencyState,
+      setUserState,
+    ],
   );
 
   useEffect(() => {
