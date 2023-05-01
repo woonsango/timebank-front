@@ -26,8 +26,8 @@ const KakaoRedirectHandler = () => {
   useEffect(() => {
     console.log('인가 코드(Authorization Code): ', authorizationCode);
 
-    //const requestUrl = `http://13.125.119.30/oauth/redirect/kakao?code=${authorizationCode}`;
-    const requestUrl = `http://10.30.112.173:8080/oauth/redirect/kakao?code=${authorizationCode}`;
+    const requestUrl = `http://13.125.119.30/oauth/redirect/kakao?code=${authorizationCode}`;
+    //const requestUrl = `http://10.30.112.173:8080/oauth/redirect/kakao?code=${authorizationCode}`;
     console.log('인가코드 전송 url: ', requestUrl);
     console.log('entire: ', new URL(window.location.href));
 
