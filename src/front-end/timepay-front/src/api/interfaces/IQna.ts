@@ -11,4 +11,18 @@ export interface IQna {
   user: IUser; // 문의 작성자 정보
 }
 
+export interface IPostQna {
+  content: string;
+  subject: string;
+  title: string;
+  week: string;
+}
+
+export interface IGetQna {
+  content: string;
+  notice: boolean;
+  title: string;
+  createdAt: string;
+}
+
 export type IQnaState = '답변대기' | '답변완료';

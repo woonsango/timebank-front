@@ -14,16 +14,40 @@ export const cssCommentItem = css`
   align-items: center;
 `;
 export const cssPostDetailProfile = css`
-  justify-content: flex-start;
-  width: 50px;
-  height: 50px;
+  width: 15%;
   margin-right: 20px;
   border-radius: 50px;
   background-color: ${COMMON_COLOR.BLUE_GRAY};
+`;
+export const cssCommentProfile = css`
+  width: 50px;
+  height: 50px;
+  border-radius: 50px;
+  background-color: ${COMMON_COLOR.BLUE_GRAY};
+`;
+export const cssCommentText = css`
+  width: 80%;
 `;
 
 export const cssEditDelete = css`
   display: flex;
   justify-content: flex-end;
   align-items: flex-end;
+  font-size: 16px;
+  .edit {
+    margin-right: 10px;
+    border: none;
+    padding: 0;
+    font-size: 16px;
+  }
+  .sidebar {
+    margin-bottom: 7px;
+  }
+  .delete {
+    margin-left: 8px;
+    margin-right: 5px;
+    border: none;
+    padding: 0;
+    font-size: 16px;
+  }
 `;

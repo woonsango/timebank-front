@@ -57,7 +57,6 @@ const AdminAdd = () => {
     <Form
       form={form}
       {...layout}
-      form={form}
       onFinish={onFinish}
       style={{ maxWidth: 600 }}
       css={cssAddModal}

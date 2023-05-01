@@ -56,7 +56,7 @@ export const cssPostDetailPage = css`
 // 1st block
 export const cssPostDetailFirst = css`
   flex-direction: row;
-  margin-top: 10px;s
+  margin-top: 20px;
   margin-left: 25px;
   margin-right: 25px;
   font-size: 18px;
@@ -67,7 +67,7 @@ export const cssPostDetailProfile = css`
   width: 50px;
   height: 50px;
   margin-top: 10px;
-  margin-left: 25px;
+  margin-left: 5px;
   border-radius: 25px;
   background-color: ${COMMON_COLOR.BLUE_GRAY};
 `;
@@ -90,12 +90,12 @@ export const cssPostDetailSecond = css`
   justify-content: space-between;
 `;
 export const cssPostDetailTitle = css`
-  margin-top: 25px;
+  margin-top: 40px;
   font-size: 22px;
   font-weight: 500;
 `;
 export const cssPostDetailStatus = css`
-  margin-top: 25px;
+  margin-top: 40px;
 `;
 
 // 3rd block
@@ -104,6 +104,7 @@ export const cssPostDetailThird = css`
   flex-direction: row;
   grid-template-columns: 85px 5fr 68px;
   align-items: center;
+  margin-top: 25px;
   margin-left: 25px;
   margin-right: 25px;
 `;
@@ -123,12 +124,14 @@ export const cssPostDetailPay = css`
   font-size: 18px;
   font-weight: 500;
   background-color: ${COMMON_COLOR.MAIN3};
+  color: ${COMMON_COLOR.WHITE};
   border-radius: 10px;
   padding: 5px;
 `;
 
 // 4th block
 export const cssPostDetailFourth = css`
+  margin-top: 25px;
   margin-left: 25px;
   margin-right: 25px;
 `;
@@ -147,6 +150,7 @@ export const cssPostDetailTime = css`
 
 // 5th block
 export const cssPostDetailFifth = css`
+  margin-top: 25px;
   margin-left: 25px;
   margin-right: 25px;
 `;
@@ -156,8 +160,8 @@ export const cssPostDetailContent1 = css`
   font-weight: 500;
 `;
 export const cssPostDetailContent2 = css`
-  margin-top: 10px;
-  padding: 10px;
+  margin-top: 20px;
+  padding: 10px 7px;
   border: 1.3px solid ${COMMON_COLOR.FONT1};
   border-radius: 10px;
   font-size: 18px;
@@ -165,6 +169,17 @@ export const cssPostDetailContent2 = css`
 `;
 export const cssPostDetailAttachment = css`
   margin-bottom: 10px;
+`;
+
+export const cssReportContainer = css`
+  display: flex;
+  justify-content: flex-end;
+  margin-right: 25px;
+  margin-top: 30px;
+`;
+export const cssReportBtnStyle = css`
+  letter-spacing: 1.5px;
+  font-weight: 500;
 `;
 
 // comment
@@ -176,7 +191,32 @@ export const cssCommentContainer = css`
   p {
     font-size: 22px;
     font-weight: 500;
+    margin: 0;
+    margin-top: 20px;
   }
+`;
+export const cssCollectButton = css`
+  display: flex;
+  justify-content: center;
+  margin-top: 5px;
+  margin-bottom: 15px;
+`;
+export const cssCollectBtn = css`
+  width: 50%;
+  height: 40px;
+  letter-spacing: 1.5px;
+  font-weight: 600;
+  font-size: 18px;
+  color: ${COMMON_COLOR.WHITE};
+  background-color: ${COMMON_COLOR.MAIN2};
+  border: none;
+  border-radius: 15px;
+`;
+
+export const cssApplicant = css`
+  height: 300px;
+  overflow: scroll;
+  font-size: 18px;
 `;
 
 // footer
@@ -204,7 +244,7 @@ export const cssPostTextarea = css`
 export const cssPostBtn = css`
   margin-top: 20px;
   margin-right: 10px;
-  width: 10%;
+  width: 15%;
   height: 40px;
   border: none;
   border-radius: 10px;

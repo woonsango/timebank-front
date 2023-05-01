@@ -39,6 +39,7 @@ import { overlap } from './overlapNickname';
 /*행정동 타입 선언*/
 type DongName = keyof typeof dongData;
 
+
 const JoinPage = () => {
   console.log('JoinPage.tsx');
 
@@ -264,6 +265,7 @@ const JoinPage = () => {
       formData.append('name', realName);
       formData.append('nickName', nickName);
       formData.append('phone', phoneNumber);
+
       //formData.append('deviceToken', 'testToken2');
 
       /*POST*/
@@ -282,12 +284,14 @@ const JoinPage = () => {
         });
 
       goTo(PATH.FINISHJOIN);
+
     }
   };
 
   return (
     <Space css={topWrapperCSS} align="baseline">
       {contextHolder}
+
       <Form
         name="JoinPage"
         onFinish={handleSubmitBtn}
@@ -320,6 +324,7 @@ const JoinPage = () => {
           label="닉네임"
           name="nickName"
           css={cssJoinMargin}
+
           rules={[{ validator: rightNickname }]}
         >
           <Input onChange={onChangeNickName} />
@@ -350,7 +355,6 @@ const JoinPage = () => {
                 label: month,
                 value: month,
               }))}
-              style={{ width: 100 }}
             />
 
             <Select
@@ -360,7 +364,6 @@ const JoinPage = () => {
                 label: day,
                 value: day,
               }))}
-              style={{ width: 100 }}
             />
           </Space>
         </Form.Item>
@@ -391,14 +394,12 @@ const JoinPage = () => {
                 label: province,
                 value: province,
               }))}
-              style={{ width: 100 }}
             />
 
             <Select
               value={dong as DongName}
               onChange={onChangeDong}
               options={gu.map((city) => ({ label: city, value: city }))}
-              style={{ width: 100 }}
             />
           </Space>
         </Form.Item>
@@ -411,8 +412,10 @@ const JoinPage = () => {
           <Input onChange={onChangeIntroduction} />
         </Form.Item>
 
+
         <Form.Item name="submit" css={cssJoinSubmitBtnBox}>
           <Button type="primary" htmlType="submit" css={cssJoinSubmitBtn}>
+
             가입 완료
           </Button>
         </Form.Item>

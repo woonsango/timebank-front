@@ -17,12 +17,37 @@ export interface IPost {
   content: string; // 게시글 내용
 }
 
+export interface IPostFreeBoard {
+  title: string; // 제목
+  content: string;
+  category: string;
+  hidden: boolean;
+}
+export interface IGetFreeBoard {
+  title: string; // 제목
+  content: string;
+  category: string;
+  createdAt: string;
+  updatedAt?: string;
+  hidden?: boolean;
+}
+
+export interface IPostDealBoard {
+  content: string;
+  startTime: string;
+  endTime: string;
+  hidden: boolean;
+  location: string;
+  pay: 100;
+  state: string;
+  title: string;
+}
+
 export type IPostState =
   | '매칭중'
   | '매칭완료'
   | '활동시작'
   | '활동완료'
-  | '활동취소'
-  | '활동지연';
+  | '활동취소';
 
 export type IPostType = '도움요청' | '도움주기' | '자유' | '후기';

@@ -110,7 +110,7 @@ const MyPage = () => {
             <div className="MyPageMoveBox">
               <button
                 className="MyPageText"
-                onClick={() => handlePageMove(PATH.ACTIVITY)}
+                onClick={() => handlePageMove(PATH.MY_ACTIVITY_RECORD)}
               >
                 활동 기록
               </button>
