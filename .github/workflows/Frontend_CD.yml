@@ -21,7 +21,6 @@ jobs:
         cd ./src/front-end/timepay-front
         yarn add craco-alias
         yarn build
-      shell: bash
       
     ## docker build image
     - name: 도커 이미지 빌드
