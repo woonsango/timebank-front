@@ -1,7 +1,18 @@
 package com.capstone.timepay.service.organization;
 
 import com.capstone.timepay.controller.organization.request.OrgaUpdateRequest;
+import com.capstone.timepay.controller.organization.response.CertificatePublishResponse;
+import com.capstone.timepay.controller.organization.response.ParticipateUsers;
+import com.capstone.timepay.controller.organization.response.VolunteerInfo;
 import com.capstone.timepay.domain.admin.Admin;
+import com.capstone.timepay.domain.certification.Certification;
+import com.capstone.timepay.domain.certification.CertificationRepository;
+import com.capstone.timepay.domain.dealBoard.DealBoard;
+import com.capstone.timepay.domain.dealBoard.DealBoardRepository;
+import com.capstone.timepay.domain.dealBoardComment.DealBoardComment;
+import com.capstone.timepay.domain.dealBoardComment.DealBoardCommentRepository;
+import com.capstone.timepay.domain.dealBoardReport.DealBoardReport;
+import com.capstone.timepay.domain.dealBoardReport.DealBoardReportRepository;
 import com.capstone.timepay.domain.organization.Organization;
 import com.capstone.timepay.domain.organization.OrganizationRepository;
 import com.capstone.timepay.domain.user.User;
@@ -12,16 +23,16 @@ import com.capstone.timepay.service.organization.dto.OrgaUserSignUpDto;
 import com.google.firebase.auth.FirebaseAuthException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -32,6 +43,9 @@ public class OrganizationUserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final FirebaseService firebaseService;
+    private final DealBoardRepository dealBoardRepository;
+    private final DealBoardCommentRepository dealBoardCommentRepository;
+    private final CertificationRepository certificationRepository;
 
 
     public Map<String, Object> create(OrgaUserSignUpDto dto, MultipartFile image, MultipartFile certification) throws IOException, FirebaseAuthException {
@@ -121,4 +135,6 @@ public class OrganizationUserService {
         organizationRepository.save(organization);
         userRepository.save(user);
     }
+
+
 }

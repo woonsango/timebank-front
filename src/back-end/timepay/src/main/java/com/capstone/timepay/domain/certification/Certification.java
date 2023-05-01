@@ -27,7 +27,16 @@ public class Certification {
     private String certificationUrl;
     private int downloadCount;
     private boolean isPublished;
+    private Long dealBoardId;
 
-    @OneToMany(mappedBy = "certification", orphanRemoval = true)
-    private List<User> users = new ArrayList<>();
+    @ManyToOne
+    @JoinColumn(name="user_id")
+    private User user;
+
+    public void updateCertificationUrl(String url){
+        this.certificationUrl = url;
+    }
+    public void updateIsPublished(boolean state){
+        this.isPublished = state;
+    }
 }

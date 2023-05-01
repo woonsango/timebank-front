@@ -78,6 +78,9 @@ public class User extends BaseTimeEntity {
     @OneToMany(mappedBy = "user", orphanRemoval = true)
     private List<DealRegister> dealRegisters = new ArrayList<>();
 
+    @OneToMany(mappedBy = "user", orphanRemoval = true)
+    private List<Certification> certifications = new ArrayList<>();
+
     @JsonIgnore
     @OneToMany(mappedBy = "user", orphanRemoval = true)
     private List<DealBoardReport> dealBoardReports = new ArrayList<>();
@@ -110,9 +113,7 @@ public class User extends BaseTimeEntity {
     @JoinColumn(name = "organization_id")
     private Organization organization;
 
-    @ManyToOne
-    @JoinColumn(name="certification_id")
-    private Certification certification;
+
 
 
     public void updateName(String name) {
