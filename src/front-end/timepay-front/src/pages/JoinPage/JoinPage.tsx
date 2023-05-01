@@ -26,31 +26,27 @@ import { save } from '../LoginPage/saveUid';
 
 import axios from 'axios';
 import {
-  cssJoinNickname,
   cssJoinSubmitBtn,
   cssJoinText,
   cssJoinProfileImg,
   topWrapperCSS,
   cssJoinSubmitBtnBox,
   cssJoinNick,
+  cssJoinMargin,
 } from './Join.styles';
+import { overlap } from './overlapNickname';
 
 /*행정동 타입 선언*/
 type DongName = keyof typeof dongData;
 
 const JoinPage = () => {
   console.log('JoinPage.tsx');
-  console.log('getUid: ', save);
 
   const { Text } = Typography;
   const [messageApi, contextHolder] = message.useMessage();
 
   const onFinishFailed = (errorInfo: any) => {
-    messageApi.open({
-      type: 'error',
-      content: '로그인 실패!',
-    });
-    console.log('Failed:', errorInfo);
+    console.log('회원가입 실패: ', errorInfo);
   };
 
   const [profileImage, setProfileImage]: any = useState(
@@ -100,24 +96,25 @@ const JoinPage = () => {
   };
 
   const onChangeNickName = (e: React.ChangeEvent<HTMLInputElement>) => {
-    console.log('닉네임 바뀜:', e.target.value);
+    //console.log('닉네임 바뀜:', e.target.value);
     setNickName(e.target.value);
   };
 
   const onChangeRealName = (e: React.ChangeEvent<HTMLInputElement>) => {
-    console.log('이름 바뀜:', e.target.value);
+    //console.log('이름 바뀜:', e.target.value);
     setRealName(e.target.value);
   };
 
   const onChangeGu = (value: DongName) => {
     setGu(dongData[value]);
-    console.log('구 바뀜: ', value.valueOf());
+    setDong(dongData[guData[0]][0]);
+    //console.log('구 바뀜: ', value.valueOf());
     setGuText(value.valueOf());
   };
 
   const onChangeDong = (value: DongName) => {
     setDong(value);
-    console.log('동 바뀜: ', value.valueOf());
+    //console.log('동 바뀜: ', value.valueOf());
     setDongText(value.valueOf());
   };
 
@@ -136,12 +133,12 @@ const JoinPage = () => {
   };
 
   const onChangePhoneNumber = (e: React.ChangeEvent<HTMLInputElement>) => {
-    console.log('전화번호 바뀜:', e.target.value);
+    //console.log('전화번호 바뀜:', e.target.value);
     setPhoneNumber(e.target.value);
   };
 
   const onChangeIntroduction = (e: React.ChangeEvent<HTMLInputElement>) => {
-    console.log('자기소개 바뀜:', e.target.value);
+    //console.log('자기소개 바뀜:', e.target.value);
     setIntroduction(e.target.value);
   };
 
@@ -198,8 +195,22 @@ const JoinPage = () => {
   const warning = (value: string) => {
     messageApi.open({
       type: 'warning',
-      content: value + '을 입력해 주세요.',
+      content: value,
     });
+  };
+
+  /*닉네임 중복 검사*/
+  const overlapNickname = () => {
+    /*get*/
+    //   axios
+    //     .get('url 넣기', nickName)
+    //     .then((res) => {
+    //       console.log('닉네임 중복 검사 성공');
+    //       console.log(res);
+    //     })
+    //     .catch((err) => {
+    //       console.log('닉네임 중복 검사 실패');
+    //     });
   };
 
   /*Handle 가입 완료 Btn*/
@@ -211,7 +222,7 @@ const JoinPage = () => {
       console.log('가입 완료 제출: 이름 형식 부적합');
     } else if (year === '연도' || month === '월' || day === '일') {
       console.log('가입 완료 제출: 생년월일 형식 부적합');
-      warning('생년월일');
+      warning('생년월일을 입력해 주세요.');
     } else if (
       !phoneNumber ||
       phoneNumber.length < 9 ||
@@ -219,12 +230,26 @@ const JoinPage = () => {
       !phone_regex.test(phoneNumber)
     ) {
       console.log('가입 완료 제출: 전화번호 형식 부적합');
+    } else if (overlap === false) {
+      console.log('가입 완료 제출: 닉네임 중복 여부 확인되지 않음');
+      warning('닉네임 중복 여부를 검사해 주세요.');
     } else {
-      console.log('가입 완료 제출: 조건 충족, 가입 완료');
+      console.log('가입 완료 제출: 조건 충족');
 
       /*formData*/
       const birthText: string = year + month + day + '0000';
       const townText: string = '서울특별시 ' + guText + ' ' + dongText;
+
+      console.log('birthday: ', birthText);
+      console.log('id: ', id);
+      console.log('imageUrl: ', '');
+      console.log('image: ', finalProfileImage);
+      console.log('introduction: ', introduction);
+      console.log('location: ', townText);
+      console.log('name: ', realName);
+      console.log('nickName: ', nickName);
+      console.log('phone: ', phoneNumber);
+      console.log('deviceToken: ', 'testToken');
 
       const formData = new FormData();
 
@@ -247,6 +272,7 @@ const JoinPage = () => {
           },
         })
         .then((res) => {
+          console.log('POST 성공');
           console.log(res);
         })
         .catch((err) => {
@@ -291,12 +317,15 @@ const JoinPage = () => {
         <Form.Item
           label="닉네임"
           name="nickName"
-          css={cssJoinNickname}
+          css={cssJoinMargin}
           rules={[{ validator: rightNickname }]}
         >
           <Input onChange={onChangeNickName} />
-          <Button type="primary" css={cssJoinNick}>
-            닉네임 중복 확인
+        </Form.Item>
+
+        <Form.Item name="닉네임 중복 검사">
+          <Button type="primary" css={cssJoinNick} onClick={overlapNickname}>
+            닉네임 중복 검사
           </Button>
         </Form.Item>
 
@@ -304,6 +333,7 @@ const JoinPage = () => {
           label="이름"
           name="realName"
           rules={[{ validator: rightRealname }]}
+          css={cssJoinMargin}
         >
           <Input onChange={onChangeRealName} />
         </Form.Item>

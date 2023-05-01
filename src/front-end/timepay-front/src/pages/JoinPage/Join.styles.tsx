@@ -5,7 +5,7 @@ export const topWrapperCSS = css`
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 100vh;
+  padding: 10%;
 `;
 
 export const cssJoinText = css`
@@ -13,8 +13,8 @@ export const cssJoinText = css`
   font-weight: bold;
 `;
 
-export const cssJoinNickname = css`
-  margin-top: 60px;
+export const cssJoinMargin = css`
+  margin-top: 10px;
 `;
 
 export const cssJoinProfileImg = css`
@@ -38,5 +38,5 @@ export const cssJoinSelectBox = css`
 `;
 
 export const cssJoinNick = css`
-  width: 100px;
+  width: 100%;
 `;

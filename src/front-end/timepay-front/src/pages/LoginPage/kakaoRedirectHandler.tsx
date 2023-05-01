@@ -28,7 +28,7 @@ const KakaoRedirectHandler = () => {
 
     const requestUrl = `http://13.125.119.30/oauth/redirect/kakao?code=${authorizationCode}`;
     //const requestUrl = `/oauth/redirect/kakao?code=${authorizationCode}`;
-    console.log(requestUrl);
+    console.log('인가코드 전송 url: ', requestUrl);
     console.log('entire: ', new URL(window.location.href));
 
     // Send GET request with authorizationCode
@@ -51,6 +51,7 @@ const KakaoRedirectHandler = () => {
           /*uid 가져오기*/
           const real_uid = response.data.uid;
           saveUid(real_uid);
+          console.log('UID 저장: ', real_uid);
 
           goTo(PATH.JOIN);
         }

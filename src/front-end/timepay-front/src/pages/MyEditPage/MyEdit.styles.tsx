@@ -5,7 +5,7 @@ export const topWrapperCSS = css`
   display: flex;
   align-items: center;
   justify-content: center;
-  padding-top: 20px;
+  padding: 10%;
 `;
 
 export const cssMyEditSubmitBtn = css`
@@ -17,4 +17,8 @@ export const cssMyEditSubmitBtn = css`
 
 export const cssMyEditCenter = css`
   text-align: center;
+`;
+
+export const cssMyEditMargin = css`
+  margin-top: 20px;
 `;

@@ -133,15 +133,6 @@ const MyPage = () => {
                 문의하기
               </button>
             </div>
-
-            <div className="MyPageMoveBox">
-              <button
-                className="MyPageText"
-                onClick={() => handlePageMove(PATH.BOOKMARK)}
-              >
-                즐겨찾기
-              </button>
-            </div>
           </div>
         </div>
       </div>
