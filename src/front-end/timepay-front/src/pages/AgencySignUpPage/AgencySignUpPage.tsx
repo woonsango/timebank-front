@@ -67,10 +67,7 @@ const AgencySignUpPage = () => {
   };
 
   const companyRegistrationNumberRule = (_: any, value: string) => {
-    if (!value) {
-      return Promise.reject(new Error('사업자 등록 번호를 입력해주세요.'));
-    }
-    if (!companyRegistrationNumber.test(value)) {
+    if (value && !companyRegistrationNumber.test(value)) {
       return Promise.reject(
         new Error('사업자 등록 번호에 맞는 형식으로 입력해주세요.'),
       );
@@ -168,7 +165,10 @@ const AgencySignUpPage = () => {
         <Form.Item
           label="비밀번호"
           name="pw"
-          rules={[{ validator: passwordRegexRule }]}
+          rules={[
+            { required: true, message: '' },
+            { validator: passwordRegexRule },
+          ]}
           extra="숫자, 영문, 특수기호(!@#$%^&*,./?)를 모두 포함하는 10~20자리"
         >
           <Input type="password" placeholder="비밀번호를 입력해주세요." />
@@ -176,14 +176,20 @@ const AgencySignUpPage = () => {
         <Form.Item
           label="비밀번호 확인"
           name="checkPw"
-          rules={[{ validator: checkPassword }]}
+          rules={[
+            { required: true, message: '' },
+            { validator: checkPassword },
+          ]}
         >
           <Input type="password" placeholder="비밀번호를 다시 입력해주세요." />
         </Form.Item>
         <Form.Item
           label="기관명"
           name="organizationName"
-          rules={[{ validator: onlyKoreanOrEnglishRule }]}
+          rules={[
+            { required: true, message: '' },
+            { validator: onlyKoreanOrEnglishRule },
+          ]}
         >
           <Input placeholder="기관명을 입력해주세요." />
         </Form.Item>
@@ -197,14 +203,20 @@ const AgencySignUpPage = () => {
         <Form.Item
           label="담당자 이름"
           name="managerName"
-          rules={[{ validator: onlyKoreanOrEnglishRule }]}
+          rules={[
+            { required: true, message: '' },
+            { validator: onlyKoreanOrEnglishRule },
+          ]}
         >
           <Input placeholder="담당자 이름을 입력해주세요." />
         </Form.Item>
         <Form.Item
           label="담당자 전화번호"
           name="managerPhone"
-          rules={[{ validator: phoneNumberRule }]}
+          rules={[
+            { required: true, message: '' },
+            { validator: phoneNumberRule },
+          ]}
           extra="'-' 빼고 입력 : 예시) 010XXXXXXXX"
         >
           <Input placeholder="담당자 전화번호를 입력해주세요." />
@@ -212,7 +224,10 @@ const AgencySignUpPage = () => {
         <Form.Item
           label="종사자 수 입력"
           name="employeeNum"
-          rules={[{ validator: onlyNumberRegex }]}
+          rules={[
+            { required: true, message: '' },
+            { validator: onlyNumberRegex },
+          ]}
         >
           <Input type="number" placeholder="종사자 수" />
         </Form.Item>
