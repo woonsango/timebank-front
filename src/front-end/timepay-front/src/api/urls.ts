@@ -9,6 +9,7 @@ export const API_URL = {
   ORGANIZATIONS_REGISTER: '/api/organizations/register',
   ORGANIZATIONS_LOGIN: '/api/organizations/login',
   ORGANIZATIONS_LOGOUT: '/api/organizations/logout',
+  ORGANIZATIONS_DELETE: '/api/organizations/delete',
 };
 
 // 토큰 필요 없는 애들

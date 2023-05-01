@@ -27,3 +27,10 @@ export const usePostAgencyRegister = () => {
       apiRequest.postFormData(API_URL.ORGANIZATIONS_REGISTER, data),
   });
 };
+
+export const useDeleteAgency = () => {
+  return useMutation<AxiosResponse<any>, AxiosError>({
+    mutationKey: 'useDeleteAgency',
+    mutationFn: () => apiRequest.delete(API_URL.ORGANIZATIONS_DELETE),
+  });
+};
