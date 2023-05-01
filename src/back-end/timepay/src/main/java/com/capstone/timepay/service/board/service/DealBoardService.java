@@ -48,9 +48,17 @@ public class DealBoardService
 
     // 전체 게시물 조회
     @Transactional(readOnly = true)
-    public Page<DealBoardDTO> getDealBoards(int pagingIndex, int paingSize)
+    public Page<DealBoardDTO> getDealBoards(int pagingIndex, int pagingSize)
     {
-        Pageable pageable = PageRequest.of(pagingIndex, paingSize);
+        Pageable pageable;
+        long totalElements = dealBoardRepository.countByIsHiddenFalse();
+        if (totalElements <= pagingSize) {
+            pageable = PageRequest.of(pagingIndex, (int) totalElements);
+        } else {
+            pageable = PageRequest.of(pagingIndex, pagingSize);
+        }
+
+//        Pageable pageable = PageRequest.of(pagingIndex, paingSize);
         Page<DealBoard> dealBoardPage = dealBoardRepository.findByIsHiddenFalse(pageable);
         List<DealBoardDTO> dealBoardDTOList = dealBoardPage.stream()
                 .map(DealBoardDTO::toDealBoardDTO)
