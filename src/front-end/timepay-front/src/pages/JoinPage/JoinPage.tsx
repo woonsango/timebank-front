@@ -269,7 +269,7 @@ const JoinPage = () => {
 
       /*POST*/
       axios
-        .post('/api/users/create', formData, {
+        .post('http://13.125.119.30/api/users/create', formData, {
           headers: {
             'Contest-Type': 'multipart/form-data',
           },
