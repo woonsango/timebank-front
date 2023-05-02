@@ -21,7 +21,10 @@ function App() {
             path={PATH.FINISHJOIN}
             element={<PageRoutes.FinishJoinPage />}
           />
-
+          <Route
+            path={PATH.AGENCY_SIGN_IN}
+            element={<PageRoutes.AgencySignInPage />}
+          />
           <Route element={<BaseLayout />}>
             <Route path={PATH.HOME} element={<PageRoutes.HomePage />} />
             <Route path={PATH.SEARCH} element={<PageRoutes.SearchPage />} />
@@ -62,6 +65,10 @@ function App() {
             />
             <Route path={PATH.MY} element={<PageRoutes.MyPage />} />
             <Route path={PATH.MY_EDIT} element={<PageRoutes.MyEditPage />} />
+            <Route
+              path={PATH.AGENCY_SIGN_UP}
+              element={<PageRoutes.AgencySignUpPage />}
+            />
           </Route>
         </Routes>
       </ConfigProvider>

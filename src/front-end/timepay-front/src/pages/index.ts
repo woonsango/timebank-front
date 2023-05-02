@@ -16,6 +16,8 @@ import QnaDetailPage from './QnaPage/QnaDetailPage';
 import PostPage from './PostPage/PostPage';
 import PostEditPage from './PostPage/PostEditPage';
 import ActivityRecordPage from './ActivityRecordPage';
+import AgencySignInPage from './AgencySignInPage';
+import AgencySignUpPage from './AgencySignUpPage';
 
 const PageRoutes = {
   LoginPage,
@@ -36,6 +38,8 @@ const PageRoutes = {
   PostPage,
   PostEditPage,
   ActivityRecordPage,
+  AgencySignInPage,
+  AgencySignUpPage,
 };
 
 export default PageRoutes;
