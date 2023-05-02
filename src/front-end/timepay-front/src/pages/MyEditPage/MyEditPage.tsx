@@ -186,7 +186,7 @@ const MyEditPage: React.FC = () => {
 
     axios.defaults.headers.common['Authorization'] = `Bearer ${userToken}`;
     axios
-      .put('/api/users/update', formData, {
+      .put('http://13.125.119.30/api/users/update', formData, {
         headers: {
           'Contest-Type': 'multipart/form-data',
         },
