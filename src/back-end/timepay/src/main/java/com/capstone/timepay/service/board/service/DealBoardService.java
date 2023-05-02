@@ -110,7 +110,7 @@ public class DealBoardService
             return new IllegalArgumentException("해당 유저를 찾을 수 없습니다.");
         });
 
-        if (!images.isEmpty()) {
+        if (images != null) {
             List<DealAttatchment> dealAttatchments = new ArrayList<>();
             for (MultipartFile image : images) {
                 String imageUrl = firebaseService.uploadFiles(image);
