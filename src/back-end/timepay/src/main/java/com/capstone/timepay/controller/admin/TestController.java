@@ -54,6 +54,6 @@ public class TestController {
 
         final UserDetails userDetails = userDetailService.loadUserByUsername(user.get().getEmail());
         final String token = jwtUtils.createToken(userDetails.getUsername(), user.get().getRoles());
-        return ResponseEntity.ok(new AuthenticationResponse(token, user.get().getRoles(), 1l));
+        return ResponseEntity.ok(new AuthenticationResponse(token, user.get().getRoles(), true));
     }
 }
