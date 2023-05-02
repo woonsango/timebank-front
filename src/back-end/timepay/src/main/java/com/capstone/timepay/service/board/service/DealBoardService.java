@@ -110,15 +110,16 @@ public class DealBoardService
             return new IllegalArgumentException("해당 유저를 찾을 수 없습니다.");
         });
 
-        List<DealAttatchment> dealAttatchments = new ArrayList<>();
-        for (MultipartFile image : images)
-        {
-            String imageUrl = firebaseService.uploadFiles(image);
-            DealAttatchment dealAttatchment = DealAttatchment.builder()
-                    .imageUrl(imageUrl)
-                    .build();
-            dealAttatchments.add(dealAttatchment);
-            dealAttatchmentRepository.save(dealAttatchment);
+        if (!images.isEmpty()) {
+            List<DealAttatchment> dealAttatchments = new ArrayList<>();
+            for (MultipartFile image : images) {
+                String imageUrl = firebaseService.uploadFiles(image);
+                DealAttatchment dealAttatchment = DealAttatchment.builder()
+                        .imageUrl(imageUrl)
+                        .build();
+                dealAttatchments.add(dealAttatchment);
+                dealAttatchmentRepository.save(dealAttatchment);
+            }
         }
 
         DealBoard dealBoard = DealBoard.builder()
@@ -164,7 +165,8 @@ public class DealBoardService
         dealBoard.setContent(boardDto.getContent());
         dealBoard.setCategory(boardDto.getCategory());
         dealBoard.setLocation(boardDto.getLocation());
-        dealBoard.setStartTime(boardDto.getEndTime());
+        dealBoard.setStartTime(boardDto.getStartTime());
+        dealBoard.setEndTime(boardDto.getEndTime());
         dealBoard.setPay(boardDto.getPay());
         dealBoard.setHidden(boardDto.isHidden());
 
