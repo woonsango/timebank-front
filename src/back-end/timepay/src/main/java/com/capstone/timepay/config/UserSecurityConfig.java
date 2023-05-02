@@ -28,8 +28,8 @@ public class UserSecurityConfig extends WebSecurityConfigurerAdapter {
             "/api/users/create",
             "/api/users/check/nickname/**",
             "/api/users/test/**",
-            "/login",
-            "/api/users/delete/**", // 테스트용
+            "/oauth/redirect/kakao",
+            // "/api/users/delete/**", // 테스트용
     };
 
     private static final String[] TIMEPAY_URI = {
@@ -63,6 +63,7 @@ public class UserSecurityConfig extends WebSecurityConfigurerAdapter {
         http.csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and() // 세션 사용 X
                 .authorizeRequests() // 요청에 대한 사용 권한 체크
+                .antMatchers(HttpMethod.OPTIONS, "/api/**").permitAll() // options 메소드로 호출하는 모든 접근 허용, JWT 토큰 검사가 불가능
                 .antMatchers("/api/admins/**").hasRole("ADMIN")
                 .antMatchers("/api/users/**").hasRole("USER")
                 .antMatchers("/api/organizations/**").hasRole("ORGANIZATION")
