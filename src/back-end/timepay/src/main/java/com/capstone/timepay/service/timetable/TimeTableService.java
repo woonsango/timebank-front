@@ -15,6 +15,10 @@ import java.util.stream.Collectors;
 public class TimeTableService {
     private final TimeStampRepository timeStampRepository;
 
+    public List<TimeStamp> getAllTimeStamps() {
+        return timeStampRepository.findAll();
+    }
+
     public List<TimeStampDTO> getTimeStamp(String startTime, String endTime)
     {
         List<TimeStamp> timeStamps = timeStampRepository.findByStartTimeBetween(startTime, endTime);
@@ -29,6 +33,7 @@ public class TimeTableService {
                 .collect(Collectors.toList());
     }
 
+
     public TimeStampDTO addTimeStamp(TimeStampDTO timeStampDTO)
     {
         TimeStamp timestamp = TimeStamp.builder()
@@ -42,5 +47,13 @@ public class TimeTableService {
         timeStampRepository.save(timestamp);
 
         return TimeStampDTO.toTimeStampDTO(timestamp);
+    }
+
+    public void deleteTimeStamp(Long timestampId)
+    {
+        TimeStamp timeStamp = timeStampRepository.findById(timestampId).orElseThrow(() ->{
+                    return new IllegalArgumentException("TimeStamp를 찾을 수 없습니다");
+                });
+        timeStampRepository.deleteById(timestampId);
     }
 }

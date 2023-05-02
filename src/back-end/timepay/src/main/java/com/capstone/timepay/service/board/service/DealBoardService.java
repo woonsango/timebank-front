@@ -129,7 +129,8 @@ public class DealBoardService
                 .type(type)
                 .boardStatus(BoardStatus.MATCHING_IN_PROGRESS)
                 .location(dealBoardDTO.getLocation())
-                .startTime(dealBoardDTO.getEndTime())
+                .startTime(dealBoardDTO.getStartTime())
+                .endTime(dealBoardDTO.getEndTime())
                 .pay(dealBoardDTO.getPay())
                 .isHidden(dealBoardDTO.isHidden())
                 .build();
