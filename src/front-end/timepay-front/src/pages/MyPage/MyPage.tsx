@@ -20,8 +20,9 @@ const MyPage = () => {
     console.log(userToken);
 
     axios.defaults.headers.common['Authorization'] = `Bearer ${userToken}`;
+    axios.defaults.withCredentials = true;
     axios
-      .get('/api/users/get')
+      .get('http://13.125.119.30/api/users/get')
       .then((res) => {
         console.log(res);
 
