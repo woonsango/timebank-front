@@ -1,9 +1,11 @@
 package com.capstone.timepay.controller.user;
 
+import com.capstone.timepay.controller.admin.response.category.CategoryResponse;
 import com.capstone.timepay.controller.user.request.RequestDTO;
 import com.capstone.timepay.controller.user.request.UpdateRequestDTO;
 import com.capstone.timepay.controller.user.response.GetResponseDTO;
 import com.capstone.timepay.controller.user.response.UpdateResponseDTO;
+import com.capstone.timepay.service.admin.CategoryManageService;
 import com.capstone.timepay.service.user.service.UserInfoService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 
 @RestController
@@ -25,6 +28,7 @@ import javax.servlet.http.HttpServletResponse;
 @RequestMapping("/api/users")
 public class ApiController {
     private final UserInfoService userInfoService;
+    private final CategoryManageService categoryManageService;
     /* 회원가입 버튼 클릭하면 데이터가 Post로 format형식으로 넘어옴 */
     /* json 형식의 데이터를 받아서 createUserService로 넘겨줌 */
     /* 카카오 데이터와 어떻게 매칭해줄지 생각 필요 */
@@ -97,4 +101,15 @@ public class ApiController {
 
         return ResponseEntity.ok("로그아웃되었습니다.");
     }
+
+    // ------------------------- 유저 카테고리 목록 불러오기 ----------------------------------
+    @ApiOperation(value = "가능한 카테고리 목록 조회")
+    @GetMapping("/category")
+    public ResponseEntity<?> loadCategory(@RequestParam String type, @RequestParam String useYn){
+
+        List<CategoryResponse> responses = categoryManageService.showPossibleCategories(type, useYn);
+
+        return ResponseEntity.ok(responses);
+    }
+    // -----------------------------------------------------------------------------------
 }

@@ -26,16 +26,15 @@ public class UserSecurityConfig extends WebSecurityConfigurerAdapter {
             "/api/organizations/login",
             "/api/organizations/register",
             "/api/users/create",
+            "/api/users/check/nickname/**",
             "/api/users/test/**",
             "/login",
             "/api/users/delete/**", // 테스트용
     };
 
     private static final String[] TIMEPAY_URI = {
-            "/api/deal-boards/comments/**/**/report",
-            "/api/free-boards/comments/**/**/report",
-            "/api/deal-boards/**/report",
-            "/api/free-boards/**/report",
+            "/api/deal-boards/**",
+            "/api/free-boards/**",
     };
 
     @Autowired
