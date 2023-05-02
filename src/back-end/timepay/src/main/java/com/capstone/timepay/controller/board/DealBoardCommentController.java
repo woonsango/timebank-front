@@ -53,7 +53,7 @@ public class DealBoardCommentController {
         {
             if(dealBoard.isAuto()) // 자동 매칭 True이면
             {
-                dealBoardController.activityFinish(boardId, principal);
+                dealBoardController.readyToStart(boardId, principal);
             }
         }
         return new ResponseEntity(dealBoardCommentService.writeComment(boardId, dealBoardCommentDTO, principal.getName()), HttpStatus.OK);
