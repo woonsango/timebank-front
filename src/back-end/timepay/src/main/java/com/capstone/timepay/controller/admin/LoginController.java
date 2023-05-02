@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -34,6 +35,7 @@ public class LoginController {
     @Autowired
     private AdminDetailService adminDetailService;
     private final AdminRepository adminRepository;
+    private final PasswordEncoder passwordEncoder;
 
 
     @PostMapping("/login")
@@ -42,6 +44,9 @@ public class LoginController {
             @RequestBody AuthenticationRequest authenticationRequest) throws Exception {
         String adminName = authenticationRequest.getAdminName();
         Admin adminData = adminRepository.findByAdminName(adminName).orElse(null);
+        if (!passwordEncoder.matches(authenticationRequest.getPassword(), adminData.getPassword())) {
+            return ResponseEntity.ok("Password invalid");
+        }
         final UserDetails userDetails = adminDetailService.loadUserByUsername(adminName);
         // final String token = jwtUtils.generateToken(userDetails, adminData.getRoles());
         final String token = jwtUtils.createToken(userDetails.getUsername(), adminData.getRoles());
