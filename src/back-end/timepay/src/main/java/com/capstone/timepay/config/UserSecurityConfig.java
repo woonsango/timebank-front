@@ -65,7 +65,7 @@ public class UserSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests() // 요청에 대한 사용 권한 체크
                 .antMatchers(HttpMethod.OPTIONS, "/api/**").permitAll() // options 메소드로 호출하는 모든 접근 허용, JWT 토큰 검사가 불가능
                 .antMatchers("/api/admins/**").hasRole("ADMIN")
-                .antMatchers("/api/users/**").hasRole("USER")
+                .antMatchers("/api/users/**").hasAnyRole("USER", "ORGANIZATION")
                 .antMatchers("/api/organizations/**").hasRole("ORGANIZATION")
                 .antMatchers(TIMEPAY_URI).hasAnyRole("USER", "ADMIN","ORGANIZATION")
                 // .antMatchers(TIMEPAY_URI).access("hasRole('USER') or hasRole('ADMIN')")
