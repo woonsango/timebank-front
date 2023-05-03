@@ -29,6 +29,8 @@ import {
 } from './MyEdit.styles';
 import { cssJoinNick } from '../JoinPage/Join.styles';
 import { overlap } from '../JoinPage/overlapNickname';
+import { apiRequest } from '../../api/request';
+import { API_URL } from '../../api/urls';
 
 /*행정동 타입 선언*/
 type DongName = keyof typeof dongData;
@@ -181,16 +183,8 @@ const MyEditPage: React.FC = () => {
     formData.append('location', townText);
     formData.append('introduction', introduction);
 
-    /*토큰으로 put*/
-    const userToken = getTokenFromCookie();
-
-    axios.defaults.headers.common['Authorization'] = `Bearer ${userToken}`;
-    axios
-      .put('http://13.125.119.30/api/users/update', formData, {
-        headers: {
-          'Contest-Type': 'multipart/form-data',
-        },
-      })
+    apiRequest
+      .put(API_URL.USER_INFO_PUT, formData)
       .then((res) => {
         console.log('PUT 완료');
         console.log(res);

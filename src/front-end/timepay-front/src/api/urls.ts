@@ -10,8 +10,9 @@ export const API_URL = {
   ORGANIZATIONS_LOGIN: '/api/organizations/login',
   ORGANIZATIONS_LOGOUT: '/api/organizations/logout',
   ORGANIZATIONS_DELETE: '/api/organizations/delete',
-  USER_INFO: '/api/users/get/',
+  USER_INFO_GET: '/api/users/get/',
   USER_INFO_POST: '/api/users/create/',
+  USER_INFO_PUT: '/api/users/update',
 };
 
 // 토큰 필요 없는 애들
@@ -25,4 +26,5 @@ export const HEADER_NOT_REQUIRED_URLS = [
 export const FORM_DATA_REQUIRED_URLS = [
   API_URL.ORGANIZATIONS_REGISTER,
   API_URL.USER_INFO_POST,
+  API_URL.USER_INFO_PUT,
 ];
