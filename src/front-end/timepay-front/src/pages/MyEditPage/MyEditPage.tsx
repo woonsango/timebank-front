@@ -200,24 +200,13 @@ const MyEditPage: React.FC = () => {
     console.log('enter edit page');
     setHeaderTitle('내 정보 수정');
 
-    /*토큰으로 get*/
-    const userToken = getTokenFromCookie();
-
-    console.log('가지고 있는 유저 토큰: ', userToken);
-
-    axios.defaults.headers.common['Authorization'] = `Bearer ${userToken}`;
-    axios.defaults.withCredentials = true;
-    axios
-      .get('http://13.125.119.30/api/users/get')
+    apiRequest
+      .get(API_URL.USER_INFO_GET)
       .then((res) => {
         console.log(res);
 
         console.log('GET한 데이터');
-        console.log(
-          '프로필 이미지: ',
-          res.data.image_url ||
-            'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png',
-        );
+        console.log('프로필 이미지: ', res.data.image_url);
         console.log('닉네임: ', res.data.nick_name);
         console.log('지역: ', res.data.location);
         console.log('소개: ', res.data.introduction);
@@ -226,8 +215,14 @@ const MyEditPage: React.FC = () => {
         setViewTown(res.data.location);
         setViewIntroduction(res.data.introduction);
 
-        setfinalProfileImage(res.data.image_url);
-        setProfileImage(res.data.image_url);
+        setfinalProfileImage(
+          res.data.image_url ||
+            'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png',
+        );
+        setProfileImage(
+          res.data.image_url ||
+            'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png',
+        );
         setNickName(res.data.nick_name);
         setTown(res.data.location);
         setIntroduction(res.data.introduction);
