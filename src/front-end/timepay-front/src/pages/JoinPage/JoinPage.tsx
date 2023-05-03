@@ -270,22 +270,8 @@ const JoinPage = () => {
       //formData.append('deviceToken', 'testToken2');
 
       /*POST*/
-      // apiRequest
-      //   .postFormData(API_URL.USER_INFO_POST, formData)
-      //   .then((res) => {
-      //     console.log('POST 성공');
-      //     console.log(res);
-      //   })
-      //   .catch((err) => {
-      //     console.log('POST 실패');
-      //   });
-
-      axios
-        .post('http://13.125.119.30/api/users/create', formData, {
-          headers: {
-            'Contest-Type': 'multipart/form-data',
-          },
-        })
+      apiRequest
+        .postFormData(API_URL.USER_INFO_POST, formData)
         .then((res) => {
           console.log('POST 성공');
           console.log(res);
@@ -293,6 +279,20 @@ const JoinPage = () => {
         .catch((err) => {
           console.log('POST 실패');
         });
+
+      // axios
+      //   .post('http://13.125.119.30/api/users/create', formData, {
+      //     headers: {
+      //       'Contest-Type': 'multipart/form-data',
+      //     },
+      //   })
+      //   .then((res) => {
+      //     console.log('POST 성공');
+      //     console.log(res);
+      //   })
+      //   .catch((err) => {
+      //     console.log('POST 실패');
+      //   });
 
       goTo(PATH.FINISHJOIN);
     }
