@@ -213,7 +213,11 @@ const MyEditPage: React.FC = () => {
         console.log(res);
 
         console.log('GET한 데이터');
-        console.log('프로필 이미지: ', res.data.image_url);
+        console.log(
+          '프로필 이미지: ',
+          res.data.image_url ||
+            'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png',
+        );
         console.log('닉네임: ', res.data.nick_name);
         console.log('지역: ', res.data.location);
         console.log('소개: ', res.data.introduction);
