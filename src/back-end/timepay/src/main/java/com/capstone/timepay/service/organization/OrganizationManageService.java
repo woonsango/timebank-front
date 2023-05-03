@@ -12,6 +12,8 @@ import com.capstone.timepay.domain.dealBoard.DealBoard;
 import com.capstone.timepay.domain.dealBoard.DealBoardRepository;
 import com.capstone.timepay.domain.dealBoardComment.DealBoardComment;
 import com.capstone.timepay.domain.dealBoardComment.DealBoardCommentRepository;
+import com.capstone.timepay.domain.dealRegister.DealRegister;
+import com.capstone.timepay.domain.dealRegister.DealRegisterRepository;
 import com.capstone.timepay.domain.inquiry.Inquiry;
 import com.capstone.timepay.domain.organization.OrganizationRepository;
 import com.capstone.timepay.domain.user.User;
@@ -40,6 +42,7 @@ public class OrganizationManageService {
     private final DealBoardRepository dealBoardRepository;
     private final DealBoardCommentRepository dealBoardCommentRepository;
     private final CertificationRepository certificationRepository;
+    private final DealRegisterRepository dealRegisterRepository;
 
     public CertificatePublishResponse publishCertificate(Long boardId) {
 
@@ -113,9 +116,8 @@ public class OrganizationManageService {
 
     }
 
-    public CertificationListResponse getCertificationList(String name, int pageIndex, int pageSize) {
-
-        User user = userRepository.findByEmail(name).orElseThrow(()->new IllegalArgumentException("존재하지 않는 유저입니다."));
+    public CertificationListResponse getCertificationList(String email, int pageIndex, int pageSize) {
+        User user = userRepository.findByEmail(email).orElseThrow(()->new IllegalArgumentException("존재하지 않는 유저입니다."));
         Pageable pageable = PageRequest.of(pageIndex, pageSize, Sort.by("createdAt").descending());
 
         Page<Certification> pages = certificationRepository.findAllByUserAndIsPublishedTrue(user,pageable);
@@ -130,12 +132,13 @@ public class OrganizationManageService {
             @Override
             public CertificationList apply(Certification certification) {
                 DealBoard dealboard = dealBoardRepository.findById(certification.getDealBoardId()).orElseThrow(()->new IllegalArgumentException("존재하지 않는 게시글입니다."));
+                DealRegister dealRegister = dealRegisterRepository.findByDealBoard(dealboard).orElseThrow(()->new IllegalArgumentException("존재하지 않는 게시글입니다."));
                 return CertificationList.builder()
                         .boardId(dealboard.getD_boardId())
                         .title(dealboard.getTitle())
-                        .organizationName(certification.getUser().getOrganization().getOrganizationName())
-                        .managerName(certification.getUser().getName())
-                        .managerPhone(certification.getUser().getPhone())
+                        .organizationName(dealRegister.getUser().getOrganization().getOrganizationName())
+                        .managerName(dealRegister.getUser().getName())
+                        .managerPhone(dealRegister.getUser().getPhone())
                         .volunteerTime(certification.getTime())
                         .certificationUrl(certification.getCertificationUrl())
                         .state(certification.isPublished())

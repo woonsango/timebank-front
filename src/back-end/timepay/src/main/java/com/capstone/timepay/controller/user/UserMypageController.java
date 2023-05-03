@@ -17,7 +17,7 @@ import java.security.Principal;
 @RequestMapping("/api/users/mypage")
 public class UserMypageController {
 
-    private OrganizationManageService organizationManageService;
+    private final OrganizationManageService organizationManageService;
 
     @ApiOperation(value = "봉사활동 인증서 내역")
     @GetMapping("/certification")

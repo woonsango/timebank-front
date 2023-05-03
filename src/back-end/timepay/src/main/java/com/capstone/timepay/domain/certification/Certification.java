@@ -1,5 +1,6 @@
 package com.capstone.timepay.domain.certification;
 
+import com.capstone.timepay.domain.BaseTimeEntity;
 import com.capstone.timepay.domain.inquiry.Inquiry;
 import com.capstone.timepay.domain.user.User;
 import lombok.AllArgsConstructor;
@@ -18,7 +19,7 @@ import java.util.List;
 @AllArgsConstructor
 @Getter
 @Entity
-public class Certification {
+public class Certification extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long certificationId;

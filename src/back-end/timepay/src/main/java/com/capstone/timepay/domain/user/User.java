@@ -133,7 +133,7 @@ public class User extends BaseTimeEntity {
         this.location = region;
     }
     public void updateTotalVolunteerTime(int totalVolunteerTime) {
-        this.totalVolunteerTime = totalVolunteerTime;
+        this.totalVolunteerTime += totalVolunteerTime;
     }
 
     public void registerBlacklist() {
