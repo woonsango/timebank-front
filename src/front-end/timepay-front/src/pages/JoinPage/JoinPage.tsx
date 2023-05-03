@@ -35,6 +35,8 @@ import {
   cssJoinMargin,
 } from './Join.styles';
 import { overlap } from './overlapNickname';
+import { apiRequest } from '../../api/request';
+import { API_URL } from '../../api/urls';
 
 /*행정동 타입 선언*/
 type DongName = keyof typeof dongData;
@@ -268,6 +270,16 @@ const JoinPage = () => {
       //formData.append('deviceToken', 'testToken2');
 
       /*POST*/
+      // apiRequest
+      //   .postFormData(API_URL.USER_INFO_POST, formData)
+      //   .then((res) => {
+      //     console.log('POST 성공');
+      //     console.log(res);
+      //   })
+      //   .catch((err) => {
+      //     console.log('POST 실패');
+      //   });
+
       axios
         .post('http://13.125.119.30/api/users/create', formData, {
           headers: {
