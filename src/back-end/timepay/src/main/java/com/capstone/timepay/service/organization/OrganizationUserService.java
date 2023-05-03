@@ -79,6 +79,7 @@ public class OrganizationUserService {
                 .authority("normal")    // 일단 기본 권한 부여
                 .imageUrl(imageUrl)
                 .certificationUrl(certificationUrl)
+                .roles(Collections.singletonList("ROLE_ORGANIZATION"))
                 .build();
             organizationRepository.save(newOrganization);
             User newUser = User.builder()

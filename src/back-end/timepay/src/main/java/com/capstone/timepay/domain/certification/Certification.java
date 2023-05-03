@@ -28,6 +28,7 @@ public class Certification {
     private int downloadCount;
     private boolean isPublished;
     private Long dealBoardId;
+    private int time;
 
     @ManyToOne
     @JoinColumn(name="user_id")
