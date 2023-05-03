@@ -212,8 +212,9 @@ const MyEditPage: React.FC = () => {
     console.log('가지고 있는 유저 토큰: ', userToken);
 
     axios.defaults.headers.common['Authorization'] = `Bearer ${userToken}`;
+    axios.defaults.withCredentials = true;
     axios
-      .get('/api/users/get')
+      .get('http://13.125.119.30/api/users/get')
       .then((res) => {
         console.log(res);
 
