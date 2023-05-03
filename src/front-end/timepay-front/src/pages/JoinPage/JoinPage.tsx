@@ -54,7 +54,9 @@ const JoinPage = () => {
   const [profileImage, setProfileImage]: any = useState(
     'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png',
   );
-  const [finalProfileImage, setfinalProfileImage]: any = useState();
+  const [finalProfileImage, setfinalProfileImage]: any = useState(
+    'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png',
+  );
   const [nickName, setNickName] = useState<string>('');
   const [realName, setRealName] = useState<string>('');
   const [phoneNumber, setPhoneNumber] = useState<string>('');
@@ -279,20 +281,6 @@ const JoinPage = () => {
         .catch((err) => {
           console.log('POST 실패');
         });
-
-      // axios
-      //   .post('http://13.125.119.30/api/users/create', formData, {
-      //     headers: {
-      //       'Contest-Type': 'multipart/form-data',
-      //     },
-      //   })
-      //   .then((res) => {
-      //     console.log('POST 성공');
-      //     console.log(res);
-      //   })
-      //   .catch((err) => {
-      //     console.log('POST 실패');
-      //   });
 
       goTo(PATH.FINISHJOIN);
     }

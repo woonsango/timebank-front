@@ -7,6 +7,8 @@ import { PATH } from '../../utils/paths';
 import './My.css';
 import axios from 'axios';
 import { getTokenFromCookie } from '../../utils/token';
+import { apiRequest } from '../../api/request';
+import { API_URL } from '../../api/urls';
 
 const MyPage = () => {
   const setHeaderTitle = useSetRecoilState(headerTitleState);
@@ -14,15 +16,8 @@ const MyPage = () => {
   useEffect(() => {
     setHeaderTitle('내정보');
 
-    /*토큰으로 get*/
-    const userToken = getTokenFromCookie();
-
-    console.log(userToken);
-
-    axios.defaults.headers.common['Authorization'] = `Bearer ${userToken}`;
-    axios.defaults.withCredentials = true;
-    axios
-      .get('http://13.125.119.30/api/users/get')
+    apiRequest
+      .get(API_URL.USER_INFO_GET)
       .then((res) => {
         console.log(res);
 
