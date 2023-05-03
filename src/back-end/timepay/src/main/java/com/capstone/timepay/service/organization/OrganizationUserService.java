@@ -58,8 +58,7 @@ public class OrganizationUserService {
 
             return resultMap;
         }
-        System.out.println("@@@@@@@@@ : " + image);
-        System.out.println("@@@@@@@@@ : " + certification);
+
         String imageUrl = "none";
         String certificationUrl = "none";
         if(!ObjectUtils.isEmpty(image)) imageUrl = firebaseService.uploadFiles(image);
@@ -90,12 +89,13 @@ public class OrganizationUserService {
                     .isSignUp(false)
                     .location(null)
                     .name(dto.getManagerName()) // 담당자 이름 저장
-                    .nickname(null)
+                    .nickname(dto.getManagerName())
                     .phone(dto.getManagerPhone())   // 담당자 폰 번호 저장
                     .sex(null)
                     .organization(newOrganization)
                     .userProfile(null)
                     .userToken(null)
+                    .totalVolunteerTime(0)
                     .build();
             userRepository.save(newUser);
             resultMap.put("success", true);

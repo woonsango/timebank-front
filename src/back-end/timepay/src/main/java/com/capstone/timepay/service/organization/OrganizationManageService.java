@@ -27,6 +27,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -98,14 +99,16 @@ public class OrganizationManageService {
         }
     }
 
-    public void publishUserCertificate(Long boardId, String nickname, MultipartFile certificationFile) throws IOException, FirebaseAuthException {
+    public void publishUserCertificate(Long boardId, Long userId, MultipartFile certificationFile) throws IOException, FirebaseAuthException {
 
-        User user = userRepository.findByNickname(nickname).orElseThrow(()->new IllegalArgumentException("존재하지 않는 유저입니다."));
+        User user = userRepository.findById(userId).orElseThrow(()->new IllegalArgumentException("존재하지 않는 유저입니다."));
         Certification certification = certificationRepository.findByUserAndDealBoardId(user,boardId);
 
+        user.updateTotalVolunteerTime(certification.getTime());
         certification.updateCertificationUrl(firebaseService.uploadFiles(certificationFile));
         certification.updateIsPublished(true);
 
+        userRepository.save(user);
         certificationRepository.save(certification);
 
     }
@@ -115,16 +118,10 @@ public class OrganizationManageService {
         User user = userRepository.findByEmail(name).orElseThrow(()->new IllegalArgumentException("존재하지 않는 유저입니다."));
         Pageable pageable = PageRequest.of(pageIndex, pageSize, Sort.by("createdAt").descending());
 
-        Page<Certification> pages = certificationRepository.findAllByUserAndIsPublished(user,true,pageable);
-
-        List<Certification> certifications = certificationRepository.findAllByUserAndIsPublished(user,true);
-        int totalTime = 0;
-        for(Certification element : certifications){
-            totalTime += element.getTime();
-        }
+        Page<Certification> pages = certificationRepository.findAllByUserAndIsPublishedTrue(user,pageable);
 
         return CertificationListResponse.builder()
-                .totalTime(totalTime)
+                .totalTime(user.getTotalVolunteerTime())
                 .certificationListPage(convertResponsePages(pages))
                 .build();
     }
@@ -134,7 +131,13 @@ public class OrganizationManageService {
             public CertificationList apply(Certification certification) {
                 DealBoard dealboard = dealBoardRepository.findById(certification.getDealBoardId()).orElseThrow(()->new IllegalArgumentException("존재하지 않는 게시글입니다."));
                 return CertificationList.builder()
+                        .boardId(dealboard.getD_boardId())
                         .title(dealboard.getTitle())
+                        .organizationName(certification.getUser().getOrganization().getOrganizationName())
+                        .managerName(certification.getUser().getName())
+                        .managerPhone(certification.getUser().getPhone())
+                        .volunteerTime(certification.getTime())
+                        .certificationUrl(certification.getCertificationUrl())
                         .state(certification.isPublished())
                         .build();
             }

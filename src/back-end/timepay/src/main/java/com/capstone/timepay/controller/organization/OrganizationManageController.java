@@ -31,13 +31,13 @@ public class OrganizationManageController {
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping(value = "/certificate/publish",consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
+    @PostMapping(value = "/certificate/publish",consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     @ApiOperation(value = "특정 유저 게시글 봉사활동 인증서 발급")
-    public ResponseEntity<?> updateOrganizationInfo(@RequestParam String nickname,
+    public ResponseEntity<?> updateOrganizationInfo(@RequestParam Long userId,
                                                     @RequestParam Long boardId,
                                                     @RequestPart MultipartFile certification) throws IOException, FirebaseAuthException {
 
-        organizationManageService.publishUserCertificate(boardId,nickname,certification);
+        organizationManageService.publishUserCertificate(boardId,userId,certification);
 
         return ResponseEntity.ok("발급되었습니다.");
     }

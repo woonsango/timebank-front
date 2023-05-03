@@ -53,6 +53,7 @@ public class User extends BaseTimeEntity {
     private String encodedPassword;
     private boolean isBanned;
     private boolean isSignUp;
+    private int totalVolunteerTime;
 
     @Column(unique = true)
     private String deviceToken;
@@ -130,6 +131,9 @@ public class User extends BaseTimeEntity {
     }
     public void updateLocation(String region) {
         this.location = region;
+    }
+    public void updateTotalVolunteerTime(int totalVolunteerTime) {
+        this.totalVolunteerTime = totalVolunteerTime;
     }
 
     public void registerBlacklist() {

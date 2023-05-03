@@ -14,6 +14,6 @@ public interface CertificationRepository extends JpaRepository<Certification,Lon
 
     Certification findAllByUser(User user);
 
-    Page<Certification> findAllByUserAndIsPublished(User user, boolean b, Pageable pageable);
-    List<Certification> findAllByUserAndIsPublished(User user, boolean b);
+    Page<Certification> findAllByUserAndIsPublishedTrue(User user, Pageable pageable);
+    List<Certification> findAllByUserAndIsPublishedTrue(User user);
 }
