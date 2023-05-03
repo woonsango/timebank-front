@@ -21,7 +21,10 @@ const MyPage = () => {
       .then((res) => {
         console.log(res);
 
-        setImage(res.data.image_url);
+        setImage(
+          res.data.image_url ||
+            'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png',
+        );
         setNickName(res.data.nick_name);
         setTown(res.data.location);
         setIntroduction(res.data.introduction);
