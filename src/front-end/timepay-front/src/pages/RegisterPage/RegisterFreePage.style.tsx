@@ -145,6 +145,7 @@ export const cssPostPageStyle = css`
     margin: 5px 10px;
     padding: 7px 10px;
     font-size: 18px;
+    color: ${COMMON_COLOR.BLACK};
     background-color: ${COMMON_COLOR.GRAY};
     border: 1px solid ${COMMON_COLOR.LIGHT_GRAY};
     border-radius: 10px;

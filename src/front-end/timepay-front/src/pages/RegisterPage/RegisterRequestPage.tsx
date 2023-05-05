@@ -15,16 +15,22 @@ import {
 import { FlagFilled } from '@ant-design/icons';
 import { KoDatePicker } from '../../components/register/KoDatePicker';
 import TimeSelct from '../../components/register/TimeSelect';
-import axios from 'axios';
+
 import { useRecoilState } from 'recoil';
 import { DateRange, startTime, endTime } from '../../states/register';
+
+import { useCreateDealBoards } from '../../api/hooks/register';
+import { useQueryClient } from 'react-query';
 
 const { Header, Content, Footer } = Layout;
 const { TextArea } = Input;
 const MAX_IMAGES = 5;
 
 const RegisterRequestPage = () => {
-  const timepay = 1000;
+  const queryclient = useQueryClient();
+  const useCreateDealBoardsMutation = useCreateDealBoards();
+
+  const pay = 100;
   const category = 'help';
   const state = '게시완료';
   const [title, setTitle] = useState<string>('');
@@ -76,8 +82,8 @@ const RegisterRequestPage = () => {
     setDates(value);
   };
   // 시간에 따른 타임페이 환산
-  const [starttime, setStarttime] = useRecoilState(startTime);
-  const [endtime, setEndtime] = useRecoilState(endTime);
+  const [starttime, setStarttime] = useRecoilState<string>(startTime);
+  const [endtime, setEndtime] = useRecoilState<string>(endTime);
 
   const minusHours: any =
     0 <= Number(endtime.slice(0, 2)) - Number(starttime.slice(0, 2))
@@ -140,24 +146,24 @@ const RegisterRequestPage = () => {
   };
 
   const handleSubmit = () => {
-    axios
-      .post('/api/deal-boards/write/help', {
-        category,
-        title,
-        content,
-        location,
-        state,
-      })
-      .then((response) => {
-        // 요청이 성공적으로 처리되었을 때 실행될 코드 작성
-        console.log('게시글 등록!');
-        // 등록 후에는 홈 화면으로 이동
-        navigate(PATH.HOME);
-      })
-      .catch((error) => {
-        // 요청이 실패했을 때 실행될 코드 작성
-        console.error('게시글 등록 실패애애', error);
-      });
+    useCreateDealBoardsMutation.mutateAsync(
+      { title, content, location, starttime, endtime, pay, state },
+      {
+        onSuccess: (data) => {
+          console.log('success');
+          // 새로고침 안해도 값이 추가되면 값이 바로 추가되게 하는 코드. (queryclient 변수와)
+          queryclient.invalidateQueries('');
+        },
+        onError(error) {
+          console.log('error');
+        },
+        onSettled: (data) => {
+          console.log('dddddd');
+        },
+      },
+    );
+
+    navigate(-1);
   };
 
   return (
@@ -195,7 +201,7 @@ const RegisterRequestPage = () => {
           <KoDatePicker value={dates} onChange={handleDatesChange} />
           <h6>시간</h6>
           <TimeSelct />
-          <p>내 타임페이 : {timepay}</p>
+          <p>내 타임페이 : {pay}</p>
           <p>지급해야할 타임페이 : {exchangeTime}</p>
           <div css={cssLineStyle} />
           <h6>장소</h6>
