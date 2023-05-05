@@ -6,14 +6,17 @@ import {
   cssReportTableRowCountStyle,
   cssReportTableStyle,
 } from './ReportTable.styles';
-import { ReportItem } from '../../interfaces/ReportItem';
+import { IReport } from '../../api/interfaces/IReport';
 import ReportDetailModal from '../ReportDetailModal';
+import { useGetReports } from '../../api/hooks/report';
 
 const ReportTable = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [currentReport, setCurrentReport] = useState<ReportItem>();
+  const [currentReport, setCurrentReport] = useState<IReport>();
+  const { data, isLoading } = useGetReports();
+  const dataSource = data?.data.content || [];
 
-  const handleOnShowDetailReport = useCallback((report: ReportItem) => {
+  const handleOnShowDetailReport = useCallback((report: IReport) => {
     setCurrentReport(report);
     setIsOpen(true);
   }, []);
@@ -23,20 +26,20 @@ const ReportTable = () => {
     setIsOpen(false);
   }, []);
 
-  const dummyDataSource: ReportItem[] = [];
-  for (let i = 0; i < 100; i++) {
-    dummyDataSource.push({
-      reportId: i,
-      reporterId: i,
-      reporterName: `홍길동${i}`,
-      type: '댓글',
-      reason: `신고내용${i}`,
-      targetId: i,
-      reportedAt: '2023-12-23 12:23',
-      targetReportId: i,
-      process: 'process',
-    });
-  }
+  // const dummyDataSource: IReport[] = [];
+  // for (let i = 0; i < 100; i++) {
+  //   dummyDataSource.push({
+  //     reportId: i,
+  //     reporterId: i,
+  //     reporterName: `홍길동${i}`,
+  //     type: '댓글',
+  //     reason: `신고내용${i}`,
+  //     targetId: i,
+  //     reportedAt: '2023-12-23 12:23',
+  //     targetReportId: i,
+  //     process: 'process',
+  //   });
+  // }
 
   // @ts-ignore
   const columns: ColumnsType<ReportItem> = useMemo(() => {
@@ -46,7 +49,7 @@ const ReportTable = () => {
         key: 'reportId',
         dataIndex: 'reportId',
         width: 90,
-        sorter: (a: ReportItem, b: ReportItem) => a.reportId - b.reportId,
+        sorter: (a: IReport, b: IReport) => a.reportId - b.reportId,
       },
       {
         title: '신고자 회원번호',
@@ -72,7 +75,7 @@ const ReportTable = () => {
           { text: '댓글', value: '댓글' },
           { text: '게시글', value: '게시글' },
         ],
-        onFilter: (value: string, record: ReportItem) =>
+        onFilter: (value: string, record: IReport) =>
           record.type.indexOf(value) === 0,
       },
       {
@@ -81,7 +84,7 @@ const ReportTable = () => {
         dataIndex: 'reason',
         width: 150,
         align: 'center',
-        render: (_: string, record: ReportItem) => (
+        render: (_: string, record: IReport) => (
           <Button type="link" onClick={() => handleOnShowDetailReport(record)}>
             더보기
           </Button>
@@ -100,7 +103,7 @@ const ReportTable = () => {
         dataIndex: 'reportedAt',
         width: 140,
         align: 'center',
-        sorter: (a: ReportItem, b: ReportItem) =>
+        sorter: (a: IReport, b: IReport) =>
           dayjs(a.reportedAt).isAfter(dayjs(b.reportedAt)),
       },
       {
@@ -120,7 +123,7 @@ const ReportTable = () => {
           { text: 'Y', value: 'Y' },
           { text: 'N', value: 'N' },
         ],
-        onFilter: (value: string, record: ReportItem) =>
+        onFilter: (value: string, record: IReport) =>
           record.type.indexOf(value) === 0,
       },
     ];
@@ -132,7 +135,7 @@ const ReportTable = () => {
         css={cssReportTableStyle}
         columns={columns}
         scroll={{ x: 1500 }}
-        dataSource={dummyDataSource}
+        dataSource={dataSource}
         rowKey="postId"
       />
       <ReportDetailModal
