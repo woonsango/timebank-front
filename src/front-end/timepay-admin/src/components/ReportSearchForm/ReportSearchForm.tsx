@@ -14,7 +14,7 @@ import { cssReportSearchFormStyle } from './ReportSearchForm.styles';
 const ReportSearchForm = () => {
   const [form] = Form.useForm();
   const { Option } = Select;
-  const [searchValue, setSearchValue] = useState();
+  const [inputValue, setInputValue] = useState();
 
   const { RangePicker } = DatePicker;
 
@@ -25,8 +25,8 @@ const ReportSearchForm = () => {
   };
 
   const searchInputValue = useMemo(() => {
-    if (searchValue)
-      switch (searchValue) {
+    if (inputValue)
+      switch (inputValue) {
         case 'reportId':
           return (
             <Form.Item
@@ -75,11 +75,11 @@ const ReportSearchForm = () => {
             </Form.Item>
           );
       }
-  }, [RangePicker, searchValue]);
+  }, [RangePicker, inputValue]);
 
   const onValuesChange = useCallback((changedFields: any) => {
     console.log(changedFields);
-    setSearchValue(changedFields);
+    setInputValue(changedFields);
   }, []);
 
   const onFinish = useCallback((values: any) => {
