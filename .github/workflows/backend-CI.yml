@@ -26,6 +26,12 @@ jobs:
     
     
     ## firebase and database setting
+    - name: create firebase key file
+      run: |
+        cd ./src/main/resources
+        touch ./serviceAccountKey.json
+      shell: bash
+    
     - name: Set up Firebase service account
       uses: jsdaniell/create-json@v1.2.2
       with:
