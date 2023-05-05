@@ -27,10 +27,11 @@ jobs:
     
     ## firebase and database setting
     - name: Set up Firebase service account
-      run: |
-        cd ./src/main/resources
-        echo "${{ secrets.FIREBASE_KEY }}" > service_account_temp.json
-        sed -e 's/\\n/\'$'\n''/g' service_account_temp.json > serviceAccountKey.json
+      uses: jsdaniell/create-json@v1.2.2
+      with:
+        name: "serviceAccountKey.json"
+        json: ${{ secrets.FIREBASE_KEY }}
+        dir: ./src/main/resources
     
     - name: database setting
       run: |
