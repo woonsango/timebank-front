@@ -8,6 +8,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -48,7 +49,11 @@ public class JwtFilter extends OncePerRequestFilter {
         String header = request.getHeader("Authorization");
         UserDetails userDetails = null;
 
-        if (header != null && header.startsWith("Bearer ")) {
+        if (HttpMethod.OPTIONS.matches(request.getMethod())) {
+            logger.debug("OPTIONS METHOD CALLED!");
+        }
+
+        else if (header != null && header.startsWith("Bearer ")) {
             String token = header.replace("Bearer ", "");
 
             try {
