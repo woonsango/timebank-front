@@ -23,15 +23,18 @@ jobs:
       with:
         java-version: '17'
         distribution: 'adopt'
-
+    
+    
     ## firebase and database setting
-    - name: firebase and database setting
+    - name: Set up Firebase service account
       run: |
         cd ./src/main/resources
-        # serviceAccountKey.json 파일 생성
-        touch ./serviceAccountKey.json
-        echo "${{ secrets.FIREBASE_KEY }}" > ./serviceAccountKey.json
-        # GitHub-Actions 에서 설정한 값을 application.yml 파일에 쓰기
+        echo "${{ secrets.FIREBASE_KEY }}" > service_account_temp.json
+        sed -e 's/\\n/\'$'\n''/g' service_account_temp.json > serviceAccountKey.json
+    
+    - name: database setting
+      run: |
+        cd ./src/main/resources
         echo "${{ secrets.APPLICATION_STAGE }}" > ./application.yml
       shell: bash
 
