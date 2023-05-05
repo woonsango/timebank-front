@@ -24,20 +24,12 @@ jobs:
         java-version: '17'
         distribution: 'adopt'
     
-    
-    ## firebase and database setting
-    - name: create firebase key file
-      run: |
-        cd ./src/main/resources
-        touch ./serviceAccountKey.json
-      shell: bash
-    
     - name: Set up Firebase service account
       uses: jsdaniell/create-json@v1.2.2
       with:
-        name: serviceAccountKey.json
+        name: "serviceAccountKey.json"
         json: ${{ secrets.FIREBASE_KEY }}
-        dir: ./src/main/resources
+        dir: "./src/main/resources/"
     
     - name: database setting
       run: |
