@@ -55,7 +55,7 @@ jobs:
         
     ## docker push    
     - name: Docker Hub 푸쉬
-      run: docker push ${{ secrets.DOCKER_USERNAME }}/${{ env.REPOSIRY }}
+      run: docker push ${{ secrets.DOCKER_USERNAME }}/${{ env.REPOSITORY }}
 
     ## docker compose up
     - name: executing remote ssh commands using password
