@@ -1,4 +1,12 @@
-import { Form, Input, Select, DatePicker, Row, Button } from 'antd';
+import {
+  Form,
+  Input,
+  Select,
+  DatePicker,
+  Row,
+  Button,
+  InputNumber,
+} from 'antd';
 import { RangePickerProps } from 'antd/es/date-picker';
 import { useCallback, useMemo, useState } from 'react';
 import { cssReportSearchFormStyle } from './ReportSearchForm.styles';
@@ -11,7 +19,9 @@ const ReportSearchForm = () => {
   const { RangePicker } = DatePicker;
 
   const onOk = (value: RangePickerProps['value']) => {
-    console.log('onOk: ', value);
+    console.log('onOk1: ', value);
+    console.log('onOk2: ', value?.[0]?.format('YYYY-MM-DD HH:mm:ss'));
+    console.log('onOk3: ', value?.[1]?.format('YYYY-MM-DD HH:mm:ss'));
   };
 
   const searchInputValue = useMemo(() => {
@@ -19,21 +29,37 @@ const ReportSearchForm = () => {
       switch (searchValue) {
         case 'reportId':
           return (
-            <Form.Item name="reportId" rules={[{ required: true }]}>
-              <Input placeholder="신고글 번호를 입력해주세요" />
+            <Form.Item
+              name="reportId"
+              rules={[
+                { required: true, message: '신고글 번호를 입력해주세요' },
+              ]}
+            >
+              <InputNumber
+                style={{ width: 250 }}
+                placeholder="신고글 번호를 입력해주세요"
+              />
             </Form.Item>
           );
 
         case 'name':
           return (
-            <Form.Item name="name" rules={[{ required: true }]}>
+            <Form.Item
+              name="name"
+              rules={[
+                { required: true, message: '신고자 이름을 입력해주세요' },
+              ]}
+            >
               <Input placeholder="신고자 이름을 입력해주세요" />
             </Form.Item>
           );
 
         case 'content':
           return (
-            <Form.Item name="content" rules={[{ required: true }]}>
+            <Form.Item
+              name="content"
+              rules={[{ required: true, message: '신고 내용을 입력해주세요' }]}
+            >
               <Input placeholder="신고 내용을 입력해주세요" />
             </Form.Item>
           );
