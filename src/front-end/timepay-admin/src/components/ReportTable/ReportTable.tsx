@@ -136,7 +136,7 @@ const ReportTable = () => {
         columns={columns}
         scroll={{ x: 1500 }}
         dataSource={dataSource}
-        rowKey="postId"
+        rowKey="reportId"
       />
       <ReportDetailModal
         isOpen={isOpen}
