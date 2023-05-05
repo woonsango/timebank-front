@@ -29,7 +29,7 @@ jobs:
       with:
         name: "serviceAccountKey.json"
         json: ${{ secrets.FIREBASE_KEY }}
-        dir: "./src/main/resources/"
+        dir: '/src/main/resources/'
     
     - name: database setting
       run: |
