@@ -17,8 +17,10 @@ const ReportDetailModal = ({
     return (
       <div>
         <Button type="primary">신고처리</Button>
-        <Button type="primary">신고반려</Button>
-        <Button type="primary" onClick={onCancel}>
+        <Button type="primary" danger>
+          신고반려
+        </Button>
+        <Button type="primary" ghost onClick={onCancel}>
           닫기
         </Button>
       </div>
@@ -37,9 +39,10 @@ const ReportDetailModal = ({
     >
       <div className="reportContent">
         <span className="title">신고 사유</span>
-        <div className="reportInnerContent">{post?.content}</div>
-        <span className="title">신고 대상 내용</span>
-        <div className="reportInnerContent">{post?.postContent}</div>
+        <div className="reportInnerContent">{post?.reason}</div>
+        {/* 게시글 조회 api 수정되면 추가 */}
+        {/* <span className="title">신고 대상 내용</span>
+        <div className="reportInnerContent">{post?.postContent}</div> */}
       </div>
     </Modal>
   );

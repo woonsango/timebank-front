@@ -27,16 +27,14 @@ const ReportTable = () => {
   for (let i = 0; i < 100; i++) {
     dummyDataSource.push({
       reportId: i,
-      name: `홍길동${i + 1}`,
-      number: i + 1,
-      nickname: '동에번쩍',
-      type: i % 2 ? '댓글' : '게시글',
-      content: `신고 사유 ${i + 1}`,
-      postNumber: i,
-      postContent: '신고대상 글내용',
-      reportAt: `2023-12-34 12:34`,
-      authorNumber: i,
-      reportStatus: i % 2 ? 'Y' : 'N',
+      reporterId: i,
+      reporterName: `홍길동${i}`,
+      type: '댓글',
+      reason: `신고내용${i}`,
+      targetId: i,
+      reportedAt: '2023-12-23 12:23',
+      targetReportId: i,
+      process: 'process',
     });
   }
 
@@ -51,23 +49,16 @@ const ReportTable = () => {
         sorter: (a: ReportItem, b: ReportItem) => a.reportId - b.reportId,
       },
       {
-        title: '신고자 이름',
-        key: 'name',
-        dataIndex: 'name',
-        width: 100,
-        align: 'center',
-      },
-      {
         title: '신고자 회원번호',
-        key: 'number',
-        dataIndex: 'number',
+        key: 'reporterId',
+        dataIndex: 'reporterId',
         width: 100,
         align: 'center',
       },
       {
-        title: '신고자 닉네임',
-        key: 'nickname',
-        dataIndex: 'nickname',
+        title: '신고자 이름',
+        key: 'reporterName',
+        dataIndex: 'reporterName',
         width: 100,
         align: 'center',
       },
@@ -86,8 +77,8 @@ const ReportTable = () => {
       },
       {
         title: '신고 사유',
-        key: 'content',
-        dataIndex: 'content',
+        key: 'reason',
+        dataIndex: 'reason',
         width: 150,
         align: 'center',
         render: (_: string, record: ReportItem) => (
@@ -98,42 +89,30 @@ const ReportTable = () => {
       },
       {
         title: '신고대상 글번호',
-        key: 'postNumber',
-        dataIndex: 'postNumber',
+        key: 'targetId',
+        dataIndex: 'targetId',
         width: 100,
         align: 'center',
       },
       {
-        title: '신고대상 글내용',
-        key: 'postContent',
-        dataIndex: 'postContent',
-        width: 150,
-        align: 'center',
-        render: (_: string, record: ReportItem) => (
-          <Button type="link" onClick={() => handleOnShowDetailReport(record)}>
-            더보기
-          </Button>
-        ),
-      },
-      {
         title: '신고일시',
-        key: 'reportAt',
-        dataIndex: 'reportAt',
+        key: 'reportedAt',
+        dataIndex: 'reportedAt',
         width: 140,
         align: 'center',
         sorter: (a: ReportItem, b: ReportItem) =>
-          dayjs(a.reportAt).isAfter(dayjs(b.reportAt)),
+          dayjs(a.reportedAt).isAfter(dayjs(b.reportedAt)),
       },
       {
         title: '신고대상 회원번호',
-        key: 'authorNumber',
-        dataIndex: 'authorNumber',
+        key: 'targetReportId',
+        dataIndex: 'targetReportId',
         width: 100,
         align: 'center',
       },
       {
         title: '신고처리여부',
-        key: 'reportStatus',
+        key: 'process',
         dataIndex: 'reportStatus',
         width: 100,
         align: 'center',
