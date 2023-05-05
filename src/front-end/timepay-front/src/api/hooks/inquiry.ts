@@ -21,3 +21,13 @@ export const useCreateInquiry = () => {
       }),
   });
 };
+
+export const useDeleteNotifications = () => {
+  return useMutation<AxiosResponse<boolean>, AxiosError, number[]>({
+    mutationKey: 'useDeleteInquiry',
+    mutationFn: (deleteInquiryIds) =>
+      apiRequest.delete(API_URL.NOTIFICATIONS, {
+        data: { ids: deleteInquiryIds },
+      }),
+  });
+};

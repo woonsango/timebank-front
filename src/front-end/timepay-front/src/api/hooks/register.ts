@@ -4,6 +4,7 @@ import {
   IPostFreeBoard,
   IGetFreeBoard,
   IPostDealBoard,
+  IGetDealBoard,
 } from '../interfaces/IPost';
 import { apiRequest } from '../request';
 import { API_URL } from '../urls';
@@ -26,11 +27,19 @@ export const useCreateFreeBoards = () => {
   });
 };
 
+export const useGetDealBoards = () => {
+  return useQuery<AxiosResponse<IGetDealBoard>, AxiosError>({
+    queryKey: ['useGetDealBoards'],
+    queryFn: () => apiRequest.get(API_URL.DEAL_BOARDS),
+    refetchOnWindowFocus: false,
+  });
+};
+// 도움 주기
 export const useCreateDealBoards = () => {
-  return useMutation<AxiosResponse<boolean>, AxiosError, IPostFreeBoard>({
-    mutationKey: 'usePostFreeBoards',
+  return useMutation<AxiosResponse<boolean>, AxiosError, IPostDealBoard>({
+    mutationKey: 'usePostDealBoards',
     mutationFn: (data) =>
-      apiRequest.post(API_URL.FREE_BOARDS_WRITE, {
+      apiRequest.post(API_URL.DEAL_HELPER_BOARDS_WRITE, {
         ...data,
       }),
   });

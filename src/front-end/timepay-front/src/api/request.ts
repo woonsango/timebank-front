@@ -16,7 +16,7 @@ request.interceptors.request.use((config) => {
   // 여기에 token 이 필요한 api 요청일 때만 추가
   config.headers.set(
     'Authorization',
-    !HEADER_NOT_REQUIRED_URLS.includes(config.url!)
+    !HEADER_NOT_REQUIRED_URLS.includes(config.url || '')
       ? token
         ? `Bearer ${token}`
         : undefined
@@ -24,7 +24,7 @@ request.interceptors.request.use((config) => {
   );
   config.headers.set(
     'Content-Type',
-    FORM_DATA_REQUIRED_URLS.includes(config.url!)
+    FORM_DATA_REQUIRED_URLS.includes(config.url || '')
       ? 'multipart/form-data'
       : 'application/json',
   );
