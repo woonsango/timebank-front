@@ -1,32 +1,55 @@
-import { Space, Table } from 'antd';
-import React from 'react';
-import { useState } from 'react';
-import type { ColumnsType } from 'antd/es/table';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { IGetUserInfoRequest, IUser } from '../../api/interfaces/IUser';
+import { useGetUserInfos } from '../../api/hooks/userManagement';
+import { mainSearchState } from './mainSearchState';
+import { useMemo, useState } from 'react';
+import Table, { ColumnsType } from 'antd/es/table';
+import { customPaginationProps } from '../../utils/pagination';
 
-import { rightAlignCSS } from './UserManagement.styles';
+interface MainTableProps {
+  selectedUserInfoIds?: React.Key[];
+  setSelectedUserInfoIds: (args?: React.Key[]) => void;
+  setSelectedUserInfos: (args?: IUser[]) => void;
+}
 
-import ProfileImageModal from './profileImageModal';
-import DetailModal from './detailModal';
-import EditModal from './editModal';
+const MainTable = ({
+  selectedUserInfoIds,
+  setSelectedUserInfoIds,
+  setSelectedUserInfos,
+}: MainTableProps) => {
+  const mainSearchValues = useRecoilValue(mainSearchState);
+  const setMainSearch = useSetRecoilState(mainSearchState);
 
-const MainTable = () => {
-  /*기본 회원 조회 화면 Table Data 설정 */
-  interface DataType {
-    key: React.Key;
+  const { data, isLoading } = useGetUserInfos(mainSearchValues);
 
-    nickName: string;
-    realName: string;
-    town: string;
-    birth: string;
-    profileImg: any;
-    timePay: number;
+  //   const [isOpen, setIsOpen] = useState(false);
+  //   const [currentPush, setCurrentPush] = useState<INotification>();
 
-    blackList: string;
-    detail: any;
-    edit: any;
-  }
+  //   const handleOnShowDetailPush = useCallback((push: INotification) => {
+  //     setCurrentPush(push);
+  //     setIsOpen(true);
+  //   }, []);
 
-  const columns: ColumnsType<DataType> = [
+  //   const handleOnCloseDetailPush = useCallback(() => {
+  //     setCurrentPush(undefined);
+  //     setIsOpen(false);
+  //   }, []);
+
+  const dataSource = useMemo(() => {
+    if (mainSearchValues) {
+      return data?.data.content || [];
+    }
+    return [];
+  }, [mainSearchValues, data]);
+
+  const rowSelection = {
+    onChange: (selectedRowKeys: React.Key[], selectedRows: IUser[]) => {
+      setSelectedUserInfoIds(selectedRowKeys);
+      setSelectedUserInfos(selectedRows);
+    },
+  };
+
+  const columns: ColumnsType<IUser> = [
     {
       title: '이름',
       dataIndex: 'nickName',
@@ -62,11 +85,11 @@ const MainTable = () => {
       dataIndex: 'detail',
       align: 'center',
     },
-    {
-      title: '블랙리스트 여부',
-      dataIndex: 'blackList',
-      align: 'center',
-    },
+    // {
+    //   title: '블랙리스트 여부',
+    //   dataIndex: 'blackList',
+    //   align: 'center',
+    // },
 
     {
       title: '정보 수정',
@@ -75,55 +98,29 @@ const MainTable = () => {
     },
   ];
 
-  const data: DataType[] = [];
-  for (let i = 0; i < 46; i++) {
-    data.push({
-      key: i,
-
-      nickName: `nickname ${i}`,
-      realName: `realname ${i}`,
-      town: `서울특별시 ${i}구 ${i}동`,
-      birth: `0000-00-00`,
-      profileImg: <ProfileImageModal />,
-
-      timePay: i * 100 + i,
-
-      blackList: `X`,
-      detail: <DetailModal />,
-      edit: <EditModal />,
-    });
-  }
-  /*Table */
-  const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
-
-  const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
-    console.log('selectedRowKeys changed: ', newSelectedRowKeys);
-    setSelectedRowKeys(newSelectedRowKeys);
-  };
-
-  const rowSelection = {
-    selectedRowKeys,
-    onChange: onSelectChange,
-  };
-  const hasSelected = selectedRowKeys.length > 0;
-
-  /*메인에서 체크된 row들 데이터 파싱해서 블랙리스트로 넘기기 */
   return (
-    <div>
-      <Space css={rightAlignCSS}>
-        {hasSelected
-          ? `${selectedRowKeys.length}/${data.length}개 선택됨`
-          : `${selectedRowKeys.length}/${data.length}개 선택됨`}
-      </Space>
-      <Space>
-        <Table
-          css={{ width: 1570 }}
-          rowSelection={rowSelection}
-          columns={columns}
-          dataSource={data}
-        />
-      </Space>
-    </div>
+    <>
+      <div>
+        {selectedUserInfoIds && selectedUserInfoIds.length > 0
+          ? `${selectedUserInfoIds.length} 개 선택 / `
+          : ''}
+        총 {data?.data.totalElements || 0} 개
+      </div>
+      <Table
+        //css={cssPushTableStyle}
+        rowSelection={rowSelection}
+        columns={columns}
+        scroll={{ x: 1200 }}
+        dataSource={dataSource}
+        rowKey="UserId"
+        loading={isLoading}
+        pagination={customPaginationProps<IGetUserInfoRequest>({
+          totalElements: data?.data.totalElements,
+          currentSearchValues: mainSearchValues,
+          setSearchValues: setMainSearch,
+        })}
+      />
+    </>
   );
 };
 
