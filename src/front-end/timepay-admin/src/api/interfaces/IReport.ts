@@ -1,4 +1,4 @@
-import { PageableData } from './ICommon';
+import { GetPageableData, PageableData } from './ICommon';
 
 export interface IReport {
   reportId: number; //신고번호
@@ -12,6 +12,15 @@ export interface IReport {
   process: string; //신고처리여부
 }
 
+export interface IGetReportRequest extends GetPageableData {
+  searchLabel?: string;
+  searchValue?: string;
+  reportId?: number;
+  reporterName?: string;
+  reason?: string;
+  startTime?: Date;
+  endTime?: Date;
+}
 export interface IGetReportResponse extends PageableData {
   content: IReport[];
 }

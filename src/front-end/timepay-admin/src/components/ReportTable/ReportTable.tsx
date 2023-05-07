@@ -6,14 +6,20 @@ import {
   cssReportTableRowCountStyle,
   cssReportTableStyle,
 } from './ReportTable.styles';
-import { IReport } from '../../api/interfaces/IReport';
+import { IGetReportRequest, IReport } from '../../api/interfaces/IReport';
 import ReportDetailModal from '../ReportDetailModal';
 import { useGetReports } from '../../api/hooks/report';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { reportSearchState } from '../../states/reportSearchState';
+import { customPaginationProps } from '../../utils/pagination';
 
 const ReportTable = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [currentReport, setCurrentReport] = useState<IReport>();
-  const { data, isLoading } = useGetReports();
+
+  const reportSearchValues = useRecoilValue(reportSearchState);
+  const setReportSearch = useSetRecoilState(reportSearchState);
+  const { data, isLoading } = useGetReports(reportSearchValues);
   const dataSource = data?.data.content || [];
 
   const handleOnShowDetailReport = useCallback((report: IReport) => {
@@ -25,21 +31,6 @@ const ReportTable = () => {
     setCurrentReport(undefined);
     setIsOpen(false);
   }, []);
-
-  // const dummyDataSource: IReport[] = [];
-  // for (let i = 0; i < 100; i++) {
-  //   dummyDataSource.push({
-  //     reportId: i,
-  //     reporterId: i,
-  //     reporterName: `홍길동${i}`,
-  //     type: '댓글',
-  //     reason: `신고내용${i}`,
-  //     targetId: i,
-  //     reportedAt: '2023-12-23 12:23',
-  //     targetReportId: i,
-  //     process: 'process',
-  //   });
-  // }
 
   // @ts-ignore
   const columns: ColumnsType<ReportItem> = useMemo(() => {
@@ -116,7 +107,7 @@ const ReportTable = () => {
       {
         title: '신고처리여부',
         key: 'process',
-        dataIndex: 'reportStatus',
+        dataIndex: 'process',
         width: 100,
         align: 'center',
         filters: [
@@ -137,6 +128,12 @@ const ReportTable = () => {
         scroll={{ x: 1500 }}
         dataSource={dataSource}
         rowKey="reportId"
+        loading={isLoading}
+        pagination={customPaginationProps<IGetReportRequest>({
+          totalElements: data?.data.totalElements,
+          currentSearchValues: reportSearchValues,
+          setSearchValues: setReportSearch,
+        })}
       />
       <ReportDetailModal
         isOpen={isOpen}

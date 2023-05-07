@@ -26,7 +26,7 @@ export const cssReportSearchFormStyle = css`
   }
   .ant-input-number {
     width: 100%;
-    max-width: 150px;
+    max-width: 250px;
   }
   .ant-btn {
     width: 100%;

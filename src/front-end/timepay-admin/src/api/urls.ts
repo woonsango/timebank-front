@@ -10,6 +10,7 @@ export const API_URL = {
   ADMIN_REGISTER: '/api/admins/register', //관리자 가입
   ADMINS: '/api/admins',
   REPORTS: '/api/admins/reports/main',
+  REPORTS__SEARCH: '/api/admins/reports/search',
 };
 
 /** 토큰을 넣지 않아도 되는 api url 모음 */

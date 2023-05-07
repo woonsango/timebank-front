@@ -9,20 +9,32 @@ import {
 } from 'antd';
 import { RangePickerProps } from 'antd/es/date-picker';
 import { useCallback, useMemo, useState } from 'react';
+import { useQueryClient } from 'react-query';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { IGetReportRequest } from '../../api/interfaces/IReport';
+import { reportSearchState } from '../../states/reportSearchState';
 import { cssReportSearchFormStyle } from './ReportSearchForm.styles';
 
 const ReportSearchForm = () => {
   const [form] = Form.useForm();
   const { Option } = Select;
   const [inputValue, setInputValue] = useState();
+  const queryClient = useQueryClient();
+  const reportSearchValue = useRecoilValue(reportSearchState);
+  const setReportSearch = useSetRecoilState(reportSearchState);
 
-  const { RangePicker } = DatePicker;
-
-  const onOk = (value: RangePickerProps['value']) => {
-    console.log('onOk1: ', value);
-    console.log('onOk2: ', value?.[0]?.format('YYYY-MM-DD HH:mm:ss'));
-    console.log('onOk3: ', value?.[1]?.format('YYYY-MM-DD HH:mm:ss'));
-  };
+  const onFinish = useCallback(
+    async (values: IGetReportRequest) => {
+      console.log(values);
+      setReportSearch({
+        ...values,
+      });
+      await queryClient.invalidateQueries({
+        queryKey: ['useGetReport', values],
+      });
+    },
+    [queryClient, setReportSearch],
+  );
 
   const searchInputValue = useMemo(() => {
     if (inputValue)
@@ -34,6 +46,7 @@ const ReportSearchForm = () => {
               rules={[
                 { required: true, message: '신고글 번호를 입력해주세요' },
               ]}
+              initialValue={reportSearchValue?.reportId}
             >
               <InputNumber
                 style={{ width: 250 }}
@@ -45,20 +58,22 @@ const ReportSearchForm = () => {
         case 'name':
           return (
             <Form.Item
-              name="name"
+              name="reporterName"
               rules={[
                 { required: true, message: '신고자 이름을 입력해주세요' },
               ]}
+              initialValue={reportSearchValue?.reporterName}
             >
               <Input placeholder="신고자 이름을 입력해주세요" />
             </Form.Item>
           );
 
-        case 'content':
+        case 'reason':
           return (
             <Form.Item
-              name="content"
+              name="reason"
               rules={[{ required: true, message: '신고 내용을 입력해주세요' }]}
+              initialValue={reportSearchValue?.reason}
             >
               <Input placeholder="신고 내용을 입력해주세요" />
             </Form.Item>
@@ -66,31 +81,55 @@ const ReportSearchForm = () => {
 
         case 'time':
           return (
-            <Form.Item name="startTime" rules={[{ required: true }]}>
-              <RangePicker
-                showTime={{ format: 'HH:mm' }}
-                format="YYYY-MM-DD HH:mm"
-                onOk={onOk}
-              />
-            </Form.Item>
+            <>
+              <Form.Item
+                name="startTime"
+                rules={[{ required: true }]}
+                initialValue={reportSearchValue?.startTime}
+              >
+                <DatePicker
+                  showTime={{ format: 'HH:mm' }}
+                  format="YYYY-MM-DD HH:mm"
+                  placeholder="start time"
+                />
+              </Form.Item>
+              <Form.Item
+                name="endTime"
+                rules={[{ required: true }]}
+                initialValue={reportSearchValue?.endTime}
+              >
+                <DatePicker
+                  showTime={{ format: 'HH:mm' }}
+                  format="YYYY-MM-DD HH:mm"
+                  placeholder="end time"
+                />
+              </Form.Item>
+            </>
           );
       }
-  }, [RangePicker, inputValue]);
+  }, [
+    inputValue,
+    reportSearchValue?.endTime,
+    reportSearchValue?.reason,
+    reportSearchValue?.reportId,
+    reportSearchValue?.reporterName,
+    reportSearchValue?.startTime,
+  ]);
 
   const onValuesChange = useCallback((changedFields: any) => {
     console.log(changedFields);
     setInputValue(changedFields);
   }, []);
 
-  const onFinish = useCallback((values: any) => {
-    //검색시 사용
-    console.log(values);
-  }, []);
   return (
     <div css={cssReportSearchFormStyle}>
       <Form form={form} layout="horizontal" onFinish={onFinish}>
         <Row>
-          <Form.Item name="searchLabel" rules={[{ required: true }]}>
+          <Form.Item
+            name="searchLabel"
+            rules={[{ required: true }]}
+            initialValue={reportSearchValue?.searchLabel}
+          >
             <Select
               placeholder="검색값을 골라주세요."
               allowClear
@@ -98,7 +137,7 @@ const ReportSearchForm = () => {
             >
               <Option value="reportId">신고글 번호</Option>
               <Option value="name">신고자 이름</Option>
-              <Option value="content">신고내용</Option>
+              <Option value="reason">신고내용</Option>
               <Option value="time">작성시간</Option>
             </Select>
           </Form.Item>
