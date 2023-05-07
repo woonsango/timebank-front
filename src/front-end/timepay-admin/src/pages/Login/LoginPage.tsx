@@ -31,8 +31,8 @@ const LoginPage = () => {
       },
       {
         onSuccess: (result) => {
-          setTokenToCookie(result.data.jwt, 1);
           if (result.data.admin) {
+            setTokenToCookie(result.data.jwt, 1);
             messageApi
               .open({
                 type: 'success',
