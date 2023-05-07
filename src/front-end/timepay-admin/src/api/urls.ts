@@ -11,6 +11,7 @@ export const API_URL = {
   ADMINS: '/api/admins',
   REPORTS: '/api/admins/reports/main',
   REPORTS__SEARCH: '/api/admins/reports/search',
+  REPORTS__PENALTY: '/api/admins/reports/penalty',
 };
 
 /** 토큰을 넣지 않아도 되는 api url 모음 */

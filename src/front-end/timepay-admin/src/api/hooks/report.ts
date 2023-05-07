@@ -1,6 +1,6 @@
 import { AxiosError, AxiosResponse } from 'axios';
-import { useQuery } from 'react-query';
-import { IGetReportResponse } from '../interfaces/IReport';
+import { useMutation, useQuery } from 'react-query';
+import { IGetReportResponse, IPatchReportRequest } from '../interfaces/IReport';
 import { apiRequest } from '../request';
 import { API_URL } from '../urls';
 
@@ -25,5 +25,15 @@ export const useGetReports = (params?: any) => {
         : apiRequest.get(API_URL.REPORTS, { params }),
     refetchOnWindowFocus: false,
     retry: false,
+  });
+};
+
+export const usePatchReport = () => {
+  return useMutation<AxiosResponse<string>, AxiosError, IPatchReportRequest>({
+    mutationKey: 'usePatchReport',
+    mutationFn: (data) =>
+      apiRequest.patch(API_URL.REPORTS__PENALTY, {
+        ...data,
+      }),
   });
 };

@@ -138,7 +138,7 @@ const ReportTable = () => {
       <ReportDetailModal
         isOpen={isOpen}
         onCancel={handleOnCloseDetailReport}
-        post={currentReport}
+        report={currentReport}
       />
     </>
   );

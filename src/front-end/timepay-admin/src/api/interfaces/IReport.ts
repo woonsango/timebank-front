@@ -1,6 +1,7 @@
 import { GetPageableData, PageableData } from './ICommon';
 
 export interface IReport {
+  map(arg0: (report: { targetId: any }) => any[]): unknown;
   reportId: number; //신고번호
   reporterId: number; //신고자 회원번호
   reporterName: string; //신고자 이름
@@ -23,4 +24,8 @@ export interface IGetReportRequest extends GetPageableData {
 }
 export interface IGetReportResponse extends PageableData {
   content: IReport[];
+}
+
+export interface IPatchReportRequest {
+  userIds: number[];
 }
