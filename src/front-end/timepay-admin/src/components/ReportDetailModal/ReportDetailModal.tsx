@@ -55,9 +55,6 @@ const ReportDetailModal = ({
         <Button type="primary" onClick={() => handleOnPenalty()}>
           신고처리
         </Button>
-        <Button type="primary" danger>
-          신고반려
-        </Button>
         <Button type="primary" ghost onClick={onCancel}>
           닫기
         </Button>
