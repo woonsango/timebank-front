@@ -8,11 +8,7 @@ export const useGetReports = (params?: any) => {
   return useQuery<AxiosResponse<IGetReportResponse>, AxiosError>({
     queryKey: ['useGetReports', params],
     queryFn: () =>
-      params &&
-      (params.reportId ||
-        params.reporterName ||
-        params.reason ||
-        (params.startTime && params.endTime))
+      params && params.startTime && params.endTime
         ? apiRequest.get(API_URL.REPORTS__SEARCH, {
             params: {
               ...params,
@@ -20,6 +16,14 @@ export const useGetReports = (params?: any) => {
               searchValue: null,
               startTime: params.startTime.format('YYYY-MM-DD HH:mm:ss'),
               endTime: params.endTime.format('YYYY-MM-DD HH:mm:ss'),
+            },
+          })
+        : params.reportId || params.reporterName || params.reason
+        ? apiRequest.get(API_URL.REPORTS__SEARCH, {
+            params: {
+              ...params,
+              searchLabel: null,
+              searchValue: null,
             },
           })
         : apiRequest.get(API_URL.REPORTS, { params }),

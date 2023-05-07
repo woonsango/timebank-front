@@ -43,9 +43,6 @@ const ReportSearchForm = () => {
           return (
             <Form.Item
               name="reportId"
-              rules={[
-                { required: true, message: '신고글 번호를 입력해주세요' },
-              ]}
               initialValue={reportSearchValue?.reportId}
             >
               <InputNumber
@@ -59,9 +56,6 @@ const ReportSearchForm = () => {
           return (
             <Form.Item
               name="reporterName"
-              rules={[
-                { required: true, message: '신고자 이름을 입력해주세요' },
-              ]}
               initialValue={reportSearchValue?.reporterName}
             >
               <Input placeholder="신고자 이름을 입력해주세요" />
@@ -70,11 +64,7 @@ const ReportSearchForm = () => {
 
         case 'reason':
           return (
-            <Form.Item
-              name="reason"
-              rules={[{ required: true, message: '신고 내용을 입력해주세요' }]}
-              initialValue={reportSearchValue?.reason}
-            >
+            <Form.Item name="reason" initialValue={reportSearchValue?.reason}>
               <Input placeholder="신고 내용을 입력해주세요" />
             </Form.Item>
           );
@@ -84,7 +74,6 @@ const ReportSearchForm = () => {
             <>
               <Form.Item
                 name="startTime"
-                rules={[{ required: true }]}
                 initialValue={reportSearchValue?.startTime}
               >
                 <DatePicker
@@ -95,7 +84,6 @@ const ReportSearchForm = () => {
               </Form.Item>
               <Form.Item
                 name="endTime"
-                rules={[{ required: true }]}
                 initialValue={reportSearchValue?.endTime}
               >
                 <DatePicker
