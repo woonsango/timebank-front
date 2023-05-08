@@ -29,10 +29,10 @@ public class CommentManageController {
     }
 
     @ApiOperation(value = "댓글 검색 조회")
-    @GetMapping(value = "/search", consumes = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<?> search(@RequestBody CommentSearchRequest request){
+    @GetMapping("/search")
+    public ResponseEntity<?> search(@RequestParam String query, @RequestParam String value){
 
-        Page<CommentResponse> responses = commentManageService.showCommentsBySearch(request.toServiceDto());
+        Page<CommentResponse> responses = commentManageService.showCommentsBySearch(query,value);
 
         return ResponseEntity.ok(responses);
     }

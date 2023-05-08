@@ -30,6 +30,7 @@ import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -138,28 +139,24 @@ public class ReportManageService {
         }
     }
 
-    public Page<ReportResponse> showReportsBySearch(ReportSearchDto reportSearchDto) {
+    public Page<ReportResponse> showReportsBySearch(String query, String value, LocalDateTime startDate, LocalDateTime endDate) {
 
-        if(!ObjectUtils.isEmpty(reportSearchDto.getReportId()) &&
-            ObjectUtils.isEmpty(reportSearchDto.getName()) &&
-            ObjectUtils.isEmpty(reportSearchDto.getContent()) &&
-            ObjectUtils.isEmpty(reportSearchDto.getStartTime()) &&
-            ObjectUtils.isEmpty(reportSearchDto.getEndTime())){
+        if(Objects.isNull(startDate) || Objects.isNull(endDate)){
+            if(Objects.isNull(query) || Objects.isNull(value)) throw new IllegalArgumentException("잘못된 파라미터 요청입니다.");
+        }
 
-            Report report = reportRepository.findByReportId(reportSearchDto.getReportId()).orElseThrow(()->new IllegalArgumentException("존재하지 않는 신고입니다."));
+        if(query.equals("reportId")){
+
+            Report report = reportRepository.findByReportId(Long.parseLong(value)).orElseThrow(()->new IllegalArgumentException("존재하지 않는 신고입니다."));
             List<Report> reports = new ArrayList<>();
             reports.add(report);
 
             return convertResponsePages(new PageImpl<>(reports));
 
         }
-        else if(ObjectUtils.isEmpty(reportSearchDto.getReportId()) &&
-                !ObjectUtils.isEmpty(reportSearchDto.getName()) &&
-                ObjectUtils.isEmpty(reportSearchDto.getContent()) &&
-                ObjectUtils.isEmpty(reportSearchDto.getStartTime()) &&
-                ObjectUtils.isEmpty(reportSearchDto.getEndTime())){
+        else if(query.equals("name")){
 
-            User user = userRepository.findByName(reportSearchDto.getName()).orElseThrow(()->new IllegalArgumentException("존재하지 않는 댓글입니다."));
+            User user = userRepository.findByName(value).orElseThrow(()->new IllegalArgumentException("존재하지 않는 댓글입니다."));
             List<ReportResponse> fcrs = convertFCRToResponse(freeCommentReportRepository.findAllByUser(user));
             List<ReportResponse> fbrs = convertFBRToResponse(freeBoardReportRepository.findAllByUser(user));
             List<ReportResponse> dcrs = convertDCRToResponse(dealCommentReportRepository.findAllByUser(user));
@@ -173,16 +170,12 @@ public class ReportManageService {
 
             return new PageImpl<>(reportResponses);
         }
-        else if(ObjectUtils.isEmpty(reportSearchDto.getReportId()) &&
-                ObjectUtils.isEmpty(reportSearchDto.getName()) &&
-                !ObjectUtils.isEmpty(reportSearchDto.getContent()) &&
-                ObjectUtils.isEmpty(reportSearchDto.getStartTime()) &&
-                ObjectUtils.isEmpty(reportSearchDto.getEndTime())){
+        else if(query.equals("content")){
 
-            List<ReportResponse> fcrs = convertFCRToResponse(freeCommentReportRepository.findByContentContains(reportSearchDto.getContent()));
-            List<ReportResponse> fbrs = convertFBRToResponse(freeBoardReportRepository.findByContentContains(reportSearchDto.getContent()));
-            List<ReportResponse> dcrs = convertDCRToResponse(dealCommentReportRepository.findByContentContains(reportSearchDto.getContent()));
-            List<ReportResponse> dbrs = convertDBRToResponse(dealBoardReportRepository.findByContentContains(reportSearchDto.getContent()));
+            List<ReportResponse> fcrs = convertFCRToResponse(freeCommentReportRepository.findByContentContains(value));
+            List<ReportResponse> fbrs = convertFBRToResponse(freeBoardReportRepository.findByContentContains(value));
+            List<ReportResponse> dcrs = convertDCRToResponse(dealCommentReportRepository.findByContentContains(value));
+            List<ReportResponse> dbrs = convertDBRToResponse(dealBoardReportRepository.findByContentContains(value));
 
             List<ReportResponse> reportResponses = new ArrayList<>();
             reportResponses.addAll(fbrs);
@@ -192,20 +185,16 @@ public class ReportManageService {
 
             return new PageImpl<>(reportResponses);
         }
-        else if(ObjectUtils.isEmpty(reportSearchDto.getReportId()) &&
-                ObjectUtils.isEmpty(reportSearchDto.getName()) &&
-                ObjectUtils.isEmpty(reportSearchDto.getContent()) &&
-                !ObjectUtils.isEmpty(reportSearchDto.getStartTime()) &&
-                !ObjectUtils.isEmpty(reportSearchDto.getEndTime())){
+        else if(!ObjectUtils.isEmpty(startDate) && !ObjectUtils.isEmpty(endDate)){
 
             List<ReportResponse> fcrs =
-                    convertFCRToResponse(freeCommentReportRepository.findByCreatedAtLessThanEqualAndCreatedAtGreaterThanEqual(reportSearchDto.getEndTime(), reportSearchDto.getStartTime()));
+                    convertFCRToResponse(freeCommentReportRepository.findByCreatedAtLessThanEqualAndCreatedAtGreaterThanEqual(endDate, startDate));
             List<ReportResponse> fbrs =
-                    convertFBRToResponse(freeBoardReportRepository.findByCreatedAtLessThanEqualAndCreatedAtGreaterThanEqual(reportSearchDto.getEndTime(), reportSearchDto.getStartTime()));
+                    convertFBRToResponse(freeBoardReportRepository.findByCreatedAtLessThanEqualAndCreatedAtGreaterThanEqual(endDate, startDate));
             List<ReportResponse> dcrs =
-                    convertDCRToResponse(dealCommentReportRepository.findByCreatedAtLessThanEqualAndCreatedAtGreaterThanEqual(reportSearchDto.getEndTime(), reportSearchDto.getStartTime()));
+                    convertDCRToResponse(dealCommentReportRepository.findByCreatedAtLessThanEqualAndCreatedAtGreaterThanEqual(endDate, startDate));
             List<ReportResponse> dbrs =
-                    convertDBRToResponse(dealBoardReportRepository.findByCreatedAtLessThanEqualAndCreatedAtGreaterThanEqual(reportSearchDto.getEndTime(), reportSearchDto.getStartTime()));
+                    convertDBRToResponse(dealBoardReportRepository.findByCreatedAtLessThanEqualAndCreatedAtGreaterThanEqual(endDate, startDate));
 
             List<ReportResponse> reportResponses = new ArrayList<>();
             reportResponses.addAll(fbrs);
