@@ -10,10 +10,6 @@ export const cssVolunteerCertificationPaymentPageStyle = css`
       word-break: keep-all;
     }
   }
-  .agency-info {
-    color: ${COMMON_COLOR.FONT2};
-    font-size: 14px;
-  }
   .ant-btn-link {
     padding: 0;
     height: max-content;
@@ -29,17 +25,6 @@ export const cssVolunteerCertificationPaymentPageStyle = css`
     display: flex;
     flex-direction: column;
     align-items: center;
-  }
-  .volunteer-extra {
-    color: ${COMMON_COLOR.FONT2};
-    font-size: 14px;
-    margin-top: 10px;
-  }
-  .certificate {
-    color: ${COMMON_COLOR.BLACK};
-  }
-  .no-certificate {
-    color: ${COMMON_COLOR.FONT4};
   }
 `;
 
