@@ -14,10 +14,11 @@ export const cssMyVolunteerPageStyle = css`
     .title {
       color: ${COMMON_COLOR.MAIN2};
     }
-    /* padding-bottom: 20px; */
   }
+
   .ant-table {
     font-size: 16px;
+    width: 100%;
     .ant-table-cell {
       word-break: keep-all;
     }

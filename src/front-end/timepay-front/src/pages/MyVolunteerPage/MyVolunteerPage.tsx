@@ -155,6 +155,7 @@ const MyVolunteerPage = () => {
             </div>
           </>
         )}
+        scroll={{ x: 430 }}
         columns={columns}
         dataSource={data}
         rowKey="boardId"
