@@ -8,3 +8,21 @@ export interface IVolunteerBoard {
   state: boolean;
   certificationUrl?: string | null;
 }
+
+export interface IVolunteerBoardInfo {
+  title: string;
+  location: string;
+  startTime: string;
+  endTime: string;
+  participateNum: number;
+}
+
+export interface IVolunteerUser {
+  userId: number;
+  userName: string;
+  userNickname: string;
+  email: string;
+  phone: string;
+  certificationUrl?: string | null;
+  published: boolean;
+}

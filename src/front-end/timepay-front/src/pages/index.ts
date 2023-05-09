@@ -19,6 +19,7 @@ import ActivityRecordPage from './ActivityRecordPage';
 import AgencySignInPage from './AgencySignInPage';
 import AgencySignUpPage from './AgencySignUpPage';
 import MyVolunteerPage from './MyVolunteerPage';
+import VolunteerCertificationPaymentPage from './VolunteerCertificationPaymentPage';
 
 const PageRoutes = {
   LoginPage,
@@ -42,6 +43,7 @@ const PageRoutes = {
   AgencySignInPage,
   AgencySignUpPage,
   MyVolunteerPage,
+  VolunteerCertificationPaymentPage,
 };
 
 export default PageRoutes;
