@@ -157,14 +157,15 @@ const MyVolunteerPage = () => {
           <>
             <div className="volunteer-overview">
               <span className="title">지급받은 총 봉사시간</span>
-              <span>총 13시간</span>
+              <span>총 12시간</span>
             </div>
             <div className="volunteer-extra">
-              * 타임페이 서비스를 통한 봉사활동만 표시됩니다.
+              * 타임페이 서비스를 통한 봉사활동만 표시됩니다. <br />* 지급받은
+              총 봉사시간은 인증서를 지급 받은 활동만 계산합니다.
             </div>
           </>
         )}
-        scroll={{ x: 430 }}
+        scroll={{ x: 330 }}
         columns={columns}
         dataSource={data}
         rowKey="boardId"
