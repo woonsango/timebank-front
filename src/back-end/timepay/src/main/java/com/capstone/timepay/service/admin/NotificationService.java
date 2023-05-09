@@ -9,9 +9,9 @@ import com.capstone.timepay.domain.user.UserRepository;
 import com.capstone.timepay.firebase.FirebaseService;
 import com.capstone.timepay.service.admin.dto.NotificationPostDTO;
 import com.google.firebase.auth.FirebaseAuthException;
-import com.google.firebase.messaging.FirebaseMessaging;
-import com.google.firebase.messaging.Message;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -34,6 +34,8 @@ public class NotificationService {
     private final UserRepository userRepository;
     private final FirebaseService firebaseService;
 
+    private static final Logger logger = LoggerFactory.getLogger(NotificationService.class);
+
     public Page<NotificationInfoResponse> getList(int pagingIndex, int pagingSize) {
         Pageable pageable = PageRequest.of(pagingIndex, pagingSize, Sort.by("createdAt").descending());
         Page<Notification> notifications = this.notificationRepository.findAll(pageable);
@@ -51,7 +53,7 @@ public class NotificationService {
                 .map(NotificationInfoResponse::new);
     }
 
-    public boolean create(NotificationPostDTO dto, Admin admin) {
+    public boolean create(NotificationPostDTO dto, Admin admin) throws ExecutionException, InterruptedException {
         List<User> userList = userRepository.findAll();
         Notification notification = Notification.builder()
                 .title(dto.getTitle())
@@ -67,21 +69,7 @@ public class NotificationService {
             String token = user.getDeviceToken();
             if (token != null) {
                 // 푸쉬 메세지
-                Message message = Message.builder()
-                        .setNotification(com.google.firebase.messaging.Notification.builder()
-                                .setTitle(notification.getTitle())
-                                .setBody(notification.getContent())
-                                .setImage(notification.getImageUrl())
-                                .build())
-                        .setToken(token)
-                        .build();
-                try {
-                    String response = FirebaseMessaging.getInstance().sendAsync(message).get();
-                    System.out.println("Successfully sent message: " + response);
-                } catch (InterruptedException | ExecutionException e) {
-                    e.printStackTrace();
-                    return false;
-                }
+                firebaseService.sendMessage(token, dto);
             }
         }
 
