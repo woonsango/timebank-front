@@ -13,6 +13,7 @@ export const API_URL = {
   USER_INFO_GET: '/api/users/get/',
   USER_INFO_POST: '/api/users/create/',
   USER_INFO_PUT: '/api/users/update',
+  MY_VOLUNTEER: '/api/users/mypage/certification',
 };
 
 // 토큰 필요 없는 애들

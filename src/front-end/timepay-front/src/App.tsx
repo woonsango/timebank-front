@@ -69,6 +69,10 @@ function App() {
               path={PATH.AGENCY_SIGN_UP}
               element={<PageRoutes.AgencySignUpPage />}
             />
+            <Route
+              path={PATH.MY_VOLUNTEER}
+              element={<PageRoutes.MyVolunteerPage />}
+            />
           </Route>
         </Routes>
       </ConfigProvider>
