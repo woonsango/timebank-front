@@ -19,4 +19,5 @@ public interface DealBoardCommentRepository extends JpaRepository<DealBoardComme
 
     List<DealBoardComment> findByCreatedAtLessThanEqualAndCreatedAtGreaterThanEqual(LocalDateTime startTime, LocalDateTime endTime);
     List<DealBoardComment> findAllByDealBoardAndIsAppliedTrue(DealBoard dealBoard);
+    List<DealBoardComment> findAllByDealBoardAndIsAdoptedTrue(DealBoard dealBoard);
 }
