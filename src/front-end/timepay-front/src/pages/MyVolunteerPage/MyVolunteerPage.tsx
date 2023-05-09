@@ -52,7 +52,7 @@ const MyVolunteerPage = () => {
       {
         title: '활동명',
         dataIndex: 'title',
-        width: 200,
+        width: 180,
         render: (title: string, record: IVolunteerBoard) => {
           return (
             <>
@@ -66,6 +66,7 @@ const MyVolunteerPage = () => {
                 {title}
               </Button>
               <br />
+              <br />
               <div className="agency-info">
                 기관명 : <span>{record.organizationName}</span>
                 <br />
@@ -78,29 +79,37 @@ const MyVolunteerPage = () => {
         },
       },
       {
-        title: '시간',
-        dataIndex: 'volunteerTime',
-        width: 70,
-      },
-      {
-        title: '인증서',
+        title: '활동시간',
         dataIndex: 'certificationUrl',
-        width: 100,
-        render: (certificationUrl?: string) =>
-          certificationUrl ? (
-            <Button
-              className="certification-link"
-              type="link"
-              href={certificationUrl}
-              target="_blank"
-              download
-            >
-              <LinkOutlined />
-              인증서 보기
-            </Button>
-          ) : (
-            '미발급'
-          ),
+        width: 90,
+        render: (certificationUrl: string, record: IVolunteerBoard) => {
+          return (
+            <>
+              <div
+                className={
+                  record.certificationUrl ? 'certificate' : 'no-certificate'
+                }
+              >
+                {record.volunteerTime} 시간
+              </div>
+              <br />
+              {certificationUrl ? (
+                <Button
+                  className="certification-link"
+                  type="link"
+                  href={certificationUrl}
+                  target="_blank"
+                  download
+                >
+                  <LinkOutlined />
+                  인증서
+                </Button>
+              ) : (
+                '미발급'
+              )}
+            </>
+          );
+        },
       },
     ];
   }, [handleOnClickTitle]);

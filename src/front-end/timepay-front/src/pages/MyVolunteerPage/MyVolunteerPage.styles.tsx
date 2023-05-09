@@ -48,4 +48,10 @@ export const cssMyVolunteerPageStyle = css`
     font-size: 14px;
     margin-top: 10px;
   }
+  .certificate {
+    color: ${COMMON_COLOR.BLACK};
+  }
+  .no-certificate {
+    color: ${COMMON_COLOR.FONT4};
+  }
 `;
