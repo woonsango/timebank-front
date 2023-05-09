@@ -29,6 +29,7 @@ public class DealBoardDTO
     private int pay;
     private boolean isHidden;
     private List<DealAttatchment> images;
+    private boolean isVolunteer;
 
     public static DealBoardDTO toDealBoardDTO(DealBoard dealBoard)
     {
@@ -44,7 +45,8 @@ public class DealBoardDTO
                 dealBoard.getEndTime(),
                 dealBoard.getPay(),
                 dealBoard.isHidden(),
-                dealBoard.getDealAttatchments()
+                dealBoard.getDealAttatchments(),
+                dealBoard.isVolunteer()
         );
     }
 }
