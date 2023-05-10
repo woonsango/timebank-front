@@ -134,7 +134,6 @@ public class DealBoardService
                 .endTime(dealBoardDTO.getEndTime())
                 .pay(dealBoardDTO.getPay())
                 .isHidden(dealBoardDTO.isHidden())
-                .isVolunteer(dealBoardDTO.isVolunteer())
                 .build();
 
         Board board = Board.builder().
@@ -170,7 +169,6 @@ public class DealBoardService
         dealBoard.setEndTime(boardDto.getEndTime());
         dealBoard.setPay(boardDto.getPay());
         dealBoard.setHidden(boardDto.isHidden());
-        dealBoard.setVolunteer(boardDto.isVolunteer());
 
         return DealBoardDTO.toDealBoardDTO(dealBoard);
     }
