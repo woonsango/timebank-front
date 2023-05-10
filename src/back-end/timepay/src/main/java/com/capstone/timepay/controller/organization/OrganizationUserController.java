@@ -1,6 +1,7 @@
 package com.capstone.timepay.controller.organization;
 
 import com.capstone.timepay.controller.admin.request.auth.AdminRegisterRequest;
+import com.capstone.timepay.controller.organization.request.OrgaUpdateRequest;
 import com.capstone.timepay.controller.organization.request.OrgaUserSignUpRequest;
 import com.capstone.timepay.service.organization.OrganizationUserService;
 import com.google.firebase.auth.FirebaseAuthException;
@@ -35,6 +36,17 @@ public class OrganizationUserController {
         } else {
             return new ResponseEntity<>(result, HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+    @PatchMapping(value= "/update",consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
+    @ApiOperation(value = "기관 회원 정보 수정")
+    public ResponseEntity<?> updateOrganizationInfo(@RequestPart OrgaUpdateRequest request,
+                                                    @RequestPart(required = false) MultipartFile image,
+                                                    @RequestPart(required = false) MultipartFile certification,
+                                                    Principal principal) throws IOException, FirebaseAuthException {
+
+        organizationUserService.updateInfo(request, image, certification, principal.getName());
+
+        return ResponseEntity.ok("수정되었습니다.");
     }
 
     @DeleteMapping("/delete")

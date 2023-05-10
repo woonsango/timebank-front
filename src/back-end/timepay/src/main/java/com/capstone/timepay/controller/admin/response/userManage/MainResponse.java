@@ -18,5 +18,8 @@ public class MainResponse {
     private LocalDateTime birth;
     private String region;
     private int timepay;
+    private boolean isBanned;
+    private int totalVolunteerTime;
+    private String profileUrl;
 
 }
