@@ -24,4 +24,5 @@ export const PATH = {
   AGENCY_SIGN_IN: '/agency/sign-in',
   AGENCY_SIGN_UP: '/agency/sign-up',
   MY_VOLUNTEER: '/my-volunteer',
+  PAYMENT_CERTIFICATION: '/payment-certification',
 };

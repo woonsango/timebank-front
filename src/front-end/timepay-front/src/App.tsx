@@ -73,6 +73,14 @@ function App() {
               path={PATH.MY_VOLUNTEER}
               element={<PageRoutes.MyVolunteerPage />}
             />
+            <Route
+              path={PATH.MY_VOLUNTEER}
+              element={<PageRoutes.MyVolunteerPage />}
+            />
+            <Route
+              path={`${PATH.PAYMENT_CERTIFICATION}/:boardId`}
+              element={<PageRoutes.VolunteerCertificationPaymentPage />}
+            />
           </Route>
         </Routes>
       </ConfigProvider>
