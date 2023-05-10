@@ -87,6 +87,7 @@ public class UserInfoService {
         user.setBirthday(birthLocalDateTime);
         user.setCreatedAt(LocalDateTime.now());
         user.setUpdatedAt(LocalDateTime.now());
+        user.setSignUp(true);
 
         user.setDeviceToken(userData.getDeviceToken()); // firebase device token
 
@@ -203,8 +204,7 @@ public class UserInfoService {
 
     @Transactional
     public void deleteUserInfo(Authentication auth){
-        String userEmail = auth.getName();
-        User userData = userRepository.findByEmail(userEmail).orElseThrow(IllegalArgumentException::new);
+        User userData = userRepository.findByEmail(auth.getName()).orElseThrow(IllegalArgumentException::new);
 
         /* deleteById를 사용하지 않고 에러 메세지를 직접 커스텀 */
         if(userData != null) {

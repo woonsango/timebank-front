@@ -1,5 +1,6 @@
 package com.capstone.timepay.controller.user;
 
+import com.capstone.timepay.controller.user.response.KakaoLoginDTO;
 import com.capstone.timepay.domain.user.User;
 import com.capstone.timepay.domain.user.model.AuthenticationResponse;
 import com.capstone.timepay.service.user.service.KakaoLoginService;
@@ -19,6 +20,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -41,9 +44,9 @@ public class KakaoLoginController {
         if(user.isSignUp()) {
             final UserDetails userDetails = userDetailService.loadUserByUsername(user.getEmail());
             final String token = jwtUtils.createToken(userDetails.getUsername(), user.getRoles());
-            return ResponseEntity.ok(new AuthenticationResponse(token, user.getRoles(), user.getUserId()));
+            return ResponseEntity.ok(new AuthenticationResponse(token, user.getRoles(), user.isSignUp()));
         }
 
-        return ResponseEntity.ok("회원가입 신청 완료\n" + user.getUserId());
+        return ResponseEntity.ok(new KakaoLoginDTO(user.isSignUp(), user.getUserId()));
     }
 }

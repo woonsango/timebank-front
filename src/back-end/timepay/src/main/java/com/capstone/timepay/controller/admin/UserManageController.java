@@ -20,7 +20,7 @@ import javax.validation.Valid;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/admins/user-management")
+@RequestMapping("/api/admins/normal-user-management")
 public class UserManageController {
 
     private final UserManageService userManageService;

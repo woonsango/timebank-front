@@ -9,10 +9,12 @@ import com.capstone.timepay.service.admin.ReportManageService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -33,10 +35,15 @@ public class ReportManageController {
     }
 
     @ApiOperation(value = "신고 검색 조회")
-    @GetMapping(value = "/search", consumes = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<?> search(@RequestBody ReportSearchRequest request){
+    @GetMapping("/search")
+    public ResponseEntity<?> search(@RequestParam(required = false) String query,
+                                    @RequestParam(required = false) String value,
+                                    @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")LocalDateTime startDate,
+                                    @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")LocalDateTime endDate){
 
-        Page<ReportResponse> responses = reportManageService.showReportsBySearch(request.toServiceDto());
+        System.out.println("@@@@@@@@@@ : " + startDate);
+        System.out.println("@@@@@@@@@@ : " + endDate);
+        Page<ReportResponse> responses = reportManageService.showReportsBySearch(query,value,startDate,endDate);
 
         return ResponseEntity.ok(responses);
     }

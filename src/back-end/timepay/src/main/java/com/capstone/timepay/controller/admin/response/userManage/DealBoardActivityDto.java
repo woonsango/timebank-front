@@ -21,5 +21,6 @@ public class DealBoardActivityDto {
     private LocalDateTime actualStartTime;
     private LocalDateTime actualEndTime;
     private String title;
+    private boolean isVolunteer;
 
 }

@@ -74,6 +74,9 @@ public class UserManageService {
                         .birth(user.getBirthday())
                         .region(user.getLocation())
                         .timepay(user.getUserProfile().getTimepay()) // 확인 필요
+                        .totalVolunteerTime(user.getTotalVolunteerTime())
+                        .isBanned(user.isBanned())
+                        .profileUrl(user.getUserProfile().getImageUrl())
                         .build();
             }
         });
@@ -84,7 +87,8 @@ public class UserManageService {
     public Page<MainResponse> showAllUserList(int pageIndex, int pageSize) {
 
         Pageable pageable = PageRequest.of(pageIndex, pageSize, Sort.by("userId"));
-        Page<User> pages = userRepository.findAll(pageable);
+        //Page<User> pages = userRepository.findAll(pageable);
+        Page<User> pages = userRepository.findAllByOrganizationIsNull(pageable);
 
         return convertResponsePages(pages);
     }
@@ -93,21 +97,25 @@ public class UserManageService {
         Pageable pageable = PageRequest.of(pageIndex, pageSize);
 
         if(!ObjectUtils.isEmpty(userId)){
-            List<User> user = userRepository.findById(userId).stream().collect(Collectors.toList());
+            //List<User> user = userRepository.findById(userId).stream().collect(Collectors.toList());
+            List<User> user = userRepository.findByUserIdAndOrganizationIsNull(userId).stream().collect(Collectors.toList());
             Page<User> pages = new PageImpl<>(user);
             return convertResponsePages(pages);
         }
         else if(!ObjectUtils.isEmpty(query) && !ObjectUtils.isEmpty(value)){
             if(query.equals("name")){
-                Page<User> pages = userRepository.findAllByName(pageable, value);
+                //Page<User> pages = userRepository.findAllByName(pageable, value);
+                Page<User> pages = userRepository.findAllByNameAndOrganizationIsNull(pageable, value);
                 return convertResponsePages(pages);
             }
             else if(query.equals("nickname")){
-                Page<User> pages = userRepository.findAllByNickname(pageable, value);
+                //Page<User> pages = userRepository.findAllByNickname(pageable, value);
+                Page<User> pages = userRepository.findAllByNicknameAndOrganizationIsNull(pageable, value);
                 return convertResponsePages(pages);
             }
             else{
-                Page<User> pages = userRepository.findAllByEmail(pageable, value);
+                //Page<User> pages = userRepository.findAllByEmail(pageable, value);
+                Page<User> pages = userRepository.findAllByEmailAndOrganizationIsNull(pageable, value);
                 return convertResponsePages(pages);
             }
         }
@@ -121,11 +129,6 @@ public class UserManageService {
         user.updateBirth(userInfo.getBirth());
         user.updateName(userInfo.getName());
         user.updateLocation(userInfo.getRegion());
-
-        log.info(user.getName());
-        log.info(user.getLocation());
-        log.info(user.getNickname());
-        log.info(user.getBirthday().toString());
 
         userRepository.save(user);
 
@@ -182,6 +185,7 @@ public class UserManageService {
                         .startTime(dr.getDealBoard().getStartTime())
                         .endTime(dr.getDealBoard().getEndTime())
                         .title(dr.getDealBoard().getTitle())
+                        .isVolunteer(dr.getDealBoard().isVolunteer())
                         .build();
             }
         });
@@ -344,7 +348,7 @@ public class UserManageService {
             if(fCommentIds.contains(element.getFreeBoardComment().getF_commentId())) {
                 Report report = reportRepository.findByFreeCommentReport(element);
                 ReceivedReportDto receivedReportDto = ReceivedReportDto.builder()
-                        .reportId(1L)//@@@@@@@@@@@@@@@@@@
+                        .reportId(report.getReportId())
                         .reporterName(element.getUser().getName()) // User의 Name 보냄 (Nickname x)
                         .reporterId(element.getUser().getUserId()) // User의 UserId 보냄 ( UID, Token 등 수정 필요 )
                         .reportReason(element.getContent())
