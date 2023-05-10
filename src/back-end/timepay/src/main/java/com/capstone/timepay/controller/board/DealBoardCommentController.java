@@ -8,6 +8,7 @@ import com.capstone.timepay.domain.dealBoardComment.DealBoardComment;
 import com.capstone.timepay.service.board.dto.DealBoardCommentDTO;
 import com.capstone.timepay.service.board.service.DealBoardCommentService;
 import com.capstone.timepay.service.board.service.ReportService;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -98,6 +99,20 @@ public class DealBoardCommentController {
     @GetMapping("/{boardId}/applied")
     public List<DealBoardCommentDTO> getAppliedComments(@PathVariable("boardId") Long boardId) {
         return dealBoardCommentService.getAppliedComments(boardId);
+    }
+
+    @ApiOperation(value = "지원한 목록 중 댓글 선정하기")
+    @PutMapping("/{boardId}/adopted/{commentId}")
+    public DealBoardCommentDTO getAdoptedComments(@PathVariable("boardId") Long boardId,
+                                                  @PathVariable("commentId") Long commentId)
+    {
+        return dealBoardCommentService.setAdoptedComments(commentId);
+    }
+
+    @ApiOperation(value = "선정된 댓글목록 확인")
+    @GetMapping("/{boardId}/adopted")
+    public List<DealBoardCommentDTO> getAdoptedComments(@PathVariable("boardId") Long boardId) {
+        return dealBoardCommentService.getAdoptedComments(boardId);
     }
 }
 

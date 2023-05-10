@@ -95,4 +95,23 @@ public class DealBoardCommentService {
         return DealBoardCommentDTO.toDealBoardCommentDTOs(comments);
     }
 
+    public DealBoardCommentDTO setAdoptedComments(Long commentId)
+    {
+        DealBoardComment dealBoardComment = dealBoardCommentRepository.findById(commentId).orElseThrow(() -> {
+            return new IllegalArgumentException("댓글을 찾을 수 없음");
+        });
+        if (dealBoardComment.isAdopted() == false)
+        {
+            dealBoardComment.setAdopted(true);
+            dealBoardCommentRepository.save(dealBoardComment);
+        }
+        return DealBoardCommentDTO.toDealBoardCommentDTO(dealBoardComment);
+    }
+
+    public List<DealBoardCommentDTO> getAdoptedComments(Long boardId)
+    {
+        DealBoard dealBoard = dealBoardRepository.findById(boardId).get();
+        List<DealBoardComment> comments = dealBoardCommentRepository.findAllByDealBoardAndIsAdoptedTrue(dealBoard);
+        return DealBoardCommentDTO.toDealBoardCommentDTOs(comments);
+    }
 }
