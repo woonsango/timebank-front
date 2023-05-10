@@ -9,11 +9,11 @@ import java.util.List;
 public class AuthenticationResponse {
     private final String jwt;
     private final List<String> user;
-    private final Long uid;
+    private final Boolean signUp;
 
-    public AuthenticationResponse(String jwt, List<String> user, Long uid) {
+    public AuthenticationResponse(String jwt, List<String> user, Boolean signUp) {
         this.jwt = jwt;
         this.user = user;
-        this.uid = uid;
+        this.signUp = signUp;
     }
 }

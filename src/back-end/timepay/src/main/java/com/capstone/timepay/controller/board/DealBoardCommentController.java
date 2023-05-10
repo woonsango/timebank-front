@@ -2,6 +2,8 @@ package com.capstone.timepay.controller.board;
 
 
 import com.capstone.timepay.controller.board.request.ReportRequestDTO;
+import com.capstone.timepay.domain.dealBoard.DealBoard;
+import com.capstone.timepay.domain.dealBoard.DealBoardRepository;
 import com.capstone.timepay.domain.dealBoardComment.DealBoardComment;
 import com.capstone.timepay.service.board.dto.DealBoardCommentDTO;
 import com.capstone.timepay.service.board.service.DealBoardCommentService;
@@ -26,6 +28,9 @@ import java.util.Map;
 public class DealBoardCommentController {
 
     private final DealBoardCommentService dealBoardCommentService;
+    private final DealBoardRepository dealBoardRepository;
+    private final DealBoardController dealBoardController;
+
     private final ReportService reportService;
 
     @ApiOperation(value = "거래게시글 게시판의 모든 댓글 불러오기")
@@ -41,6 +46,16 @@ public class DealBoardCommentController {
                                                 @RequestBody DealBoardCommentDTO dealBoardCommentDTO,
                                                 Principal principal)
     {
+        DealBoard dealBoard = dealBoardRepository.findById(boardId).orElseThrow(() -> {
+            return new IllegalArgumentException("게시판을 찾을 수 없음");
+        });
+        if(dealBoardCommentDTO.isApplied()) // 지원 댓글이고
+        {
+            if(dealBoard.isAuto()) // 자동 매칭 True이면
+            {
+                dealBoardController.readyToStart(boardId, principal);
+            }
+        }
         return new ResponseEntity(dealBoardCommentService.writeComment(boardId, dealBoardCommentDTO, principal.getName()), HttpStatus.OK);
     }
 

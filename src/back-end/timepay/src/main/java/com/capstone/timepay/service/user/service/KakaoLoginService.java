@@ -42,9 +42,11 @@ public class KakaoLoginService {
             StringBuilder sb = new StringBuilder();
             sb.append("grant_type=authorization_code");
             sb.append("&client_id=79587b639a3a9ca1c9433fa63bc55863");
+
             sb.append("&redirect_uri=http://localhost:8080/oauth/redirect/kakao"); // 서버 로컬 테스트용
             //sb.append("&redirect_uri=http://localhost:3000/oauth/redirect/kakao"); // 프론트 로컬 테스트용
             //sb.append("&redirect_uri=http://54.180.107.93:3000/oauth/redirect/kakao"); // 배포할 때 이 코드 사용
+
 
             sb.append("&code=" + code);
             bw.write(sb.toString());
@@ -195,7 +197,7 @@ public class KakaoLoginService {
     public User createKakaoUsers(String email, String sex, String encodePassword){
         return userRepository.save(User.builder()
                 .email(email).sex(sex)
-                .isSignUp(true) // 우선 회원가입 승인 확인 X, 무조건 회원가입하도록
+                //.isSignUp(true) // 우선 회원가입 승인 확인 X, 무조건 회원가입하도록
                 .encodedPassword(encodePassword)
                 .roles(Collections.singletonList("ROLE_USER"))
                 .build());

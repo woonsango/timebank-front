@@ -28,6 +28,7 @@ public class DealBoardDTO
     private LocalDateTime endTime;
     private int pay;
     private boolean isHidden;
+    private boolean isAuto;
     private List<DealAttatchment> images;
 
     public static DealBoardDTO toDealBoardDTO(DealBoard dealBoard)
@@ -44,6 +45,7 @@ public class DealBoardDTO
                 dealBoard.getEndTime(),
                 dealBoard.getPay(),
                 dealBoard.isHidden(),
+                dealBoard.isAuto(),
                 dealBoard.getDealAttatchments()
         );
     }
