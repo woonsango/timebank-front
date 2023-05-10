@@ -16,6 +16,10 @@ spring:
         format_sql: false
         default_batch_fetch_size: 1000
   servlet:
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
     multipart:
       max-file-size: 30MB
       max-request-size: 30MB
