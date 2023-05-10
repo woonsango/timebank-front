@@ -193,6 +193,7 @@ public class DealBoardService
         });
 
         dealBoard.setBoardStatus(BoardStatus.MATCHING_COMPLETE);
+        dealBoardRepository.save(dealBoard);
         return DealBoardDTO.toDealBoardDTO(dealBoard);
     }
 
@@ -204,6 +205,7 @@ public class DealBoardService
         });
 
         dealBoard.setBoardStatus(BoardStatus.ACTIVITY_COMPLETE);
+        dealBoardRepository.save(dealBoard);
         return DealBoardDTO.toDealBoardDTO(dealBoard);
     }
 
