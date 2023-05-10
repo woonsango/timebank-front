@@ -103,6 +103,7 @@ public class DealBoardCommentService {
         if (dealBoardComment.isAdopted() == false)
         {
             dealBoardComment.setAdopted(true);
+            dealBoardCommentRepository.save(dealBoardComment);
         }
         return DealBoardCommentDTO.toDealBoardCommentDTO(dealBoardComment);
     }

@@ -87,9 +87,9 @@ public class DealBoardCommentController {
     }
 
     @ApiOperation(value = "지원한 목록 중 댓글 선정하기")
-    @PutMapping("/{boardId}/adopted")
+    @PutMapping("/{boardId}/adopted/{commentId}")
     public DealBoardCommentDTO getAdoptedComments(@PathVariable("boardId") Long boardId,
-                                                  @RequestBody Long commentId)
+                                                  @PathVariable("commentId") Long commentId)
     {
         return dealBoardCommentService.setAdoptedComments(commentId);
     }
