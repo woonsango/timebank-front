@@ -10,4 +10,6 @@ import java.util.List;
 public interface DealBoardRepository extends JpaRepository<DealBoard,Long> {
     Page<DealBoard> findByIsHiddenFalse(Pageable pageable);
     Page<DealBoard> findByType(Pageable pageable, String Type);
+
+    long countByIsHiddenFalse();
 }

@@ -1,6 +1,8 @@
 package com.capstone.timepay.service.admin;
 
 import com.capstone.timepay.controller.admin.response.comment.CommentResponse;
+import com.capstone.timepay.domain.board.Board;
+import com.capstone.timepay.domain.board.BoardRepository;
 import com.capstone.timepay.domain.comment.Comment;
 import com.capstone.timepay.domain.comment.CommentRepository;
 import com.capstone.timepay.domain.dealBoardComment.DealBoardComment;
@@ -38,6 +40,7 @@ public class CommentManageService {
 
     private final DealBoardCommentRepository dealBoardCommentRepository;
     private final UserRepository userRepository;
+    private final BoardRepository boardRepository;
 
     public Page<CommentResponse> convertResponsePages(Page<Comment> pages){
         Page<CommentResponse> pageResponses = pages.map(new Function<Comment, CommentResponse>() {
@@ -112,31 +115,34 @@ public class CommentManageService {
 
     }
 
-    public Page<CommentResponse> showCommentsBySearch(CommentSearchDto commentSearchDto) {
+    public Page<CommentResponse> showCommentsBySearch(String query, String value) {
 
-        if(!ObjectUtils.isEmpty(commentSearchDto.getCommentId()) &&
-                ObjectUtils.isEmpty(commentSearchDto.getName()) &&
-                ObjectUtils.isEmpty(commentSearchDto.getNickname())){
+        if(ObjectUtils.isEmpty(query) || ObjectUtils.isEmpty(value)) throw new IllegalArgumentException("잘못된 파라미터 요청입니다.");
 
-            Comment comment = commentRepository.findByCommentId(commentSearchDto.getCommentId()).orElseThrow(()->new IllegalArgumentException("존재하지 않는 댓글입니다."));
-            List<CommentResponse> response = new ArrayList<>();
-            if(!Objects.isNull(comment.getFreeBoardComment())) {
-                List<FreeBoardComment> temp = new ArrayList<>();
-                temp.add(comment.getFreeBoardComment());
-                response = convertFCommentsToResponse(temp);
+        if(query.equals("boardId")){
+            Board board = boardRepository.findById(Long.parseLong(value)).orElseThrow(()->new IllegalArgumentException("존재하지 않는 게시글입니다."));
+            List<CommentResponse> commentResponses = new ArrayList<>();
+
+            if(!Objects.isNull(board.getFreeBoard())){
+                List<FreeBoardComment> comments = freeBoardCommentRepository.findAllByFreeBoard(board.getFreeBoard());
+
+                List<CommentResponse> fComments = convertFCommentsToResponse(comments);
+                commentResponses.addAll(fComments);
+            }
+            else if(!Objects.isNull(board.getDealBoard())){
+                List<DealBoardComment> comments = dealBoardCommentRepository.findAllByDealBoard(board.getDealBoard());
+
+                List<CommentResponse> dComments = convertDCommentsToResponse(comments);
+                commentResponses.addAll(dComments);
             }
             else{
-                List<DealBoardComment> temp = new ArrayList<>();
-                temp.add(comment.getDealBoardComment());
-                response = convertDCommentsToResponse(temp);
+                throw new IllegalArgumentException("존재하지 않는 게시글입니다.");
             }
-            return new PageImpl<>(response);
+            return new PageImpl<>(commentResponses);
         }
-        else if(ObjectUtils.isEmpty(commentSearchDto.getCommentId()) &&
-                !ObjectUtils.isEmpty(commentSearchDto.getName()) &&
-                ObjectUtils.isEmpty(commentSearchDto.getNickname())){
+        else if(query.equals("name")){
 
-            User user = userRepository.findByName(commentSearchDto.getName()).orElseThrow(()->new IllegalArgumentException("존재하지 않는 회원입니다."));
+            User user = userRepository.findByName(value).orElseThrow(()->new IllegalArgumentException("존재하지 않는 회원입니다."));
             List<CommentResponse> fComments = convertFCommentsToResponse(freeBoardCommentRepository.findAllByUser(user));
             List<CommentResponse> dComments = convertDCommentsToResponse(dealBoardCommentRepository.findAllByUser(user));
 
@@ -146,11 +152,9 @@ public class CommentManageService {
 
             return new PageImpl<>(commentResponses);
         }
-        else if(ObjectUtils.isEmpty(commentSearchDto.getCommentId()) &&
-                ObjectUtils.isEmpty(commentSearchDto.getName()) &&
-                !ObjectUtils.isEmpty(commentSearchDto.getNickname())){
+        else if(query.equals("nickname")){
 
-            User user = userRepository.findByNicknameContains(commentSearchDto.getNickname()).orElseThrow(()->new IllegalArgumentException("존재하지 않는 회원입니다."));
+            User user = userRepository.findByNicknameContains(value).orElseThrow(()->new IllegalArgumentException("존재하지 않는 회원입니다."));
             List<FreeBoardComment> users = freeBoardCommentRepository.findAllByUser(user);
             List<CommentResponse> fComments = convertFCommentsToResponse(users);
             List<CommentResponse> dComments = convertDCommentsToResponse(dealBoardCommentRepository.findAllByUser(user));

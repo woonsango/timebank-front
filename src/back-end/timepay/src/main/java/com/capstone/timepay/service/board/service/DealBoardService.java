@@ -48,9 +48,17 @@ public class DealBoardService
 
     // 전체 게시물 조회
     @Transactional(readOnly = true)
-    public Page<DealBoardDTO> getDealBoards(int pagingIndex, int paingSize)
+    public Page<DealBoardDTO> getDealBoards(int pagingIndex, int pagingSize)
     {
-        Pageable pageable = PageRequest.of(pagingIndex, paingSize);
+        Pageable pageable;
+        long totalElements = dealBoardRepository.countByIsHiddenFalse();
+        if (totalElements <= pagingSize) {
+            pageable = PageRequest.of(pagingIndex, (int) totalElements);
+        } else {
+            pageable = PageRequest.of(pagingIndex, pagingSize);
+        }
+
+//        Pageable pageable = PageRequest.of(pagingIndex, paingSize);
         Page<DealBoard> dealBoardPage = dealBoardRepository.findByIsHiddenFalse(pageable);
         List<DealBoardDTO> dealBoardDTOList = dealBoardPage.stream()
                 .map(DealBoardDTO::toDealBoardDTO)
@@ -102,15 +110,16 @@ public class DealBoardService
             return new IllegalArgumentException("해당 유저를 찾을 수 없습니다.");
         });
 
-        List<DealAttatchment> dealAttatchments = new ArrayList<>();
-        for (MultipartFile image : images)
-        {
-            String imageUrl = firebaseService.uploadFiles(image);
-            DealAttatchment dealAttatchment = DealAttatchment.builder()
-                    .imageUrl(imageUrl)
-                    .build();
-            dealAttatchments.add(dealAttatchment);
-            dealAttatchmentRepository.save(dealAttatchment);
+        if (images != null) {
+            List<DealAttatchment> dealAttatchments = new ArrayList<>();
+            for (MultipartFile image : images) {
+                String imageUrl = firebaseService.uploadFiles(image);
+                DealAttatchment dealAttatchment = DealAttatchment.builder()
+                        .imageUrl(imageUrl)
+                        .build();
+                dealAttatchments.add(dealAttatchment);
+                dealAttatchmentRepository.save(dealAttatchment);
+            }
         }
 
         DealBoard dealBoard = DealBoard.builder()
@@ -121,7 +130,8 @@ public class DealBoardService
                 .type(type)
                 .boardStatus(BoardStatus.MATCHING_IN_PROGRESS)
                 .location(dealBoardDTO.getLocation())
-                .startTime(dealBoardDTO.getEndTime())
+                .startTime(dealBoardDTO.getStartTime())
+                .endTime(dealBoardDTO.getEndTime())
                 .pay(dealBoardDTO.getPay())
                 .isHidden(dealBoardDTO.isHidden())
                 .isAuto(dealBoardDTO.isAuto())
@@ -156,7 +166,8 @@ public class DealBoardService
         dealBoard.setContent(boardDto.getContent());
         dealBoard.setCategory(boardDto.getCategory());
         dealBoard.setLocation(boardDto.getLocation());
-        dealBoard.setStartTime(boardDto.getEndTime());
+        dealBoard.setStartTime(boardDto.getStartTime());
+        dealBoard.setEndTime(boardDto.getEndTime());
         dealBoard.setPay(boardDto.getPay());
         dealBoard.setHidden(boardDto.isHidden());
         dealBoard.setAuto(boardDto.isAuto());
@@ -184,6 +195,7 @@ public class DealBoardService
         });
 
         dealBoard.setBoardStatus(BoardStatus.MATCHING_COMPLETE);
+        dealBoardRepository.save(dealBoard);
         return DealBoardDTO.toDealBoardDTO(dealBoard);
     }
 
@@ -195,6 +207,7 @@ public class DealBoardService
         });
 
         dealBoard.setBoardStatus(BoardStatus.ACTIVITY_COMPLETE);
+        dealBoardRepository.save(dealBoard);
         return DealBoardDTO.toDealBoardDTO(dealBoard);
     }
 

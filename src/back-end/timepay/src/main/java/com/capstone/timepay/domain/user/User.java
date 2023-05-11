@@ -1,6 +1,7 @@
 package com.capstone.timepay.domain.user;
 
 import com.capstone.timepay.domain.BaseTimeEntity;
+import com.capstone.timepay.domain.certification.Certification;
 import com.capstone.timepay.domain.dealBoardComment.DealBoardComment;
 import com.capstone.timepay.domain.dealBoardReport.DealBoardReport;
 import com.capstone.timepay.domain.dealCommentReport.DealCommentReport;
@@ -18,6 +19,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
@@ -50,6 +53,7 @@ public class User extends BaseTimeEntity {
     private String encodedPassword;
     private boolean isBanned;
     private boolean isSignUp;
+    private int totalVolunteerTime;
 
     @Column(unique = true)
     private String deviceToken;
@@ -74,6 +78,9 @@ public class User extends BaseTimeEntity {
     @JsonIgnore
     @OneToMany(mappedBy = "user", orphanRemoval = true)
     private List<DealRegister> dealRegisters = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user", orphanRemoval = true)
+    private List<Certification> certifications = new ArrayList<>();
 
     @JsonIgnore
     @OneToMany(mappedBy = "user", orphanRemoval = true)
@@ -108,8 +115,13 @@ public class User extends BaseTimeEntity {
     private Organization organization;
 
 
+
+
     public void updateName(String name) {
         this.name = name;
+    }
+    public void updatePhone(String phone) {
+        this.phone = phone;
     }
     public void updateBirth(LocalDateTime birth) {
         this.birthday = birth;
@@ -119,6 +131,9 @@ public class User extends BaseTimeEntity {
     }
     public void updateLocation(String region) {
         this.location = region;
+    }
+    public void updateTotalVolunteerTime(int totalVolunteerTime) {
+        this.totalVolunteerTime += totalVolunteerTime;
     }
 
     public void registerBlacklist() {

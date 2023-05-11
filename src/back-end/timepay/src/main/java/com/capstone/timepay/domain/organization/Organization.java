@@ -47,5 +47,11 @@ public class Organization extends BaseTimeEntity {
     public void updateAuthority(String authority){
         this.authority= authority;
     }
+    public void updateImageUrl(String imageUrl){
+        this.imageUrl= imageUrl;
+    }
+    public void updateCertificationUrl(String certificationUrl){
+        this.certificationUrl= certificationUrl;
+    }
 
 }
