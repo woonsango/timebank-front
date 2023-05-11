@@ -10,6 +10,7 @@ export interface IAdmin {
   name: string;
   email: string;
   phone: string;
+  first: boolean;
   inquiryAnswers: any[];
 }
 export interface IGetAdminRequest extends GetPageableData {

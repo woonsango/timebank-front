@@ -23,4 +23,6 @@ export const PATH = {
   BOOKMARK: '/bookmark', //즐겨찾기
   AGENCY_SIGN_IN: '/agency/sign-in',
   AGENCY_SIGN_UP: '/agency/sign-up',
+  MY_VOLUNTEER: '/my-volunteer',
+  PAYMENT_CERTIFICATION: '/payment-certification',
 };

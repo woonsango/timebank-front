@@ -24,8 +24,6 @@ const LoginPage = () => {
   };
 
   const handleOnClickLoginBtn = async (values: any) => {
-    /*첫로그인 검증후 비밀번호 변경 페이지 접근 제어 추가예정*/
-    const firstLogin: boolean = true;
     await loginMutation.mutateAsync(
       {
         adminName: values.username,
@@ -33,18 +31,26 @@ const LoginPage = () => {
       },
       {
         onSuccess: (result) => {
-          setTokenToCookie(result.data.jwt, 1);
-          messageApi
-            .open({
-              type: 'success',
-              content: '로그인 성공!',
-              duration: 1,
-            })
-            .then(function () {
-              firstLogin
-                ? navigate('/password-edit')
-                : navigate(`/post-management`);
+          if (result.data.admin) {
+            setTokenToCookie(result.data.jwt, 1);
+            messageApi
+              .open({
+                type: 'success',
+                content: '로그인 성공!',
+                duration: 1,
+              })
+              .then(function () {
+                result.data.admin.first
+                  ? navigate('/password-edit')
+                  : navigate(`/post-management`);
+              });
+          } else {
+            console.log(result.data);
+            messageApi.open({
+              type: 'error',
+              content: '비밀번호 오류',
             });
+          }
         },
         onError: (err) => {
           messageApi.open({
