@@ -7,6 +7,7 @@ import com.capstone.timepay.domain.notification.NotificationRepository;
 import com.capstone.timepay.domain.user.User;
 import com.capstone.timepay.domain.user.UserRepository;
 import com.capstone.timepay.firebase.FirebaseService;
+import com.capstone.timepay.firebase.dto.FCMDto;
 import com.capstone.timepay.service.admin.dto.NotificationPostDTO;
 import com.google.firebase.auth.FirebaseAuthException;
 import lombok.RequiredArgsConstructor;
@@ -69,7 +70,13 @@ public class NotificationService {
             String token = user.getDeviceToken();
             if (token != null) {
                 // 푸쉬 메세지
-                firebaseService.sendMessage(token, dto);
+                FCMDto fcmDto = FCMDto.builder()
+                        .title(dto.getTitle())
+                        .body(dto.getContent())
+                        .imageUrl(dto.getImageUrl())
+                        .token(token)
+                        .build();
+                firebaseService.sendMessage(fcmDto);
             }
         }
 

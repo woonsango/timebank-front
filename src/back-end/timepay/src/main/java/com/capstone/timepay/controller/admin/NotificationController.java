@@ -18,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.security.Principal;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 
 @RequiredArgsConstructor
 @RestController()
@@ -31,7 +32,7 @@ public class NotificationController {
     @ApiOperation(value = "공지사항 생성 및 푸쉬알림 전송")
     public ResponseEntity<Boolean> createNotification(@ModelAttribute NotificationPostRequest request,
                                                       @RequestPart(value = "image", required = false) MultipartFile image,
-                                                      Principal principal) throws IOException, FirebaseAuthException {
+                                                      Principal principal) throws IOException, FirebaseAuthException, ExecutionException, InterruptedException {
         Admin admin = this.adminService.getAdmin(principal.getName());
         if (image != null) {
             request.setImageUrl(notificationService.imageUpload(image));

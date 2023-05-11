@@ -1,6 +1,6 @@
 package com.capstone.timepay.firebase;
 
-import com.capstone.timepay.service.admin.dto.NotificationPostDTO;
+import com.capstone.timepay.firebase.dto.FCMDto;
 import com.google.cloud.storage.Blob;
 import com.google.cloud.storage.Bucket;
 import com.google.firebase.auth.FirebaseAuthException;
@@ -40,14 +40,14 @@ public class FirebaseService {
         return "https://storage.googleapis.com/" + bucket.getName() + "/" + blob.getName();
     }
 
-    public boolean sendMessage(String token, NotificationPostDTO dto) throws ExecutionException, InterruptedException {
+    public boolean sendMessage(FCMDto dto) throws ExecutionException, InterruptedException {
         Message message = Message.builder()
                 .setNotification(com.google.firebase.messaging.Notification.builder()
                 .setTitle(dto.getTitle())
-                .setBody(dto.getContent())
+                .setBody(dto.getBody())
                 .setImage(dto.getImageUrl())
                 .build())
-                .setToken(token)
+                .setToken(dto.getToken())
                 .build();
         try {
             String response = FirebaseMessaging.getInstance().sendAsync(message).get();
