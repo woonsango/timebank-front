@@ -186,6 +186,7 @@ export const cssPostContentInputStyle = css`
 `;
 
 export const cssLineStyle = css`
+  width: 100%;
   border-top: 1px solid ${COMMON_COLOR.FONT1};
   margin-top: 15px;
 `;
@@ -206,4 +207,9 @@ export const cssPostBtnStyle = css`
   letter-spacing: 3px;
   font-size: 24px;
   font-weight: 600;
+`;
+
+export const cssPostCategoryStyle = css`
+  margin-top: 20px;
+  margin-left: 20px;
 `;

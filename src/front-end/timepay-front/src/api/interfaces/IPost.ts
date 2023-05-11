@@ -34,13 +34,15 @@ export interface IGetFreeBoard {
 
 export interface IPostDealBoard {
   title: string;
+  category: string;
   content: string;
   location: string;
-  state: string;
+  state?: string;
   starttime?: string;
   endtime?: string;
   hidden?: boolean;
   pay?: 100;
+  imageUrl?: string;
 }
 
 export interface IGetDealBoard {

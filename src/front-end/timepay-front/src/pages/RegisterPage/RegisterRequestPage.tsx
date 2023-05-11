@@ -1,5 +1,16 @@
-import { Layout, Input, Button } from 'antd';
-import { useCallback, useState } from 'react';
+import {
+  Layout,
+  Input,
+  Button,
+  Form,
+  message,
+  Upload,
+  UploadFile,
+  Radio,
+  DatePicker,
+} from 'antd';
+import { RcFile, UploadChangeParam, UploadProps } from 'antd/es/upload';
+import { useCallback, useState, useMemo } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { PATH } from '../../utils/paths';
 import { ReactComponent as BackArrow } from '../../assets/images/icons/header-back-arrow.svg';
@@ -11,28 +22,32 @@ import {
   cssPostContentInputStyle,
   cssPostBtnStyle,
   cssPostFooterStyle,
+  cssPostCategoryStyle,
 } from './RegisterFreePage.style';
 import { FlagFilled } from '@ant-design/icons';
 import { KoDatePicker } from '../../components/register/KoDatePicker';
 import TimeSelct from '../../components/register/TimeSelect';
-
 import { useRecoilState } from 'recoil';
 import { DateRange, startTime, endTime } from '../../states/register';
-
 import { useCreateDealBoards } from '../../api/hooks/register';
-import { useQueryClient } from 'react-query';
+import dummyProfileImg from '../../assets/images/icons/dummy-profile-img.png';
 
 const { Header, Content, Footer } = Layout;
 const { TextArea } = Input;
+const { RangePicker } = DatePicker;
+
 const MAX_IMAGES = 5;
 
 const RegisterRequestPage = () => {
-  const queryclient = useQueryClient();
-  const useCreateDealBoardsMutation = useCreateDealBoards();
+  const [form] = Form.useForm();
+  const [imgFileList, setImgFileList] = useState<UploadFile[]>([]);
+  const [previewImage, setPreviewImage] = useState('');
+  const [previewOpen, setPreviewOpen] = useState(false);
+
+  const createDealBoardsMutation = useCreateDealBoards();
+  const [messageApi, contextHolder] = message.useMessage();
 
   const pay = 100;
-  const category = 'help';
-  const state = '게시완료';
   const [title, setTitle] = useState<string>('');
   const [location, setLocation] = useState<string>('');
   const [content, setContent] = useState<string>('');
@@ -55,6 +70,13 @@ const RegisterRequestPage = () => {
     console.log(typeof category);
   };
 
+  const normFile = (e: any) => {
+    if (Array.isArray(e)) {
+      return e;
+    }
+    return e?.fileList;
+  };
+
   // 사진
   const [images, setImages] = useState<File[]>([]);
   const [previewUrls, setPreviewUrls] = useState<string[]>([]);
@@ -75,6 +97,31 @@ const RegisterRequestPage = () => {
     setImages((prevState) => prevState.filter((_, i) => i !== index));
     setPreviewUrls((prevState) => prevState.filter((_, i) => i !== index));
   };
+
+  //////////
+
+  const getBase64 = (file: RcFile): Promise<string> =>
+    new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result as string);
+      reader.onerror = (error) => reject(error);
+    });
+  const handleImgChange: UploadProps['onChange'] = (
+    info: UploadChangeParam<UploadFile>,
+  ) => {
+    setImgFileList(info.fileList);
+  };
+  const handlePreview = async (file: UploadFile) => {
+    if (!file.url && !file.preview) {
+      file.preview = await getBase64(file.originFileObj as RcFile);
+    }
+    setPreviewImage(file.url || (file.preview as string));
+    setPreviewOpen(true);
+  };
+  const handleCancelPreview = useCallback(() => setPreviewOpen(false), []);
+
+  ////////
 
   // 날짜
   const [dates, setDates] = useState<DateRange>([null, null]);
@@ -103,13 +150,7 @@ const RegisterRequestPage = () => {
   }, [navigate]);
 
   // 버튼 활성화 관련
-  const isDisabled =
-    !title ||
-    !content ||
-    !location ||
-    !dates[0] ||
-    !dates[1] ||
-    !selectedCategory;
+  const isDisabled = !title || !content || !location;
 
   const handleTitleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setTitle(event.target.value);
@@ -145,159 +186,177 @@ const RegisterRequestPage = () => {
     setPreviewUrls(newPreviewUrls);
   };
 
-  const handleSubmit = () => {
-    useCreateDealBoardsMutation.mutateAsync(
-      { title, content, location, starttime, endtime, pay, state },
-      {
-        onSuccess: (data) => {
-          console.log('success');
-          // 새로고침 안해도 값이 추가되면 값이 바로 추가되게 하는 코드. (queryclient 변수와)
-          queryclient.invalidateQueries('');
-        },
-        onError(error) {
-          console.log('error');
-        },
-        onSettled: (data) => {
-          console.log('dddddd');
-        },
-      },
-    );
+  const handleOnSubmit = useCallback(
+    async (values: any) => {
+      let formData = new FormData();
+      if (values.images && values.images.length > 0) {
+        formData.append('image', values.images[0].originFileObj);
+      }
 
-    navigate(-1);
-  };
+      const newPost = {
+        ...values,
+        d_board_id: parseInt(values.d_board_id),
+        images: null,
+      };
+
+      formData.append(
+        'dealBoardDTO',
+        new Blob([JSON.stringify(newPost)], { type: 'application/json' }),
+      );
+
+      await createDealBoardsMutation.mutateAsync(formData, {
+        onSuccess: (result) => {
+          messageApi.open({
+            type: 'success',
+            content: '회원가입을 성공했습니다.',
+            duration: 1,
+            onClose: () => {
+              navigate(-1);
+            },
+          });
+        },
+        onError: (err) => {
+          console.log(err);
+          messageApi.open({
+            type: 'error',
+            content: (
+              <>
+                오류 발생: <br />
+                {err}
+              </>
+            ),
+          });
+        },
+      });
+    },
+    [messageApi, navigate, createDealBoardsMutation],
+  );
+
+  const uploadButton = useMemo(() => {
+    return <img width="100%" height="100%" src={dummyProfileImg} alt="+" />;
+  }, []);
 
   return (
-    <Layout css={cssPostPageStyle}>
+    <div css={cssPostPageStyle}>
       <div className="wrapper">
         <Header css={cssMainHeaderStyle}>
           <BackArrow onClick={handleClickBack} />
           <span>도움받기</span>
         </Header>
-        <Content style={{ paddingTop: 60 }}>
-          <input
-            css={cssPostTitleInputStyle}
-            placeholder="제목을 입력하세요"
-            maxLength={25}
-            value={title}
-            onChange={handleTitleChange}
-          />
+        {contextHolder}
+        <Form
+          onFinish={handleOnSubmit}
+          style={{ paddingTop: 60 }}
+          form={form}
+          layout="vertical"
+        >
+          <Form.Item name="title">
+            <Input
+              css={cssPostTitleInputStyle}
+              placeholder="제목을 입력하세요"
+              maxLength={25}
+              value={title}
+              onChange={handleTitleChange}
+            />
+          </Form.Item>
           <div css={cssLineStyle} />
-          <h6>카테고리 설정</h6>
-          <div className="category-container">
-            {categories.map((category) => (
-              <button
-                key={category}
-                className={`category ${
-                  selectedCategory === category ? 'selected' : ''
-                }`}
-                onClick={() => handleCategoryClick(category)}
-              >
-                {category}
-              </button>
-            ))}
-          </div>
-          <div css={cssLineStyle} />
-          <h6>날짜</h6>
-          <KoDatePicker value={dates} onChange={handleDatesChange} />
-          <h6>시간</h6>
-          <TimeSelct />
-          <p>내 타임페이 : {pay}</p>
-          <p>지급해야할 타임페이 : {exchangeTime}</p>
-          <div css={cssLineStyle} />
-          <h6>장소</h6>
-          <Input
-            size="large"
-            placeholder="희망하는 장소를 입력하세요 :)"
-            style={{ marginLeft: '20px', paddingLeft: '15px', width: '280px' }}
-            prefix={<FlagFilled style={{ marginRight: '5px' }} />}
-            onChange={handleLocationChange}
-          />
-          <div css={cssLineStyle} />
-          <TextArea
-            rows={10}
-            bordered={false}
-            style={{ resize: 'none' }}
-            css={cssPostContentInputStyle}
-            placeholder="내용을 입력하세요"
-            value={content}
-            onChange={handleContentChange}
-          />
-          <div css={cssLineStyle} />
-          <div className="image-container">
-            <div className="imageFont">사진 ({images.length} / 5)</div>
 
-            {previewUrls.length < MAX_IMAGES && (
-              <div className="cssImageWrapper1">
-                <div className="cssImagePlaceholder">
-                  <label htmlFor="upload">
-                    <div className="uploadBtn">
-                      📷 <br />
-                      사진 추가
-                    </div>
-                  </label>
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={handleFileChange}
-                    id="upload"
-                  />
-                </div>
-              </div>
-            )}
-
-            <div className="images-container">
-              {previewUrls.map((url, index) => (
-                <div className="cssImageWrapper2" key={index}>
-                  <img src={url} className="cssSelectedImage" alt="uploaded" />
-                  <div className="cssImages">
-                    <div className="cssImagePlaceholder2">
-                      <label htmlFor="change">
-                        <div className="changeBtn">사진 변경</div>
-                      </label>
-                      <input
-                        className="fileButton"
-                        type="file"
-                        accept="image/*"
-                        onChange={(e) => handleImageChange(e, index)}
-                        id="change"
-                      />
-                    </div>
-                    <Button
-                      danger
-                      className="deleteBtn"
-                      onClick={() => handleDeleteImage(index)}
-                    >
-                      삭제
-                    </Button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </Content>
-      </div>
-      <Footer css={cssPostFooterStyle}>
-        {isDisabled ? (
-          <Button
-            css={cssPostBtnStyle}
-            onClick={handleSubmit}
-            disabled={isDisabled}
+          <Form.Item
+            label="카테고리"
+            name="category"
+            css={cssPostCategoryStyle}
           >
-            작성완료
-          </Button>
-        ) : (
-          <Link to={PATH.HOME}>
-            <Button
-              css={cssPostBtnStyle}
-              onClick={handleSubmit}
-              disabled={isDisabled}
+            <Radio.Group>
+              <Radio.Button value="1">산책</Radio.Button>
+              <Radio.Button value="2">봉사</Radio.Button>
+              <Radio.Button value="3">교육</Radio.Button>
+              <Radio.Button value="4">친목</Radio.Button>
+              <Radio.Button value="5">생활</Radio.Button>
+              <Radio.Button value="6">건강</Radio.Button>
+              <Radio.Button value="7">도와주세요</Radio.Button>
+            </Radio.Group>
+          </Form.Item>
+
+          <div css={cssLineStyle} />
+          <Form.Item
+            name="range-picker"
+            label="날짜"
+            css={cssPostCategoryStyle}
+          >
+            <RangePicker />
+          </Form.Item>
+
+          <Form.Item name="time">
+            <TimeSelct />
+          </Form.Item>
+          <div>
+            <p>내 타임페이 : {pay}</p>
+            <p>지급해야할 타임페이 : {exchangeTime}</p>
+          </div>
+          <div css={cssLineStyle} />
+          <Form.Item label="장소" name="location" css={cssPostCategoryStyle}>
+            <Input
+              size="large"
+              placeholder="희망하는 장소를 입력하세요 :)"
+              style={{
+                paddingLeft: '15px',
+                width: '280px',
+              }}
+              prefix={<FlagFilled style={{ marginRight: '5px' }} />}
+              onChange={handleLocationChange}
+            />
+          </Form.Item>
+          <div css={cssLineStyle} />
+          <Form.Item name="content">
+            <TextArea
+              rows={10}
+              bordered={false}
+              style={{ resize: 'none' }}
+              css={cssPostContentInputStyle}
+              placeholder="내용을 입력하세요"
+              value={content}
+              onChange={handleContentChange}
+            />
+          </Form.Item>
+          <div css={cssLineStyle} />
+          <Form.Item
+            name="images"
+            getValueFromEvent={normFile}
+            valuePropName="fileList"
+          >
+            <Upload
+              onChange={handleImgChange}
+              onPreview={handlePreview}
+              multiple={false}
+              beforeUpload={() => false}
+              accept="image/png, image/jpg, image/jpeg"
             >
-              작성완료
-            </Button>
-          </Link>
-        )}
-      </Footer>
-    </Layout>
+              {imgFileList.length === 1 ? null : uploadButton}
+            </Upload>
+          </Form.Item>
+
+          <div css={cssPostFooterStyle}>
+            {isDisabled ? (
+              <Button
+                htmlType="submit"
+                css={cssPostBtnStyle}
+                disabled={isDisabled}
+              >
+                작성완료
+              </Button>
+            ) : (
+              <Button
+                htmlType="submit"
+                css={cssPostBtnStyle}
+                disabled={isDisabled}
+              >
+                작성완료
+              </Button>
+            )}
+          </div>
+        </Form>
+      </div>
+    </div>
   );
 };
 

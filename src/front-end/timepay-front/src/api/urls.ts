@@ -2,8 +2,7 @@ export const API_URL = {
   DEAL_BOARDS: '/api/deal-boards',
   FREE_BOARDS: '/api/free-boards',
   FREE_BOARDS_WRITE: '/api/free-boards/write',
-  DEAL_HELP_BOARDS_WRITE: '/api/deal-boards/write/help', // 도움받기
-  DEAL_HELPER_BOARDS_WRITE: '/api/deal-boards/write/helper', // 도움주기
+  DEAL_BOARDS_WRITE: '/api/deal-boards/write/help', // 도움받기
   INQUIRY_WRITE: '/api/inquiry-boards/write',
   INQUIRY: 'api/inquiry-boards',
   NOTIFICATIONS: 'api/notifications',
@@ -29,4 +28,5 @@ export const FORM_DATA_REQUIRED_URLS = [
   API_URL.ORGANIZATIONS_REGISTER,
   API_URL.USER_INFO_POST,
   API_URL.USER_INFO_PUT,
+  API_URL.DEAL_BOARDS_WRITE,
 ];

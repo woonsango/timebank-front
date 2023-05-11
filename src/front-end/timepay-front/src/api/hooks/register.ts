@@ -3,7 +3,6 @@ import { useMutation, useQuery } from 'react-query';
 import {
   IPostFreeBoard,
   IGetFreeBoard,
-  IPostDealBoard,
   IGetDealBoard,
 } from '../interfaces/IPost';
 import { apiRequest } from '../request';
@@ -36,11 +35,9 @@ export const useGetDealBoards = () => {
 };
 // 도움 주기
 export const useCreateDealBoards = () => {
-  return useMutation<AxiosResponse<boolean>, AxiosError, IPostDealBoard>({
+  return useMutation<AxiosResponse<any>, AxiosError, FormData>({
     mutationKey: 'usePostDealBoards',
     mutationFn: (data) =>
-      apiRequest.post(API_URL.DEAL_HELPER_BOARDS_WRITE, {
-        ...data,
-      }),
+      apiRequest.postFormData(API_URL.DEAL_BOARDS_WRITE, data),
   });
 };
