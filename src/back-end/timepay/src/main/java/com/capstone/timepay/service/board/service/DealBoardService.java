@@ -14,6 +14,7 @@ import com.capstone.timepay.domain.user.User;
 import com.capstone.timepay.domain.user.UserRepository;
 import com.capstone.timepay.firebase.FirebaseService;
 import com.capstone.timepay.service.board.dto.DealBoardDTO;
+import com.capstone.timepay.service.organization.OrganizationManageService;
 import com.google.firebase.auth.FirebaseAuthException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -40,6 +41,7 @@ public class DealBoardService
     private final UserRepository userRepository;
     private final FirebaseService firebaseService;
     private final DealAttatchmentRepository dealAttatchmentRepository;
+    private final OrganizationManageService organizationManageService;
 
     public DealBoard getId(Long id)
     {
@@ -200,13 +202,14 @@ public class DealBoardService
     }
 
     @Transactional
-    public DealBoardDTO modifyActivityFinsih(Long boardId)
+    public DealBoardDTO modifyActivityFinish(Long boardId)
     {
         DealBoard dealBoard = dealBoardRepository.findById(boardId).orElseThrow(() -> {
             return new IllegalArgumentException("Board Id를 찾을 수 없습니다");
         });
 
         dealBoard.setBoardStatus(BoardStatus.ACTIVITY_COMPLETE);
+        organizationManageService.activityComplete(boardId); // 준원님 요청
         dealBoardRepository.save(dealBoard);
         return DealBoardDTO.toDealBoardDTO(dealBoard);
     }

@@ -24,6 +24,7 @@ public class DealRegisterService {
     public String getEmail(Long boardId)
     {
         DealRegister dealRegister = dealRegisterRepository.findById(boardId).orElse(null);
+
         return dealRegister.getUser().getEmail();
     }
 
