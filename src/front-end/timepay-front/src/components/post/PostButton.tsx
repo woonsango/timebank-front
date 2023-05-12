@@ -40,7 +40,7 @@ const PostButton = () => {
   };
 
   const showModal = () => {
-    if (buttonState === 'start') {
+    if (buttonState === 'completed') {
       setIsModalOpen(true);
     }
   };
@@ -63,7 +63,7 @@ const PostButton = () => {
             css={cssPostButton}
             onClick={() => {
               onClickButton();
-              showModal();
+              // showModal();
             }}
             className={`${buttonState}`}
           >
@@ -75,6 +75,7 @@ const PostButton = () => {
               css={cssPostButton}
               onClick={() => {
                 setButtonState('theEnd');
+                showModal();
               }}
               className="completed"
             >

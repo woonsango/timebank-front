@@ -33,14 +33,27 @@ export interface IGetFreeBoard {
 }
 
 export interface IPostDealBoard {
-  content: string;
-  startTime: string;
-  endTime: string;
-  hidden: boolean;
-  location: string;
-  pay: 100;
-  state: string;
   title: string;
+  category: string;
+  content: string;
+  location: string;
+  state?: string;
+  starttime?: string;
+  endtime?: string;
+  hidden?: boolean;
+  pay?: 100;
+  imageUrl?: string;
+}
+
+export interface IGetDealBoard {
+  title: string;
+  content: string;
+  location: string;
+  state: string;
+  starttime?: string;
+  endtime?: string;
+  hidden?: boolean;
+  pay?: 100;
 }
 
 export type IPostState =
