@@ -11,6 +11,7 @@ import {
 import { cssCategoryTable } from './CategoryTable.style';
 import { ICategory } from '../../api/interfaces/ICategory';
 import { CheckOutlined, CloseOutlined } from '@ant-design/icons';
+import { useGetCategories } from '../../api/hooks/category';
 
 const originData: ICategory[] = [];
 for (let i = 0; i < 100; i++) {
@@ -24,7 +25,9 @@ for (let i = 0; i < 100; i++) {
 
 const CategoryTable = () => {
   const [form] = Form.useForm();
-  const [data, setData] = useState(originData);
+  const { data, isLoading } = useGetCategories();
+
+  const dataSource = data?.data.content || [];
 
   const cancel = () => {};
 
@@ -73,20 +76,20 @@ const CategoryTable = () => {
           />
         ),
     },
-    {
-      title: '삭제',
-      dataIndex: 'operation',
-      width: '10%',
-      render: (_: any, record: { categoryId: number }) =>
-        originData.length >= 1 ? (
-          <Popconfirm
-            title="삭제하시겠습니까?"
-            onConfirm={() => handleDelete(record.categoryId)}
-          >
-            <a>Delete</a>
-          </Popconfirm>
-        ) : null,
-    },
+    // {
+    //   title: '삭제',
+    //   dataIndex: 'operation',
+    //   width: '10%',
+    //   render: (_: any, record: { categoryId: number }) =>
+    //     originData.length >= 1 ? (
+    //       <Popconfirm
+    //         title="삭제하시겠습니까?"
+    //         onConfirm={() => handleDelete(record.categoryId)}
+    //       >
+    //         <a>Delete</a>
+    //       </Popconfirm>
+    //     ) : null,
+    // },
   ];
 
   return (
@@ -94,13 +97,13 @@ const CategoryTable = () => {
       <Form form={form} component={false}>
         <Table
           bordered
-          dataSource={data}
+          dataSource={dataSource}
           // @ts-ignore
           columns={columns}
-          rowClassName="editable-row"
-          pagination={{
-            onChange: cancel,
-          }}
+          rowClassName="categoryId"
+          // pagination={{
+          //   onChange: cancel,
+          // }}
         />
       </Form>
     </div>
