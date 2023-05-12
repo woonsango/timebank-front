@@ -112,7 +112,7 @@ public class DealBoardController
     {
         Map<String, Object> updateMap = new HashMap<>();
         DealBoard dealBoard = dealBoardService.getId(id);
-        String boardEmail = dealRegisterService.getEmail(id ,dealBoard);
+        String boardEmail = dealRegisterService.getEmail(id);
 
         if (dealBoard == null)
         {
@@ -142,7 +142,7 @@ public class DealBoardController
     {
         Map<String, Object> deleteMap = new HashMap<>();
         DealBoard dealBoard = dealBoardService.getId(id);
-        String boardEmail = dealRegisterService.getEmail(id, dealBoard);
+        String boardEmail = dealRegisterService.getEmail(id);
 
         if (dealBoard == null)
         {
@@ -194,30 +194,30 @@ public class DealBoardController
 
     @ApiOperation(value = "활동완료로로 변경시키는 컨트롤러")
     @PutMapping("/{boardId}/finish")
-    public DealBoardDTO activityFinish(@PathVariable("boardId") Long boardId,
+    public Map<String, Object> activityFinish(@PathVariable("boardId") Long boardId,
                                               Principal principal)
     {
-//        Map<String, Object> resultMap = new HashMap<>();
-//        DealBoard dealBoard  = dealBoardService.getId(boardId);
-//        String boardEmail = dealRegisterService.getEmail(boardId);
-//
-//        if (dealBoard == null)
-//        {
-//            resultMap.put("success", false);
-//            resultMap.put("message", "해당 게시글을 찾을 수 없습니다");
-//            return resultMap;
-//        }
-//
-//        if (!principal.getName().equals(boardEmail))
-//        {
-//            resultMap.put("success", false);
-//            resultMap.put("message", "상태를 수정할 권한이 없습니다");
-//            return resultMap;
-//        }
+        Map<String, Object> resultMap = new HashMap<>();
+        DealBoard dealBoard  = dealBoardService.getId(boardId);
+        String boardEmail = dealRegisterService.getEmail(boardId);
 
-        return dealBoardService.modifyActivityFinish(boardId);
-//        resultMap.put("success", true);
-//        return resultMap;
+        if (dealBoard == null)
+        {
+            resultMap.put("success", false);
+            resultMap.put("message", "해당 게시글을 찾을 수 없습니다");
+            return resultMap;
+        }
+
+        if (!principal.getName().equals(boardEmail))
+        {
+            resultMap.put("success", false);
+            resultMap.put("message", "상태를 수정할 권한이 없습니다");
+            return resultMap;
+        }
+
+        dealBoardService.modifyActivityFinish(boardId);
+        resultMap.put("success", true);
+        return resultMap;
     }
 
     @PostMapping("/{boardId}/report")
