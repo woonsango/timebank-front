@@ -166,30 +166,30 @@ public class DealBoardController
     // == 글 작성 후 로직 == //
     @ApiOperation(value = "모집중에서 모집완료로 변경시키는 컨트롤러")
     @PutMapping("/{boardId}/start")
-    public DealBoardDTO readyToStart(@PathVariable("boardId") Long boardId,
+    public Map<String, Object> readyToStart(@PathVariable("boardId") Long boardId,
                                             Principal principal)
     {
-//        Map<String, Object> resultMap = new HashMap<>();
-//        DealBoard dealBoard  = dealBoardService.getId(boardId);
-//        String boardEmail = dealRegisterService.getEmail(boardId);
-//
-//        if (dealBoard == null)
-//        {
-//            resultMap.put("success", false);
-//            resultMap.put("message", "해당 게시글을 찾을 수 없습니다");
-//            return resultMap;
-//        }
-//
-//        if (!principal.getName().equals(boardEmail))
-//        {
-//            resultMap.put("success", false);
-//            resultMap.put("message", "상태를 수정할 권한이 없습니다");
-//            return resultMap;
-//        }
+        Map<String, Object> resultMap = new HashMap<>();
+        DealBoard dealBoard  = dealBoardService.getId(boardId);
+        String boardEmail = dealRegisterService.getEmail(boardId);
 
-        return dealBoardService.modifyMatchingFinish(boardId);
-//        resultMap.put("success", true);
-//        return resultMap;
+        if (dealBoard == null)
+        {
+            resultMap.put("success", false);
+            resultMap.put("message", "해당 게시글을 찾을 수 없습니다");
+            return resultMap;
+        }
+
+        if (!principal.getName().equals(boardEmail))
+        {
+            resultMap.put("success", false);
+            resultMap.put("message", "상태를 수정할 권한이 없습니다");
+            return resultMap;
+        }
+
+        dealBoardService.modifyMatchingFinish(boardId);
+        resultMap.put("success", true);
+        return resultMap;
     }
 
     @ApiOperation(value = "활동완료로로 변경시키는 컨트롤러")
