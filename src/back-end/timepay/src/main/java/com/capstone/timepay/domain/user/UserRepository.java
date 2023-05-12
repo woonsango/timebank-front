@@ -38,4 +38,6 @@ public interface UserRepository extends JpaRepository<User,Long> {
     Page<User> findAllByEmailAndOrganizationIsNull(Pageable pageable, String value);
 
     Page<User> findAllByNicknameAndOrganizationIsNull(Pageable pageable, String value);
+
+    Optional<User> findByNameContains(String value);
 }
