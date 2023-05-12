@@ -1,5 +1,6 @@
 package com.capstone.timepay.service.user.service;
 
+import com.capstone.timepay.controller.admin.response.comment.CommentResponse;
 import com.capstone.timepay.controller.user.request.RequestDTO;
 import com.capstone.timepay.controller.user.request.UpdateRequestDTO;
 import com.capstone.timepay.controller.user.response.GetResponseDTO;
@@ -8,7 +9,10 @@ import com.capstone.timepay.domain.board.Board;
 import com.capstone.timepay.domain.board.BoardRepository;
 import com.capstone.timepay.domain.comment.Comment;
 import com.capstone.timepay.domain.comment.CommentRepository;
+import com.capstone.timepay.domain.dealBoard.DealBoard;
+import com.capstone.timepay.domain.dealBoard.DealBoardRepository;
 import com.capstone.timepay.domain.dealBoardComment.DealBoardComment;
+import com.capstone.timepay.domain.dealBoardComment.DealBoardCommentRepository;
 import com.capstone.timepay.domain.dealRegister.DealRegister;
 import com.capstone.timepay.domain.freeBoard.FreeBoard;
 import com.capstone.timepay.domain.freeBoard.FreeBoardRepository;
@@ -20,6 +24,7 @@ import com.capstone.timepay.domain.user.UserRepository;
 import com.capstone.timepay.domain.userProfile.UserProfile;
 import com.capstone.timepay.domain.userProfile.UserProfileRepository;
 import com.capstone.timepay.firebase.FirebaseService;
+import com.capstone.timepay.service.admin.CommentManageService;
 import com.google.firebase.auth.FirebaseAuthException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -37,6 +42,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 
 /* 받은 데이터를 데이터베이스에 저장 */
@@ -46,9 +52,9 @@ public class UserInfoService {
     private final UserRepository userRepository;
     private final UserProfileRepository userProfileRepository;
     private final FirebaseService firebaseService;
-    private final FreeBoardRepository freeBoardRepository;
-    private final FreeRegisterRepository freeRegisterRepository;
-    private final BoardRepository boardRepository;
+    private final DealBoardRepository dealBoardRepository;
+    private final DealBoardCommentRepository dealBoardCommentRepository;
+
     private final CommentRepository commentRepository;
 
     @Transactional
@@ -163,8 +169,12 @@ public class UserInfoService {
         String nickName = userData.getNickname();
         String location = userData.getLocation();
 
-        Page<DealRegister> dealRegisters = new PageImpl<>(userData.getDealRegisters(), pageable, userData.getDealRegisters().size());
-        Page<DealBoardComment> dealBoardComments  = new PageImpl<>(userData.getDealBoardComments(), pageable, userData.getDealBoardComments().size());
+        List<DealRegister> dealRegisters = userData.getDealRegisters();
+        Page<DealBoard> dealBoards = new PageImpl<>(dealBoardRepository.findByDealRegistersIn(userData.getDealRegisters()), pageable, userData.getDealRegisters().size());
+        // Page<DealRegister> dealRegisters = new PageImpl<>(userData.getDealRegisters(), pageable, userData.getDealRegisters().size());
+        // Page<DealBoardComment> dealBoardComments  = new PageImpl<>(userData.getDealBoardComments(), pageable, userData.getDealBoardComments().size());
+        Page<CommentResponse> dealBoardComments = new PageImpl<>(
+                convertDCommentsToResponse(dealBoardCommentRepository.findAllByUser(userData)));
 
         /* 유저 프로필 테이블에서 데이터 가져오기 */
         String imageUrl = userProfileData.getImageUrl();
@@ -174,7 +184,7 @@ public class UserInfoService {
 
 
         /* 생성자를 사용하여 객체 생성 */
-        GetResponseDTO getResponseDTO = new GetResponseDTO(id, imageUrl, nickName, location, introduction, timePay, dealRegisters, dealBoardComments);
+        GetResponseDTO getResponseDTO = new GetResponseDTO(id, imageUrl, nickName, location, introduction, timePay, dealBoards, dealBoardComments);
         return getResponseDTO;
     }
 
@@ -188,9 +198,12 @@ public class UserInfoService {
         String nickName = userData.getNickname();
         String location = userData.getLocation();
 
-        Page<DealRegister> dealRegisters = new PageImpl<>(userData.getDealRegisters(), pageable, userData.getDealRegisters().size());
-        Page<DealBoardComment> dealBoardComments  = new PageImpl<>(userData.getDealBoardComments(), pageable, userData.getDealBoardComments().size());
-
+        Page<DealBoard> dealBoards = new PageImpl<>(dealBoardRepository.findByDealRegistersIn(userData.getDealRegisters()), pageable, userData.getDealRegisters().size());
+        // Page<DealRegister> dealRegisters = new PageImpl<>(userData.getDealRegisters(), pageable, userData.getDealRegisters().size());
+        //Page<DealBoardComment> dealBoardComments  = new PageImpl<>(dealBoardCommentRepository.findAllByUser(userData), pageable, userData.getDealBoardComments().size());
+        // List<CommentResponse> dComments = commentManageService.convertDCommentsToResponse(dealBoardCommentRepository.findAllByUser(userData));
+        Page<CommentResponse> dealBoardComments = new PageImpl<>(
+                convertDCommentsToResponse(dealBoardCommentRepository.findAllByUser(userData)));
 
         /* 유저 프로필 테이블에서 데이터 가져오기 */
         String imageUrl = userData.getUserProfile().getImageUrl();
@@ -198,7 +211,7 @@ public class UserInfoService {
         int timePay = userData.getUserProfile().getTimepay();
 
         /* 생성자를 사용하여 객체 생성 */
-        GetResponseDTO getResponseDTO = new GetResponseDTO(userData.getUserId(), imageUrl, nickName, location, introcudtion, timePay, dealRegisters, dealBoardComments);
+        GetResponseDTO getResponseDTO = new GetResponseDTO(userData.getUserId(), imageUrl, nickName, location, introcudtion, timePay, dealBoards, dealBoardComments);
         return getResponseDTO;
     }
 
@@ -242,4 +255,25 @@ public class UserInfoService {
         return user;
     }
 
+    public List<CommentResponse> convertDCommentsToResponse(List<DealBoardComment> dComments){
+        return dComments
+                .stream()
+                .map(dealBoardComment ->
+                        CommentResponse.builder()
+                                .commentId(commentRepository.findByDealBoardComment(dealBoardComment).getCommentId())
+                                .originBoardId(dealBoardComment.getDealBoard().getD_boardId())
+                                .originCommentId(dealBoardComment.getD_commentId())
+                                .applyYN(dealBoardComment.isApplied())
+                                .selectYN(dealBoardComment.isAdopted())
+                                .content(dealBoardComment.getContent())
+                                .writerId(dealBoardComment.getUser().getUserId())// dealBoardComment.getUser().getUserId()
+                                .writerName(dealBoardComment.getUser().getName()) //dealBoardComment.getUser().getName()
+                                .writtenTime(dealBoardComment.getCreatedAt())
+                                .originWriterYN(true)
+                                .writerNickname(dealBoardComment.getUser().getNickname()) //dealBoardComment.getUser().getNickname()
+                                .isHidden(dealBoardComment.isHidden())
+                                .updatedTime(dealBoardComment.getUpdatedAt())
+                                .build())
+                .collect(Collectors.toList());
+    }
 }
