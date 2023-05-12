@@ -156,11 +156,26 @@ public class ReportManageService {
         }
         else if(query.equals("name")){
 
-            User user = userRepository.findByName(value).orElseThrow(()->new IllegalArgumentException("존재하지 않는 댓글입니다."));
-            List<ReportResponse> fcrs = convertFCRToResponse(freeCommentReportRepository.findAllByUser(user));
-            List<ReportResponse> fbrs = convertFBRToResponse(freeBoardReportRepository.findAllByUser(user));
-            List<ReportResponse> dcrs = convertDCRToResponse(dealCommentReportRepository.findAllByUser(user));
-            List<ReportResponse> dbrs = convertDBRToResponse(dealBoardReportRepository.findAllByUser(user));
+            List<User> users = userRepository.findAllByNameContains(value);
+
+            if(ObjectUtils.isEmpty(users)) return new PageImpl<>(new ArrayList<>());
+
+            List<ReportResponse> fcrs = new ArrayList<>();
+            List<ReportResponse> fbrs = new ArrayList<>();
+            List<ReportResponse> dcrs = new ArrayList<>();
+            List<ReportResponse> dbrs = new ArrayList<>();
+            for(User user : users){
+                fcrs.addAll(convertFCRToResponse(freeCommentReportRepository.findAllByUser(user)));
+            }
+            for(User user : users){
+                fbrs.addAll(convertFBRToResponse(freeBoardReportRepository.findAllByUser(user)));
+            }
+            for(User user : users){
+                dcrs.addAll(convertDCRToResponse(dealCommentReportRepository.findAllByUser(user)));
+            }
+            for(User user : users){
+                dbrs.addAll(convertDBRToResponse(dealBoardReportRepository.findAllByUser(user)));
+            }
 
             List<ReportResponse> reportResponses = new ArrayList<>();
             reportResponses.addAll(fbrs);
