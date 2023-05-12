@@ -20,6 +20,8 @@ export interface IGetReportRequest extends GetPageableData {
   reason?: string;
   startTime?: Date;
   endTime?: Date;
+  query: string;
+  value?: string;
 }
 export interface IGetReportResponse extends PageableData {
   content: IReport[];
