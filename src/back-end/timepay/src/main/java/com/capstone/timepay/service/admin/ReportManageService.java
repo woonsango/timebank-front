@@ -147,7 +147,10 @@ public class ReportManageService {
 
         if(query.equals("reportId")){
 
-            Report report = reportRepository.findByReportId(Long.parseLong(value)).orElseThrow(()->new IllegalArgumentException("존재하지 않는 신고입니다."));
+            Report report = reportRepository.findByReportId(Long.parseLong(value)).orElse(null);
+
+            if(Objects.isNull(report)) return new PageImpl<>(new ArrayList<>());
+
             List<Report> reports = new ArrayList<>();
             reports.add(report);
 
