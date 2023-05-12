@@ -97,16 +97,19 @@ const CommentTable = ({
         align: 'center',
         sorter: (a: IComment, b: IComment) =>
           dayjs(a.writtenTime).isAfter(dayjs(b.writtenTime)),
+        render: (text: string) =>
+          text ? text.split('.')[0].replaceAll('T', ' ') : '-',
       },
       {
         title: '수정일시',
-        key: 'updatedAt',
-        dataIndex: 'updatedAt',
+        key: 'updatedTime',
+        dataIndex: 'updatedTime',
         width: 140,
         align: 'center',
         sorter: (a: IComment, b: IComment) =>
-          dayjs(a.updatedAt).isAfter(dayjs(b.updatedAt)),
-        render: (text: string) => text || '-',
+          dayjs(a.updatedTime).isAfter(dayjs(b.updatedTime)),
+        render: (text: string) =>
+          text ? text.split('.')[0].replaceAll('T', ' ') : '-',
       },
       {
         title: '지원여부',
@@ -152,17 +155,16 @@ const CommentTable = ({
       },
       {
         title: '숨김여부',
-        key: 'isHidden',
-        dataIndex: 'isHidden',
+        key: 'hidden',
+        dataIndex: 'hidden',
         width: 140,
         align: 'center',
         filters: [
           { text: 'Y', value: true },
           { text: 'N', value: false },
         ],
-        onFilter: (value: boolean, record: IComment) =>
-          record.isHidden === value,
-        render: (isHidden: boolean) => (isHidden ? 'Y' : 'N'),
+        onFilter: (value: boolean, record: IComment) => record.hidden === value,
+        render: (hidden: boolean) => (hidden ? 'Y' : 'N'),
       },
       {
         title: '댓글 내용',

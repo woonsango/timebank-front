@@ -12,16 +12,14 @@ export interface IComment {
   originWriterYN: boolean; // 게시글 작성자 여부
   writtenTime: any; // 작성 날짜
   content: string; // 댓글 내용
-  isHidden: boolean; // 댓글 숨김 여부
-  updatedAt?: string; // 수정 날짜
+  hidden: boolean; // 댓글 숨김 여부
+  updatedTime?: string; // 수정 날짜
 }
 
 export interface IGetCommentRequest extends GetPageableData {
-  originBoardId?: number;
-  writerName?: string;
-  writerNickname?: string;
-  writerSearchKeyword?: string;
-  writerSearchValue?: string;
+  query: string;
+  value?: string;
+  boardId?: string;
 }
 
 export interface IGetCommentResponse extends PageableData {

@@ -16,4 +16,5 @@ export const COMMON_COLOR = {
   SILVER_GRAY: '#CDCDCD',
   LIGHT_YELLOW: '#FFDE99',
   WARM_GRAY: '#F6F6F6',
+  LOGO1: '#FFC700',
 };

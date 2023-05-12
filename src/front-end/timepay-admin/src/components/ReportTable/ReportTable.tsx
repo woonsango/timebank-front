@@ -71,8 +71,8 @@ const ReportTable = () => {
       },
       {
         title: '신고 사유',
-        key: 'reason',
-        dataIndex: 'reason',
+        key: 'content',
+        dataIndex: 'content',
         width: 150,
         align: 'center',
         render: (_: string, record: IReport) => (

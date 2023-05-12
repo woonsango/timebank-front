@@ -11,6 +11,8 @@ export const reportSearchState = atom<IGetReportRequest>({
     reason: undefined,
     startTime: undefined,
     endTime: undefined,
+    query: '',
+    value: undefined,
     pagingIndex: 0,
     pagingSize: 10,
   },

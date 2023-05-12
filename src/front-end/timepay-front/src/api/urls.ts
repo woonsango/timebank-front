@@ -6,15 +6,15 @@ export const API_URL = {
   INQUIRY_WRITE: '/api/inquiry-boards/write',
   INQUIRY: 'api/inquiry-boards',
   NOTIFICATIONS: 'api/notifications',
-  USERS_INFO: '/api/users/get/',
   ORGANIZATIONS_REGISTER: '/api/organizations/register',
   ORGANIZATIONS_LOGIN: '/api/organizations/login',
   ORGANIZATIONS_LOGOUT: '/api/organizations/logout',
   ORGANIZATIONS_DELETE: '/api/organizations/delete',
-  USER_INFO_GET: '/api/users/get/',
+  USER_INFO: '/api/users/mypage',
   USER_INFO_POST: '/api/users/create/',
   USER_INFO_PUT: '/api/users/update',
   MY_VOLUNTEER: '/api/users/mypage/certification',
+  USERS__CATEGORY: '/api/users/category',
 };
 
 // 토큰 필요 없는 애들

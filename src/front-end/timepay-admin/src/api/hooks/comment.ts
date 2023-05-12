@@ -13,19 +13,21 @@ export const useGetComments = (params?: IGetCommentRequest) => {
   return useQuery<AxiosResponse<IGetCommentResponse>, AxiosError>({
     queryKey: ['useGetComments', params],
     queryFn: () =>
-      params && (params.originBoardId || params.writerSearchValue)
+      params && (params.value || params.boardId)
         ? apiRequest.get(API_URL.COMMENTS__SEARCH, {
             params: {
               ...params,
-              writerSearchKeyword: null,
-              writerSearchValue: null,
+              boardId: null,
+              query: params.boardId ? 'boardId' : params.query,
+              value: params.boardId || params.value,
             },
           })
         : apiRequest.get(API_URL.COMMENTS, {
             params: {
               ...params,
-              writerSearchKeyword: null,
-              writerSearchValue: null,
+              query: null,
+              value: null,
+              boardId: null,
             },
           }),
     refetchOnWindowFocus: false,
