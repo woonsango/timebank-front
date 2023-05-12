@@ -53,7 +53,7 @@ public class ApiController {
 
     @DeleteMapping("/delete")
     @ApiOperation(value="유저 데이터 삭제(회원탈퇴)",notes = "JWT 토큰에 해당하는 유저 정보를 삭제합니다.")
-    public ResponseEntity<?> deleteUserInfo2() {
+    public ResponseEntity<?> deleteUserInfo() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
         userInfoService.deleteUserInfo(auth);
