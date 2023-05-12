@@ -1,14 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import {
-  Button,
-  Form,
-  Input,
-  Select,
-  Space,
-  message,
-  Image,
-  Typography,
-} from 'antd';
+import { Button, Form, Input, Select, Space, message, Image } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import { headerTitleState } from '../../states/uiState';
 import { useSetRecoilState } from 'recoil';
@@ -19,8 +10,7 @@ import { dongData } from '../JoinPage/Data/DONGDATA';
 
 import { PATH } from '../../utils/paths';
 import './MyEdit_imageSet.css';
-import { getTokenFromCookie } from '../../utils/token';
-import axios from 'axios';
+
 import {
   cssMyEditCenter,
   cssMyEditMargin,
@@ -28,7 +18,6 @@ import {
   topWrapperCSS,
 } from './MyEdit.styles';
 import { cssJoinNick } from '../JoinPage/Join.styles';
-import { overlap } from '../JoinPage/overlapNickname';
 import { apiRequest } from '../../api/request';
 import { API_URL } from '../../api/urls';
 
@@ -36,8 +25,8 @@ import { API_URL } from '../../api/urls';
 type DongName = keyof typeof dongData;
 
 const MyEditPage: React.FC = () => {
+  const [form] = Form.useForm();
   const [messageApi, contextHolder] = message.useMessage();
-  const { Text } = Typography;
 
   const [profileImage, setProfileImage]: any = useState();
   const [finalProfileImage, setfinalProfileImage]: any = useState();
@@ -53,8 +42,6 @@ const MyEditPage: React.FC = () => {
   const [dongText, setDongText] = useState<string>('');
 
   const [viewNickname, setViewNickname] = useState<string>('');
-  const [viewTown, setViewTown] = useState<string>('');
-  const [viewIntroduction, setViewIntroduction] = useState<string>('');
 
   const handleFileChange = (e: any) => {
     const imageFile = e.target.files[0];
@@ -110,7 +97,7 @@ const MyEditPage: React.FC = () => {
     /*닉네임 수정없이 기존 닉네임 그대로*/
     if (nickName === viewNickname || value === '') {
       return Promise.resolve();
-    } else if (value.search(/\s/) != -1) {
+    } else if (value.search(/\s/) !== -1) {
       return Promise.reject(new Error('닉네임을 공백 없이 입력해 주세요.'));
     }
     if (!nickname_regExp.test(value)) {
@@ -201,7 +188,7 @@ const MyEditPage: React.FC = () => {
     setHeaderTitle('내 정보 수정');
 
     apiRequest
-      .get(API_URL.USER_INFO_GET)
+      .get(API_URL.USER_INFO)
       .then((res) => {
         console.log(res);
 
@@ -210,10 +197,13 @@ const MyEditPage: React.FC = () => {
         console.log('닉네임: ', res.data.nick_name);
         console.log('지역: ', res.data.location);
         console.log('소개: ', res.data.introduction);
-
-        setViewNickname(res.data.nick_name);
-        setViewTown(res.data.location);
-        setViewIntroduction(res.data.introduction);
+        form.setFieldValue('nickName', res.data.nick_name);
+        form.setFieldValue('introduction', res.data.introduction);
+        setGu(
+          dongData[res.data.location.split(' ')[1] as (typeof guData)[number]],
+        );
+        setGuText(res.data.location.split(' ')[1]);
+        setDong(res.data.location.split(' ')[2]);
 
         setfinalProfileImage(
           res.data.image_url ||
@@ -236,6 +226,7 @@ const MyEditPage: React.FC = () => {
     <Space css={topWrapperCSS} align="baseline">
       {contextHolder}
       <Form
+        form={form}
         name="EditMyPage"
         onFinish={handleSubmitBtn}
         onFinishFailed={onFinishFailedJoin}
@@ -262,19 +253,13 @@ const MyEditPage: React.FC = () => {
           </Space>
         </Form.Item>
 
-        <Space direction="vertical" css={cssMyEditMargin}>
-          <Text strong>기존 닉네임: {viewNickname}</Text>
-          <Text strong>기존 지역: {viewTown}</Text>
-          <Text strong>기존 자기소개: {viewIntroduction}</Text>
-        </Space>
-
         <Form.Item
           label="닉네임"
           name="nickName"
           rules={[{ validator: rightNickname }]}
           css={cssMyEditMargin}
         >
-          <Input onChange={onChangeNickName} defaultValue={nickName} />
+          <Input onChange={onChangeNickName} />
         </Form.Item>
 
         <Form.Item name="닉네임 중복 검사">
@@ -284,7 +269,6 @@ const MyEditPage: React.FC = () => {
         </Form.Item>
 
         <Form.Item label="지역" name="Town">
-          {' '}
           <Space align="baseline">
             <Select
               defaultValue={siData[0]}
@@ -295,7 +279,7 @@ const MyEditPage: React.FC = () => {
             />
 
             <Select
-              defaultValue={'구'}
+              value={guText as (typeof guData)[number]}
               onChange={onChangeGu}
               options={guData.map((province) => ({
                 label: province,
