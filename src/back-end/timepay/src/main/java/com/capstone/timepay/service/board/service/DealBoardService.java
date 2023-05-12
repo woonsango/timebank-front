@@ -184,9 +184,13 @@ public class DealBoardService
         DealBoard dealBoard = dealBoardRepository.findById(id).orElseThrow(() -> {
             return new IllegalArgumentException("Board Id를 찾을 수 없습니다!");
         });
+        DealRegister dealRegister = dealRegisterRepository.findById(id).orElseThrow(() -> {
+            return new IllegalArgumentException("레지스터를 찾을 수 없습니다.");
+        });
 
         // 게시글이 있는 경우 삭제처리
         dealBoardRepository.deleteById(id);
+        dealRegisterRepository.deleteById(id);
     }
 
     @Transactional

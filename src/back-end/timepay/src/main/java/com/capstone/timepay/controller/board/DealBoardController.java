@@ -226,7 +226,10 @@ public class DealBoardController
         /* 현재 인증된 사용자의 인증 토큰을 가져온다.*/
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         return ResponseEntity.ok(reportService.reportBoard(authentication, boardId, requestDTO, "거래신고"));
-
     }
+
+//    @GetMapping("/testing")
+//    @ApiOperation(value = "레지스터 값 확인")
+//    public DealBoardDTO testing()
 }
 
