@@ -143,24 +143,6 @@ const PostPage = ({ post }: PostPageProps) => {
     '지원자3',
   ]);
 
-  /*
-  const [apiData, setApiData] = useState(null);
-
-  useEffect(() => {
-    async function fetchData() {
-      try {
-        const response = await fetch('/api/boards');
-        const data = await response.json();
-        setApiData(data);
-      } catch (error) {
-        console.error(error);
-      }
-    }
-    fetchData();
-  }, []);
-
-  */
-
   // 댓글 입력
   const [inputText, setInputText] = useState('');
   // 댓글
