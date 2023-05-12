@@ -67,6 +67,7 @@ public class CommentManageService {
                 }
                 else{
                     // 2. 거래 게시판 댓글
+
                     return CommentResponse.builder()
                             .commentId(comment.getCommentId())
                             .originBoardId(comment.getDealBoardComment().getDealBoard().getD_boardId())
@@ -78,9 +79,9 @@ public class CommentManageService {
                             .writerName(comment.getDealBoardComment().getUser().getName())
                             .writtenTime(comment.getDealBoardComment().getCreatedAt())
                             .originWriterYN(false)
-                            .writerNickname(comment.getFreeBoardComment().getUser().getNickname())
-                            .isHidden(comment.getFreeBoardComment().isHidden())
-                            .updatedTime(comment.getFreeBoardComment().getUpdatedAt())
+                            .writerNickname(comment.getDealBoardComment().getUser().getNickname())
+                            .isHidden(comment.getDealBoardComment().isHidden())
+                            .updatedTime(comment.getDealBoardComment().getUpdatedAt())
                             .build();
                 }
 
