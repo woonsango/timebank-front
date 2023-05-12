@@ -1,9 +1,11 @@
 package com.capstone.timepay.service.board.service;
 
+import com.capstone.timepay.domain.dealBoard.DealBoard;
 import com.capstone.timepay.domain.dealRegister.DealRegister;
 import com.capstone.timepay.domain.dealRegister.DealRegisterRepository;
 import com.capstone.timepay.domain.freeRegister.FreeRegister;
 import com.capstone.timepay.domain.freeRegister.FreeRegisterRepository;
+import com.capstone.timepay.domain.user.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -13,7 +15,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class DealRegisterService {
 
-    private DealRegisterRepository dealRegisterRepository;
+    private final DealRegisterRepository dealRegisterRepository;
 
     public DealRegister getId(Long id)
     {
@@ -21,11 +23,14 @@ public class DealRegisterService {
     }
 
     // 해당 레지스터에서 유저 Email을 가져오는 메서드
-    public String getEmail(Long boardId)
-    {
-        DealRegister dealRegister = dealRegisterRepository.findById(boardId).orElse(null);
-
-        return dealRegister.getUser().getEmail();
+    public String getEmail(Long boardId, DealBoard dealBoard) {
+        DealRegister dealRegister = dealRegisterRepository.findById(boardId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid board ID: " + boardId));
+        User user = dealRegister.getUser();
+        if (user == null) {
+            throw new IllegalArgumentException("User not found for board ID: " + boardId);
+        }
+        return user.getEmail();
     }
 
     public List<DealRegister> getAllDealRegisters() {

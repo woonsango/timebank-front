@@ -112,7 +112,7 @@ public class DealBoardController
     {
         Map<String, Object> updateMap = new HashMap<>();
         DealBoard dealBoard = dealBoardService.getId(id);
-        String boardEmail = dealRegisterService.getEmail(id);
+        String boardEmail = dealRegisterService.getEmail(id ,dealBoard);
 
         if (dealBoard == null)
         {
@@ -141,9 +141,9 @@ public class DealBoardController
                                       Principal principal)
     {
         Map<String, Object> deleteMap = new HashMap<>();
-        String boardEmail = dealRegisterService.getEmail(id);
-
         DealBoard dealBoard = dealBoardService.getId(id);
+        String boardEmail = dealRegisterService.getEmail(id, dealBoard);
+
         if (dealBoard == null)
         {
             deleteMap.put("success", false);
