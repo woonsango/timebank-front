@@ -18,8 +18,8 @@ export const customPaginationProps = <T extends GetPageableData>({
   };
   return {
     total: totalElements || 0,
-    defaultCurrent: (currentSearchValues?.pagingIndex || 0) + 1,
-    defaultPageSize: currentSearchValues?.pagingSize || 10,
+    current: (currentSearchValues?.pagingIndex || 0) + 1,
+    pageSize: currentSearchValues.pagingSize || 10,
     showSizeChanger: true,
     pageSizeOptions: [10, 50, 100],
     onChange: handleOnChangePagination,
