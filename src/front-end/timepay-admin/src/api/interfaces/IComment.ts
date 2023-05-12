@@ -17,11 +17,9 @@ export interface IComment {
 }
 
 export interface IGetCommentRequest extends GetPageableData {
-  originBoardId?: number;
-  writerName?: string;
-  writerNickname?: string;
-  writerSearchKeyword?: string;
-  writerSearchValue?: string;
+  query: string;
+  value?: string;
+  boardId?: string;
 }
 
 export interface IGetCommentResponse extends PageableData {
