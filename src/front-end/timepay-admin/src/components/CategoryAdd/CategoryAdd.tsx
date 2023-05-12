@@ -15,13 +15,13 @@ const CategoryAdd = () => {
   const [isOpenModal, setIsOpenModal] = useState(false);
   const content = (
     <Form {...layout} onFinish={onFinish} style={{ maxWidth: 600 }}>
-      <Form.Item name={['key']} label="카테고리 번호">
+      <Form.Item name={['categoryId']} label="카테고리 번호">
         <Input />
       </Form.Item>
-      <Form.Item name={['name']} label="카테고리 이름">
+      <Form.Item name={['boardType']} label="카테고리 타입">
         <Input />
       </Form.Item>
-      <Form.Item name={['parentCategory']} label="상위 카테고리">
+      <Form.Item name={['categoryName']} label="카테고리 이름">
         <Input />
       </Form.Item>
     </Form>
