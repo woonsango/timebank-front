@@ -44,6 +44,7 @@ public class DealBoard extends BaseTimeEntity {
     private String state;
     private int volunteerTime;
     private boolean isVolunteer;
+    private int volunteerPeople;
 
     @JsonIgnore
     @OneToMany(mappedBy = "dealBoard", orphanRemoval = true, fetch = FetchType.LAZY)

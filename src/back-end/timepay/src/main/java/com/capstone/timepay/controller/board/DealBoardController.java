@@ -65,7 +65,7 @@ public class DealBoardController
         return new ResponseEntity<>(paging, HttpStatus.OK);
     }
 
-    @ApiOperation(value = "도움받기 게시판 불러오기")
+    @ApiOperation(value = "도움요청 게시판 불러오기")
     @GetMapping("/help")
     public ResponseEntity<Page<DealBoardDTO>> getHelpBoards(
             @RequestParam(value = "pagingIndex", defaultValue = "0") int pagingIndex,
@@ -92,10 +92,10 @@ public class DealBoardController
                                       @RequestPart(required = false) List<MultipartFile> images,
                                       Principal principal) throws Exception
     {
-        return new ResponseEntity(dealBoardService.write(dealBoardDTO, principal.getName(), "helper", images), HttpStatus.OK);
+        return new ResponseEntity(dealBoardService.helperWrite(dealBoardDTO, principal.getName(), "helper", images), HttpStatus.OK);
     }
 
-    @ApiOperation(value = "거래게시판 도움받기 게시글 작성")
+    @ApiOperation(value = "거래게시판 도움요청 게시글 작성")
     @PostMapping(value = "/write/help", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity getHelpWrite(@RequestPart DealBoardDTO dealBoardDTO,
                                        @RequestPart(required = false) List<MultipartFile> images,
@@ -227,9 +227,5 @@ public class DealBoardController
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         return ResponseEntity.ok(reportService.reportBoard(authentication, boardId, requestDTO, "거래신고"));
     }
-
-//    @GetMapping("/testing")
-//    @ApiOperation(value = "레지스터 값 확인")
-//    public DealBoardDTO testing()
 }
 

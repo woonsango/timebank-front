@@ -21,6 +21,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -91,7 +92,7 @@ public class DealBoardService
         return new PageImpl<>(dealBoardDTOList, dealBoardPage.getPageable(), dealBoardPage.getTotalElements());
     }
 
-    // 도움받기 게시물 조회
+    // 도움요청 게시물 조회
     @Transactional(readOnly = true)
     public Page<DealBoardDTO> getHelpDealBoard(int pagingIndex, int paingSize)
     {
@@ -137,6 +138,7 @@ public class DealBoardService
                 .pay(dealBoardDTO.getPay())
                 .isHidden(dealBoardDTO.isHidden())
                 .isAuto(dealBoardDTO.isAuto())
+                .volunteerPeople(dealBoardDTO.getVolunteerPeople())
                 .build();
 
         Board board = Board.builder().
@@ -151,6 +153,54 @@ public class DealBoardService
                 .user(user)
                .build();
                dealRegisterRepository.save(dealRegister);
+
+        dealBoardRepository.save(dealBoard);
+        return DealBoardDTO.toDealBoardDTO(dealBoard);
+    }
+
+    @Transactional
+    public DealBoardDTO helperWrite(DealBoardDTO dealBoardDTO, String email,
+                                    String type, List<MultipartFile> images) throws IOException, FirebaseAuthException
+    {
+        User user = userRepository.findByEmail(email).orElseThrow(() -> {
+            return new IllegalArgumentException("해당 유저를 찾을 수 없습니다.");
+        });
+
+        if (images != null) {
+            List<DealAttatchment> dealAttatchments = new ArrayList<>();
+            for (MultipartFile image : images) {
+                String imageUrl = firebaseService.uploadFiles(image);
+                DealAttatchment dealAttatchment = DealAttatchment.builder()
+                        .imageUrl(imageUrl)
+                        .build();
+                dealAttatchments.add(dealAttatchment);
+                dealAttatchmentRepository.save(dealAttatchment);
+            }
+        }
+
+        DealBoard dealBoard = DealBoard.builder()
+                .title(dealBoardDTO.getTitle())
+                .content(dealBoardDTO.getContent())
+                .category(dealBoardDTO.getCategory())
+                .type(type)
+                .location(dealBoardDTO.getLocation())
+                .startTime(dealBoardDTO.getStartTime())
+                .endTime(dealBoardDTO.getEndTime())
+                .isHidden(dealBoardDTO.isHidden())
+                .build();
+
+        Board board = Board.builder().
+                freeBoard(null).
+                dealBoard(dealBoard).
+                build();
+        boardRepository.save(board);
+
+        DealRegister dealRegister = DealRegister.builder()
+                .d_registerId(dealBoard.getD_boardId())
+                .dealBoard(dealBoard)
+                .user(user)
+                .build();
+        dealRegisterRepository.save(dealRegister);
 
         dealBoardRepository.save(dealBoard);
         return DealBoardDTO.toDealBoardDTO(dealBoard);
@@ -173,6 +223,7 @@ public class DealBoardService
         dealBoard.setPay(boardDto.getPay());
         dealBoard.setHidden(boardDto.isHidden());
         dealBoard.setAuto(boardDto.isAuto());
+        dealBoard.setVolunteerPeople(boardDto.getVolunteerPeople());
 
         return DealBoardDTO.toDealBoardDTO(dealBoard);
     }
@@ -223,5 +274,9 @@ public class DealBoardService
     {
         DealBoard dealBoard = dealBoardRepository.findById(boardId).orElse(null);
         dealBoard.getDealBoardComments().add(dealBoardComment);
+    }
+
+    public Page<DealBoard> search(Specification<DealBoard> spec, Pageable pageable) {
+        return dealBoardRepository.findAll(spec, pageable);
     }
 }
