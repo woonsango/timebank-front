@@ -13,7 +13,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class DealRegisterService {
 
-    private DealRegisterRepository dealRegisterRepository;
+    private final DealRegisterRepository dealRegisterRepository;
 
     public DealRegister getId(Long id)
     {
