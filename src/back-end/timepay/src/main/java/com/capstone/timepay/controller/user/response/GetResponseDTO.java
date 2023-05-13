@@ -1,4 +1,5 @@
 package com.capstone.timepay.controller.user.response;
+import com.capstone.timepay.controller.admin.response.comment.CommentResponse;
 import com.capstone.timepay.domain.board.Board;
 import com.capstone.timepay.domain.comment.Comment;
 import com.capstone.timepay.domain.dealBoard.DealBoard;
@@ -29,8 +30,8 @@ public class GetResponseDTO {
 
     private int timePay; // 타임페이, userProfile에서 가져옴
 
-    private Page<DealRegister> dealRegisters;
-    private Page<DealBoardComment> dealBoardComments;
+    private Page<DealBoard> dealBoards;
+    private Page<CommentResponse> dealBoardComments;
 
     private Page<Board> boards;
     private Page<Comment> comments;
@@ -38,14 +39,25 @@ public class GetResponseDTO {
 
     /* 타유저 프로필 정보 조회를 위한 DTO */
     public GetResponseDTO(Long id, String imageUrl, String nickName, String location, String intoroduction, int timePay,
-                           Page<DealRegister> dealRegisters, Page<DealBoardComment> dealBoardComments){
+                           Page<DealBoard> dealBoards, Page<CommentResponse> dealBoardComments){
         this.id = id;
         this.imageUrl = imageUrl;
         this.nickName = nickName;
         this.location = location;
         this.introduction = intoroduction;
         this.timePay = timePay;
-        this.dealRegisters = dealRegisters;
+        this.dealBoards = dealBoards;
         this.dealBoardComments = dealBoardComments;
+    }
+
+    public GetResponseDTO(Long id, String imageUrl, String nickName, String location, String intoroduction, int timePay,
+                          Page<DealBoard> dealBoards){
+        this.id = id;
+        this.imageUrl = imageUrl;
+        this.nickName = nickName;
+        this.location = location;
+        this.introduction = intoroduction;
+        this.timePay = timePay;
+        this.dealBoards = dealBoards;
     }
 }

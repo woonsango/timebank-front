@@ -55,6 +55,11 @@ public class DealBoardCommentController {
             if(dealBoard.isAuto()) // 자동 매칭 True이면
             {
                 dealBoardController.readyToStart(boardId, principal);
+
+                DealBoardCommentDTO response = dealBoardCommentService.writeComment(boardId, dealBoardCommentDTO, principal.getName());
+                dealBoardCommentService.setAdoptedComments(response.getId());
+                return new ResponseEntity(response, HttpStatus.OK);
+
             }
         }
         return new ResponseEntity(dealBoardCommentService.writeComment(boardId, dealBoardCommentDTO, principal.getName()), HttpStatus.OK);
