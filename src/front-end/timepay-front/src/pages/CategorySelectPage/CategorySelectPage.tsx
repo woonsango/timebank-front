@@ -44,10 +44,12 @@ const CategorySelectPage = () => {
 
   return (
     <div css={cssCategorySelect}>
-      <div css={cssMainHeaderStyle}>
-        <BackArrow onClick={handleClickBack} />
-        <span>카테고리 알림 설정</span>
-      </div>
+      {!isFirst && (
+        <div css={cssMainHeaderStyle}>
+          <BackArrow onClick={handleClickBack} />
+          <span>카테고리 알림 설정</span>
+        </div>
+      )}
       <div css={cssMainHeaderBlank}></div>
       <div css={cssCategorySelectText}>
         <h3>관심 카테고리를 선택해주세요!</h3>
