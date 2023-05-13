@@ -7,7 +7,6 @@ import {
   cssApplicant,
 } from '../../pages/PostPage/PostPage.style';
 import { COMMON_COLOR } from '../../styles/constants/colors';
-import { NoNeedToReleaseEntityManagerError } from 'typeorm';
 
 export const ApplicantButton = ({ applicantList, onItemClick }) => {
   const [isListModalOpen, setIsListModalOpen] = useState(false);
