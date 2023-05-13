@@ -1,9 +1,8 @@
-import React, { useState } from 'react';
-import { Button, Modal, Form, Input, InputNumber, message } from 'antd';
+import { useState } from 'react';
+import { Button, Modal, Form, Input, message } from 'antd';
 import { cssCategoryAdd, cssBox, cssAddModal } from './CategoryAdd.style';
 import { usePostCategories } from '../../api/hooks/category';
 import { useQueryClient } from 'react-query';
-import { IGetCategoryRequest } from '../../api/interfaces/ICategory';
 
 const layout = {
   labelCol: { span: 6 },

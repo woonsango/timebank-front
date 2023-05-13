@@ -25,3 +25,14 @@ export const usePostCategories = () => {
       ),
   });
 };
+
+export const usePatchCategories = () => {
+  return useMutation<AxiosResponse<string>, AxiosError, any>({
+    mutationKey: 'usePatchCategories',
+    mutationFn: (data) =>
+      apiRequest.patch(
+        `${API_URL.CATEGORIES__UPDATE}?categoryId=${data.categoryId}&query=${data.useYn}`,
+        {},
+      ),
+  });
+};

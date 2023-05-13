@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import {
   Form,
   Input,
@@ -7,38 +7,54 @@ import {
   Switch,
   Table,
   Typography,
+  message,
 } from 'antd';
 import { cssCategoryTable } from './CategoryTable.style';
 import { ICategory } from '../../api/interfaces/ICategory';
-import { CheckOutlined, CloseOutlined } from '@ant-design/icons';
-import { useGetCategories } from '../../api/hooks/category';
-
-const originData: ICategory[] = [];
-for (let i = 0; i < 100; i++) {
-  originData.push({
-    categoryId: i + 1,
-    boardType: '도움요청',
-    categoryName: `카테고리 이름 ${i}`,
-    useYn: i % 2 ? 'Y' : 'N',
-  });
-}
+import { useGetCategories, usePatchCategories } from '../../api/hooks/category';
+import { useQueryClient } from 'react-query';
 
 const CategoryTable = () => {
   const [form] = Form.useForm();
   const { data, isLoading } = useGetCategories();
+  const queryClient = useQueryClient();
+  const patchCategories = usePatchCategories();
+  const [messageApi, contextHolder] = message.useMessage();
 
   const dataSource = data?.data.content || [];
 
-  const cancel = () => {};
-
-  const onChangeUseYn = (categoryId: number, useYn: 'Y' | 'N') => {
+  const onChangeUseYn = useCallback((categoryId: number, useYn: 'Y' | 'N') => {
     console.log(`switch to ${useYn}`);
     console.log(categoryId);
-  };
+    useYn === 'Y' ? (useYn = 'N') : (useYn = 'Y');
 
-  const handleDelete = (categoryId: number) => {
-    console.log(categoryId);
-  };
+    patchCategories.mutateAsync(
+      {
+        categoryId,
+        useYn,
+      },
+      {
+        onSuccess: async (data) => {
+          messageApi.open({
+            type: 'success',
+            content: '상태 변경 완료.',
+          });
+          await queryClient.invalidateQueries('useGetComments');
+        },
+        onError: (err) => {
+          messageApi.open({
+            type: 'error',
+            content: (
+              <>
+                오류 발생: <br />
+                {err}
+              </>
+            ),
+          });
+        },
+      },
+    );
+  }, []);
 
   const columns = [
     {
@@ -76,34 +92,19 @@ const CategoryTable = () => {
           />
         ),
     },
-    // {
-    //   title: '삭제',
-    //   dataIndex: 'operation',
-    //   width: '10%',
-    //   render: (_: any, record: { categoryId: number }) =>
-    //     originData.length >= 1 ? (
-    //       <Popconfirm
-    //         title="삭제하시겠습니까?"
-    //         onConfirm={() => handleDelete(record.categoryId)}
-    //       >
-    //         <a>Delete</a>
-    //       </Popconfirm>
-    //     ) : null,
-    // },
   ];
 
   return (
     <div css={cssCategoryTable}>
       <Form form={form} component={false}>
+        {contextHolder}
         <Table
           bordered
           dataSource={dataSource}
+          loading={isLoading}
           // @ts-ignore
           columns={columns}
           rowClassName="categoryId"
-          // pagination={{
-          //   onChange: cancel,
-          // }}
         />
       </Form>
     </div>
