@@ -82,9 +82,9 @@ public class DealBoardService
 
     // 도움주기 게시물 조회
     @Transactional(readOnly = true)
-    public Page<DealBoardDTO> getHelperDealBoard(int pagingIndex, int paingSize)
+    public Page<DealBoardDTO> getHelperDealBoard(int pagingIndex, int pagingSize)
     {
-        Pageable pageable = PageRequest.of(pagingIndex, paingSize);
+        Pageable pageable = PageRequest.of(pagingIndex, pagingSize);
         Page<DealBoard> dealBoardPage = dealBoardRepository.findByType(pageable, "helper");
         List<DealBoardDTO> dealBoardDTOList = dealBoardPage.stream()
                 .map(DealBoardDTO::toDealBoardDTO)

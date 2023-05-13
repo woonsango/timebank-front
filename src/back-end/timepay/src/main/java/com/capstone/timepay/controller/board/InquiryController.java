@@ -5,11 +5,12 @@ import com.capstone.timepay.service.board.dto.InquiryDTO;
 import com.capstone.timepay.service.board.service.InquiryService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import java.security.Principal;
 
 @RestController
 @RequiredArgsConstructor
@@ -20,15 +21,25 @@ public class InquiryController {
 
     @ApiOperation(value = "문의게시글 작성")
     @PostMapping("/write")
-    public ResponseEntity<Inquiry> createInquiry(@RequestBody InquiryDTO inquiryDTO) {
-        Inquiry inquiry = inquiryService.createInquiry(inquiryDTO);
-        return new ResponseEntity<>(inquiry, HttpStatus.CREATED);
+    public ResponseEntity createInquiry(@RequestBody InquiryDTO inquiryDTO,
+                                        Principal principal) {
+        return new ResponseEntity<>(inquiryService.createInquiry(inquiryDTO, principal.getName()), HttpStatus.CREATED);
     }
 
     @ApiOperation(value = "문의게시글 조회")
     @GetMapping("")
-    public ResponseEntity<List<Inquiry>> getInquiries() {
-        List<Inquiry> inquiries = inquiryService.getAllInquiries();
+    public ResponseEntity<Page<InquiryDTO>> getInquiries(@RequestParam(value = "pagingIndex", defaultValue = "0") int pagingIndex,
+                                                         @RequestParam(value = "pagingSize", defaultValue = "50") int pagingSize) {
+        Page<InquiryDTO> inquiries = inquiryService.getAllInquiries(pagingIndex, pagingSize);
+        return new ResponseEntity<>(inquiries, HttpStatus.OK);
+    }
+
+    @ApiOperation(value = "내가 쓴 문의게시글 조회")
+    @GetMapping("/my-page")
+    public ResponseEntity getMyInquiries(@RequestParam(value = "pagingIndex", defaultValue = "0") int pagingIndex,
+                                                           @RequestParam(value = "pagingSize", defaultValue = "50") int pagingSize,
+                                                           Principal principal) {
+        Page<InquiryDTO> inquiries = inquiryService.getMyInquiries(pagingIndex, pagingSize, principal);
         return new ResponseEntity<>(inquiries, HttpStatus.OK);
     }
 
