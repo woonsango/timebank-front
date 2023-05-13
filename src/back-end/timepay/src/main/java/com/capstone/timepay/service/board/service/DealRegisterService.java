@@ -23,6 +23,7 @@ public class DealRegisterService {
     // 해당 레지스터에서 유저 Email을 가져오는 메서드
     public String getEmail(Long boardId)
     {
+        System.out.println(boardId);
         DealRegister dealRegister = dealRegisterRepository.findById(boardId).orElse(null);
         return dealRegister.getUser().getEmail();
     }

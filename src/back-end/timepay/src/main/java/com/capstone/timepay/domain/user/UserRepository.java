@@ -15,18 +15,7 @@ public interface UserRepository extends JpaRepository<User,Long> {
     Optional<User> findByEmail(String eamil);
     Optional<User> findByName(String name);
     Optional<User> findByNickname(String nickName);
-
-    Page<User> findAllByName(Pageable pageable, String query);
-
-    Page<User> findAllByNickname(Pageable pageable, String query);
-
-    Page<User> findAllByEmail(Pageable pageable, String query);
-
     Page<User> findAll(Pageable pageable);
-
-
-    Optional<User> findByNicknameContains(String nickname);
-
     Optional<User> findByOrganization(Organization organization);
 
     Page<User> findAllByOrganizationIsNull(Pageable pageable);
@@ -38,4 +27,8 @@ public interface UserRepository extends JpaRepository<User,Long> {
     Page<User> findAllByEmailAndOrganizationIsNull(Pageable pageable, String value);
 
     Page<User> findAllByNicknameAndOrganizationIsNull(Pageable pageable, String value);
+
+    List<User> findAllByNicknameContains(String value);
+
+    List<User> findAllByNameContains(String value);
 }

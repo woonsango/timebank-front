@@ -31,12 +31,16 @@ public class UserSecurityConfig extends WebSecurityConfigurerAdapter {
             "/api/users/check/nickname/**",
             "/api/users/test/**",
             "/oauth/redirect/kakao",
-            // "/api/users/delete/**", // 테스트용
     };
 
     private static final String[] TIMEPAY_URI = {
             "/api/deal-boards/**",
             "/api/free-boards/**",
+    };
+
+    private static final String[] USER_URI = {
+            "/api/auto-matching",
+            "/api/auto-matching/**",
     };
 
     @Autowired
@@ -70,6 +74,7 @@ public class UserSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/users/**").hasAnyRole("USER", "ORGANIZATION")
                 .antMatchers("/api/organizations/**").hasRole("ORGANIZATION")
                 .antMatchers(TIMEPAY_URI).hasAnyRole("USER", "ADMIN","ORGANIZATION")
+                .antMatchers(USER_URI).hasRole("USER")
                 // .antMatchers(TIMEPAY_URI).access("hasRole('USER') or hasRole('ADMIN')")
                 // .anyRequest().permitAll() 그외 모든 요청 접근 가능, 위 configure을 오버라이딩하여 깔끔하게 해결함
                 .antMatchers(HttpMethod.POST, "/api/notifications/**").authenticated().and()
