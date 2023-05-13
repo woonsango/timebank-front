@@ -5,26 +5,17 @@ import com.capstone.timepay.controller.user.request.RequestDTO;
 import com.capstone.timepay.controller.user.request.UpdateRequestDTO;
 import com.capstone.timepay.controller.user.response.GetResponseDTO;
 import com.capstone.timepay.controller.user.response.UpdateResponseDTO;
-import com.capstone.timepay.domain.board.Board;
-import com.capstone.timepay.domain.board.BoardRepository;
-import com.capstone.timepay.domain.comment.Comment;
 import com.capstone.timepay.domain.comment.CommentRepository;
 import com.capstone.timepay.domain.dealBoard.DealBoard;
 import com.capstone.timepay.domain.dealBoard.DealBoardRepository;
 import com.capstone.timepay.domain.dealBoardComment.DealBoardComment;
 import com.capstone.timepay.domain.dealBoardComment.DealBoardCommentRepository;
 import com.capstone.timepay.domain.dealRegister.DealRegister;
-import com.capstone.timepay.domain.freeBoard.FreeBoard;
-import com.capstone.timepay.domain.freeBoard.FreeBoardRepository;
-import com.capstone.timepay.domain.freeBoardComment.FreeBoardComment;
-import com.capstone.timepay.domain.freeRegister.FreeRegister;
-import com.capstone.timepay.domain.freeRegister.FreeRegisterRepository;
 import com.capstone.timepay.domain.user.User;
 import com.capstone.timepay.domain.user.UserRepository;
 import com.capstone.timepay.domain.userProfile.UserProfile;
 import com.capstone.timepay.domain.userProfile.UserProfileRepository;
 import com.capstone.timepay.firebase.FirebaseService;
-import com.capstone.timepay.service.admin.CommentManageService;
 import com.google.firebase.auth.FirebaseAuthException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -39,9 +30,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 
@@ -54,7 +43,6 @@ public class UserInfoService {
     private final FirebaseService firebaseService;
     private final DealBoardRepository dealBoardRepository;
     private final DealBoardCommentRepository dealBoardCommentRepository;
-
     private final CommentRepository commentRepository;
 
     @Transactional
@@ -73,6 +61,7 @@ public class UserInfoService {
             userProfile.setIntroduction(userData.getIntroduction());
             userProfile.setCreatedAt(LocalDateTime.now());
             userProfile.setUpdatedAt(LocalDateTime.now());
+            userProfile.setTimepay(300);
             user.setUserProfile(userProfileRepository.save(userProfile));
 
         } else {
@@ -158,8 +147,7 @@ public class UserInfoService {
     }
 
     @Transactional(readOnly = true)
-    public GetResponseDTO getUserInfo(Long id, String boardType, String boardStatus,
-                                      String commentStatus, int pageIndex, int pageSize){
+    public GetResponseDTO getUserInfo(Long id, int pageIndex, int pageSize){
         User userData = userRepository.findById(id).orElseThrow(()->new IllegalArgumentException("존재하지 않는 유저입니다."));
         UserProfile userProfileData = userData.getUserProfile();
         Pageable pageable = PageRequest.of(pageIndex, pageSize);
@@ -169,12 +157,11 @@ public class UserInfoService {
         String nickName = userData.getNickname();
         String location = userData.getLocation();
 
-        List<DealRegister> dealRegisters = userData.getDealRegisters();
-        Page<DealBoard> dealBoards = new PageImpl<>(dealBoardRepository.findByDealRegistersIn(userData.getDealRegisters()), pageable, userData.getDealRegisters().size());
-        // Page<DealRegister> dealRegisters = new PageImpl<>(userData.getDealRegisters(), pageable, userData.getDealRegisters().size());
-        // Page<DealBoardComment> dealBoardComments  = new PageImpl<>(userData.getDealBoardComments(), pageable, userData.getDealBoardComments().size());
+        Page<DealBoard> dealBoards = new PageImpl<>(dealBoardRepository.findByDealRegistersIn(userData.getDealRegisters()),
+                pageable, userData.getDealRegisters().size());
+
         Page<CommentResponse> dealBoardComments = new PageImpl<>(
-                convertDCommentsToResponse(dealBoardCommentRepository.findAllByUser(userData)));
+                convertDCommentsToResponse(dealBoardCommentRepository.findAllByUser(userData)), pageable, pageSize);
 
         /* 유저 프로필 테이블에서 데이터 가져오기 */
         String imageUrl = userProfileData.getImageUrl();
@@ -182,10 +169,48 @@ public class UserInfoService {
         int timePay = userData.getUserProfile().getTimepay();
 
 
-
         /* 생성자를 사용하여 객체 생성 */
         GetResponseDTO getResponseDTO = new GetResponseDTO(id, imageUrl, nickName, location, introduction, timePay, dealBoards, dealBoardComments);
         return getResponseDTO;
+    }
+
+    // 게시글
+    @Transactional(readOnly = true)
+    public GetResponseDTO getUserInfoBoard(Long id, int pageIndex, int pageSize){
+        User userData = userRepository.findById(id).orElseThrow(()->new IllegalArgumentException("존재하지 않는 유저입니다."));
+        UserProfile userProfileData = userData.getUserProfile();
+        Pageable pageable = PageRequest.of(pageIndex, pageSize);
+
+
+        /* 유저 테이블에서 데이터 가져오기 */
+        String nickName = userData.getNickname();
+        String location = userData.getLocation();
+
+        Page<DealBoard> dealBoards = new PageImpl<>(dealBoardRepository.findByDealRegistersIn(userData.getDealRegisters()),
+                pageable, userData.getDealRegisters().size());
+
+        /* 유저 프로필 테이블에서 데이터 가져오기 */
+        String imageUrl = userProfileData.getImageUrl();
+        String introduction = userProfileData.getIntroduction();
+        int timePay = userData.getUserProfile().getTimepay();
+
+        /* 생성자를 사용하여 객체 생성 */
+        GetResponseDTO getResponseDTO = new GetResponseDTO(id, imageUrl, nickName, location, introduction, timePay, dealBoards);
+        return getResponseDTO;
+    }
+
+    // 댓글
+    @Transactional(readOnly = true)
+    public  Page<CommentResponse> getUserInfoComment(Long id, int pageIndex, int pageSize){
+        User userData = userRepository.findById(id).orElseThrow(()->new IllegalArgumentException("존재하지 않는 유저입니다."));
+        UserProfile userProfileData = userData.getUserProfile();
+        Pageable pageable = PageRequest.of(pageIndex, pageSize);
+
+        Page<CommentResponse> dealBoardComments = new PageImpl<>(
+                convertDCommentsToResponse(dealBoardCommentRepository.findAllByUser(userData)), pageable, pageSize);
+
+
+        return dealBoardComments;
     }
 
     @Transactional(readOnly = true)
@@ -198,12 +223,13 @@ public class UserInfoService {
         String nickName = userData.getNickname();
         String location = userData.getLocation();
 
-        Page<DealBoard> dealBoards = new PageImpl<>(dealBoardRepository.findByDealRegistersIn(userData.getDealRegisters()), pageable, userData.getDealRegisters().size());
-        // Page<DealRegister> dealRegisters = new PageImpl<>(userData.getDealRegisters(), pageable, userData.getDealRegisters().size());
-        //Page<DealBoardComment> dealBoardComments  = new PageImpl<>(dealBoardCommentRepository.findAllByUser(userData), pageable, userData.getDealBoardComments().size());
-        // List<CommentResponse> dComments = commentManageService.convertDCommentsToResponse(dealBoardCommentRepository.findAllByUser(userData));
+        List<DealRegister> dealRegisters = userData.getDealRegisters();
+        Page<DealBoard> dealBoards = new PageImpl<>(dealBoardRepository.findByDealRegistersIn(userData.getDealRegisters()),
+                pageable, userData.getDealRegisters().size());
+
         Page<CommentResponse> dealBoardComments = new PageImpl<>(
-                convertDCommentsToResponse(dealBoardCommentRepository.findAllByUser(userData)));
+                convertDCommentsToResponse(dealBoardCommentRepository.findAllByUser(userData)), pageable, pageSize);
+
 
         /* 유저 프로필 테이블에서 데이터 가져오기 */
         String imageUrl = userData.getUserProfile().getImageUrl();
@@ -276,4 +302,5 @@ public class UserInfoService {
                                 .build())
                 .collect(Collectors.toList());
     }
+
 }

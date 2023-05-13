@@ -31,7 +31,6 @@ public class GetResponseDTO {
     private int timePay; // 타임페이, userProfile에서 가져옴
 
     private Page<DealBoard> dealBoards;
-    // private Page<DealRegister> dealRegisters;
     private Page<CommentResponse> dealBoardComments;
 
     private Page<Board> boards;
@@ -49,5 +48,16 @@ public class GetResponseDTO {
         this.timePay = timePay;
         this.dealBoards = dealBoards;
         this.dealBoardComments = dealBoardComments;
+    }
+
+    public GetResponseDTO(Long id, String imageUrl, String nickName, String location, String intoroduction, int timePay,
+                          Page<DealBoard> dealBoards){
+        this.id = id;
+        this.imageUrl = imageUrl;
+        this.nickName = nickName;
+        this.location = location;
+        this.introduction = intoroduction;
+        this.timePay = timePay;
+        this.dealBoards = dealBoards;
     }
 }
