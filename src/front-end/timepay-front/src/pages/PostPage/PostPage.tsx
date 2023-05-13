@@ -1,6 +1,6 @@
-import { useCallback, useState, useRef, useEffect } from 'react';
+import { useCallback, useState, useRef, useEffect, useMemo } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { List, Modal } from 'antd';
+import { List, Modal, Form, Input } from 'antd';
 import { ReactComponent as BackArrow } from '../../assets/images/icons/header-back-arrow.svg';
 import { cssMainHeaderStyle } from '../../components/MainHeader/MainHeader.styles';
 import {
@@ -55,11 +55,9 @@ import { ReactComponent as LikeClick } from '../../assets/images/icons/like_clic
 
 import Item from '../../components/post/Item';
 import InputText from '../../components/post/InputText';
-
-import { Form, Input } from 'antd';
+import { ApplicantButton } from '../../components/post/ApplicantButton';
 
 import axios from 'axios';
-import { useGetFreeBoards } from '../../api/hooks/register';
 
 interface PostPageProps {
   post?: IPost;
@@ -73,12 +71,6 @@ interface TList {
 const Footer = Layout;
 
 const PostPage = ({ post }: PostPageProps) => {
-  const { data } = useGetFreeBoards();
-
-  useEffect(() => {
-    console.log(data);
-  });
-
   const [like, setLike] = useState(false);
 
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -124,6 +116,9 @@ const PostPage = ({ post }: PostPageProps) => {
   };
   const onCancel2 = () => {
     setIsListModalOpen(false);
+  };
+  const onApplicantClick = (applicant: any) => {
+    console.log(`Selected applicant: ${applicant}`);
   };
   const onItemClick = (item: any) => {
     setSelectedItem(item);
@@ -353,39 +348,11 @@ const PostPage = ({ post }: PostPageProps) => {
             )}
           </div>
         </div>
-
         <div css={cssLine4} />
-        <div css={cssCommentContainer}>
-          <p>댓글</p>
-          <div css={cssCollectButton}>
-            <Button css={cssCollectBtn} onClick={showListModal}>
-              지원자 선정하기
-            </Button>
-          </div>
-          <Modal
-            title="지원자 목록"
-            open={isListModalOpen}
-            onOk={onOk2}
-            onCancel={onCancel2}
-            okText="선정하기"
-            cancelText="취소"
-          >
-            <div css={cssApplicant}>
-              <List>
-                {applicantList.map((applicant, index) => (
-                  <List.Item key={index} onClick={() => onItemClick(index)}>
-                    {applicant}
-                  </List.Item>
-                ))}
-              </List>
-            </div>
-          </Modal>
-          <div>
-            {tasks.map((task) => (
-              <Item key={`${task.id}task`} id={task.id} text={task.text} />
-            ))}
-          </div>
-        </div>
+        <ApplicantButton
+          applicantList={applicantList}
+          onItemClick={onApplicantClick}
+        />
       </div>
       <Footer css={cssPostFooter}>
         <div css={cssLine2} />
