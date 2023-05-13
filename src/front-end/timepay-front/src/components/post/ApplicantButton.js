@@ -53,7 +53,7 @@ export const ApplicantButton = ({ applicantList, onItemClick }) => {
       </div>
       <Modal
         title="지원자 목록"
-        visible={isListModalOpen}
+        open={isListModalOpen}
         onOk={onOk2}
         onCancel={onCancel2}
         width={330}
