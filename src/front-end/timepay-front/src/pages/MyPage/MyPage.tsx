@@ -138,7 +138,7 @@ const MyPage = () => {
                 className="MyPageText"
                 onClick={() => handlePageMove(PATH.CATEGORY_SELECT)}
               >
-                카테코리 알림 설정
+                카테고리 알림 설정
               </button>
             </div>
           </div>
