@@ -15,3 +15,11 @@ export const cssBox = css`
   display: flex;
   flex-direction: row-reverse;
 `;
+
+export const cssAddModal = css`
+  .footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+  }
+`;

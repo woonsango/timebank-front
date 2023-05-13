@@ -60,19 +60,19 @@ const CategoryTable = () => {
       title: '사용여부',
       dataIndex: 'useYn',
       width: '10%',
-      render: (useYn: 'Y' | 'N', categoryId: number) =>
+      render: (useYn: 'Y' | 'N', record: ICategory) =>
         useYn === 'Y' ? (
           <Switch
             checkedChildren="Y"
             unCheckedChildren="N"
             defaultChecked
-            onChange={() => onChangeUseYn(categoryId, useYn)}
+            onChange={() => onChangeUseYn(record.categoryId, useYn)}
           />
         ) : (
           <Switch
             checkedChildren="Y"
             unCheckedChildren="N"
-            onChange={() => onChangeUseYn(categoryId, useYn)}
+            onChange={() => onChangeUseYn(record.categoryId, useYn)}
           />
         ),
     },

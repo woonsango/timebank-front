@@ -13,6 +13,7 @@ export const API_URL = {
   REPORTS__SEARCH: '/api/admins/reports/search',
   REPORTS__PENALTY: '/api/admins/reports/penalty',
   CATEGORIES: '/api/admins/categories/main',
+  CATEGORIES__CREATE: '/api/admins/categories/create',
 };
 
 /** 토큰을 넣지 않아도 되는 api url 모음 */

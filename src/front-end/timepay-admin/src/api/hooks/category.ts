@@ -1,4 +1,4 @@
-import { useQuery } from 'react-query';
+import { useMutation, useQuery } from 'react-query';
 import {
   IGetCategoryRequest,
   IGetCategoryResponse,
@@ -12,5 +12,16 @@ export const useGetCategories = (params?: IGetCategoryRequest) => {
     queryKey: ['useGetCategories', params],
     queryFn: () => apiRequest.get(API_URL.CATEGORIES, { params }),
     refetchOnWindowFocus: false,
+  });
+};
+
+export const usePostCategories = () => {
+  return useMutation<AxiosResponse<any>, AxiosError, any>({
+    mutationKey: 'usePostCategories',
+    mutationFn: (data) =>
+      apiRequest.post(
+        `${API_URL.CATEGORIES__CREATE}?categoryName=${data.categoryName}&boardType=${data.boardType}`,
+        {},
+      ),
   });
 };
