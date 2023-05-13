@@ -1,16 +1,15 @@
 import { cssMainFooterStyle, cssPlusPostBtnStyle } from './MainFooter.styles';
 import type { MenuProps } from 'antd';
 import { Button, Dropdown, Layout } from 'antd';
-import { HomeOutlined, SearchOutlined, UserOutlined } from '@ant-design/icons';
+import { UserOutlined } from '@ant-design/icons';
 import { ReactComponent as ModifyFontSize } from '../../assets/images/icons/modify-font-size.svg';
-import { ReactComponent as PlusPost } from '../../assets/images/icons/plus-post.svg';
-import { Link, NavLink, useNavigate } from 'react-router-dom';
-import { useCallback } from 'react';
+import { ReactComponent as WriteBoard } from '../../assets/images/icons/write-board.svg';
+import { ReactComponent as ActivityRecord } from '../../assets/images/icons/activity-record.svg';
+import { ReactComponent as Home } from '../../assets/images/icons/home.svg';
+import { Link, NavLink } from 'react-router-dom';
 import { PATH } from '../../utils/paths';
 
 const MainFooter = () => {
-  const navigate = useNavigate();
-
   const items: MenuProps['items'] = [
     {
       key: '/register/help-request',
@@ -26,49 +25,42 @@ const MainFooter = () => {
     },
   ];
 
-  const handleOnClickLinkBtn = useCallback(
-    (path: string) => {
-      navigate(path);
-    },
-    [navigate],
-  );
-
   return (
     <Layout.Footer css={cssMainFooterStyle}>
+      <NavLink
+        to={PATH.HOME}
+        className={({ isActive }) => (isActive ? 'active' : undefined)}
+      >
+        <Button>
+          <Home width={30} height={30} />
+        </Button>
+      </NavLink>
       <Button>
         <ModifyFontSize />
       </Button>
-      <Button onClick={() => handleOnClickLinkBtn(PATH.HOME)}>
-        <NavLink
-          to={PATH.HOME}
-          className={({ isActive }) => (isActive ? 'active' : undefined)}
-        >
-          <HomeOutlined />
-        </NavLink>
-      </Button>
-
       <Dropdown menu={{ items }} placement="top" arrow trigger={['click']}>
         <Button css={cssPlusPostBtnStyle}>
-          <PlusPost />
+          <WriteBoard width={30} height={30} />
         </Button>
       </Dropdown>
 
-      <Button onClick={() => handleOnClickLinkBtn(PATH.SEARCH)}>
-        <NavLink
-          to={PATH.SEARCH}
-          className={({ isActive }) => (isActive ? 'active' : undefined)}
-        >
-          <SearchOutlined />
-        </NavLink>
-      </Button>
-      <Button onClick={() => handleOnClickLinkBtn(PATH.MY)}>
-        <NavLink
-          to={PATH.MY}
-          className={({ isActive }) => (isActive ? 'active' : undefined)}
-        >
+      <NavLink
+        to={PATH.MY_ACTIVITY_RECORD}
+        className={({ isActive }) => (isActive ? 'active' : undefined)}
+      >
+        <Button>
+          <ActivityRecord width={30} height={30} />
+        </Button>
+      </NavLink>
+
+      <NavLink
+        to={PATH.MY}
+        className={({ isActive }) => (isActive ? 'active' : undefined)}
+      >
+        <Button>
           <UserOutlined />
-        </NavLink>
-      </Button>
+        </Button>
+      </NavLink>
     </Layout.Footer>
   );
 };
