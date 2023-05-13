@@ -12,9 +12,10 @@ import {
 } from './CategorySelectPage.styles';
 import { ReactComponent as BackArrow } from '../../assets/images/icons/header-back-arrow.svg';
 import { cssMainHeaderStyle } from '../../components/MainHeader/MainHeader.styles';
+import { PATH } from '../../utils/paths';
 
 const CategorySelectPage = () => {
-  const [isFirst, setIsFirst] = useState(false); // isFirst가 false면 첫 화면 아님
+  const [isFirst, setIsFirst] = useState(true); // isFirst가 false면 첫 화면 아님
 
   const { pathname } = useLocation();
   useEffect(() => {
@@ -32,7 +33,13 @@ const CategorySelectPage = () => {
   });
 
   const handleOnSelect = useCallback(() => {
+    setIsFirst(false);
     navigate(-1);
+  }, [navigate]);
+
+  const handleOnLater = useCallback(() => {
+    setIsFirst(false);
+    navigate(PATH.FINISHJOIN);
   }, [navigate]);
 
   return (
