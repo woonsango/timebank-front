@@ -5,11 +5,14 @@ import com.capstone.timepay.controller.user.request.RequestDTO;
 import com.capstone.timepay.controller.user.request.UpdateRequestDTO;
 import com.capstone.timepay.controller.user.response.GetResponseDTO;
 import com.capstone.timepay.controller.user.response.UpdateResponseDTO;
+import com.capstone.timepay.domain.board.BoardStatus;
 import com.capstone.timepay.domain.comment.CommentRepository;
 import com.capstone.timepay.domain.dealBoard.DealBoard;
 import com.capstone.timepay.domain.dealBoard.DealBoardRepository;
+import com.capstone.timepay.domain.dealBoard.DealBoardSearch;
 import com.capstone.timepay.domain.dealBoardComment.DealBoardComment;
 import com.capstone.timepay.domain.dealBoardComment.DealBoardCommentRepository;
+import com.capstone.timepay.domain.dealBoardComment.DealBoardCommentSearch;
 import com.capstone.timepay.domain.dealRegister.DealRegister;
 import com.capstone.timepay.domain.user.User;
 import com.capstone.timepay.domain.user.UserRepository;
@@ -22,6 +25,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -203,7 +207,7 @@ public class UserInfoService {
     }
 
     @Transactional(readOnly = true)
-    public GetResponseDTO getMyInfoBoard(Authentication auth, String query, int pageIndex, int pageSize){
+    public GetResponseDTO getMyInfoBoard(Authentication auth, int pageIndex, int pageSize, Specification<DealBoard> spec){
         String userEmail = auth.getName();
         User userData = userRepository.findByEmail(userEmail).orElseThrow(IllegalArgumentException::new);
         Pageable pageable = PageRequest.of(pageIndex, pageSize);
@@ -213,8 +217,8 @@ public class UserInfoService {
         String nickName = userData.getNickname();
         String location = userData.getLocation();
 
-        Page<DealBoard> dealBoards = new PageImpl<>(dealBoardRepository.findByDealRegistersIn(userData.getDealRegisters()),
-                pageable, userData.getDealRegisters().size());
+        Page<DealBoard> dealBoards = dealBoardRepository.findAll(Specification.where(spec)
+                .and(DealBoardSearch.withDealRegisters(userData.getDealRegisters())), pageable);
 
         /* 유저 프로필 테이블에서 데이터 가져오기 */
         String imageUrl = userData.getUserProfile().getImageUrl();
@@ -227,16 +231,21 @@ public class UserInfoService {
     }
 
     @Transactional(readOnly = true)
-    public Page<CommentResponse> getMyInfoComment(Authentication auth, String query, int pageIndex, int pageSize){
+    public Page<CommentResponse> getMyInfoComment(Authentication auth, int pageIndex, int pageSize, Specification<DealBoardComment> spec){
         String userEmail = auth.getName();
         User userData = userRepository.findByEmail(userEmail).orElseThrow(IllegalArgumentException::new);
         Pageable pageable = PageRequest.of(pageIndex, pageSize);
 
+//        Page<CommentResponse> dealBoardComments = new PageImpl<>(
+//                convertDCommentsToResponse(dealBoardCommentRepository.findAllByUser(userData)), pageable, pageSize);
+
         Page<CommentResponse> dealBoardComments = new PageImpl<>(
-                convertDCommentsToResponse(dealBoardCommentRepository.findAllByUser(userData)), pageable, pageSize);
+                convertDCommentsToResponse(
+                dealBoardCommentRepository.findAll(Specification
+                .where(DealBoardCommentSearch.withUser(userData))
+                .and(spec))), pageable, pageSize);
 
-
-        return dealBoardComments;
+        return (dealBoardComments);
     }
 
     @Transactional
