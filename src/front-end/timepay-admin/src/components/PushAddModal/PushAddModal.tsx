@@ -3,6 +3,7 @@ import { Modal, Form, Input, Button, message } from 'antd';
 import { useCreateNotifications } from '../../api/hooks/notification';
 import { cssPushAddModalStyle } from './PushAddModal.style';
 import { useQueryClient } from 'react-query';
+import { IPostNotificationRequest } from '../../api/interfaces/INotification';
 
 export interface PushAddModalProps {
   isOpen: boolean;
@@ -24,7 +25,21 @@ const PushAddModal = ({ isOpen, onCancel }: PushAddModalProps) => {
 
   const onFinish = useCallback(
     (values: any) => {
-      createNotificationMutation.mutateAsync(values, {
+      let formData = new FormData();
+
+      const newNotification: IPostNotificationRequest = {
+        ...values,
+        isNotice: true,
+      };
+
+      formData.append(
+        'notification',
+        new Blob([JSON.stringify(newNotification)], {
+          type: 'application/json',
+        }),
+      );
+
+      createNotificationMutation.mutateAsync(formData, {
         onSuccess: (result) => {
           messageApi.open({
             type: 'success',
