@@ -37,6 +37,21 @@ public class DealBoardSearch {
         };
     }
 
+    public static Specification<DealBoard> withNickname(String nickname) {
+        return (root, query, builder) -> {
+            if (StringUtils.isEmpty(nickname)) {
+                return null;
+            }
+            // DealBoard와 DealRegister를 참조하는 join
+            Join<DealBoard, DealRegister> dealRegisterJoin = root.join("dealRegisters", JoinType.INNER);
+
+            // DealRegister와 User를 참조하는 join
+            Join<DealRegister, User> userJoin = dealRegisterJoin.join("user", JoinType.INNER);
+
+            return builder.equal(userJoin.get("nickname"), nickname);
+        };
+    }
+
     public static Specification<DealBoard> withType(String type) {
         return (root, query, builder) -> {
             if (StringUtils.isEmpty(type)) {
