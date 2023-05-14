@@ -10,7 +10,7 @@ export const getTokenFromCookie = () => {
 export const setTokenToCookie = (value: string, exp: number) => {
   if (exp > 0) {
     const date = new Date();
-    date.setTime(date.getTime() + exp * 10 * 60 * 60 * 1000);
+    date.setTime(date.getTime() + exp * 60 * 60 * 1000);
     document.cookie = `${TOKEN_NAME}=${value};expires=${date.toUTCString()};path=/`;
   } else document.cookie = `${TOKEN_NAME}=${value};path=/`;
 };
