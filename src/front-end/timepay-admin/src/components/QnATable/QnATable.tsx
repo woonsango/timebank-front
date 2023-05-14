@@ -23,13 +23,13 @@ const QnATable = () => {
   const dummyDataSource: IQna[] = [];
   for (let i = 0; i < 100; i++) {
     dummyDataSource.push({
-      qnaId: i,
+      inquiryId: i,
       title: `문의 제목 ${i + 1}`,
       createdAt: `2023-12-34 12:34`,
       status: i % 2 ? '답변대기' : '답변완료',
       category: `카테고리 ${i}`,
       content: `문의 내용 ${i + 1}`,
-      user: `${i}작성자 id`,
+      writer: `${i}작성자 이름`,
     });
   }
 
@@ -38,26 +38,16 @@ const QnATable = () => {
     return [
       {
         title: '문의 번호',
-        key: 'qnaId',
-        dataIndex: 'qnaId',
-        width: 90,
-        sorter: (a: IQna, b: IQna) => a.qnaId - b.qnaId,
-      },
-
-      {
-        title: '작성일시',
-        key: 'createdAt',
-        dataIndex: 'createdAt',
-        width: 140,
-        align: 'center',
-        sorter: (a: IQna, b: IQna) =>
-          dayjs(a.createdAt).isAfter(dayjs(b.createdAt)),
+        key: 'inquiryId',
+        dataIndex: 'inquiryId',
+        width: 10,
+        sorter: (a: IQna, b: IQna) => a.inquiryId - b.inquiryId,
       },
       {
         title: '문의 상태',
         key: 'status',
         dataIndex: 'status',
-        width: 100,
+        width: 30,
         align: 'center',
         filters: [
           { text: '답변대기', value: '답변대기' },
@@ -70,9 +60,19 @@ const QnATable = () => {
         title: '카테고리',
         key: 'category',
         dataIndex: 'category',
-        width: 100,
+        width: 30,
         align: 'center',
       },
+      {
+        title: '작성일시',
+        key: 'createdAt',
+        dataIndex: 'createdAt',
+        width: 30,
+        align: 'center',
+        sorter: (a: IQna, b: IQna) =>
+          dayjs(a.createdAt).isAfter(dayjs(b.createdAt)),
+      },
+
       {
         title: '문의 제목',
         key: 'title',
@@ -86,21 +86,9 @@ const QnATable = () => {
         ),
       },
       {
-        title: '문의 내용',
-        key: 'content',
-        dataIndex: 'content',
-        width: 150,
-        align: 'center',
-        render: (_: string, record: IQna) => (
-          <Button type="link" onClick={() => handleOnShowDetailQnA(record)}>
-            더보기
-          </Button>
-        ),
-      },
-      {
-        title: '문의 작성자 회원번호',
-        key: 'user',
-        dataIndex: 'user',
+        title: '문의 작성자 이름',
+        key: 'writer',
+        dataIndex: 'writer',
         width: 100,
         align: 'center',
       },
@@ -112,7 +100,7 @@ const QnATable = () => {
       <Table
         css={cssQnATableStyle}
         columns={columns}
-        scroll={{ x: 1500 }}
+        scroll={{ x: 1000 }}
         dataSource={dummyDataSource}
         rowKey="postId"
       />
