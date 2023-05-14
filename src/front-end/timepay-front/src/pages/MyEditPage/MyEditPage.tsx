@@ -31,7 +31,7 @@ const MyEditPage: React.FC = () => {
   const [profileImage, setProfileImage]: any = useState();
   const [finalProfileImage, setfinalProfileImage]: any = useState();
 
-  const [nickName, setNickName] = useState<string>('이진');
+  const [nickName, setNickName] = useState<string>('');
   const [town, setTown] = useState<string>('');
   const [introduction, setIntroduction] = useState<string>('');
 
