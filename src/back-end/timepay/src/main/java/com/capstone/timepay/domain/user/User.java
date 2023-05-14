@@ -51,6 +51,7 @@ public class User extends BaseTimeEntity {
     private String nickname;
     private String email;
     private String encodedPassword;
+    private String bookmark;
     private boolean isBanned;
     private boolean isSignUp;
     private int totalVolunteerTime;

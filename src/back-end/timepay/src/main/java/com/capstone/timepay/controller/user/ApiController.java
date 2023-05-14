@@ -1,6 +1,7 @@
 package com.capstone.timepay.controller.user;
 
 import com.capstone.timepay.controller.admin.response.category.CategoryResponse;
+import com.capstone.timepay.controller.user.request.BookmarkDTO;
 import com.capstone.timepay.controller.user.request.RequestDTO;
 import com.capstone.timepay.controller.user.request.UpdateRequestDTO;
 import com.capstone.timepay.controller.user.response.GetResponseDTO;
@@ -8,6 +9,7 @@ import com.capstone.timepay.controller.user.response.UpdateResponseDTO;
 import com.capstone.timepay.service.admin.CategoryManageService;
 import com.capstone.timepay.service.user.service.UserInfoService;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.http.ResponseEntity;
@@ -41,6 +43,15 @@ public class ApiController {
         userInfoService.createUserInfo(requestData);
 
         return ResponseEntity.ok(requestData);
+    }
+
+    @PostMapping("/create/bookmark")
+    @ApiOperation(value="유저 북마크(관심 카테고리) 설정")
+    public ResponseEntity<?> postBookmark(@RequestBody BookmarkDTO bookmarkDTO) {
+
+        userInfoService.saveBookmark(bookmarkDTO);
+
+        return ResponseEntity.ok(bookmarkDTO.getBookmark() + " 정상적으로 처리되었습니다.");
     }
 
     @PutMapping("/update")

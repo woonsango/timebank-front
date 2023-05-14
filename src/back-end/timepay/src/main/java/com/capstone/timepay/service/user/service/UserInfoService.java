@@ -1,6 +1,7 @@
 package com.capstone.timepay.service.user.service;
 
 import com.capstone.timepay.controller.admin.response.comment.CommentResponse;
+import com.capstone.timepay.controller.user.request.BookmarkDTO;
 import com.capstone.timepay.controller.user.request.RequestDTO;
 import com.capstone.timepay.controller.user.request.UpdateRequestDTO;
 import com.capstone.timepay.controller.user.response.GetResponseDTO;
@@ -59,8 +60,6 @@ public class UserInfoService {
 
 
         /* uid값 비교하여 중복된 데이터는 데이터베이스에 저장X */
-
-
         UserProfile userProfile = user.getUserProfile();
 
         if(userData.getImageUrl() == null){
@@ -321,6 +320,13 @@ public class UserInfoService {
                                 .updatedTime(dealBoardComment.getUpdatedAt())
                                 .build())
                 .collect(Collectors.toList());
+    }
+
+    public void saveBookmark(BookmarkDTO bookmarkDTO){
+        User user = userRepository.findById(bookmarkDTO.getId()).orElseThrow(() ->
+                new IllegalArgumentException("존재하지 않는 유저입니다."));
+        user.setBookmark(bookmarkDTO.getBookmark());
+        userRepository.save(user);
     }
 
 }
