@@ -2,6 +2,8 @@ package com.capstone.timepay.service.user.service;
 import com.capstone.timepay.domain.user.User;
 import com.capstone.timepay.domain.user.UserRepository;
 
+import com.capstone.timepay.domain.userProfile.UserProfile;
+import com.capstone.timepay.domain.userProfile.UserProfileRepository;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonElement;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +26,7 @@ import java.util.Collections;
 public class KakaoLoginService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final UserProfileRepository userProfileRepository;
 
     public  String getKaKaoAccessToken(String code){
         String access_Token="";
@@ -42,9 +45,9 @@ public class KakaoLoginService {
             StringBuilder sb = new StringBuilder();
             sb.append("grant_type=authorization_code");
             sb.append("&client_id=79587b639a3a9ca1c9433fa63bc55863");
-            sb.append("&redirect_uri=http://localhost:8080/oauth/redirect/kakao"); // 서버 로컬 테스트용
+            //sb.append("&redirect_uri=http://localhost:8080/oauth/redirect/kakao"); // 서버 로컬 테스트용
             //sb.append("&redirect_uri=http://localhost:3000/oauth/redirect/kakao"); // 프론트 로컬 테스트용
-//            sb.append("&redirect_uri=http://13.125.249.51/oauth/redirect/kakao"); // 배포할 때 이 코드 사용
+            sb.append("&redirect_uri=http://13.125.249.51/oauth/redirect/kakao"); // 배포할 때 이 코드 사용
 
 
             sb.append("&code=" + code);
@@ -154,7 +157,12 @@ public class KakaoLoginService {
 
                     String encodedPassword = passwordEncoder.encode(password);
 
+
+
                     User userTmp = createKakaoUsers(email, sex, encodedPassword);
+
+
+
                     System.out.println("email : " + userTmp.getEmail());
                     System.out.println("gender : " + userTmp.getSex());
                     System.out.println("회원가입 ~!!!");
@@ -196,9 +204,10 @@ public class KakaoLoginService {
     public User createKakaoUsers(String email, String sex, String encodePassword){
         return userRepository.save(User.builder()
                 .email(email).sex(sex)
-                //.isSignUp(true) // 우선 회원가입 승인 확인 X, 무조건 회원가입하도록
                 .encodedPassword(encodePassword)
                 .roles(Collections.singletonList("ROLE_USER"))
+                .userProfile(userProfileRepository.save(new UserProfile()))
+                .bookmark("")
                 .build());
     }
 

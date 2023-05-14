@@ -43,7 +43,7 @@ public class InquiryManageController {
                                              @RequestParam(defaultValue = "0") int pageIndex,
                                              @RequestParam(defaultValue = "50") int pageSize){
 
-        Page<InquiryResponse> responses = inquiryManagerService.searchInquiriesByQuery(state, category, writer, title, pageIndex, pageSize);
+        Page<InquiryResponse> responses = inquiryManagerService.searchInquiriesByQuery(state, category, writer, title);
         return ResponseEntity.ok(responses);
     }
 

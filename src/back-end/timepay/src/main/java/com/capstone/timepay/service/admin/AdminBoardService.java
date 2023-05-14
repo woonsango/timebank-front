@@ -1,9 +1,11 @@
 package com.capstone.timepay.service.admin;
 
+import com.capstone.timepay.controller.admin.response.board.DealBoardResponse;
 import com.capstone.timepay.domain.board.Board;
 import com.capstone.timepay.domain.board.BoardRepository;
 import com.capstone.timepay.domain.board.BoardStatus;
 import com.capstone.timepay.domain.dealBoard.DealBoard;
+import com.capstone.timepay.domain.dealBoard.DealBoardRepository;
 import com.capstone.timepay.domain.freeBoard.FreeBoard;
 import com.capstone.timepay.service.admin.dto.AdminBoardDTO;
 import com.capstone.timepay.service.admin.dto.AdminDealBoardDTO;
@@ -13,6 +15,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,6 +27,7 @@ import java.util.List;
 public class AdminBoardService {
 
     private final BoardRepository boardRepository;
+    private final DealBoardRepository dealBoardRepository;
 
     @Transactional
     public Page<AdminBoardDTO> getAllBoards(int pageIndex, int pageSize) {
@@ -84,5 +88,10 @@ public class AdminBoardService {
             return false;
         }
         return true;
+    }
+
+    public Page<DealBoardResponse> search(Specification<DealBoard> spec, Pageable pageable) {
+        Page<DealBoard> dealBoards = dealBoardRepository.findAll(spec, pageable);
+        return dealBoards.map(DealBoardResponse::new);
     }
 }

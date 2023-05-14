@@ -1,6 +1,7 @@
 package com.capstone.timepay.service.user.service;
 
 import com.capstone.timepay.controller.admin.response.comment.CommentResponse;
+import com.capstone.timepay.controller.user.request.BookmarkDTO;
 import com.capstone.timepay.controller.user.request.RequestDTO;
 import com.capstone.timepay.controller.user.request.UpdateRequestDTO;
 import com.capstone.timepay.controller.user.response.GetResponseDTO;
@@ -34,6 +35,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.security.Principal;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -59,24 +61,19 @@ public class UserInfoService {
 
 
         /* uid값 비교하여 중복된 데이터는 데이터베이스에 저장X */
-        if(user.getUserProfile() == null)
-        {
+        UserProfile userProfile = user.getUserProfile();
 
-            UserProfile userProfile = new UserProfile();
-
-            if(userData.getImageUrl() == null){
-                userData.setImageUrl("");
-            }
-            userProfile.setImageUrl(userData.getImageUrl());
-            userProfile.setIntroduction(userData.getIntroduction());
-            userProfile.setCreatedAt(LocalDateTime.now());
-            userProfile.setUpdatedAt(LocalDateTime.now());
-            userProfile.setTimepay(300);
-            user.setUserProfile(userProfileRepository.save(userProfile));
-
-        } else {
-            System.out.println("\n이미 저장된 데이터래요~\n");
+        if(userData.getImageUrl() == null){
+            userData.setImageUrl("");
         }
+        userProfile.setImageUrl(userData.getImageUrl());
+        userProfile.setIntroduction(userData.getIntroduction());
+        userProfile.setCreatedAt(LocalDateTime.now());
+        userProfile.setUpdatedAt(LocalDateTime.now());
+        userProfile.setTimepay(300);
+        user.setUserProfile(userProfileRepository.save(userProfile));
+
+
 
         /* String으로 입력받은 생년월일을 LocalDateTime으로 형변환 */
         /* 만약 SignUpUser 테이블에 존재하지 않으면 에러 발생 */
@@ -324,6 +321,20 @@ public class UserInfoService {
                                 .updatedTime(dealBoardComment.getUpdatedAt())
                                 .build())
                 .collect(Collectors.toList());
+    }
+
+    public void saveBookmark(BookmarkDTO bookmarkDTO){
+        User user = userRepository.findById(bookmarkDTO.getId()).orElseThrow(() ->
+                new IllegalArgumentException("존재하지 않는 유저입니다."));
+        user.setBookmark(bookmarkDTO.getBookmark());
+        userRepository.save(user);
+    }
+
+    public void updateBookmark(BookmarkDTO bookmarkDTO, Principal principal){
+        User user = userRepository.findByEmail(principal.getName()).orElseThrow(() ->
+                new IllegalArgumentException("존재하지 않는 유저입니다."));
+        user.setBookmark(bookmarkDTO.getBookmark());
+        userRepository.save(user);
     }
 
 }

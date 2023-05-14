@@ -51,6 +51,7 @@ public class User extends BaseTimeEntity {
     private String nickname;
     private String email;
     private String encodedPassword;
+    private String bookmark;
     private boolean isBanned;
     private boolean isSignUp;
     private int totalVolunteerTime;
@@ -68,53 +69,64 @@ public class User extends BaseTimeEntity {
                 .collect(Collectors.toList());
     }
     @JsonIgnore
-    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "user", orphanRemoval = true)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private List<Inquiry> inquiries = new ArrayList<>();
 
     @JsonIgnore
-    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "user", orphanRemoval = true)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private List<DealBoardComment> dealBoardComments = new ArrayList<>();
 
     @JsonIgnore
-    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "user", orphanRemoval = true)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private List<DealRegister> dealRegisters = new ArrayList<>();
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "user", orphanRemoval = true)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private List<Certification> certifications = new ArrayList<>();
 
     @JsonIgnore
-    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "user", orphanRemoval = true)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private List<DealBoardReport> dealBoardReports = new ArrayList<>();
     @JsonIgnore
-    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "user", orphanRemoval = true)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private List<FreeBoardReport> freeBoardReports = new ArrayList<>();
     @JsonIgnore
-    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "user", orphanRemoval = true)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private List<DealCommentReport> dealCommentReports = new ArrayList<>();
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "user", orphanRemoval = true)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private List<FreeCommentReport> freeCommentReports = new ArrayList<>();
     @JsonIgnore
-    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "user", orphanRemoval = true)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private List<FreeBoardComment> freeBoardComments = new ArrayList<>();
 
     @JsonIgnore
-    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "user", orphanRemoval = true)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private List<FreeRegister> freeRegisters = new ArrayList<>();
 
     @OneToOne
     @JoinColumn(name = "profile_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private UserProfile userProfile;
 
     @OneToOne
     @JoinColumn(name = "token_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private UserToken userToken;
 
     @OneToOne
     @JoinColumn(name = "organization_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Organization organization;
-
-
 
 
     public void updateName(String name) {

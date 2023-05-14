@@ -1,6 +1,7 @@
 package com.capstone.timepay.controller.user;
 
 import com.capstone.timepay.controller.admin.response.category.CategoryResponse;
+import com.capstone.timepay.controller.user.request.BookmarkDTO;
 import com.capstone.timepay.controller.user.request.RequestDTO;
 import com.capstone.timepay.controller.user.request.UpdateRequestDTO;
 import com.capstone.timepay.controller.user.response.GetResponseDTO;
@@ -8,8 +9,10 @@ import com.capstone.timepay.controller.user.response.UpdateResponseDTO;
 import com.capstone.timepay.service.admin.CategoryManageService;
 import com.capstone.timepay.service.user.service.UserInfoService;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -20,6 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.security.Principal;
 import java.util.List;
 
 
@@ -43,12 +47,13 @@ public class ApiController {
         return ResponseEntity.ok(requestData);
     }
 
-    @PutMapping("/update")
-    @ApiOperation(value="유저 데이터 수정",notes = "Email을 이용하여 유저를 매핑하고 데이터를 수정합니다.")
-    public ResponseEntity<?> putUserInfo(@ModelAttribute UpdateRequestDTO updateRequestData, @RequestPart(required = false) MultipartFile image) throws Exception{
+    @PostMapping("/create/bookmark")
+    @ApiOperation(value="회원가입할 때, 유저 북마크(관심 카테고리) 설정")
+    public ResponseEntity<?> postBookmark(@RequestBody BookmarkDTO bookmarkDTO) {
 
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        return ResponseEntity.ok(userInfoService.updateUserInfo(auth, updateRequestData, image));
+        userInfoService.saveBookmark(bookmarkDTO);
+
+        return ResponseEntity.ok(bookmarkDTO.getBookmark() + " 정상적으로 처리되었습니다." + HttpStatus.OK);
     }
 
     @DeleteMapping("/delete")
