@@ -45,7 +45,7 @@ public class ApiController {
         return ResponseEntity.ok(requestData);
     }
 
-    @PostMapping("/create/bookmark")
+    @PostMapping("/bookmark")
     @ApiOperation(value="유저 북마크(관심 카테고리) 설정")
     public ResponseEntity<?> postBookmark(@RequestBody BookmarkDTO bookmarkDTO) {
 
