@@ -1,12 +1,12 @@
 package com.capstone.timepay.controller.admin;
 
+import com.capstone.timepay.controller.admin.response.board.DealBoardResponse;
 import com.capstone.timepay.domain.dealBoard.DealBoard;
 import com.capstone.timepay.domain.dealBoard.DealBoardSearch;
 import com.capstone.timepay.service.admin.AdminBoardService;
 import com.capstone.timepay.service.admin.dto.AdminBoardDTO;
 import com.capstone.timepay.service.admin.dto.AdminBoardHiddenDto;
 import com.capstone.timepay.service.admin.dto.AdminBoardStatusDto;
-import com.capstone.timepay.service.board.service.DealBoardService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -25,7 +25,6 @@ import java.time.LocalDateTime;
 public class AdminBoardController {
 
     private final AdminBoardService boardService;
-    private final DealBoardService dealBoardService;
 
     @GetMapping("")
     public ResponseEntity<Page<AdminBoardDTO>> getAllBoards(
@@ -53,9 +52,10 @@ public class AdminBoardController {
     }
 
     @GetMapping("/search")
-    public ResponseEntity<Page<DealBoard>> searchDealBoards(
+    public ResponseEntity<Page<DealBoardResponse>> searchDealBoards(
             @RequestParam(value = "title", required = false) String title,
             @RequestParam(value = "author", required = false) String name,
+            @RequestParam(value = "nickname", required = false) String nickname,
             @RequestParam(value = "type", required = false) String type,
             @RequestParam(value = "category", required = false) String category,
             @RequestParam(value = "sortType", required = false) String sortType,
@@ -67,6 +67,7 @@ public class AdminBoardController {
     ) {
         Specification<DealBoard> spec = DealBoardSearch.withTitle(title)
                 .and(DealBoardSearch.withName(name))
+                .and(DealBoardSearch.withNickname(nickname))
                 .and(DealBoardSearch.withType(type))
                 .and(DealBoardSearch.withCategory(category))
                 .and(DealBoardSearch.withStartTime(startTime))
@@ -74,7 +75,7 @@ public class AdminBoardController {
                 .and(DealBoardSearch.withVolunteer(volunteer));
 
         Pageable pageable = PageRequest.of(curPage - 1, perPage, getSort(sortType));
-        Page<DealBoard> dealBoards = dealBoardService.search(spec, pageable);
+        Page<DealBoardResponse> dealBoards = boardService.search(spec, pageable);
 
         return ResponseEntity.ok(dealBoards);
     }
