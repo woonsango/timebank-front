@@ -1,8 +1,12 @@
 package com.capstone.timepay.domain.dealBoard;
 
+import com.capstone.timepay.domain.dealRegister.DealRegister;
+import com.capstone.timepay.domain.user.User;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.util.StringUtils;
 
+import javax.persistence.criteria.Join;
+import javax.persistence.criteria.JoinType;
 import java.time.LocalDateTime;
 
 public class DealBoardSearch {
@@ -13,6 +17,21 @@ public class DealBoardSearch {
                 return null;
             }
             return builder.equal(root.get("title"), title);
+        };
+    }
+
+    public static Specification<DealBoard> withName(String name) {
+        return (root, query, builder) -> {
+            if (StringUtils.isEmpty(name)) {
+                return null;
+            }
+            // DealBoard와 DealRegister를 참조하는 join
+            Join<DealBoard, DealRegister> dealRegisterJoin = root.join("dealRegisters", JoinType.INNER);
+
+            // DealRegister와 User를 참조하는 join
+            Join<DealRegister, User> userJoin = dealRegisterJoin.join("user", JoinType.INNER);
+
+            return builder.equal(userJoin.get("name"), name);
         };
     }
 
