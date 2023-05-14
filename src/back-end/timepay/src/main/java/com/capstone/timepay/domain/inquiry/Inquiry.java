@@ -34,4 +34,8 @@ public class Inquiry extends BaseTimeEntity {
 
     @OneToMany(mappedBy = "inquiry", orphanRemoval = true)
     private List<InquiryAnswer> inquiryAnswers = new ArrayList<>();
+
+    public void updateStateComplete(){
+        this.state = "답변 완료";
+    }
 }

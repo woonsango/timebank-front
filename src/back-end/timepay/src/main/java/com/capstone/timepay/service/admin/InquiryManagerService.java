@@ -21,6 +21,7 @@ import org.springframework.util.ObjectUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -67,8 +68,9 @@ public class InquiryManagerService {
 
         Inquiry inquiry = inquiryRepository.findById(answer.getInquiryId()).orElseThrow(()->new IllegalArgumentException("존재하지 않는 문의입니다."));
         InquiryAnswer inquiryAnswer = InquiryAnswer.getNewInstance(answer, inquiry, admin);
-
+        inquiry.updateStateComplete();
         inquiryAnswerRepository.save(inquiryAnswer);
+        inquiryRepository.save(inquiry);
     }
 
     public InquiryDetailResponse showInquiryDetail(Long inquiryId) {
@@ -99,56 +101,65 @@ public class InquiryManagerService {
 
     }
 
-    public Page<InquiryResponse> searchInquiriesByQuery(String state, String category, String writer, String title, int pageIndex, int pageSize) {
-        Pageable pageable = PageRequest.of(pageIndex, pageSize);
+    public Page<InquiryResponse> searchInquiriesByQuery(String state, String category, String writer, String title) {
 
+        List<InquiryResponse> responses = new ArrayList<>();
+
+        if(ObjectUtils.isEmpty(writer) && ObjectUtils.isEmpty(title)){
+            List<Inquiry> inquiries = inquiryRepository.findAllByStateAndCategory(state,category);
+
+            if(ObjectUtils.isEmpty(inquiries)) return new PageImpl<>(new ArrayList<>());
+
+            responses = convertResponseLists(inquiries);
+        }
         if(!ObjectUtils.isEmpty(writer) && ObjectUtils.isEmpty(title)){
-            User user = userRepository.findByName(writer).orElseThrow(()->new IllegalArgumentException("존재하지 않는 댓글입니다."));
-            Page<Inquiry> pages = inquiryRepository.findAllByUser(user, pageable);
+            List<User> users = userRepository.findAllByNameContains(writer);
 
-            List<InquiryResponse> responses = convertResponsePages(pages)
-                    .stream()
-                    .filter(inquiryResponse -> inquiryResponse.getState().equals(state))
-                    .filter(inquiryResponse -> inquiryResponse.getCategory().equals(category))
-                    .collect(Collectors.toList());
+            if(ObjectUtils.isEmpty(users)) return new PageImpl<>(new ArrayList<>());
 
-            return new PageImpl<>(responses);
+            List<Inquiry> results = new ArrayList<>();
+            for(User user : users){
+                List<Inquiry> inquiries = inquiryRepository.findAllByStateAndCategoryAndUser(state,category,user);
+                results.addAll(inquiries);
+            }
+           responses = convertResponseLists(results);
         }
         else if(ObjectUtils.isEmpty(writer) && !ObjectUtils.isEmpty(title)){
-            Page<Inquiry> pages = inquiryRepository.findByTitleContains(title, pageable);
+            List<Inquiry> inquiries = inquiryRepository.findAllByStateAndCategoryAndTitleContains(state,category,title);
 
-            List<InquiryResponse> responses = convertResponsePages(pages)
-                    .stream()
-                    .filter(inquiryResponse -> inquiryResponse.getState().equals(state))
-                    .filter(inquiryResponse -> inquiryResponse.getCategory().equals(category))
-                    .collect(Collectors.toList());
+            if(ObjectUtils.isEmpty(inquiries)) return new PageImpl<>(new ArrayList<>());
 
-            return new PageImpl<>(responses);
+            responses = convertResponseLists(inquiries);
         }
         else if(!ObjectUtils.isEmpty(writer) && !ObjectUtils.isEmpty(title)){
+            List<User> users = userRepository.findAllByNameContains(writer);
 
-            Page<Inquiry> pages = inquiryRepository.findByTitleContains(title, pageable);
+            if(ObjectUtils.isEmpty(users)) return new PageImpl<>(new ArrayList<>());
 
-            List<InquiryResponse> responses = convertResponsePages(pages)
-                    .stream()
-                    .filter(inquiryResponse -> inquiryResponse.getState().equals(state))
-                    .filter(inquiryResponse -> inquiryResponse.getCategory().equals(category))
-                    .filter(inquiryResponse -> inquiryResponse.getWriter().equals(writer))
-                    .collect(Collectors.toList());
+            List<Inquiry> results = new ArrayList<>();
+            for(User user : users){
+                List<Inquiry> inquiries = inquiryRepository.findAllByStateAndCategoryAndUserAndTitleContains(state,category,user,title);
+                results.addAll(inquiries);
+            }
 
-            return new PageImpl<>(responses);
+            responses = convertResponseLists(results);
         }
-        else{
-            Page<Inquiry> pages = inquiryRepository.findAll(pageable);
 
-            List<InquiryResponse> responses = convertResponsePages(pages)
-                    .stream()
-                    .filter(inquiryResponse -> inquiryResponse.getState().equals(state))
-                    .filter(inquiryResponse -> inquiryResponse.getCategory().equals(category))
+        return new PageImpl<>(responses);
+    }
+
+    private List<InquiryResponse> convertResponseLists(List<Inquiry> results) {
+        return results.stream()
+                    .map(inquiry -> InquiryResponse.builder()
+                                        .inquiryId(inquiry.getInquiryId())
+                                        .state(inquiry.getState())
+                                        .category(inquiry.getCategory())
+                                        .createdAt(inquiry.getCreatedAt())
+                                        .writer(inquiry.getUser().getName())
+                                        .title(inquiry.getTitle())
+                                        .content(inquiry.getContent())
+                                        .build())
                     .collect(Collectors.toList());
-
-            return new PageImpl<>(responses);
-        }
 
     }
 }
