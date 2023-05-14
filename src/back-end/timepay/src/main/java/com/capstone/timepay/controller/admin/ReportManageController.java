@@ -41,8 +41,6 @@ public class ReportManageController {
                                     @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")LocalDateTime startDate,
                                     @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")LocalDateTime endDate){
 
-        System.out.println("@@@@@@@@@@ : " + startDate);
-        System.out.println("@@@@@@@@@@ : " + endDate);
         Page<ReportResponse> responses = reportManageService.showReportsBySearch(query,value,startDate,endDate);
 
         return ResponseEntity.ok(responses);

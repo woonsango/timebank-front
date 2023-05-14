@@ -9,6 +9,7 @@ import com.capstone.timepay.domain.dealRegister.DealRegister;
 import com.capstone.timepay.domain.user.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;

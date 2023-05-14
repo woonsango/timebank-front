@@ -67,6 +67,7 @@ public class CommentManageService {
                 }
                 else{
                     // 2. 거래 게시판 댓글
+
                     return CommentResponse.builder()
                             .commentId(comment.getCommentId())
                             .originBoardId(comment.getDealBoardComment().getDealBoard().getD_boardId())
@@ -78,9 +79,9 @@ public class CommentManageService {
                             .writerName(comment.getDealBoardComment().getUser().getName())
                             .writtenTime(comment.getDealBoardComment().getCreatedAt())
                             .originWriterYN(false)
-                            .writerNickname(comment.getFreeBoardComment().getUser().getNickname())
-                            .isHidden(comment.getFreeBoardComment().isHidden())
-                            .updatedTime(comment.getFreeBoardComment().getUpdatedAt())
+                            .writerNickname(comment.getDealBoardComment().getUser().getNickname())
+                            .isHidden(comment.getDealBoardComment().isHidden())
+                            .updatedTime(comment.getDealBoardComment().getUpdatedAt())
                             .build();
                 }
 
@@ -142,9 +143,18 @@ public class CommentManageService {
         }
         else if(query.equals("name")){
 
-            User user = userRepository.findByName(value).orElseThrow(()->new IllegalArgumentException("존재하지 않는 회원입니다."));
-            List<CommentResponse> fComments = convertFCommentsToResponse(freeBoardCommentRepository.findAllByUser(user));
-            List<CommentResponse> dComments = convertDCommentsToResponse(dealBoardCommentRepository.findAllByUser(user));
+            List<User> users = userRepository.findAllByNameContains(value);
+
+            if(ObjectUtils.isEmpty(users)) return new PageImpl<>(new ArrayList<>());
+
+            List<CommentResponse> fComments = new ArrayList<>();
+            List<CommentResponse> dComments = new ArrayList<>();
+            for(User user : users){
+                fComments.addAll(convertFCommentsToResponse(freeBoardCommentRepository.findAllByUser(user)));
+            }
+            for(User user : users){
+                dComments.addAll(convertDCommentsToResponse(dealBoardCommentRepository.findAllByUser(user)));
+            }
 
             List<CommentResponse> commentResponses = new ArrayList<>();
             commentResponses.addAll(fComments);
@@ -154,10 +164,18 @@ public class CommentManageService {
         }
         else if(query.equals("nickname")){
 
-            User user = userRepository.findByNicknameContains(value).orElseThrow(()->new IllegalArgumentException("존재하지 않는 회원입니다."));
-            List<FreeBoardComment> users = freeBoardCommentRepository.findAllByUser(user);
-            List<CommentResponse> fComments = convertFCommentsToResponse(users);
-            List<CommentResponse> dComments = convertDCommentsToResponse(dealBoardCommentRepository.findAllByUser(user));
+            List<User> users = userRepository.findAllByNicknameContains(value);
+            if(ObjectUtils.isEmpty(users)) return new PageImpl<>(new ArrayList<>());
+
+            List<CommentResponse> fComments = new ArrayList<>();
+            List<CommentResponse> dComments = new ArrayList<>();
+            for(User user : users){
+                fComments.addAll(convertFCommentsToResponse(freeBoardCommentRepository.findAllByUser(user)));
+            }
+            for(User user : users){
+                dComments.addAll(convertDCommentsToResponse(dealBoardCommentRepository.findAllByUser(user)));
+            }
+
             List<CommentResponse> commentResponses = new ArrayList<>();
             commentResponses.addAll(fComments);
             commentResponses.addAll(dComments);

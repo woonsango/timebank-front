@@ -43,28 +43,6 @@ public class ApiController {
         return ResponseEntity.ok(requestData);
     }
 
-    @Transactional(readOnly = true)
-    @GetMapping("/get/{id}")
-    @ApiOperation(value="유저 데이터 조회",notes = "주소로 id를 받아 해당하는 유저 정보를 조회합니다.")
-    public ResponseEntity<?> getUserInfo(@PathVariable Long id, @RequestParam(required = false) String boardType,
-                                         @RequestParam(required = false) String boardStatus,
-                                         @RequestParam(required = false) String commentType,
-                                         @RequestParam(defaultValue = "0") int pageIndex,
-                                         @RequestParam(defaultValue = "50") int pageSize){
-        GetResponseDTO responseData = userInfoService.getUserInfo(id, boardType, boardStatus, commentType, pageIndex, pageSize);
-        return ResponseEntity.ok(responseData);
-    }
-
-    @Transactional(readOnly = true)
-    @GetMapping("/get")
-    @ApiOperation(value="마이페이지 조회",notes = "JWT 토큰에 해당하는 유저의 프로필 정보를 조회합니다.(마이페이지)")
-    public ResponseEntity<?> getMyInfo(@RequestParam(defaultValue = "0") int pageIndex,
-                                       @RequestParam(defaultValue = "50") int pageSize){
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        GetResponseDTO responseData = userInfoService.getMyInfo(auth, pageIndex, pageSize);
-        return ResponseEntity.ok(responseData);
-    }
-
     @PutMapping("/update")
     @ApiOperation(value="유저 데이터 수정",notes = "Email을 이용하여 유저를 매핑하고 데이터를 수정합니다.")
     public ResponseEntity<?> putUserInfo(@ModelAttribute UpdateRequestDTO updateRequestData, @RequestPart(required = false) MultipartFile image) throws Exception{
@@ -75,7 +53,7 @@ public class ApiController {
 
     @DeleteMapping("/delete")
     @ApiOperation(value="유저 데이터 삭제(회원탈퇴)",notes = "JWT 토큰에 해당하는 유저 정보를 삭제합니다.")
-    public ResponseEntity<?> deleteUserInfo2() {
+    public ResponseEntity<?> deleteUserInfo() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
         userInfoService.deleteUserInfo(auth);
