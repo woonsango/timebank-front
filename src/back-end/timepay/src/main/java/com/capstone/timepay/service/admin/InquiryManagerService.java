@@ -84,6 +84,7 @@ public class InquiryManagerService {
                                 .createdAt(inquiry.getCreatedAt())
                                 .writer(inquiry.getUser().getName())
                                 .title(inquiry.getTitle())
+                                .content(inquiry.getContent())
                                 .build();
         List<AdminAnswerResponse> adminAnswerResponses =
                 inquiryAnswers.stream()
