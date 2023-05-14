@@ -12,6 +12,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -52,7 +53,7 @@ public class ApiController {
 
         userInfoService.saveBookmark(bookmarkDTO);
 
-        return ResponseEntity.ok(bookmarkDTO.getBookmark() + " 정상적으로 처리되었습니다.");
+        return ResponseEntity.ok(bookmarkDTO.getBookmark() + " 정상적으로 처리되었습니다." + HttpStatus.OK);
     }
 
     @DeleteMapping("/delete")
