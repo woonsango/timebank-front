@@ -174,45 +174,6 @@ public class UserInfoService {
         return getResponseDTO;
     }
 
-    // 게시글
-    @Transactional(readOnly = true)
-    public GetResponseDTO getUserInfoBoard(Long id, int pageIndex, int pageSize){
-        User userData = userRepository.findById(id).orElseThrow(()->new IllegalArgumentException("존재하지 않는 유저입니다."));
-        UserProfile userProfileData = userData.getUserProfile();
-        Pageable pageable = PageRequest.of(pageIndex, pageSize);
-
-
-        /* 유저 테이블에서 데이터 가져오기 */
-        String nickName = userData.getNickname();
-        String location = userData.getLocation();
-
-        Page<DealBoard> dealBoards = new PageImpl<>(dealBoardRepository.findByDealRegistersIn(userData.getDealRegisters()),
-                pageable, userData.getDealRegisters().size());
-
-        /* 유저 프로필 테이블에서 데이터 가져오기 */
-        String imageUrl = userProfileData.getImageUrl();
-        String introduction = userProfileData.getIntroduction();
-        int timePay = userData.getUserProfile().getTimepay();
-
-        /* 생성자를 사용하여 객체 생성 */
-        GetResponseDTO getResponseDTO = new GetResponseDTO(id, imageUrl, nickName, location, introduction, timePay, dealBoards);
-        return getResponseDTO;
-    }
-
-    // 댓글
-    @Transactional(readOnly = true)
-    public  Page<CommentResponse> getUserInfoComment(Long id, int pageIndex, int pageSize){
-        User userData = userRepository.findById(id).orElseThrow(()->new IllegalArgumentException("존재하지 않는 유저입니다."));
-        UserProfile userProfileData = userData.getUserProfile();
-        Pageable pageable = PageRequest.of(pageIndex, pageSize);
-
-        Page<CommentResponse> dealBoardComments = new PageImpl<>(
-                convertDCommentsToResponse(dealBoardCommentRepository.findAllByUser(userData)), pageable, pageSize);
-
-
-        return dealBoardComments;
-    }
-
     @Transactional(readOnly = true)
     public GetResponseDTO getMyInfo(Authentication auth, int pageIndex, int pageSize){
         String userEmail = auth.getName();
@@ -233,12 +194,49 @@ public class UserInfoService {
 
         /* 유저 프로필 테이블에서 데이터 가져오기 */
         String imageUrl = userData.getUserProfile().getImageUrl();
-        String introcudtion = userData.getUserProfile().getIntroduction();
+        String introduction = userData.getUserProfile().getIntroduction();
         int timePay = userData.getUserProfile().getTimepay();
 
         /* 생성자를 사용하여 객체 생성 */
-        GetResponseDTO getResponseDTO = new GetResponseDTO(userData.getUserId(), imageUrl, nickName, location, introcudtion, timePay, dealBoards, dealBoardComments);
+        GetResponseDTO getResponseDTO = new GetResponseDTO(userData.getUserId(), imageUrl, nickName, location, introduction, timePay, dealBoards, dealBoardComments);
         return getResponseDTO;
+    }
+
+    @Transactional(readOnly = true)
+    public GetResponseDTO getMyInfoBoard(Authentication auth, String query, int pageIndex, int pageSize){
+        String userEmail = auth.getName();
+        User userData = userRepository.findByEmail(userEmail).orElseThrow(IllegalArgumentException::new);
+        Pageable pageable = PageRequest.of(pageIndex, pageSize);
+
+
+        /* 유저 테이블에서 데이터 가져오기 */
+        String nickName = userData.getNickname();
+        String location = userData.getLocation();
+
+        Page<DealBoard> dealBoards = new PageImpl<>(dealBoardRepository.findByDealRegistersIn(userData.getDealRegisters()),
+                pageable, userData.getDealRegisters().size());
+
+        /* 유저 프로필 테이블에서 데이터 가져오기 */
+        String imageUrl = userData.getUserProfile().getImageUrl();
+        String introduction = userData.getUserProfile().getIntroduction();
+        int timePay = userData.getUserProfile().getTimepay();
+
+        /* 생성자를 사용하여 객체 생성 */
+        GetResponseDTO getResponseDTO = new GetResponseDTO(userData.getUserId(), imageUrl, nickName, location, introduction, timePay, dealBoards);
+        return getResponseDTO;
+    }
+
+    @Transactional(readOnly = true)
+    public Page<CommentResponse> getMyInfoComment(Authentication auth, String query, int pageIndex, int pageSize){
+        String userEmail = auth.getName();
+        User userData = userRepository.findByEmail(userEmail).orElseThrow(IllegalArgumentException::new);
+        Pageable pageable = PageRequest.of(pageIndex, pageSize);
+
+        Page<CommentResponse> dealBoardComments = new PageImpl<>(
+                convertDCommentsToResponse(dealBoardCommentRepository.findAllByUser(userData)), pageable, pageSize);
+
+
+        return dealBoardComments;
     }
 
     @Transactional
