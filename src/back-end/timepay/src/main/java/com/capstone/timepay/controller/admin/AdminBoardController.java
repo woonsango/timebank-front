@@ -75,6 +75,7 @@ public class AdminBoardController {
                 .and(DealBoardSearch.withVolunteer(volunteer));
 
         Pageable pageable = PageRequest.of(curPage, perPage, getSort(sortType));
+        Page<DealBoardResponse> dealBoards = boardService.search(spec, pageable);
 
         return ResponseEntity.ok(dealBoards);
     }
