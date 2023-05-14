@@ -68,38 +68,38 @@ public class User extends BaseTimeEntity {
                 .collect(Collectors.toList());
     }
     @JsonIgnore
-    @OneToMany(mappedBy = "user", orphanRemoval = true)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
     private List<Inquiry> inquiries = new ArrayList<>();
 
     @JsonIgnore
-    @OneToMany(mappedBy = "user", orphanRemoval = true)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
     private List<DealBoardComment> dealBoardComments = new ArrayList<>();
 
     @JsonIgnore
-    @OneToMany(mappedBy = "user", orphanRemoval = true)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
     private List<DealRegister> dealRegisters = new ArrayList<>();
 
-    @OneToMany(mappedBy = "user", orphanRemoval = true)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
     private List<Certification> certifications = new ArrayList<>();
 
     @JsonIgnore
-    @OneToMany(mappedBy = "user", orphanRemoval = true)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
     private List<DealBoardReport> dealBoardReports = new ArrayList<>();
     @JsonIgnore
-    @OneToMany(mappedBy = "user", orphanRemoval = true)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
     private List<FreeBoardReport> freeBoardReports = new ArrayList<>();
     @JsonIgnore
-    @OneToMany(mappedBy = "user", orphanRemoval = true)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
     private List<DealCommentReport> dealCommentReports = new ArrayList<>();
 
-    @OneToMany(mappedBy = "user", orphanRemoval = true)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
     private List<FreeCommentReport> freeCommentReports = new ArrayList<>();
     @JsonIgnore
-    @OneToMany(mappedBy = "user", orphanRemoval = true)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
     private List<FreeBoardComment> freeBoardComments = new ArrayList<>();
 
     @JsonIgnore
-    @OneToMany(mappedBy = "user", orphanRemoval = true)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
     private List<FreeRegister> freeRegisters = new ArrayList<>();
 
     @OneToOne
