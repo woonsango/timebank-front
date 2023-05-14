@@ -201,7 +201,7 @@ const MyEditPage: React.FC = () => {
     setHeaderTitle('내 정보 수정');
 
     apiRequest
-      .get(API_URL.USER_INFO)
+      .get(API_URL.USER_INFO_GET)
       .then((res) => {
         console.log(res);
 
@@ -286,7 +286,7 @@ const MyEditPage: React.FC = () => {
         </Form.Item>
 
         <Form.Item label="지역" name="Town">
-          현재 설정된 지역: {viewTown}
+          현재 설정된 지역: {town}
           <Space align="baseline">
             <Select
               defaultValue={siData[0]}
