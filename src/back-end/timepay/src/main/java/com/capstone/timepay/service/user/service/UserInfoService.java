@@ -18,6 +18,8 @@ import com.capstone.timepay.domain.user.User;
 import com.capstone.timepay.domain.user.UserRepository;
 import com.capstone.timepay.domain.userProfile.UserProfile;
 import com.capstone.timepay.domain.userProfile.UserProfileRepository;
+import com.capstone.timepay.domain.userToken.UserToken;
+import com.capstone.timepay.domain.userToken.UserTokenRepository;
 import com.capstone.timepay.firebase.FirebaseService;
 import com.google.firebase.auth.FirebaseAuthException;
 import lombok.RequiredArgsConstructor;
@@ -48,7 +50,7 @@ public class UserInfoService {
     private final DealBoardRepository dealBoardRepository;
     private final DealBoardCommentRepository dealBoardCommentRepository;
     private final CommentRepository commentRepository;
-
+    private final UserTokenRepository userTokenRepository;
     @Transactional
     public void createUserInfo(RequestDTO userData){
         /* 유저 프로필 데이터 저장 */
@@ -61,6 +63,10 @@ public class UserInfoService {
         {
 
             UserProfile userProfile = new UserProfile();
+
+            if(userData.getImageUrl() == null){
+                userData.setImageUrl("");
+            }
             userProfile.setImageUrl(userData.getImageUrl());
             userProfile.setIntroduction(userData.getIntroduction());
             userProfile.setCreatedAt(LocalDateTime.now());
@@ -86,7 +92,17 @@ public class UserInfoService {
         user.setBirthday(birthLocalDateTime);
         user.setCreatedAt(LocalDateTime.now());
         user.setUpdatedAt(LocalDateTime.now());
-        user.setSignUp(true);
+        user.setSignUp(true); // 회원가입 자동 승인 추후 뺄 예정
+
+        
+        /* 유저 토큰을 우선 빈문자열로 채움 */
+        /* 추후 유저 토큰 테이블을 지우거나, 리프레쉬 토큰 사용 */
+        UserToken userToken = new UserToken().builder()
+                .accessToken("")
+                .refrechToken("")
+                .build();
+        userTokenRepository.save(userToken);
+        user.setUserToken(userToken);
 
         user.setDeviceToken(userData.getDeviceToken()); // firebase device token
 

@@ -2,20 +2,17 @@ package com.capstone.timepay.service.admin;
 
 import com.capstone.timepay.domain.board.Board;
 import com.capstone.timepay.domain.board.BoardRepository;
-import com.capstone.timepay.domain.board.BoardSearch;
 import com.capstone.timepay.domain.board.BoardStatus;
 import com.capstone.timepay.domain.dealBoard.DealBoard;
 import com.capstone.timepay.domain.freeBoard.FreeBoard;
 import com.capstone.timepay.service.admin.dto.AdminBoardDTO;
 import com.capstone.timepay.service.admin.dto.AdminDealBoardDTO;
 import com.capstone.timepay.service.admin.dto.AdminFreeBoardDTO;
-import com.capstone.timepay.service.board.service.BoardService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -53,43 +50,6 @@ public class AdminBoardService {
         }
 
         return new PageImpl<>(boardDTOs, pageable, boards.getTotalElements());
-    }
-
-    public enum SortType {
-        LATEST_FIRST, OLDEST_FIRST
-    }
-
-    public List<Board> search(BoardService.SortType sortType, boolean freeBoard, boolean dealBoard, String user, String category) {
-        Specification<Board> spec = Specification.where(null);
-
-        switch (sortType) {
-            case LATEST_FIRST:
-                spec = spec.and(BoardSearch.latestFirst());
-                break;
-            case OLDEST_FIRST:
-                spec = spec.and(BoardSearch.oldestFirst());
-                break;
-            default:
-                break;
-        }
-
-        if (freeBoard) {
-            spec = spec.and(BoardSearch.freeBoard());
-        }
-
-        if (dealBoard) {
-            spec = spec.and(BoardSearch.dealBoard());
-        }
-
-        if (user != null) {
-            spec = spec.and(BoardSearch.createdBy(user));
-        }
-
-        if (category != null) {
-            spec = spec.and(BoardSearch.category(category));
-        }
-
-        return boardRepository.findAll(spec);
     }
 
     public boolean setHidden(List<Long> ids) {
