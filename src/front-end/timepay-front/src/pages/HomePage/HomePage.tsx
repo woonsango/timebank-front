@@ -5,9 +5,13 @@ import { useGetCategory } from '../../api/hooks/category';
 import { useNavigate } from 'react-router-dom';
 import { useCallback } from 'react';
 import { PATH } from '../../utils/paths';
+import useFontSize from '../../hooks/useFontSize';
 
 const HomePage = () => {
   const navigate = useNavigate();
+
+  const { scaleValue } = useFontSize();
+
   const { data, isLoading } = useGetCategory({
     type: '도움요청',
     useYn: 'Y',
@@ -20,7 +24,7 @@ const HomePage = () => {
   }, [navigate]);
 
   return (
-    <div css={cssHomePageStyle}>
+    <div css={cssHomePageStyle(scaleValue)}>
       <div className="title-search-container">
         <Logo />
         <div className="title-search">
@@ -36,7 +40,7 @@ const HomePage = () => {
         ) : (
           <>
             <div>당신의 도움이 필요해요!</div>
-            <div css={cssCategoryListStyle}>
+            <div css={cssCategoryListStyle(scaleValue)}>
               {data?.data.map((category) => (
                 <Button key={category.categoryId} onClick={handleOnSearch}>
                   {category.categoryName}
