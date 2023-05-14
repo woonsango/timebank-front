@@ -102,19 +102,35 @@ public class User extends BaseTimeEntity {
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<FreeRegister> freeRegisters = new ArrayList<>();
 
+//    @OneToOne
+//    @JoinColumn(name = "profile_id", referencedColumnName = "profile_id")
+//    @OnDelete(action = OnDeleteAction.CASCADE)
+//    private UserProfile userProfile;
+//
+//    @OneToOne
+//    @JoinColumn(name = "token_id", referencedColumnName = "token_id")
+//    @OnDelete(action = OnDeleteAction.CASCADE)
+//    private UserToken userToken;
+//
+//    @OneToOne
+//    @JoinColumn(name = "organization_id", referencedColumnName = "organization_id")
+//    @OnDelete(action = OnDeleteAction.CASCADE)
+//    private Organization organization;
+
     @OneToOne
     @JoinColumn(name = "profile_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private UserProfile userProfile;
 
     @OneToOne
     @JoinColumn(name = "token_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private UserToken userToken;
 
     @OneToOne
     @JoinColumn(name = "organization_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Organization organization;
-
-
 
 
     public void updateName(String name) {
