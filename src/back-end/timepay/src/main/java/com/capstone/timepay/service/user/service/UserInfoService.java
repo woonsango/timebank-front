@@ -35,6 +35,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.security.Principal;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -324,6 +325,13 @@ public class UserInfoService {
 
     public void saveBookmark(BookmarkDTO bookmarkDTO){
         User user = userRepository.findById(bookmarkDTO.getId()).orElseThrow(() ->
+                new IllegalArgumentException("존재하지 않는 유저입니다."));
+        user.setBookmark(bookmarkDTO.getBookmark());
+        userRepository.save(user);
+    }
+
+    public void updateBookmark(BookmarkDTO bookmarkDTO, Principal principal){
+        User user = userRepository.findByEmail(principal.getName()).orElseThrow(() ->
                 new IllegalArgumentException("존재하지 않는 유저입니다."));
         user.setBookmark(bookmarkDTO.getBookmark());
         userRepository.save(user);

@@ -22,6 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.security.Principal;
 import java.util.List;
 
 
@@ -46,20 +47,12 @@ public class ApiController {
     }
 
     @PostMapping("/create/bookmark")
-    @ApiOperation(value="유저 북마크(관심 카테고리) 설정")
+    @ApiOperation(value="회원가입할 때, 유저 북마크(관심 카테고리) 설정")
     public ResponseEntity<?> postBookmark(@RequestBody BookmarkDTO bookmarkDTO) {
 
         userInfoService.saveBookmark(bookmarkDTO);
 
         return ResponseEntity.ok(bookmarkDTO.getBookmark() + " 정상적으로 처리되었습니다.");
-    }
-
-    @PutMapping("/update")
-    @ApiOperation(value="유저 데이터 수정",notes = "Email을 이용하여 유저를 매핑하고 데이터를 수정합니다.")
-    public ResponseEntity<?> putUserInfo(@ModelAttribute UpdateRequestDTO updateRequestData, @RequestPart(required = false) MultipartFile image) throws Exception{
-
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        return ResponseEntity.ok(userInfoService.updateUserInfo(auth, updateRequestData, image));
     }
 
     @DeleteMapping("/delete")
