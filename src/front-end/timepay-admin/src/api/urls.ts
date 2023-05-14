@@ -17,6 +17,8 @@ export const API_URL = {
   CATEGORIES__UPDATE: '/api/admins/categories/update',
   BOARDS: '/api/admins/boards',
   BOARDS__SEARCH: '/api/admins/boards/search',
+  BOARDS__HIDDEN: '/api/admins/boards/hidden',
+  BOARDS__STATUS: '/api/admins/boards/status',
 };
 
 /** 토큰을 넣지 않아도 되는 api url 모음 */

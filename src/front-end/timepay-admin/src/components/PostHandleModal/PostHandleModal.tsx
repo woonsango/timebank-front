@@ -5,6 +5,8 @@ import dayjs from 'dayjs';
 import { cssPostHandleModalStyle } from './PostHandleModal.styles';
 import { IDealBoard } from '../../api/interfaces/IBoard';
 import { getStatus } from '../../utils/board';
+import { usePostBoardHidden, usePostBoardStatus } from '../../api/hooks/boards';
+import { useQueryClient } from 'react-query';
 
 export interface PostHandleModalProps {
   type: 'hide' | 'changeStatus';
@@ -18,6 +20,11 @@ const PostHandleModal = ({
   isOpen,
   onCancel,
 }: PostHandleModalProps) => {
+  const queryClient = useQueryClient();
+
+  const postBoardHiddenMutation = usePostBoardHidden();
+  const postBoardStatusMutation = usePostBoardStatus();
+
   const [messageApi, contextHolder] = message.useMessage();
   const [status, setStatus] = useState<string>();
 
@@ -84,18 +91,45 @@ const PostHandleModal = ({
 
   const handleOnSubmit = useCallback(() => {
     if (type === 'changeStatus') {
-      if (!!status)
+      if (!!status && posts)
         Modal.confirm({
           type: 'warning',
           content: '정말 상태를 변경하시겠습니까?',
           okText: '확인',
           cancelText: '취소',
-          onOk: () => {
-            setStatus(undefined);
-            messageApi.open({
-              type: 'success',
-              content: '상태 변경이 완료되었습니다.',
-            });
+          onOk: async () => {
+            await postBoardStatusMutation.mutateAsync(
+              {
+                ids: posts?.map((item) => item.d_boardId),
+                status: status,
+              },
+              {
+                onSuccess: (data) => {
+                  setStatus(undefined);
+                  messageApi.open({
+                    type: 'success',
+                    content: '상태 변경이 완료되었습니다.',
+                  });
+                },
+                onError: (err) => {
+                  messageApi.open({
+                    type: 'error',
+                    content: (
+                      <>
+                        오류 발생: <br />
+                        {err}
+                      </>
+                    ),
+                  });
+                },
+                onSettled: async (data) => {
+                  onCancel();
+                  await queryClient.invalidateQueries({
+                    queryKey: ['useGetBoards'],
+                  });
+                },
+              },
+            );
           },
         });
       else {
@@ -105,18 +139,52 @@ const PostHandleModal = ({
         });
       }
     } else {
-      Modal.confirm({
-        content: '정말 숨김 처리하시겠습니까?',
-        okText: '확인',
-        cancelText: '취소',
-        onOk: () =>
-          messageApi.open({
-            type: 'success',
-            content: '숨김 처리 완료되었습니다.',
-          }),
-      });
+      if (posts)
+        Modal.confirm({
+          content: '정말 숨김 처리하시겠습니까?',
+          okText: '확인',
+          cancelText: '취소',
+          onOk: async () =>
+            await postBoardHiddenMutation.mutateAsync(
+              posts?.map((item) => item.d_boardId),
+              {
+                onSuccess: (data) => {
+                  messageApi.open({
+                    type: 'success',
+                    content: '숨김 처리 완료되었습니다.',
+                  });
+                },
+                onError: (err) => {
+                  messageApi.open({
+                    type: 'error',
+                    content: (
+                      <>
+                        오류 발생: <br />
+                        {err}
+                      </>
+                    ),
+                  });
+                },
+                onSettled: async (data) => {
+                  onCancel();
+                  await queryClient.invalidateQueries({
+                    queryKey: ['useGetBoards'],
+                  });
+                },
+              },
+            ),
+        });
     }
-  }, [type, status, messageApi]);
+  }, [
+    type,
+    onCancel,
+    postBoardHiddenMutation,
+    postBoardStatusMutation,
+    posts,
+    queryClient,
+    status,
+    messageApi,
+  ]);
 
   const footer = useMemo(() => {
     return (
