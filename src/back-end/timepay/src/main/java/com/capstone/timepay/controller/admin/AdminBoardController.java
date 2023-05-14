@@ -62,8 +62,8 @@ public class AdminBoardController {
             @RequestParam(value = "startTime", required = false) LocalDateTime startTime,
             @RequestParam(value = "endTime", required = false) LocalDateTime endTime,
             @RequestParam(value = "volunteer", required = false) boolean volunteer,
-            @RequestParam(value = "perPage", defaultValue = "10") int perPage,
-            @RequestParam(value = "curPage", defaultValue = "1") int curPage
+            @RequestParam(value = "pagingSize", defaultValue = "10") int perPage,
+            @RequestParam(value = "pagingIndex", defaultValue = "0") int curPage
     ) {
         Specification<DealBoard> spec = DealBoardSearch.withTitle(title)
                 .and(DealBoardSearch.withName(name))
@@ -74,8 +74,7 @@ public class AdminBoardController {
                 .and(DealBoardSearch.withEndTime(endTime))
                 .and(DealBoardSearch.withVolunteer(volunteer));
 
-        Pageable pageable = PageRequest.of(curPage - 1, perPage, getSort(sortType));
-        Page<DealBoardResponse> dealBoards = boardService.search(spec, pageable);
+        Pageable pageable = PageRequest.of(curPage, perPage, getSort(sortType));
 
         return ResponseEntity.ok(dealBoards);
     }

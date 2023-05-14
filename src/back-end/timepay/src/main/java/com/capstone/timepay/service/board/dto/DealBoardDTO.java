@@ -34,6 +34,13 @@ public class DealBoardDTO
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
+    //
+
+    private String writerName;
+    private String writerNickname;
+    private String writerType;
+    private String imageUrl;
+
     public static DealBoardDTO toDealBoardDTO(DealBoard dealBoard)
     {
         return new DealBoardDTO(
@@ -52,7 +59,11 @@ public class DealBoardDTO
                 dealBoard.getDealAttatchments(),
                 dealBoard.getVolunteerPeople(),
                 dealBoard.getCreatedAt(),
-                dealBoard.getUpdatedAt()
+                dealBoard.getUpdatedAt(),
+                dealBoard.getWriterName(),
+                dealBoard.getWriterNickname(),
+                dealBoard.getWriterType(),
+                dealBoard.getImageUrl()
         );
     }
 }
