@@ -156,6 +156,11 @@ const RegisterServePage = () => {
       })
       .catch((error) => {
         console.error('게시글 등록 실패🥹', error);
+        console.log(title);
+        console.log(content);
+        console.log(place);
+        console.log(state);
+        console.log(starttime);
       });
   };
 

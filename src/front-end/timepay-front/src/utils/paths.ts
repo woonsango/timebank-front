@@ -21,6 +21,9 @@ export const PATH = {
   REPORT: '/report', //신고기록
   INQUIRE: '/inquire', //문의기록
   BOOKMARK: '/bookmark', //즐겨찾기
+  CATEGORY_SELECT: '/category-select',
   AGENCY_SIGN_IN: '/agency/sign-in',
   AGENCY_SIGN_UP: '/agency/sign-up',
+  MY_VOLUNTEER: '/my-volunteer',
+  PAYMENT_CERTIFICATION: '/payment-certification',
 };

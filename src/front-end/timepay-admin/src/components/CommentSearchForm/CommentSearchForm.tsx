@@ -14,21 +14,24 @@ const CommentSearchForm = () => {
   const setCommentSearch = useSetRecoilState(commentSearchState);
   const handleOnSearch = useCallback(
     async (values: IGetCommentRequest) => {
-      if (values.writerSearchValue && values.originBoardId) {
+      if (values.boardId && values.value) {
         messageApi.warning({
           content: '게시글 번호나 작성자 정보 둘 중 하나만 입력해야합니다.',
         });
       } else {
         setCommentSearch({
-          ...values,
-          [values.writerSearchKeyword as string]: values.writerSearchValue,
+          ...commentSearchValue,
+          pagingIndex: 0,
+          boardId: values.boardId,
+          query: values.query,
+          value: values.value,
         });
         await queryClient.invalidateQueries({
           queryKey: ['useGetComments', values],
         });
       }
     },
-    [setCommentSearch, messageApi, queryClient],
+    [commentSearchValue, setCommentSearch, messageApi, queryClient],
   );
 
   return (
@@ -36,25 +39,19 @@ const CommentSearchForm = () => {
       <Form layout="horizontal" onFinish={handleOnSearch}>
         <Row>
           <Form.Item
-            name="originBoardId"
+            name="boardId"
             label="게시글 번호"
-            initialValue={commentSearchValue?.originBoardId}
+            initialValue={commentSearchValue?.boardId}
           >
             <InputNumber min={0} placeholder="번호 입력" />
           </Form.Item>
-          <Form.Item
-            name="writerSearchKeyword"
-            initialValue={commentSearchValue?.writerSearchKeyword}
-          >
+          <Form.Item name="query" initialValue={commentSearchValue?.query}>
             <Select style={{ width: 100 }}>
-              <Select.Option value="writerName">이름</Select.Option>
-              <Select.Option value="writerNickName">닉네임</Select.Option>
+              <Select.Option value="name">이름</Select.Option>
+              <Select.Option value="nickname">닉네임</Select.Option>
             </Select>
           </Form.Item>
-          <Form.Item
-            name="writerSearchValue"
-            initialValue={commentSearchValue?.writerSearchValue}
-          >
+          <Form.Item name="value" initialValue={commentSearchValue?.value}>
             <Input placeholder="작성자 정보 입력" />
           </Form.Item>
           <Button

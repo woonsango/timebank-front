@@ -1,29 +1,58 @@
-import React, { useState } from 'react';
-import { Button, Modal, Form, Input, InputNumber } from 'antd';
-import { cssCategoryAdd, cssBox } from './CategoryAdd.style';
+import { useState } from 'react';
+import { Button, Modal, Form, Input, message } from 'antd';
+import { cssCategoryAdd, cssBox, cssAddModal } from './CategoryAdd.style';
+import { usePostCategories } from '../../api/hooks/category';
+import { useQueryClient } from 'react-query';
 
 const layout = {
   labelCol: { span: 6 },
   wrapperCol: { span: 16 },
 };
 
-const onFinish = (values: any) => {
-  console.log(values);
-};
-
 const CategoryAdd = () => {
   const [isOpenModal, setIsOpenModal] = useState(false);
+  const [form] = Form.useForm();
+  const postCategories = usePostCategories();
+  const [messageApi, contextHolder] = message.useMessage();
+  const queryClient = useQueryClient();
+
+  const onFinish = async (values: any) => {
+    await postCategories.mutateAsync(values, {
+      onSuccess: () => {
+        messageApi.open({
+          type: 'success',
+          content: '카테고리가 추가되었습니다.',
+        });
+        queryClient.invalidateQueries({
+          queryKey: ['useGetCategories'],
+        });
+        form.resetFields();
+      },
+      onError: (err) => {
+        console.log(err.response?.status);
+      },
+    });
+  };
+
   const content = (
-    <Form {...layout} onFinish={onFinish} style={{ maxWidth: 600 }}>
-      <Form.Item name={['key']} label="카테고리 번호">
+    <Form
+      form={form}
+      css={cssAddModal}
+      {...layout}
+      onFinish={onFinish}
+      style={{ maxWidth: 600 }}
+    >
+      <Form.Item name={['boardType']} label="카테고리 타입">
         <Input />
       </Form.Item>
-      <Form.Item name={['name']} label="카테고리 이름">
+      <Form.Item name={['categoryName']} label="카테고리 이름">
         <Input />
       </Form.Item>
-      <Form.Item name={['parentCategory']} label="상위 카테고리">
-        <Input />
-      </Form.Item>
+      <div className="footer">
+        <Button key="submit" type="primary" htmlType="submit">
+          추가
+        </Button>
+      </div>
     </Form>
   );
 
@@ -36,12 +65,14 @@ const CategoryAdd = () => {
       >
         카테고리 추가
       </Button>
+      {contextHolder}
       <Modal
         title="카테고리 추가"
         centered
         open={isOpenModal}
+        footer={null}
         onCancel={() => setIsOpenModal(false)}
-        onOk={() => setIsOpenModal(false)}
+        // onOk={() => setIsOpenModal(false)}
       >
         {content}
       </Modal>

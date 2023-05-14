@@ -5,8 +5,6 @@ import { useSetRecoilState } from 'recoil';
 import { headerTitleState } from '../../states/uiState';
 import { PATH } from '../../utils/paths';
 import './My.css';
-import axios from 'axios';
-import { getTokenFromCookie } from '../../utils/token';
 import { apiRequest } from '../../api/request';
 import { API_URL } from '../../api/urls';
 
@@ -15,9 +13,11 @@ const MyPage = () => {
 
   useEffect(() => {
     setHeaderTitle('내정보');
+  }, [setHeaderTitle]);
 
+  useEffect(() => {
     apiRequest
-      .get(API_URL.USER_INFO_GET)
+      .get(API_URL.USER_INFO)
       .then((res) => {
         console.log(res);
 
@@ -65,7 +65,7 @@ const MyPage = () => {
           {' '}
           <div className="MyTopBox">
             <div className="MyImageWrap">
-              <img src={image} className="MyProfileImage" />
+              <img src={image} className="MyProfileImage" alt="내 프로필" />
             </div>
             <div className="space"></div>
 
@@ -130,6 +130,15 @@ const MyPage = () => {
                 onClick={() => handlePageMove(PATH.INQUIRE)}
               >
                 문의하기
+              </button>
+            </div>
+
+            <div className="MyPageMoveBox">
+              <button
+                className="MyPageText"
+                onClick={() => handlePageMove(PATH.CATEGORY_SELECT)}
+              >
+                카테고리 알림 설정
               </button>
             </div>
           </div>

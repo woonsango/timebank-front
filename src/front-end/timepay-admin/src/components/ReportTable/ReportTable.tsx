@@ -6,14 +6,23 @@ import {
   cssReportTableRowCountStyle,
   cssReportTableStyle,
 } from './ReportTable.styles';
-import { ReportItem } from '../../interfaces/ReportItem';
+import { IGetReportRequest, IReport } from '../../api/interfaces/IReport';
 import ReportDetailModal from '../ReportDetailModal';
+import { useGetReports } from '../../api/hooks/report';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { reportSearchState } from '../../states/reportSearchState';
+import { customPaginationProps } from '../../utils/pagination';
 
 const ReportTable = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [currentReport, setCurrentReport] = useState<ReportItem>();
+  const [currentReport, setCurrentReport] = useState<IReport>();
 
-  const handleOnShowDetailReport = useCallback((report: ReportItem) => {
+  const reportSearchValues = useRecoilValue(reportSearchState);
+  const setReportSearch = useSetRecoilState(reportSearchState);
+  const { data, isLoading } = useGetReports(reportSearchValues);
+  const dataSource = data?.data.content || [];
+
+  const handleOnShowDetailReport = useCallback((report: IReport) => {
     setCurrentReport(report);
     setIsOpen(true);
   }, []);
@@ -23,23 +32,6 @@ const ReportTable = () => {
     setIsOpen(false);
   }, []);
 
-  const dummyDataSource: ReportItem[] = [];
-  for (let i = 0; i < 100; i++) {
-    dummyDataSource.push({
-      reportId: i,
-      name: `홍길동${i + 1}`,
-      number: i + 1,
-      nickname: '동에번쩍',
-      type: i % 2 ? '댓글' : '게시글',
-      content: `신고 사유 ${i + 1}`,
-      postNumber: i,
-      postContent: '신고대상 글내용',
-      reportAt: `2023-12-34 12:34`,
-      authorNumber: i,
-      reportStatus: i % 2 ? 'Y' : 'N',
-    });
-  }
-
   // @ts-ignore
   const columns: ColumnsType<ReportItem> = useMemo(() => {
     return [
@@ -48,26 +40,19 @@ const ReportTable = () => {
         key: 'reportId',
         dataIndex: 'reportId',
         width: 90,
-        sorter: (a: ReportItem, b: ReportItem) => a.reportId - b.reportId,
-      },
-      {
-        title: '신고자 이름',
-        key: 'name',
-        dataIndex: 'name',
-        width: 100,
-        align: 'center',
+        sorter: (a: IReport, b: IReport) => a.reportId - b.reportId,
       },
       {
         title: '신고자 회원번호',
-        key: 'number',
-        dataIndex: 'number',
+        key: 'reporterId',
+        dataIndex: 'reporterId',
         width: 100,
         align: 'center',
       },
       {
-        title: '신고자 닉네임',
-        key: 'nickname',
-        dataIndex: 'nickname',
+        title: '신고자 이름',
+        key: 'reporterName',
+        dataIndex: 'reporterName',
         width: 100,
         align: 'center',
       },
@@ -81,7 +66,7 @@ const ReportTable = () => {
           { text: '댓글', value: '댓글' },
           { text: '게시글', value: '게시글' },
         ],
-        onFilter: (value: string, record: ReportItem) =>
+        onFilter: (value: string, record: IReport) =>
           record.type.indexOf(value) === 0,
       },
       {
@@ -90,7 +75,7 @@ const ReportTable = () => {
         dataIndex: 'content',
         width: 150,
         align: 'center',
-        render: (_: string, record: ReportItem) => (
+        render: (_: string, record: IReport) => (
           <Button type="link" onClick={() => handleOnShowDetailReport(record)}>
             더보기
           </Button>
@@ -98,50 +83,38 @@ const ReportTable = () => {
       },
       {
         title: '신고대상 글번호',
-        key: 'postNumber',
-        dataIndex: 'postNumber',
+        key: 'targetId',
+        dataIndex: 'targetId',
         width: 100,
         align: 'center',
       },
       {
-        title: '신고대상 글내용',
-        key: 'postContent',
-        dataIndex: 'postContent',
-        width: 150,
-        align: 'center',
-        render: (_: string, record: ReportItem) => (
-          <Button type="link" onClick={() => handleOnShowDetailReport(record)}>
-            더보기
-          </Button>
-        ),
-      },
-      {
         title: '신고일시',
-        key: 'reportAt',
-        dataIndex: 'reportAt',
+        key: 'reportedAt',
+        dataIndex: 'reportedAt',
         width: 140,
         align: 'center',
-        sorter: (a: ReportItem, b: ReportItem) =>
-          dayjs(a.reportAt).isAfter(dayjs(b.reportAt)),
+        sorter: (a: IReport, b: IReport) =>
+          dayjs(a.reportedAt).isAfter(dayjs(b.reportedAt)),
       },
       {
         title: '신고대상 회원번호',
-        key: 'authorNumber',
-        dataIndex: 'authorNumber',
+        key: 'targetReportId',
+        dataIndex: 'targetReportId',
         width: 100,
         align: 'center',
       },
       {
         title: '신고처리여부',
-        key: 'reportStatus',
-        dataIndex: 'reportStatus',
+        key: 'process',
+        dataIndex: 'process',
         width: 100,
         align: 'center',
         filters: [
           { text: 'Y', value: 'Y' },
           { text: 'N', value: 'N' },
         ],
-        onFilter: (value: string, record: ReportItem) =>
+        onFilter: (value: string, record: IReport) =>
           record.type.indexOf(value) === 0,
       },
     ];
@@ -153,13 +126,19 @@ const ReportTable = () => {
         css={cssReportTableStyle}
         columns={columns}
         scroll={{ x: 1500 }}
-        dataSource={dummyDataSource}
-        rowKey="postId"
+        dataSource={dataSource}
+        rowKey="reportId"
+        loading={isLoading}
+        pagination={customPaginationProps<IGetReportRequest>({
+          totalElements: data?.data.totalElements,
+          currentSearchValues: reportSearchValues,
+          setSearchValues: setReportSearch,
+        })}
       />
       <ReportDetailModal
         isOpen={isOpen}
         onCancel={handleOnCloseDetailReport}
-        post={currentReport}
+        report={currentReport}
       />
     </>
   );
