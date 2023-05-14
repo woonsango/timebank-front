@@ -43,7 +43,7 @@ public class DealBoardSearchController {
                 .and(DealBoardSearch.withEndTime(endTime))
                 .and(DealBoardSearch.withVolunteer(volunteer));
 
-        Pageable pageable = PageRequest.of(curPage - 1, perPage, getSort(sortType));
+        Pageable pageable = PageRequest.of(curPage, perPage, getSort(sortType));
         Page<DealBoard> dealBoards = dealBoardService.search(spec, pageable);
 
         return ResponseEntity.ok(dealBoards);
