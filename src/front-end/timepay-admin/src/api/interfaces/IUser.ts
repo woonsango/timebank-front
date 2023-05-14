@@ -15,7 +15,7 @@ export interface IUser {
   isAdmin: boolean; // 관리자 여부
 }
 
-export interface IUsers {
+export interface IUserInfo {
   userId: number;
   userName: string;
   nickName: string;
@@ -23,11 +23,14 @@ export interface IUsers {
   birth: string;
   region: string;
   timepay: number;
+  totalVolunteerTime: number;
+  profileUrl: string;
+  banned: boolean;
 }
 
 export interface IGetUserInfoRequest extends GetPageableData {
-  nickName?: string;
+  value?: string;
 }
 export interface IGetUserInfoResponse extends PageableData {
-  content: IUsers[];
+  content: IUserInfo[];
 }

@@ -1,15 +1,17 @@
 import { useRecoilValue, useSetRecoilState } from 'recoil';
-import { IGetUserInfoRequest, IUsers } from '../../api/interfaces/IUser';
+import { IGetUserInfoRequest, IUserInfo } from '../../api/interfaces/IUser';
 import { useGetUserInfos } from '../../api/hooks/userManagement';
 import { mainSearchState } from './mainSearchState';
 import { useMemo, useState } from 'react';
 import Table, { ColumnsType } from 'antd/es/table';
 import { customPaginationProps } from '../../utils/pagination';
+import { Button, Modal } from 'antd';
+import ProfileImageModal from './profileImageModal';
 
 interface MainTableProps {
   selectedUserInfoIds?: React.Key[];
   setSelectedUserInfoIds: (args?: React.Key[]) => void;
-  setSelectedUserInfos: (args?: IUsers[]) => void;
+  setSelectedUserInfos: (args?: IUserInfo[]) => void;
 }
 
 const MainTable = ({
@@ -22,19 +24,6 @@ const MainTable = ({
 
   const { data, isLoading } = useGetUserInfos(mainSearchValues);
 
-  //   const [isOpen, setIsOpen] = useState(false);
-  //   const [currentPush, setCurrentPush] = useState<INotification>();
-
-  //   const handleOnShowDetailPush = useCallback((push: INotification) => {
-  //     setCurrentPush(push);
-  //     setIsOpen(true);
-  //   }, []);
-
-  //   const handleOnCloseDetailPush = useCallback(() => {
-  //     setCurrentPush(undefined);
-  //     setIsOpen(false);
-  //   }, []);
-
   const dataSource = useMemo(() => {
     if (mainSearchValues) {
       return data?.data.content || [];
@@ -43,26 +32,49 @@ const MainTable = ({
   }, [mainSearchValues, data]);
 
   const rowSelection = {
-    onChange: (selectedRowKeys: React.Key[], selectedRows: IUsers[]) => {
+    onChange: (selectedRowKeys: React.Key[], selectedRows: IUserInfo[]) => {
       setSelectedUserInfoIds(selectedRowKeys);
       setSelectedUserInfos(selectedRows);
     },
   };
 
-  const columns: ColumnsType<IUsers> = [
+  const columns: ColumnsType<IUserInfo> = [
     {
-      title: '이름',
-      dataIndex: 'nickName',
+      title: 'UID',
+      dataIndex: 'userId',
       align: 'center',
     },
     {
       title: '닉네임',
-      dataIndex: 'realName',
+      dataIndex: 'nickName',
       align: 'center',
     },
     {
+      title: '프로필 사진',
+      dataIndex: 'profileUrl',
+      //dataIndex: 'profileModal',
+      render: () => (
+        <Button type="link" onClick={() => showModalProfileImage()}>
+          프로필 사진보기
+        </Button>
+      ),
+      align: 'center',
+    },
+
+    {
+      title: '이름',
+      dataIndex: 'userName',
+      align: 'center',
+    },
+
+    {
       title: '지역',
-      dataIndex: 'town',
+      dataIndex: 'region',
+      align: 'center',
+    },
+    {
+      title: '성별',
+      dataIndex: 'sex',
       align: 'center',
     },
     {
@@ -70,26 +82,23 @@ const MainTable = ({
       dataIndex: 'birth',
       align: 'center',
     },
-    {
-      title: '프로필 사진',
-      dataIndex: 'profileImg',
-      align: 'center',
-    },
+
     {
       title: '타임페이 보유량',
-      dataIndex: 'timePay',
+      dataIndex: 'timepay',
       align: 'center',
     },
+    {
+      title: '봉사 시간',
+      dataIndex: 'totalVolunteerTime',
+      align: 'center',
+    },
+
     {
       title: '활동 목록',
       dataIndex: 'detail',
       align: 'center',
     },
-    // {
-    //   title: '블랙리스트 여부',
-    //   dataIndex: 'blackList',
-    //   align: 'center',
-    // },
 
     {
       title: '정보 수정',
@@ -97,6 +106,20 @@ const MainTable = ({
       align: 'center',
     },
   ];
+
+  /*프로필 사진 모달 설정 */
+  const [modalProfileImage, setModalProfileImage] = useState(false);
+
+  const showModalProfileImage = () => {
+    setModalProfileImage(true);
+  };
+  const handleOkProfileImage = () => {
+    setModalProfileImage(false);
+  };
+
+  const handleCancelProfileImage = () => {
+    setModalProfileImage(false);
+  };
 
   return (
     <>
@@ -120,6 +143,14 @@ const MainTable = ({
           setSearchValues: setMainSearch,
         })}
       />
+      <Modal
+        title="프로필 사진"
+        open={modalProfileImage}
+        onOk={handleOkProfileImage}
+        onCancel={handleCancelProfileImage}
+        okText="확인"
+        cancelText="취소"
+      ></Modal>
     </>
   );
 };
