@@ -1,21 +1,31 @@
 import { FloatButton } from 'antd';
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { ReactComponent as BackArrow } from '../../assets/images/icons/header-back-arrow.svg';
 import { cssMainHeaderStyle } from '../../components/MainHeader/MainHeader.styles';
 import { EditFilled } from '@ant-design/icons';
 import { IQna } from '../../api/interfaces/IQna';
 import { useGetInquiry } from '../../api/hooks/inquiry';
-import { useRecoilValue } from 'recoil';
 
 import QnaList from '../../components/qna/QnaList';
 
 const QnaListPage = () => {
   const data = useGetInquiry();
+  const inquiry = data.data;
 
   useEffect(() => {
     console.log(data);
+    console.log(inquiry);
   });
+
+  /*
+  const inquiries = useMemo(() => {
+    return data?.data.content.map((qna) => ({
+      ...qna,
+      type: 'qna',
+    }));
+  }, [qna]);
+*/
 
   const dummyData: (IQna | undefined)[] = [
     {

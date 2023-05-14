@@ -41,7 +41,6 @@ export const cssTabStyle = css`
 
   .ant-tabs-content-holder {
     height: 100%;
-    background-color: ${COMMON_COLOR.WARM_GRAY};
     padding-bottom: 10px;
   }
 `;

@@ -15,13 +15,15 @@ export interface IPostQna {
   content: string;
   subject: string;
   title: string;
-  week: string;
+  category?: string;
 }
 
 export interface IGetQna {
-  content: string;
-  notice: boolean;
   title: string;
+  content: string;
+  inquiryId: number;
+  state: string;
+  category: string;
   createdAt: string;
 }
 

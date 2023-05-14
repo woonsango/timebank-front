@@ -24,7 +24,6 @@ const QnaList = ({ qna }: QnaListProps) => {
         createdAt: qna?.createdAt,
         status: qna?.status,
         category: qna?.category,
-        attachment: qna?.attachment,
       },
     });
   };
