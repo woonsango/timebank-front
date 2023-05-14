@@ -59,24 +59,21 @@ public class UserInfoService {
 
 
         /* uid값 비교하여 중복된 데이터는 데이터베이스에 저장X */
-        if(user.getUserProfile() == null)
-        {
 
-            UserProfile userProfile = new UserProfile();
 
-            if(userData.getImageUrl() == null){
-                userData.setImageUrl("");
-            }
-            userProfile.setImageUrl(userData.getImageUrl());
-            userProfile.setIntroduction(userData.getIntroduction());
-            userProfile.setCreatedAt(LocalDateTime.now());
-            userProfile.setUpdatedAt(LocalDateTime.now());
-            userProfile.setTimepay(300);
-            user.setUserProfile(userProfileRepository.save(userProfile));
+        UserProfile userProfile = user.getUserProfile();
 
-        } else {
-            System.out.println("\n이미 저장된 데이터래요~\n");
+        if(userData.getImageUrl() == null){
+            userData.setImageUrl("");
         }
+        userProfile.setImageUrl(userData.getImageUrl());
+        userProfile.setIntroduction(userData.getIntroduction());
+        userProfile.setCreatedAt(LocalDateTime.now());
+        userProfile.setUpdatedAt(LocalDateTime.now());
+        userProfile.setTimepay(300);
+        user.setUserProfile(userProfileRepository.save(userProfile));
+
+
 
         /* String으로 입력받은 생년월일을 LocalDateTime으로 형변환 */
         /* 만약 SignUpUser 테이블에 존재하지 않으면 에러 발생 */
@@ -271,8 +268,8 @@ public class UserInfoService {
         /* deleteById를 사용하지 않고 에러 메세지를 직접 커스텀 */
         if(userData != null) {
             UserProfile userProfileData = userData.getUserProfile();
-            userProfileRepository.delete(userProfileData);
             userRepository.delete(userData);
+            userProfileRepository.delete(userProfileData);
 
         } else{
             System.out.println("존재하지 않는 회원이랍니다~");
