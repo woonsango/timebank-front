@@ -224,6 +224,7 @@ public class DealBoardService
         dealBoard.setHidden(boardDto.isHidden());
         dealBoard.setAuto(boardDto.isAuto());
         dealBoard.setVolunteerPeople(boardDto.getVolunteerPeople());
+        dealBoard.setUpdatedAt(LocalDateTime.now());
 
         return DealBoardDTO.toDealBoardDTO(dealBoard);
     }

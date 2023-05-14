@@ -31,6 +31,8 @@ public class DealBoardDTO
     private boolean isAuto;
     private List<DealAttatchment> images;
     private int volunteerPeople;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 
     public static DealBoardDTO toDealBoardDTO(DealBoard dealBoard)
     {
@@ -48,7 +50,9 @@ public class DealBoardDTO
                 dealBoard.isHidden(),
                 dealBoard.isAuto(),
                 dealBoard.getDealAttatchments(),
-                dealBoard.getVolunteerPeople()
+                dealBoard.getVolunteerPeople(),
+                dealBoard.getCreatedAt(),
+                dealBoard.getUpdatedAt()
         );
     }
 }

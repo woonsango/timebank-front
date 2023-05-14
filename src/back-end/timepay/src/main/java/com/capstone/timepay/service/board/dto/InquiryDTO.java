@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -17,6 +19,8 @@ public class InquiryDTO {
     private String category;
     private String state;
     private String content;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 
     public static InquiryDTO toInquiryDTO(Inquiry inquiry)
     {
@@ -25,7 +29,9 @@ public class InquiryDTO {
                 inquiry.getTitle(),
                 inquiry.getCategory(),
                 inquiry.getState(),
-                inquiry.getContent()
+                inquiry.getContent(),
+                inquiry.getCreatedAt(),
+                inquiry.getUpdatedAt()
         );
     }
 }

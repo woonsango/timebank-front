@@ -1,5 +1,6 @@
 package com.capstone.timepay.domain.dealBoard;
 
+import com.capstone.timepay.domain.board.BoardStatus;
 import com.capstone.timepay.domain.dealRegister.DealRegister;
 import com.capstone.timepay.domain.user.User;
 import org.springframework.data.jpa.domain.Specification;
@@ -8,6 +9,7 @@ import org.springframework.util.StringUtils;
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.JoinType;
 import java.time.LocalDateTime;
+import java.util.List;
 
 public class DealBoardSearch {
 
@@ -73,5 +75,20 @@ public class DealBoardSearch {
 
     public static Specification<DealBoard> withVolunteer(boolean isVolunteer) {
         return (root, query, builder) -> builder.equal(root.get("isVolunteer"), isVolunteer);
+    }
+
+//    public static Specification<DealBoard> withDealRegister(User user) {
+//        return (root, query, builder) -> builder.isMember(user, root.get("dealRegisters"));
+//    }
+
+    public static Specification<DealBoard> withBoardStatus(BoardStatus boardStatus) {
+        return (root, query, builder) -> builder.equal(root.get("boardStatus"), boardStatus);
+    }
+
+    public static Specification<DealBoard> withDealRegisters(List<DealRegister> dealRegisters) {
+        return (root, query, criteriaBuilder) -> {
+            Join<DealBoard, DealRegister> joinDealRegister = root.join("dealRegisters");
+            return joinDealRegister.in(dealRegisters);
+        };
     }
 }

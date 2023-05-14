@@ -33,8 +33,8 @@ public class DealBoardSearchController {
             @RequestParam(value = "startTime", required = false) LocalDateTime startTime,
             @RequestParam(value = "endTime", required = false) LocalDateTime endTime,
             @RequestParam(value = "volunteer", required = false) boolean volunteer,
-            @RequestParam(value = "perPage", defaultValue = "10") int perPage,
-            @RequestParam(value = "curPage", defaultValue = "1") int curPage
+            @RequestParam(value = "pagingSize", defaultValue = "10") int perPage,
+            @RequestParam(value = "pagingIndex", defaultValue = "0") int curPage
     ) {
         Specification<DealBoard> spec = DealBoardSearch.withTitle(title)
                 .and(DealBoardSearch.withType(type))

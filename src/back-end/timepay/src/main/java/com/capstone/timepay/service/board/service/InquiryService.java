@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.security.Principal;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -34,7 +35,7 @@ public class InquiryService {
         Inquiry inquiry = new Inquiry();
         inquiry.setTitle(inquiryDTO.getTitle());
         inquiry.setCategory(inquiryDTO.getCategory());
-        inquiry.setState(inquiryDTO.getState());
+        inquiry.setState("답변대기");
         inquiry.setContent(inquiryDTO.getContent());
         inquiry.setUser(user);
         inquiryRepository.save(inquiry);
@@ -62,8 +63,8 @@ public class InquiryService {
             Inquiry inquiry = optionalInquiry.get();
             inquiry.setTitle(inquiryDTO.getTitle());
             inquiry.setCategory(inquiryDTO.getCategory());
-            inquiry.setState(inquiryDTO.getState());
             inquiry.setContent(inquiryDTO.getContent());
+            inquiry.setUpdatedAt(LocalDateTime.now());
             return inquiryRepository.save(inquiry);
         } else {
             return null;
