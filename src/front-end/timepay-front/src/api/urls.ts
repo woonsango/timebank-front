@@ -10,7 +10,7 @@ export const API_URL = {
   ORGANIZATIONS_LOGIN: '/api/organizations/login',
   ORGANIZATIONS_LOGOUT: '/api/organizations/logout',
   ORGANIZATIONS_DELETE: '/api/organizations/delete',
-  USER_INFO_GET: '/api/users/get/',
+  USER_INFO_GET: '/api/users/mypage/',
   USER_INFO_POST: '/api/users/create/',
   USER_INFO_PUT: '/api/users/update',
 };
