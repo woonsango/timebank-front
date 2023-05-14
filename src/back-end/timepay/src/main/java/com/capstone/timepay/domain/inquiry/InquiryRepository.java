@@ -6,6 +6,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.List;
+
 public interface InquiryRepository extends JpaRepository<Inquiry,Long> {
     Page<Inquiry> findAllByCategory(String category, Pageable pageable);
 
@@ -18,4 +20,6 @@ public interface InquiryRepository extends JpaRepository<Inquiry,Long> {
     Page<Inquiry> findByTitleContains(String title, Pageable pageable);
 
     Page<Inquiry> findAllByUser(User user, Pageable pageable);
+
+    Page<Inquiry> findByUserEmail(String email, Pageable pageable);
 }

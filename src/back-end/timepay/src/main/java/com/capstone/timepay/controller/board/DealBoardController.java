@@ -65,7 +65,7 @@ public class DealBoardController
         return new ResponseEntity<>(paging, HttpStatus.OK);
     }
 
-    @ApiOperation(value = "도움받기 게시판 불러오기")
+    @ApiOperation(value = "도움요청 게시판 불러오기")
     @GetMapping("/help")
     public ResponseEntity<Page<DealBoardDTO>> getHelpBoards(
             @RequestParam(value = "pagingIndex", defaultValue = "0") int pagingIndex,
@@ -92,10 +92,10 @@ public class DealBoardController
                                       @RequestPart(required = false) List<MultipartFile> images,
                                       Principal principal) throws Exception
     {
-        return new ResponseEntity(dealBoardService.write(dealBoardDTO, principal.getName(), "helper", images), HttpStatus.OK);
+        return new ResponseEntity(dealBoardService.helperWrite(dealBoardDTO, principal.getName(), "helper", images), HttpStatus.OK);
     }
 
-    @ApiOperation(value = "거래게시판 도움받기 게시글 작성")
+    @ApiOperation(value = "거래게시판 도움요청 게시글 작성")
     @PostMapping(value = "/write/help", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity getHelpWrite(@RequestPart DealBoardDTO dealBoardDTO,
                                        @RequestPart(required = false) List<MultipartFile> images,
@@ -141,9 +141,9 @@ public class DealBoardController
                                       Principal principal)
     {
         Map<String, Object> deleteMap = new HashMap<>();
+        DealBoard dealBoard = dealBoardService.getId(id);
         String boardEmail = dealRegisterService.getEmail(id);
 
-        DealBoard dealBoard = dealBoardService.getId(id);
         if (dealBoard == null)
         {
             deleteMap.put("success", false);
@@ -215,7 +215,7 @@ public class DealBoardController
             return resultMap;
         }
 
-        dealBoardService.modifyActivityFinsih(boardId);
+        dealBoardService.modifyActivityFinish(boardId);
         resultMap.put("success", true);
         return resultMap;
     }
@@ -226,7 +226,6 @@ public class DealBoardController
         /* 현재 인증된 사용자의 인증 토큰을 가져온다.*/
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         return ResponseEntity.ok(reportService.reportBoard(authentication, boardId, requestDTO, "거래신고"));
-
     }
 }
 
