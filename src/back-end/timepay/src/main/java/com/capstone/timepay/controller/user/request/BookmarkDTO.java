@@ -12,4 +12,8 @@ public class BookmarkDTO {
         this.id = id;
         this.bookmark = bookmark;
     }
+
+    public BookmarkDTO(String bookmark){
+        this.bookmark = bookmark;
+    }
 }

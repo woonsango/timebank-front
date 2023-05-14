@@ -22,6 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.security.Principal;
 import java.util.List;
 
 
@@ -45,11 +46,20 @@ public class ApiController {
         return ResponseEntity.ok(requestData);
     }
 
-    @PostMapping("/bookmark")
-    @ApiOperation(value="유저 북마크(관심 카테고리) 설정")
+    @PostMapping("/create/bookmark")
+    @ApiOperation(value="회원가입할 때, 유저 북마크(관심 카테고리) 설정")
     public ResponseEntity<?> postBookmark(@RequestBody BookmarkDTO bookmarkDTO) {
 
         userInfoService.saveBookmark(bookmarkDTO);
+
+        return ResponseEntity.ok(bookmarkDTO.getBookmark() + " 정상적으로 처리되었습니다.");
+    }
+
+    @PostMapping("/update/bookmark")
+    @ApiOperation(value="회원가입할 때, 유저 북마크(관심 카테고리) 설정")
+    public ResponseEntity<?> postBookmarkUpdate(@RequestBody BookmarkDTO bookmarkDTO, Principal principal) {
+
+        userInfoService.updateBookmark(bookmarkDTO, principal);
 
         return ResponseEntity.ok(bookmarkDTO.getBookmark() + " 정상적으로 처리되었습니다.");
     }
