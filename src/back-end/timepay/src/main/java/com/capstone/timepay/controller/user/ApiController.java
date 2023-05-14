@@ -55,23 +55,6 @@ public class ApiController {
         return ResponseEntity.ok(bookmarkDTO.getBookmark() + " 정상적으로 처리되었습니다.");
     }
 
-    @PostMapping("/update/bookmark")
-    @ApiOperation(value="회원가입할 때, 유저 북마크(관심 카테고리) 설정")
-    public ResponseEntity<?> postBookmarkUpdate(@RequestBody BookmarkDTO bookmarkDTO, Principal principal) {
-
-        userInfoService.updateBookmark(bookmarkDTO, principal);
-
-        return ResponseEntity.ok(bookmarkDTO.getBookmark() + " 정상적으로 처리되었습니다.");
-    }
-
-    @PutMapping("/update")
-    @ApiOperation(value="유저 데이터 수정",notes = "Email을 이용하여 유저를 매핑하고 데이터를 수정합니다.")
-    public ResponseEntity<?> putUserInfo(@ModelAttribute UpdateRequestDTO updateRequestData, @RequestPart(required = false) MultipartFile image) throws Exception{
-
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        return ResponseEntity.ok(userInfoService.updateUserInfo(auth, updateRequestData, image));
-    }
-
     @DeleteMapping("/delete")
     @ApiOperation(value="유저 데이터 삭제(회원탈퇴)",notes = "JWT 토큰에 해당하는 유저 정보를 삭제합니다.")
     public ResponseEntity<?> deleteUserInfo() {

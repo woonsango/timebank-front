@@ -1,5 +1,7 @@
 package com.capstone.timepay.controller.user;
 
+import com.capstone.timepay.controller.user.request.BookmarkDTO;
+import com.capstone.timepay.controller.user.request.UpdateRequestDTO;
 import com.capstone.timepay.controller.user.response.CertificationListResponse;
 import com.capstone.timepay.controller.user.response.GetResponseDTO;
 import com.capstone.timepay.domain.board.BoardStatus;
@@ -10,6 +12,7 @@ import com.capstone.timepay.domain.dealBoardComment.DealBoardCommentSearch;
 import com.capstone.timepay.service.organization.OrganizationManageService;
 import com.capstone.timepay.service.user.service.UserInfoService;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +20,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.security.Principal;
 
@@ -90,5 +94,22 @@ public class UserMypageController {
         CertificationListResponse response = organizationManageService.getCertificationList(principal.getName(),pageIndex,pageSize);
 
         return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/update/bookmark")
+    @ApiOperation(value="마이페이지에서 유저 북마크(관심 카테고리) 설정")
+    public ResponseEntity<?> postBookmarkUpdate(@RequestBody BookmarkDTO bookmarkDTO, Principal principal) {
+
+        userInfoService.updateBookmark(bookmarkDTO, principal);
+
+        return ResponseEntity.ok(bookmarkDTO.getBookmark() + " 정상적으로 처리되었습니다.");
+    }
+
+    @PutMapping("/update")
+    @ApiOperation(value="유저 데이터 수정",notes = "Email을 이용하여 유저를 매핑하고 데이터를 수정합니다.")
+    public ResponseEntity<?> putUserInfo(@ModelAttribute UpdateRequestDTO updateRequestData, @RequestPart(required = false) MultipartFile image) throws Exception{
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        return ResponseEntity.ok(userInfoService.updateUserInfo(auth, updateRequestData, image));
     }
 }
