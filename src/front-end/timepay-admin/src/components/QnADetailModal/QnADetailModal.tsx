@@ -1,10 +1,10 @@
 import { Button, Card, Input, Modal } from 'antd';
 import { useMemo } from 'react';
-import { IQna } from '../../api/interfaces/IQna';
+import { IInquiry } from '../../api/interfaces/IInquiry';
 import { cssQnADetailModalStyle } from './QnADetailModal.styles';
 
 interface QnADetailModalProps {
-  qna?: IQna;
+  qna?: IInquiry;
   isOpen: boolean;
   onCancel: () => void;
 }
