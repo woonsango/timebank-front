@@ -15,7 +15,7 @@ import { fontSizeState } from '../../states/uiState';
 import useFontSize from '../../hooks/useFontSize';
 
 const MainFooter = () => {
-  const { isSmall, isBig } = useFontSize();
+  const { isBig } = useFontSize();
   const setFontSize = useSetRecoilState(fontSizeState);
 
   const items: MenuProps['items'] = [
@@ -35,8 +35,8 @@ const MainFooter = () => {
 
   const handleOnClickModifyFontSize = useCallback(() => {
     if (isBig) setFontSize('small');
-    if (isSmall) setFontSize('big');
-  }, [isBig, isSmall, setFontSize]);
+    else setFontSize('big');
+  }, [isBig, setFontSize]);
 
   return (
     <Layout.Footer css={cssMainFooterStyle}>
@@ -49,7 +49,7 @@ const MainFooter = () => {
         </Button>
       </NavLink>
       <Button onClick={handleOnClickModifyFontSize}>
-        <ModifyFontSizeSmall style={{ display: isSmall ? 'block' : 'none' }} />
+        <ModifyFontSizeSmall style={{ display: isBig ? 'none' : 'block' }} />
         <ModifyFontSizeBig style={{ display: isBig ? 'block' : 'none' }} />
       </Button>
       <Dropdown menu={{ items }} placement="top" arrow trigger={['click']}>
