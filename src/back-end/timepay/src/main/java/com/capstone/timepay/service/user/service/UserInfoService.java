@@ -60,11 +60,10 @@ public class UserInfoService {
 
             UserProfile userProfile = new UserProfile();
 
-            if(userData.getImageUrl() == null)
-                userProfile.setImageUrl("");
-            else
-                userProfile.setImageUrl(userData.getImageUrl());
-            
+            if(userData.getImageUrl() == null){
+                userData.setImageUrl("");
+            }
+            userProfile.setImageUrl(userData.getImageUrl());
             userProfile.setIntroduction(userData.getIntroduction());
             userProfile.setCreatedAt(LocalDateTime.now());
             userProfile.setUpdatedAt(LocalDateTime.now());
