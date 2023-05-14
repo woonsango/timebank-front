@@ -207,6 +207,7 @@ public class KakaoLoginService {
                 .encodedPassword(encodePassword)
                 .roles(Collections.singletonList("ROLE_USER"))
                 .userProfile(userProfileRepository.save(new UserProfile()))
+                .bookmark("")
                 .build());
     }
 
