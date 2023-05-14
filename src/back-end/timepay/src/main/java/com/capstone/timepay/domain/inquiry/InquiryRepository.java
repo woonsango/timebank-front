@@ -22,4 +22,12 @@ public interface InquiryRepository extends JpaRepository<Inquiry,Long> {
     Page<Inquiry> findAllByUser(User user, Pageable pageable);
 
     Page<Inquiry> findByUserEmail(String email, Pageable pageable);
+
+    List<Inquiry> findAllByStateAndCategoryAndUser(String state, String category, User user);
+
+    List<Inquiry> findAllByStateAndCategoryAndTitleContains(String state, String category, String title);
+
+    List<Inquiry> findAllByStateAndCategoryAndUserAndTitleContains(String state, String category, User user, String title);
+
+    List<Inquiry> findAllByStateAndCategory(String state, String category);
 }
