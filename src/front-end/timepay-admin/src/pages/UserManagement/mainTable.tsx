@@ -1,5 +1,5 @@
 import { useRecoilValue, useSetRecoilState } from 'recoil';
-import { IGetUserInfoRequest, IUser } from '../../api/interfaces/IUser';
+import { IGetUserInfoRequest, IUsers } from '../../api/interfaces/IUser';
 import { useGetUserInfos } from '../../api/hooks/userManagement';
 import { mainSearchState } from './mainSearchState';
 import { useMemo, useState } from 'react';
@@ -9,7 +9,7 @@ import { customPaginationProps } from '../../utils/pagination';
 interface MainTableProps {
   selectedUserInfoIds?: React.Key[];
   setSelectedUserInfoIds: (args?: React.Key[]) => void;
-  setSelectedUserInfos: (args?: IUser[]) => void;
+  setSelectedUserInfos: (args?: IUsers[]) => void;
 }
 
 const MainTable = ({
@@ -43,13 +43,13 @@ const MainTable = ({
   }, [mainSearchValues, data]);
 
   const rowSelection = {
-    onChange: (selectedRowKeys: React.Key[], selectedRows: IUser[]) => {
+    onChange: (selectedRowKeys: React.Key[], selectedRows: IUsers[]) => {
       setSelectedUserInfoIds(selectedRowKeys);
       setSelectedUserInfos(selectedRows);
     },
   };
 
-  const columns: ColumnsType<IUser> = [
+  const columns: ColumnsType<IUsers> = [
     {
       title: '이름',
       dataIndex: 'nickName',

@@ -15,19 +15,19 @@ export interface IUser {
   isAdmin: boolean; // 관리자 여부
 }
 
-// export interface IUser {
-//   userId: number;
-//   userName: string;
-//   nickName: string;
-//   sex: string;
-//   birth: string;
-//   region: string;
-//   timepay: number;
-// }
+export interface IUsers {
+  userId: number;
+  userName: string;
+  nickName: string;
+  sex: string;
+  birth: string;
+  region: string;
+  timepay: number;
+}
 
 export interface IGetUserInfoRequest extends GetPageableData {
   nickName?: string;
 }
 export interface IGetUserInfoResponse extends PageableData {
-  content: IUser[];
+  content: IUsers[];
 }

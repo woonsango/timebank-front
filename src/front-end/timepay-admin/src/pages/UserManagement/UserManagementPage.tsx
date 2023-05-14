@@ -13,7 +13,7 @@ import ProfileImageModal from './profileImageModal';
 import DetailModal from './detailModal';
 import EditModal from './editModal';
 import { IUser } from '../../api/interfaces/IUser';
-import MainTable from './MainTable';
+import MainTable from './mainTable';
 
 const UserManagementPage = () => {
   // /*Table */

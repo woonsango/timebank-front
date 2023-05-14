@@ -9,8 +9,8 @@ export const API_URL = {
   NOTIFICATIONS__SEARCH: 'api/notifications/search',
   ADMIN_REGISTER: '/api/admins/register', //관리자 가입
   ADMINS: '/api/admins',
-  USERINFOS: '/api/admins/user-management/main',
-  USERINFOS__SEARCH: '/api/admins/user-management/search',
+  USERINFOS: '/api/admins/normal-user-management/main',
+  USERINFOS__SEARCH: '/api/admins/normal-user-management/search',
 };
 
 /** 토큰을 넣지 않아도 되는 api url 모음 */
