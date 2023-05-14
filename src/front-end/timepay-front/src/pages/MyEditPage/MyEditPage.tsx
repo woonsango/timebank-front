@@ -130,10 +130,9 @@ const MyEditPage: React.FC = () => {
 
   /*닉네임 중복 검사*/
   const overlapNickname = () => {
-    const requestUrl = `http://13.125.119.30/api/users/check/nickname/${nickName}`;
     /*get*/
     apiRequest
-      .get(requestUrl)
+      .get(`/api/users/check/nickname/${nickName}`)
       .then((res) => {
         console.log('닉네임 중복 검사 성공');
         console.log(res);
