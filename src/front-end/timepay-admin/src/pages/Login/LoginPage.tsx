@@ -32,7 +32,7 @@ const LoginPage = () => {
       {
         onSuccess: (result) => {
           if (result.data.admin) {
-            setTokenToCookie(result.data.jwt, 1);
+            setTokenToCookie(result.data.jwt, 10);
             messageApi
               .open({
                 type: 'success',
