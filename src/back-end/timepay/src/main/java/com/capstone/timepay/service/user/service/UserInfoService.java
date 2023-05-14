@@ -271,8 +271,8 @@ public class UserInfoService {
         /* deleteById를 사용하지 않고 에러 메세지를 직접 커스텀 */
         if(userData != null) {
             UserProfile userProfileData = userData.getUserProfile();
-            userRepository.delete(userData);
             userProfileRepository.delete(userProfileData);
+            userRepository.delete(userData);
 
         } else{
             System.out.println("존재하지 않는 회원이랍니다~");
