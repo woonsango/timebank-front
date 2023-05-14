@@ -17,7 +17,7 @@ const MyPage = () => {
 
   useEffect(() => {
     apiRequest
-      .get(API_URL.USER_INFO)
+      .get(API_URL.USER_INFO_GET)
       .then((res) => {
         console.log(res);
 

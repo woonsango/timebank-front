@@ -34,7 +34,6 @@ import {
   cssJoinNick,
   cssJoinMargin,
 } from './Join.styles';
-import { overlap } from './overlapNickname';
 import { apiRequest } from '../../api/request';
 import { API_URL } from '../../api/urls';
 
@@ -74,6 +73,8 @@ const JoinPage = () => {
 
   const [guText, setGuText] = useState<string>('');
   const [dongText, setDongText] = useState<string>('');
+
+  const [overlap, setOverlap] = useState<boolean>(false);
 
   const navigate = useNavigate();
 
@@ -195,7 +196,6 @@ const JoinPage = () => {
     return Promise.resolve();
   };
 
-  /*지역, 생년월일 null check*/
   const warning = (value: string) => {
     messageApi.open({
       type: 'warning',
@@ -203,18 +203,32 @@ const JoinPage = () => {
     });
   };
 
+  const success_nickNameOverlapping = () => {
+    messageApi.open({
+      type: 'success',
+      content: '사용 가능한 닉네임입니다.',
+    });
+  };
+
   /*닉네임 중복 검사*/
   const overlapNickname = () => {
     /*get*/
-    //   axios
-    //     .get('url 넣기', nickName)
-    //     .then((res) => {
-    //       console.log('닉네임 중복 검사 성공');
-    //       console.log(res);
-    //     })
-    //     .catch((err) => {
-    //       console.log('닉네임 중복 검사 실패');
-    //     });
+    apiRequest
+      .get(`/api/users/check/nickname/${nickName}`)
+      .then((res) => {
+        console.log('닉네임 중복 검사 성공');
+        console.log(res);
+
+        if (res.data === true) {
+          setOverlap(true);
+          success_nickNameOverlapping();
+        } else if (res.data === false) {
+          warning('이미 존재하는 닉네임입니다.');
+        }
+      })
+      .catch((err) => {
+        console.log('닉네임 중복 검사 실패');
+      });
   };
 
   /*Handle 가입 완료 Btn*/
@@ -234,12 +248,10 @@ const JoinPage = () => {
       !phone_regex.test(phoneNumber)
     ) {
       console.log('가입 완료 제출: 전화번호 형식 부적합');
-    }
-    //else if (overlap === false) {
-    //   console.log('가입 완료 제출: 닉네임 중복 여부 확인되지 않음');
-    //   warning('닉네임 중복 여부를 검사해 주세요.');
-    // }
-    else {
+    } else if (overlap === false) {
+      console.log('가입 완료 제출: 닉네임 중복 여부 확인되지 않음');
+      warning('닉네임 중복 여부를 검사해 주세요.');
+    } else {
       console.log('가입 완료 제출: 조건 충족');
 
       /*formData*/
