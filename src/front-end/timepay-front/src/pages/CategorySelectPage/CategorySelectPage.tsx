@@ -13,9 +13,15 @@ import {
 import { ReactComponent as BackArrow } from '../../assets/images/icons/header-back-arrow.svg';
 import { cssMainHeaderStyle } from '../../components/MainHeader/MainHeader.styles';
 import { PATH } from '../../utils/paths';
+import { useRecoilState } from 'recoil';
+import { isFirstState } from '../../states/categorySelect';
 
 const CategorySelectPage = () => {
-  const [isFirst, setIsFirst] = useState(true); // isFirst가 false면 첫 화면 아님
+  //
+  // recoil value 로 바꾸기..
+  // 지금은 항상 isFirst가 true로 초기화됨
+  //
+  const [isFirst, setIsFirst] = useRecoilState(isFirstState); // isFirst가 false면 첫 화면 아님
 
   const { pathname } = useLocation();
   useEffect(() => {
