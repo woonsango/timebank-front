@@ -40,7 +40,7 @@ public class UserMypageController {
     public ResponseEntity<?> getMyInfoBoard(@RequestParam(required = false) String query, @RequestParam(defaultValue = "0") int pageIndex,
                                        @RequestParam(defaultValue = "10") int pageSize){
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        GetResponseDTO responseData = userInfoService.getMyInfo(auth, pageIndex, pageSize);
+        GetResponseDTO responseData = userInfoService.getMyInfoBoard(auth, query, pageIndex, pageSize);
         return ResponseEntity.ok(responseData);
     }
 
@@ -52,8 +52,8 @@ public class UserMypageController {
     public ResponseEntity<?> getMyInfoComment(@RequestParam(required = false) String query, @RequestParam(defaultValue = "0") int pageIndex,
                                        @RequestParam(defaultValue = "10") int pageSize){
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        GetResponseDTO responseData = userInfoService.getMyInfo(auth, pageIndex, pageSize);
-        return ResponseEntity.ok(responseData);
+
+        return ResponseEntity.ok(userInfoService.getMyInfoComment(auth, query, pageIndex, pageSize));
     }
 
     @Transactional(readOnly = true)
