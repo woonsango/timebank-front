@@ -1,18 +1,23 @@
 import { Button, Table } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import { useCallback, useMemo, useState } from 'react';
-import { IPost, IPostState, IPostType } from '../../api/interfaces/IPost';
 import dayjs from 'dayjs';
 import {
   cssPostTableRowCountStyle,
   cssPostTableStyle,
 } from './PostTable.styles';
 import PostDetailModal from '../PostDetailModal';
+import { useGetBoards } from '../../api/hooks/boards';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { boardSearchState } from '../../states/boardSearchState';
+import { IDealBoard, IGetBoardRequest } from '../../api/interfaces/IBoard';
+import { getStatus, getType } from '../../utils/board';
+import { customPaginationProps } from '../../utils/pagination';
 
 interface PostTableProps {
   selectedPostIds?: React.Key[];
   setSelectedPostIds: (args?: React.Key[]) => void;
-  setSelectedPosts: (args?: IPost[]) => void;
+  setSelectedPosts: (args?: IDealBoard[]) => void;
 }
 
 const PostTable = ({
@@ -20,10 +25,15 @@ const PostTable = ({
   setSelectedPostIds,
   setSelectedPosts,
 }: PostTableProps) => {
-  const [isOpen, setIsOpen] = useState(false);
-  const [currentPost, setCurrentPost] = useState<IPost>();
+  const boardSearchValue = useRecoilValue(boardSearchState);
+  const setBoardSearch = useSetRecoilState(boardSearchState);
 
-  const handleOnShowDetailPost = useCallback((post: IPost) => {
+  const { data, isLoading } = useGetBoards(boardSearchValue);
+
+  const [isOpen, setIsOpen] = useState(false);
+  const [currentPost, setCurrentPost] = useState<IDealBoard>();
+
+  const handleOnShowDetailPost = useCallback((post: IDealBoard) => {
     setCurrentPost(post);
     setIsOpen(true);
   }, []);
@@ -33,49 +43,15 @@ const PostTable = ({
     setIsOpen(false);
   }, []);
 
-  const postTypes: IPostType[] = ['도움요청', '도움주기', '자유', '후기'];
-  const postStatus: IPostState[] = [
-    '매칭중',
-    '매칭완료',
-    '활동시작',
-    '활동완료',
-    '활동취소',
-    '활동지연',
-  ];
-  const dummyDataSource: IPost[] = [];
+  const dataSource = useMemo(() => {
+    if (boardSearchValue) {
+      return data?.data.content || [];
+    }
+    return [];
+  }, [boardSearchValue, data]);
 
-  for (let i = 0; i < 100; i++) {
-    dummyDataSource.push({
-      postId: i,
-      type: postTypes[i % 4],
-      status: postStatus[i % 6],
-      category: '카텍',
-      user: {
-        userPk: i * 1000 + 1,
-        name: `사용자 ${i}`,
-        birthday: '2000-01-15 11:00:00',
-        createdAt: '2023-01-15 11:00:00',
-        sex: 'W',
-        nickname: '하연',
-        region: '광진구',
-        phoneNumber: '01023860370',
-        accountEmail: 'iioo3356@gmail.com',
-        isAdmin: true,
-      },
-      pay: i * 100,
-      startTime: '2023-03-19 11:00:00',
-      endTime: `2023-03-19 ${((12 + i) % 12).toString()}:00:00`,
-      createdAt: `2023-02-18 ${(i % 12).toString()}:00:00`,
-      title: `게시글 제목 ${i}`,
-      content: `게시글 내용 ${i}`,
-      region: '정릉3동',
-      originPostId: i % 20 === 0 ? i : undefined,
-      attachment:
-        'https://newsimg.hankookilbo.com/2018/02/05/201802051120876500_1.jpg',
-    });
-  }
   const rowSelection = {
-    onChange: (selectedRowKeys: React.Key[], selectedRows: IPost[]) => {
+    onChange: (selectedRowKeys: React.Key[], selectedRows: IDealBoard[]) => {
       console.log(
         `selectedRowKeys: ${selectedRowKeys}`,
         'selectedRows: ',
@@ -87,14 +63,14 @@ const PostTable = ({
   };
 
   // @ts-ignore
-  const columns: ColumnsType<IPost> = useMemo(() => {
+  const columns: ColumnsType<IDealBoard> = useMemo(() => {
     return [
       {
         title: '게시글 번호',
-        key: 'postId',
-        dataIndex: 'postId',
+        key: 'd_boardId',
+        dataIndex: 'd_boardId',
         width: 90,
-        sorter: (a: IPost, b: IPost) => a.postId - b.postId,
+        sorter: (a: IDealBoard, b: IDealBoard) => a.d_boardId - b.d_boardId,
       },
       {
         title: '유형',
@@ -103,30 +79,31 @@ const PostTable = ({
         width: 100,
         align: 'center',
         filters: [
-          { text: '도움요청', value: '도움요청' },
-          { text: '도움주기', value: '도움주기' },
-          { text: '자유', value: '자유' },
-          { text: '후기', value: '후기' },
+          { text: '도움요청', value: 'help' },
+          { text: '도움주기', value: 'helper' },
+          { text: '기부하기', value: 'event' },
         ],
-        onFilter: (value: string, record: IPost) =>
+        onFilter: (value: string, record: IDealBoard) =>
           record.type.indexOf(value) === 0,
+        render: (type: string) => getType(type),
       },
       {
         title: '상태',
-        key: 'status',
-        dataIndex: 'status',
+        key: 'boardStatus',
+        dataIndex: 'boardStatus',
         width: 100,
         align: 'center',
         filters: [
-          { text: '매칭중', value: '매칭중' },
-          { text: '매칭완료', value: '매칭완료' },
-          { text: '활동시작', value: '활동시작' },
-          { text: '활동완료', value: '활동완료' },
-          { text: '활동취소', value: '활동취소' },
-          { text: '활동지연', value: '활동지연' },
+          { text: '매칭중', value: 'MATCHING_IN_PROGRESS' },
+          { text: '매칭완료', value: 'MATCHING_COMPLETE' },
+          { text: '활동중', value: 'ACTIVITY_IN_PROGRESS' },
+          { text: '활동완료', value: 'ACTIVITY_COMPLETE' },
+          { text: '활동취소', value: 'ACTIVITY_CANCEL' },
+          { text: '활동지연', value: 'ACTIVITY_DELAY' },
         ],
-        onFilter: (value: string, record: IPost) =>
-          record.status.indexOf(value) === 0,
+        onFilter: (value: string, record: IDealBoard) =>
+          record.boardStatus.indexOf(value) === 0,
+        render: (boardStatus: string) => getStatus(boardStatus),
       },
       {
         title: '카테고리',
@@ -137,11 +114,10 @@ const PostTable = ({
       },
       {
         title: '작성자 회원번호',
-        key: 'userPk',
-        dataIndex: 'userPk',
+        key: 'userId',
+        dataIndex: 'userId',
         width: 110,
-        sorter: (a: IPost, b: IPost) => a.user.userPk - b.user.userPk,
-        render: (_userPk: string, record: IPost) => record.user.userPk,
+        sorter: (a: IDealBoard, b: IDealBoard) => a.userId - b.userId,
       },
       {
         title: '작성자 이름',
@@ -149,7 +125,6 @@ const PostTable = ({
         dataIndex: 'userName',
         width: 100,
         align: 'center',
-        render: (_userName: string, record: IPost) => record.user.name,
       },
       {
         title: '작성자 닉네임',
@@ -157,7 +132,6 @@ const PostTable = ({
         dataIndex: 'userNickname',
         width: 100,
         align: 'center',
-        render: (_userNickname: string, record: IPost) => record.user.nickname,
       },
       {
         title: '작성일시',
@@ -165,7 +139,7 @@ const PostTable = ({
         dataIndex: 'createdAt',
         width: 140,
         align: 'center',
-        sorter: (a: IPost, b: IPost) =>
+        sorter: (a: IDealBoard, b: IDealBoard) =>
           dayjs(a.createdAt).isAfter(dayjs(b.createdAt)),
       },
       {
@@ -174,7 +148,7 @@ const PostTable = ({
         dataIndex: 'updatedAt',
         width: 140,
         align: 'center',
-        sorter: (a: IPost, b: IPost) =>
+        sorter: (a: IDealBoard, b: IDealBoard) =>
           dayjs(a.updatedAt).isAfter(dayjs(b.updatedAt)),
       },
       {
@@ -183,7 +157,7 @@ const PostTable = ({
         dataIndex: 'startTime',
         width: 150,
         align: 'center',
-        render: (startTime: string, record: IPost) => (
+        render: (startTime: string, record: IDealBoard) => (
           <div>
             {startTime}
             <br />~<br />
@@ -192,12 +166,19 @@ const PostTable = ({
         ),
       },
       {
+        title: '활동장소',
+        key: 'location',
+        dataIndex: 'location',
+        width: 150,
+        align: 'center',
+      },
+      {
         title: '타임페이 거래량',
         key: 'pay',
         dataIndex: 'pay',
         width: 100,
         align: 'center',
-        sorter: (a: IPost, b: IPost) => b.pay - a.pay,
+        sorter: (a: IDealBoard, b: IDealBoard) => b.pay - a.pay,
       },
       {
         title: '제목',
@@ -206,7 +187,7 @@ const PostTable = ({
         width: 150,
         align: 'center',
 
-        render: (_: string, record: IPost) => (
+        render: (_: string, record: IDealBoard) => (
           <Button type="link" onClick={() => handleOnShowDetailPost(record)}>
             더보기
           </Button>
@@ -218,7 +199,7 @@ const PostTable = ({
         dataIndex: 'content',
         width: 150,
         align: 'center',
-        render: (_: string, record: IPost) => (
+        render: (_: string, record: IDealBoard) => (
           <Button type="link" onClick={() => handleOnShowDetailPost(record)}>
             더보기
           </Button>
@@ -226,23 +207,61 @@ const PostTable = ({
       },
       {
         title: '본문 첨부사진',
-        key: 'attachment',
-        dataIndex: 'attachment',
+        key: 'dealAttatchments',
+        dataIndex: 'dealAttatchments',
         width: 100,
         align: 'center',
-        render: (_: string, record: IPost) => (
+        render: (_: string, record: IDealBoard) => (
           <Button type="link" onClick={() => handleOnShowDetailPost(record)}>
             더보기
           </Button>
         ),
       },
       {
-        title: '원본 게시글 번호',
-        key: 'originPostId',
-        dataIndex: 'originPostId',
+        title: '숨김여부',
+        key: 'hidden',
+        dataIndex: 'hidden',
         width: 100,
-        sorter: (a: IPost, b: IPost) =>
-          (b.originPostId || 0) - (a.originPostId || 0),
+        align: 'center',
+        render: (hidden: boolean) => (hidden ? 'Y' : 'N'),
+        filters: [
+          { text: 'Y', value: true },
+          { text: 'N', value: false },
+        ],
+        onFilter: (value: boolean, record: IDealBoard) =>
+          record.hidden === value,
+      },
+      {
+        title: '봉사활동 게시글',
+        key: 'volunteer',
+        dataIndex: 'volunteer',
+        width: 100,
+        align: 'center',
+        render: (volunteer: boolean) => (volunteer ? 'Y' : 'N'),
+        filters: [
+          { text: 'Y', value: true },
+          { text: 'N', value: false },
+        ],
+        onFilter: (value: boolean, record: IDealBoard) =>
+          record.volunteer === value,
+      },
+      {
+        title: '봉사 인원',
+        key: 'volunteerPeople',
+        dataIndex: 'volunteerPeople',
+        width: 100,
+        align: 'center',
+        render: (volunteerPeople: number, record: IDealBoard) =>
+          record.volunteer ? volunteerPeople : '-',
+      },
+      {
+        title: '봉사시간',
+        key: 'volunteerTime',
+        dataIndex: 'volunteerTime',
+        width: 100,
+        align: 'center',
+        render: (volunteerTime: number, record: IDealBoard) =>
+          record.volunteer ? volunteerTime : '-',
       },
     ];
   }, [handleOnShowDetailPost]);
@@ -253,15 +272,21 @@ const PostTable = ({
         {selectedPostIds && selectedPostIds.length > 0
           ? `${selectedPostIds.length} 개 선택 / `
           : ''}
-        총 {dummyDataSource.length} 개
+        총 {data?.data.totalElements} 개
       </div>
       <Table
         css={cssPostTableStyle}
         rowSelection={rowSelection}
         columns={columns}
         scroll={{ x: 1500 }}
-        dataSource={dummyDataSource}
-        rowKey="postId"
+        dataSource={dataSource}
+        rowKey="d_boardId"
+        loading={isLoading}
+        pagination={customPaginationProps<IGetBoardRequest>({
+          totalElements: data?.data.totalElements,
+          currentSearchValues: boardSearchValue,
+          setSearchValues: setBoardSearch,
+        })}
       />
       <PostDetailModal
         isOpen={isOpen}

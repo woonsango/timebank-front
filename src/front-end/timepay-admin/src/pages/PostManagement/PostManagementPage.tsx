@@ -1,6 +1,6 @@
 import { Button, Card } from 'antd';
 import { useCallback, useState } from 'react';
-import { IPost } from '../../api/interfaces/IPost';
+import { IDealBoard } from '../../api/interfaces/IBoard';
 import PostHandleModal from '../../components/PostHandleModal';
 import PostSearchForm from '../../components/PostSearchForm';
 import PostTable from '../../components/PostTable';
@@ -11,7 +11,7 @@ const PostManagementPage = () => {
   const [isOpenChangeStatusModal, setIsOpenChangeStatusModal] = useState(false);
 
   const [selectedPostIds, setSelectedPostIds] = useState<React.Key[]>();
-  const [selectedPosts, setSelectedPosts] = useState<IPost[]>();
+  const [selectedPosts, setSelectedPosts] = useState<IDealBoard[]>();
 
   const handleOnCancelModal = useCallback(() => {
     setIsOpenChangeStatusModal(false);
