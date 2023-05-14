@@ -214,7 +214,7 @@ const JoinPage = () => {
   const overlapNickname = () => {
     const requestUrl = `http://13.125.119.30/api/users/check/nickname/${nickName}`;
     /*get*/
-    axios
+    apiRequest
       .get(requestUrl)
       .then((res) => {
         console.log('닉네임 중복 검사 성공');
