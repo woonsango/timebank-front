@@ -1,6 +1,6 @@
 import { css } from '@emotion/react';
 
-export const cssQnADetailModalStyle = css`
+export const cssInquiryDetailModalStyle = css`
   .ant-modal-content {
     padding: 30px;
   }
@@ -11,7 +11,7 @@ export const cssQnADetailModalStyle = css`
     padding-top: 20px;
   }
 
-  .QnAInnerContent {
+  .InquiryInnerContent {
     padding: 10px;
   }
   .textInput {

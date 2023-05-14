@@ -83,10 +83,10 @@ const BaseLayout = () => {
         ),
       },
       {
-        key: PATH.QNA_MANAGEMENT,
+        key: PATH.INQUIRY_MANAGEMENT,
         label: '문의 관리',
         icon: (
-          <Link to={PATH.QNA_MANAGEMENT}>
+          <Link to={PATH.INQUIRY_MANAGEMENT}>
             <MailOutlined />
           </Link>
         ),

@@ -2,12 +2,12 @@ import { Button, Table } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import { useCallback, useMemo, useState } from 'react';
 import dayjs from 'dayjs';
-import { cssQnATableStyle } from './QnATable.styles';
+import { cssInquiryTableStyle } from './InquiryTable.styles';
 import { IInquiry } from '../../api/interfaces/IInquiry';
-import QnADetailModal from '../QnADetailModal';
+import InquiryDetailModal from '../InquiryDetailModal';
 import { useGetInquiries } from '../../api/hooks/inquiry';
 
-const QnATable = () => {
+const InquiryTable = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [currentQnA, setCurrentQnA] = useState<IInquiry>();
   const { data, isLoading } = useGetInquiries();
@@ -96,19 +96,20 @@ const QnATable = () => {
   return (
     <>
       <Table
-        css={cssQnATableStyle}
+        css={cssInquiryTableStyle}
         columns={columns}
         scroll={{ x: 1000 }}
         dataSource={dataSource}
-        rowKey="postId"
+        rowKey="inquiryId"
+        loading={isLoading}
       />
-      <QnADetailModal
+      <InquiryDetailModal
         isOpen={isOpen}
         onCancel={handleOnCloseDetailQnA}
-        qna={currentQnA}
+        Inquiry={currentQnA}
       />
     </>
   );
 };
 
-export default QnATable;
+export default InquiryTable;

@@ -1,7 +1,7 @@
 import { css } from '@emotion/react';
 import { COMMON_COLOR } from '../../styles/constants/colors';
 
-export const cssQnATableStyle = css`
+export const cssInquiryTableStyle = css`
   width: 100%;
   .ant-table-cell {
     word-break: keep-all;

@@ -19,8 +19,8 @@ function App() {
           />
           <Route element={<BaseLayout />}>
             <Route
-              path={PATH.QNA_MANAGEMENT}
-              element={<PageRoutes.QnAManagementPage />}
+              path={PATH.INQUIRY_MANAGEMENT}
+              element={<PageRoutes.InquiryManagementPage />}
             />
             <Route
               path={PATH.USER_MANAGEMENT}

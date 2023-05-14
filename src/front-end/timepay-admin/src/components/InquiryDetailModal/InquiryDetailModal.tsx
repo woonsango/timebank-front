@@ -1,15 +1,19 @@
 import { Button, Card, Input, Modal } from 'antd';
 import { useMemo } from 'react';
 import { IInquiry } from '../../api/interfaces/IInquiry';
-import { cssQnADetailModalStyle } from './QnADetailModal.styles';
+import { cssInquiryDetailModalStyle } from './InquiryDetailModal.styles';
 
-interface QnADetailModalProps {
-  qna?: IInquiry;
+interface InquiryDetailModalProps {
+  Inquiry?: IInquiry;
   isOpen: boolean;
   onCancel: () => void;
 }
 const { TextArea } = Input;
-const QnADetailModal = ({ qna, isOpen, onCancel }: QnADetailModalProps) => {
+const InquiryDetailModal = ({
+  Inquiry,
+  isOpen,
+  onCancel,
+}: InquiryDetailModalProps) => {
   const footer = useMemo(() => {
     return (
       <div>
@@ -29,11 +33,11 @@ const QnADetailModal = ({ qna, isOpen, onCancel }: QnADetailModalProps) => {
       onCancel={onCancel}
       footer={footer}
       width={700}
-      css={cssQnADetailModalStyle}
+      css={cssInquiryDetailModalStyle}
     >
-      <div className="QnATitle">
-        <Card title={qna?.title}>
-          <div className="QnAInnerContent">{qna?.content}</div>
+      <div className="InquiryTitle">
+        <Card title={Inquiry?.title}>
+          <div className="InquiryInnerContent">{Inquiry?.content}</div>
         </Card>
         <div className="answerInput">
           <TextArea
@@ -46,4 +50,4 @@ const QnADetailModal = ({ qna, isOpen, onCancel }: QnADetailModalProps) => {
     </Modal>
   );
 };
-export default QnADetailModal;
+export default InquiryDetailModal;
