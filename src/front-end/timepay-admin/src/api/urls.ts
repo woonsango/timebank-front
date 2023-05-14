@@ -19,3 +19,6 @@ export const API_URL = {
 
 /** 토큰을 넣지 않아도 되는 api url 모음 */
 export const HEADER_NOT_REQUIRED_URLS = [API_URL.ADMIN_LOGIN];
+
+// form data로 전송 필요한 url
+export const FORM_DATA_REQUIRED_URLS = [API_URL.NOTIFICATIONS];
