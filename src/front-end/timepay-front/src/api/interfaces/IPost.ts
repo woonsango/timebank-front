@@ -96,7 +96,9 @@ export interface IGetSearchBoardRequest {
   type?: string;
   category?: string;
   sortType?: string;
+  startDate: null; // 프론트에서만 사용
   startTime?: string;
+  endDate: null; // 프론트에서만 사용
   endTime?: string;
   volunteer?: boolean;
   pagingSize: number;

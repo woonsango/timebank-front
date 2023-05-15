@@ -5,10 +5,12 @@ export const initialBoardSearchState = {
   pagingIndex: 0,
   pagingSize: 10,
   title: undefined,
-  type: undefined,
+  type: 'help',
   category: undefined,
   sortType: undefined,
+  startDate: null,
   startTime: undefined,
+  endDate: null,
   endTime: undefined,
   volunteer: undefined,
 };

@@ -17,8 +17,14 @@ import { useCallback, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { DownOutlined, UpOutlined } from '@ant-design/icons';
 import dayjs from 'dayjs';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { boardSearchState } from '../../states/boardSearch';
+
 const SearchHeader = () => {
   const navigate = useNavigate();
+
+  const boardSearchValue = useRecoilValue(boardSearchState);
+  const setBoardSearch = useSetRecoilState(boardSearchState);
 
   const [titleSearchForm] = Form.useForm();
   const [optionSearchForm] = Form.useForm();
@@ -40,17 +46,42 @@ const SearchHeader = () => {
   }, []);
 
   const handleOnChangeOptionSearchForm = useCallback(
-    (changedValues: any, values: any) => {
+    (changedValues: { [key: string]: any }, values: any) => {
       // 옵션 검색 시 값이 바뀔 때마다 바로 api 호출
-      console.log('변경된 내용', changedValues);
-      console.log('현재 전체 내용', values);
+      setBoardSearch({
+        ...boardSearchValue,
+        ...changedValues,
+        startDate: null,
+        endDate: null,
+        startTime: values.startDate
+          ? `${values.startDate.format('YYYY-MM-DD')}T${
+              values.startTime
+                ? values.startTime.format('HH:mm:ss.000000')
+                : '00:00:00.000000'
+            }`
+          : undefined,
+        endTime: values.endDate
+          ? `${values.endDate.format('YYYY-MM-DD')}T${
+              values.endTime
+                ? values.endTime.format('HH:mm:ss.000000')
+                : '00:00:00.000000'
+            }`
+          : undefined,
+      });
     },
-    [],
+    [setBoardSearch, boardSearchValue],
   );
 
-  const handleOnSearchTitle = useCallback((values: { title: string }) => {
-    console.log('검색 성공', values);
-  }, []);
+  const handleOnSearchTitle = useCallback(
+    (values: { title: string }) => {
+      setBoardSearch({
+        ...boardSearchValue,
+        title: values.title,
+        pagingIndex: 0,
+      });
+    },
+    [boardSearchValue, setBoardSearch],
+  );
 
   const handleOnFailSearchTitle = useCallback(
     (errorInfo: any) => {
@@ -75,15 +106,7 @@ const SearchHeader = () => {
           onFinish={handleOnSearchTitle}
           onFinishFailed={handleOnFailSearchTitle}
         >
-          <Form.Item
-            name="title"
-            rules={[
-              {
-                required: true,
-                message: '',
-              },
-            ]}
-          >
+          <Form.Item name="title" initialValue={boardSearchValue.title}>
             <Input placeholder="검색할 게시글의 제목을 입력해주세요" />
           </Form.Item>
           <Button htmlType="submit" type="primary">
@@ -120,7 +143,7 @@ const SearchHeader = () => {
             colon={false}
             onValuesChange={handleOnChangeOptionSearchForm}
           >
-            <Form.Item name="type" initialValue="도움요청">
+            <Form.Item name="type" initialValue={boardSearchValue.type}>
               <Radio.Group
                 buttonStyle="solid"
                 style={{
@@ -129,9 +152,9 @@ const SearchHeader = () => {
                   marginBottom: '10px',
                 }}
               >
-                <Radio.Button value="도움요청">도와줘요</Radio.Button>
-                <Radio.Button value="모집">같이해요</Radio.Button>
-                <Radio.Button value="기부">기부해요</Radio.Button>
+                <Radio.Button value="help">도움요청</Radio.Button>
+                <Radio.Button value="helper">같이하기</Radio.Button>
+                <Radio.Button value="event">기부하기</Radio.Button>
               </Radio.Group>
             </Form.Item>
 
@@ -165,6 +188,7 @@ const SearchHeader = () => {
                       optionSearchForm.getFieldsValue(),
                     );
                   }}
+                  disabled={!optionSearchForm.getFieldValue('startDate')}
                 />
               </Form.Item>
             </Form.Item>
@@ -197,10 +221,11 @@ const SearchHeader = () => {
                       optionSearchForm.getFieldsValue(),
                     );
                   }}
+                  disabled={!optionSearchForm.getFieldValue('endDate')}
                 />
               </Form.Item>
             </Form.Item>
-            <Form.Item name="isVolunteer" valuePropName="checked">
+            <Form.Item name="volunteer" valuePropName="checked">
               <Checkbox>봉사활동 게시글만 보기</Checkbox>
             </Form.Item>
           </Form>

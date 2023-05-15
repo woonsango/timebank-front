@@ -58,7 +58,10 @@ const HomePage = () => {
       <div className="title-search-container">
         <Logo />
         <div className="title-search">
-          <Input onChange={handleOnChange} />
+          <Input
+            defaultValue={boardSearchValue.title}
+            onChange={handleOnChange}
+          />
           <Button type="ghost" onClick={handleOnSearchTitle}>
             검색
           </Button>

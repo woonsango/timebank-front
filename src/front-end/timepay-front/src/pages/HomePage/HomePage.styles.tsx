@@ -29,6 +29,7 @@ export const cssHomePageStyle = (scaleValue: number) => css`
         justify-content: center;
       }
       .ant-input {
+        width: 172px;
         font-size: calc(14px * ${scaleValue}) !important;
       }
     }
