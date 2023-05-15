@@ -131,9 +131,6 @@ public class KakaoLoginService {
                 kakaoUser = userRepository.findByEmail(email).orElse(null);
                 password = email + Key;
                 if (kakaoUser == null) {
-
-
-
                     /* 성별 제공 여부 확인 및 성별 가져오기 */
                     boolean hasSex = element.getAsJsonObject().get("kakao_account").getAsJsonObject().get("has_gender").getAsBoolean();
                     if (hasSex) {
@@ -170,7 +167,7 @@ public class KakaoLoginService {
                     return userTmp;
 
                 }
-                if (!kakaoUser.isSignUp()) {
+                else if (!kakaoUser.isSignUp()) {
                     System.out.println("\n이미 회원가입 신청한 계정이래요~\n");
 
                     User user = userRepository.findByEmail(email).orElseThrow(IllegalArgumentException::new);

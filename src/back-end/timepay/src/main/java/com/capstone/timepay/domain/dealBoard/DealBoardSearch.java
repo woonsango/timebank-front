@@ -89,7 +89,12 @@ public class DealBoardSearch {
     }
 
     public static Specification<DealBoard> withVolunteer(boolean isVolunteer) {
-        return (root, query, builder) -> builder.equal(root.get("isVolunteer"), isVolunteer);
+        if (isVolunteer) {
+            return (root, query, builder) -> builder.isTrue(root.get("isVolunteer"));
+        } else {
+            return (root, query, builder) -> builder.or(builder.isFalse(root.get("isVolunteer")),
+                    builder.isTrue(root.get("isVolunteer")));
+        }
     }
 
 //    public static Specification<DealBoard> withDealRegister(User user) {
