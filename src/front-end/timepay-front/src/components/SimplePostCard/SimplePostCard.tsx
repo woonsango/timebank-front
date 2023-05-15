@@ -17,6 +17,7 @@ import { ReactComponent as PostDetailArrow } from '../../assets/images/icons/pos
 import PostTypeTag from '../PostTypeTag';
 import { cssPostTypeTagStyle } from '../PostTypeTag/PostTypeTag.styles';
 import { COMMON_COLOR } from '../../styles/constants/colors';
+import { getDateDiffToday } from '../../utils/board';
 
 interface SimplePostCardProps {
   post?: IBoard;
@@ -38,8 +39,8 @@ const SimplePostCard = ({ post }: SimplePostCardProps) => {
         startTime: post?.startTime,
         endTime: post?.endTime,
         region: post?.location,
-        // attachment: post?.attachment,
-        // user: post?.user?.name,
+        attachment: post?.imageUrl,
+        user: post?.writerNickname,
       },
     });
   };
@@ -57,7 +58,7 @@ const SimplePostCard = ({ post }: SimplePostCardProps) => {
               <PostDetailArrow />
             </span>
           </div>
-          <div>{createdAt || '-'}</div>
+          <div>{createdAt ? getDateDiffToday(createdAt) : '-'}</div>
         </div>
       );
     },

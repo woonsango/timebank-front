@@ -1,4 +1,5 @@
 import { IPostState, IPostType } from '../api/interfaces/IPost';
+import dayjs from 'dayjs';
 
 export const getStatus: (boardStatus?: string) => IPostState = (
   boardStatus?: string,
@@ -37,4 +38,22 @@ export const getType: (type?: string) => IPostType = (type?: string) => {
         return '도움요청';
     }
   else return '도움요청';
+};
+
+export const getDateDiffToday = (createdAt: string) => {
+  console.log(dayjs().diff(dayjs().add(-1, 'days'), 'days'));
+  const diffDay = dayjs().diff(
+    dayjs(createdAt, 'YYYY-MM-DDTHH:mm:ss.SSS'),
+    'minutes',
+  );
+  if (diffDay <= 60 * 24) {
+    if (diffDay < 60) return `${diffDay}분 전`;
+    else {
+      return `${Math.floor(diffDay / 60)}시간 전`;
+    }
+  }
+  if (diffDay <= 60 * 24 * 3) {
+    return `${Math.floor(diffDay / (60 * 24))} 일 전`;
+  }
+  return createdAt.split('T')[0];
 };
