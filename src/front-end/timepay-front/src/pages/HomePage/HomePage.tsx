@@ -6,10 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { useCallback, useState } from 'react';
 import { PATH } from '../../utils/paths';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
-import {
-  boardSearchState,
-  initialBoardSearchState,
-} from '../../states/boardSearch';
+import { boardSearchState } from '../../states/boardSearch';
 import useFontSize from '../../hooks/useFontSize';
 
 const HomePage = () => {
@@ -34,23 +31,25 @@ const HomePage = () => {
 
   const handleOnSearchTitle = useCallback(() => {
     setBoardSearchState({
-      ...initialBoardSearchState,
+      ...boardSearchValue,
+      category: undefined,
       title: searchTitleValue,
     });
     navigate(PATH.SEARCH);
     window.scrollTo(0, 0);
-  }, [searchTitleValue, setBoardSearchState, navigate]);
+  }, [boardSearchValue, searchTitleValue, setBoardSearchState, navigate]);
 
   const handleOnSearchCategory = useCallback(
     (categoryName: string) => {
       setBoardSearchState({
-        ...initialBoardSearchState,
+        ...boardSearchValue,
+        title: undefined,
         category: categoryName,
       });
       navigate(PATH.SEARCH);
       window.scrollTo(0, 0);
     },
-    [navigate, setBoardSearchState],
+    [navigate, boardSearchValue, setBoardSearchState],
   );
 
   return (
