@@ -61,6 +61,7 @@ const HomePage = () => {
           <Input
             defaultValue={boardSearchValue.title}
             onChange={handleOnChange}
+            onPressEnter={handleOnSearchTitle}
           />
           <Button type="ghost" onClick={handleOnSearchTitle}>
             검색
