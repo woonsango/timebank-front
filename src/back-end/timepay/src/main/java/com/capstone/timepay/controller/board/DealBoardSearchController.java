@@ -9,6 +9,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,8 +31,10 @@ public class DealBoardSearchController {
             @RequestParam(value = "type", required = false) String type,
             @RequestParam(value = "category", required = false) String category,
             @RequestParam(value = "sortType", required = false) String sortType,
-            @RequestParam(value = "startTime", required = false) LocalDateTime startTime,
-            @RequestParam(value = "endTime", required = false) LocalDateTime endTime,
+            @RequestParam(value = "startTime", required = false)
+            @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSSSS") LocalDateTime startTime,
+            @RequestParam(value = "endTime", required = false)
+            @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSSSS") LocalDateTime endTime,
             @RequestParam(value = "volunteer", required = false) boolean volunteer,
             @RequestParam(value = "pagingSize", defaultValue = "10") int perPage,
             @RequestParam(value = "pagingIndex", defaultValue = "0") int curPage
