@@ -18,13 +18,26 @@ import { cssBaseLayoutStyle } from './BaseLayout.styles';
 import { ReactComponent as Logo } from '../../assets/images/timepay-logo.svg';
 import { COMMON_COLOR } from '../../styles/constants/colors';
 import { useLogout } from '../../api/hooks/login';
-import { setTokenToCookie } from '../../utils/token';
+import { getTokenFromCookie, setTokenToCookie } from '../../utils/token';
 
 const BaseLayout = () => {
   const [collapsed, setCollapsed] = useState(false);
   const logoutMutation = useLogout();
   const navigate = useNavigate();
   const [messageApi, contextHolder] = message.useMessage();
+
+  const token = getTokenFromCookie();
+  if (!token || token === 'undefined') {
+    messageApi
+      .open({
+        type: 'error',
+        content: '로그인후 이용해주세요',
+        duration: 1,
+      })
+      .then(function () {
+        navigate('/');
+      });
+  }
 
   const onClickLogout = async (values: any) => {
     await logoutMutation.mutateAsync(

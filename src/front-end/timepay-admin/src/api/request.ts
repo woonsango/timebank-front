@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { getTokenFromCookie } from '../utils/token';
-import { HEADER_NOT_REQUIRED_URLS } from './urls';
+import { FORM_DATA_REQUIRED_URLS, HEADER_NOT_REQUIRED_URLS } from './urls';
 
 const request = axios.create({
   withCredentials: true,
@@ -22,6 +22,13 @@ request.interceptors.request.use((config) => {
         : undefined
       : undefined,
   );
+  config.headers.set(
+    'Content-Type',
+    FORM_DATA_REQUIRED_URLS.includes(config.url || '') &&
+      config.method === 'post'
+      ? 'multipart/form-data'
+      : 'application/json',
+  );
   return config;
 });
 
@@ -30,6 +37,8 @@ request.interceptors.response.use();
 export const apiRequest = {
   get: (url: string, params?: object) => request.get(url, { ...params }),
   post: (url: string, data: unknown) => request.post(url, data),
+  postFormData: (url: string, formData: FormData) =>
+    request.post(url, formData),
   patch: (url: string, data: unknown) => request.patch(url, data),
   put: (url: string, data: unknown) => request.put(url, data),
   delete: (url: string, data?: any) => request.delete(url, data),

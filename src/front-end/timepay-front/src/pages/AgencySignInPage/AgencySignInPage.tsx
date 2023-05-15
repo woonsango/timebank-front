@@ -73,7 +73,7 @@ const AgencySignInPage = () => {
   useEffect(() => {
     // 이미 토큰이 있다면 자동 로그인
     if (getTokenFromCookie()) navigate(PATH.HOME);
-  }, []);
+  }, [navigate]);
 
   return (
     <div css={cssAgencySignInPaeStyle}>
