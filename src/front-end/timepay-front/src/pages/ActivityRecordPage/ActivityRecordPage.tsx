@@ -2,7 +2,7 @@ import { Form, Select, Tabs, TabsProps } from 'antd';
 import { useEffect, useMemo } from 'react';
 import { useSetRecoilState } from 'recoil';
 import { ICommentActivity } from '../../api/interfaces/IComment';
-import { IPost } from '../../api/interfaces/IPost';
+import { IBoard } from '../../api/interfaces/IPost';
 import ActivityCommentCard from '../../components/ActivityCommentCard';
 import ActivityPostCard from '../../components/ActivityPostCard';
 import { headerTitleState } from '../../states/uiState';
@@ -18,15 +18,16 @@ const ActivityRecordPage = () => {
 
   const setHeaderTitle = useSetRecoilState(headerTitleState);
 
+  //@ts-ignore
   const dummyActivities: {
     [key in typeof ACTIVITY_TAB_KEYS.POST | typeof ACTIVITY_TAB_KEYS.COMMENT]:
-      | IPost[]
+      | IBoard[]
       | ICommentActivity[];
   } = useMemo(() => {
     return {
       [ACTIVITY_TAB_KEYS.POST]: [
         {
-          postId: 1,
+          d_boardId: 1,
           createdAt: '10분 전',
           title: '예시 제목1',
           status: '활동완료',
@@ -52,7 +53,7 @@ const ActivityRecordPage = () => {
           },
         },
         {
-          postId: 2,
+          d_boardId: 2,
           type: '도움주기',
           createdAt: '23시간 59분 전',
           title: '예시 제목2',
@@ -80,7 +81,7 @@ const ActivityRecordPage = () => {
           },
         },
         {
-          postId: 3,
+          d_boardId: 3,
           type: '자유',
           createdAt: '2023-03-20 14:00:00',
           title: '예시 제목3',
@@ -194,9 +195,9 @@ const ActivityRecordPage = () => {
                 </Select>
               </Form.Item>
             </Form>
-            {(dummyActivities[ACTIVITY_TAB_KEYS.POST] as IPost[]).map(
+            {(dummyActivities[ACTIVITY_TAB_KEYS.POST] as IBoard[]).map(
               (post) => (
-                <ActivityPostCard key={post.postId} post={post} />
+                <ActivityPostCard key={post.d_boardId} post={post} />
               ),
             )}
           </div>
