@@ -52,11 +52,6 @@ const PostTable = ({
 
   const rowSelection = {
     onChange: (selectedRowKeys: React.Key[], selectedRows: IDealBoard[]) => {
-      console.log(
-        `selectedRowKeys: ${selectedRowKeys}`,
-        'selectedRows: ',
-        selectedRows,
-      );
       setSelectedPostIds(selectedRowKeys);
       setSelectedPosts(selectedRows);
     },
