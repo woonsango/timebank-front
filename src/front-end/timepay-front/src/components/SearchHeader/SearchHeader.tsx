@@ -15,7 +15,7 @@ import {
 } from 'antd';
 import { cssSearchHeaderStyle } from './SearchHeader.styles';
 import { ReactComponent as BackArrow } from '../../assets/images/icons/header-back-arrow.svg';
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { DownOutlined, UpOutlined } from '@ant-design/icons';
 import dayjs from 'dayjs';
@@ -123,6 +123,14 @@ const SearchHeader = () => {
     },
     [setBoardSearch, boardSearchValue],
   );
+
+  useEffect(() => {
+    return () => {
+      // 다른 화면 진입 시 스크롤 초기화
+      window.scrollTo(0, 0);
+      setSearchDrawerOpen(false);
+    };
+  }, [setSearchDrawerOpen]);
 
   return (
     <div css={cssSearchHeaderStyle}>
