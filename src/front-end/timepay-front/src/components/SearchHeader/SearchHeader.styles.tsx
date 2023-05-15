@@ -44,6 +44,30 @@ export const cssSearchHeaderStyle = css`
       background-color: ${COMMON_COLOR.MAIN1};
     }
   }
+  .available-category-tag-container {
+    padding-left: 20px;
+    display: flex;
+    flex-direction: row;
+    overflow-x: scroll;
+    /* 스크롤바 숨김 */
+    ::-webkit-scrollbar {
+      display: none;
+    }
+    .ant-tag {
+      padding: 5px 10px;
+      border-radius: 20px;
+      font-style: normal;
+      font-weight: 600;
+      font-size: 14px;
+      line-height: 15px;
+      color: black;
+      border: unset;
+      background: ${COMMON_COLOR.LIGHT_GRAY};
+      &.ant-tag-checkable-checked {
+        background: ${COMMON_COLOR.MAIN3};
+      }
+    }
+  }
   .search-option-container {
     width: 100%;
     text-align: right;
@@ -96,29 +120,6 @@ export const cssSearchHeaderStyle = css`
 
       .ant-select {
         width: 100px;
-      }
-      .available-category-tag-container {
-        display: flex;
-        flex-direction: row;
-        overflow-x: scroll;
-        /* 스크롤바 숨김 */
-        ::-webkit-scrollbar {
-          display: none;
-        }
-        .ant-tag {
-          padding: 5px 10px;
-          border-radius: 20px;
-          font-style: normal;
-          font-weight: 600;
-          font-size: 14px;
-          line-height: 15px;
-          color: black;
-          border: unset;
-          background: ${COMMON_COLOR.LIGHT_GRAY};
-          &.ant-tag-checkable-checked {
-            background: ${COMMON_COLOR.MAIN3};
-          }
-        }
       }
     }
   }

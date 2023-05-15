@@ -10,6 +10,8 @@ import {
   Input,
   message,
   Radio,
+  Spin,
+  Tag,
 } from 'antd';
 import { cssSearchHeaderStyle } from './SearchHeader.styles';
 import { ReactComponent as BackArrow } from '../../assets/images/icons/header-back-arrow.svg';
@@ -19,9 +21,15 @@ import { DownOutlined, UpOutlined } from '@ant-design/icons';
 import dayjs from 'dayjs';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { boardSearchState } from '../../states/boardSearch';
+import { useGetCategory } from '../../api/hooks/category';
 
 const SearchHeader = () => {
   const navigate = useNavigate();
+
+  const { data, isLoading } = useGetCategory({
+    type: '도움요청',
+    useYn: 'Y',
+  });
 
   const boardSearchValue = useRecoilValue(boardSearchState);
   const setBoardSearch = useSetRecoilState(boardSearchState);
@@ -95,6 +103,15 @@ const SearchHeader = () => {
     [messageApi],
   );
 
+  const handleOnCategoryChange = useCallback(
+    (clickedCategory: string, checked: boolean) => {
+      if (boardSearchValue.category === clickedCategory)
+        setBoardSearch({ ...boardSearchValue, category: undefined });
+      else setBoardSearch({ ...boardSearchValue, category: clickedCategory });
+    },
+    [setBoardSearch, boardSearchValue],
+  );
+
   return (
     <div css={cssSearchHeaderStyle}>
       {contextHolder}
@@ -113,6 +130,23 @@ const SearchHeader = () => {
             검색
           </Button>
         </Form>
+      </div>
+      <div className="available-category-tag-container">
+        {isLoading ? (
+          <Spin />
+        ) : (
+          data?.data.map((category) => (
+            <Tag.CheckableTag
+              checked={boardSearchValue.category === category.categoryName}
+              key={category.categoryId}
+              onChange={(checked) =>
+                handleOnCategoryChange(category.categoryName, checked)
+              }
+            >
+              {category.categoryName}
+            </Tag.CheckableTag>
+          ))
+        )}
       </div>
       <Collapse
         className="search-option-container"
