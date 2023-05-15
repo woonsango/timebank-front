@@ -5,10 +5,16 @@ import { useInView } from 'react-intersection-observer';
 import { useRecoilValue } from 'recoil';
 import { boardSearchState } from '../../states/boardSearch';
 import { Spin } from 'antd';
-import { cssNothingStyle, cssSpinStyle } from './SearchPage.styles';
+import {
+  cssNothingStyle,
+  cssSearchPageStyle,
+  cssSpinStyle,
+} from './SearchPage.styles';
+import { searchDrawerOpenState } from '../../states/uiState';
 
 const SearchPage = () => {
   const boardSearchValue = useRecoilValue(boardSearchState);
+  const isDrawerOpen = useRecoilValue(searchDrawerOpenState);
 
   const { data, fetchNextPage, hasNextPage, isLoading } =
     useInfiniteGetSearchBoard(boardSearchValue);
@@ -29,7 +35,8 @@ const SearchPage = () => {
   return isLoading ? (
     <Spin size="large" css={cssSpinStyle} />
   ) : (
-    <div>
+    <div css={cssSearchPageStyle(isDrawerOpen)}>
+      <div className="dimmed" />
       {boardsList && boardsList.length > 0 ? (
         boardsList.map((board, index) => (
           <SimplePostCard key={board ? board.d_boardId : index} post={board} />

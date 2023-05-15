@@ -22,6 +22,7 @@ import dayjs from 'dayjs';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { boardSearchState } from '../../states/boardSearch';
 import { useGetCategory } from '../../api/hooks/category';
+import { searchDrawerOpenState } from '../../states/uiState';
 
 const SearchHeader = () => {
   const navigate = useNavigate();
@@ -34,6 +35,8 @@ const SearchHeader = () => {
   const boardSearchValue = useRecoilValue(boardSearchState);
   const setBoardSearch = useSetRecoilState(boardSearchState);
 
+  const setSearchDrawerOpen = useSetRecoilState(searchDrawerOpenState);
+
   const [titleSearchForm] = Form.useForm();
   const [optionSearchForm] = Form.useForm();
   const [messageApi, contextHolder] = message.useMessage();
@@ -45,13 +48,16 @@ const SearchHeader = () => {
   }, [navigate]);
 
   const handleOnShowSearchOptionCollapse = useCallback(() => {
-    if (panelActiveKey && panelActiveKey.length === 0)
+    if (panelActiveKey && panelActiveKey.length === 0) {
       setPanelActiveKey(['search-option-collapse']);
-  }, [panelActiveKey]);
+      setSearchDrawerOpen(true);
+    }
+  }, [panelActiveKey, setSearchDrawerOpen]);
 
   const handleOnHideSearchOptionCollapse = useCallback(() => {
     setPanelActiveKey([]);
-  }, []);
+    setSearchDrawerOpen(false);
+  }, [setSearchDrawerOpen]);
 
   const handleOnChangeOptionSearchForm = useCallback(
     (changedValues: { [key: string]: any }, values: any) => {
