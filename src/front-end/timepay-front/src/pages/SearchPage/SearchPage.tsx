@@ -5,8 +5,8 @@ import { useInView } from 'react-intersection-observer';
 
 const SearchPage = () => {
   const { data, fetchNextPage, hasNextPage } = useInfiniteGetSearchBoard({
-    perPage: 10,
-    curPage: 0,
+    pagingSize: 10,
+    pagingIndex: 0,
   });
   const [ref, inView] = useInView({ threshold: 0.3 });
 

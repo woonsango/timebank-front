@@ -12,7 +12,7 @@ export const useInfiniteGetSearchBoard = (params: IGetSearchBoardRequest) => {
     queryKey: ['useGetSearchBoard', params],
     queryFn: ({ pageParam = 0 }) =>
       apiRequest.get(API_URL.DEAL_BOARDS__SEARCH, {
-        params: { ...params, curPage: pageParam },
+        params: { ...params, pagingIndex: pageParam },
       }),
     refetchOnWindowFocus: false,
     retry: false, // api 호출 실패해도 계속 호출하지 않음
