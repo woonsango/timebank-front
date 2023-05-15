@@ -143,7 +143,7 @@ const AdminMainTable = () => {
 
   const columns = [
     {
-      title: '관리자 번1호',
+      title: '관리자 번호',
       dataIndex: 'adminId',
       width: '10%',
       editable: false,
