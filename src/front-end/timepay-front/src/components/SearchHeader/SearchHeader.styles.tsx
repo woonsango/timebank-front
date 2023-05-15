@@ -13,6 +13,8 @@ export const cssSearchHeaderStyle = css`
   background-color: ${COMMON_COLOR.WHITE};
   border-bottom: 1px solid ${COMMON_COLOR.SILVER_GRAY};
   padding-bottom: 15px;
+  border-radius: 0px 0px 25px 25px;
+  box-shadow: 0px 3px 10px rgba(0, 0, 0, 0.05);
   .back-arrow {
     width: 20px;
     height: auto;
