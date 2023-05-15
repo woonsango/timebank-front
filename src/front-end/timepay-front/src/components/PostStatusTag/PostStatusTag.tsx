@@ -1,16 +1,16 @@
 import { Tag } from 'antd';
 import { useMemo } from 'react';
-import { IPostState } from '../../api/interfaces/IPost';
 import { COMMON_COLOR } from '../../styles/constants/colors';
+import { getStatus } from '../../utils/board';
 import { cssPostStatusTagStyle } from './PostStatusTag.styles';
 
 export interface PostStatusTagColorProps {
   pointColor: string;
   backgroundColor?: string;
 }
-const PostStatusTag = ({ status }: { status?: IPostState }) => {
+const PostStatusTag = ({ status }: { status?: string }) => {
   const statusColor: PostStatusTagColorProps = useMemo(() => {
-    switch (status) {
+    switch (getStatus(status)) {
       case '매칭중':
         return {
           pointColor: COMMON_COLOR.MAIN1,
@@ -19,9 +19,9 @@ const PostStatusTag = ({ status }: { status?: IPostState }) => {
         return {
           pointColor: COMMON_COLOR.FONT2,
         };
-      case '활동시작':
+      case '활동중':
         return {
-          pointColor: COMMON_COLOR.BLACK,
+          pointColor: COMMON_COLOR.FONT2,
         };
       case '활동완료':
         return {
@@ -39,7 +39,9 @@ const PostStatusTag = ({ status }: { status?: IPostState }) => {
     }
   }, [status]);
   return (
-    <Tag css={cssPostStatusTagStyle(statusColor)}>{status || '로딩 중'}</Tag>
+    <Tag css={cssPostStatusTagStyle(statusColor)}>
+      {getStatus(status) || '로딩 중'}
+    </Tag>
   );
 };
 

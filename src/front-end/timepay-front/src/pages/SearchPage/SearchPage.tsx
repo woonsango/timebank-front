@@ -1,126 +1,37 @@
-import { IPost } from '../../api/interfaces/IPost';
+import { useEffect, useMemo } from 'react';
+import { useInfiniteGetSearchBoard } from '../../api/hooks/post';
 import SimplePostCard from '../../components/SimplePostCard';
+import { useInView } from 'react-intersection-observer';
 
 const SearchPage = () => {
-  const dummyData: (IPost | undefined)[] = [
-    undefined,
-    {
-      postId: 1,
-      createdAt: '10분 전',
-      title: '예시 제목1',
-      status: '활동완료',
-      category: '이동 도움',
-      pay: 120,
-      startTime: '2022/02/17 14:00',
-      endTime: '2022/02/17 16:00',
-      region: '서울시 성북구 정릉3동',
-      content: '이것좀 도와줘요',
-      type: '도움요청',
-      user: {
-        userPk: 1,
-        name: '하연',
-        sex: '여자',
-        birthday: '2000/01/15 00:00',
-        profileMessage: '안녕',
-        nickname: '하연하이',
-        region: '서울시 광진구',
-        phoneNumber: '01023860370',
-        accountEmail: 'iioo3356@gmail.com',
-        isAdmin: false,
-        createdAt: '2022/02/14: 14:00',
-      },
-    },
-    {
-      postId: 2,
-      type: '도움주기',
-      createdAt: '23시간 59분 전',
-      title: '예시 제목1',
-      status: '매칭완료',
-      category: '이동 도움',
-      pay: 120,
-      startTime: '2022/02/17 14:00',
-      endTime: '2022/02/17 16:00',
-      region: '서울시 성북구 정릉3동',
-      attachment: 'sss',
-      content:
-        '이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요',
-      user: {
-        userPk: 1,
-        name: '하연',
-        sex: '여자',
-        birthday: '2000/01/15 00:00:00',
-        profileMessage: '안녕',
-        nickname: '하연하이',
-        region: '서울시 광진구',
-        phoneNumber: '01023860370',
-        accountEmail: 'iioo3356@gmail.com',
-        isAdmin: false,
-        createdAt: '2022/02/14: 14:00:00',
-      },
-    },
-    {
-      postId: 3,
-      type: '자유',
-      createdAt: '23-03-20',
-      title: '예시 제목1',
-      status: '활동취소',
-      category: '이동 도움',
-      pay: 120,
-      startTime: '2022/02/17 14:00',
-      endTime: '2022/02/17 16:00',
-      region: '서울시 성북구 정릉3동',
-      attachment: 'sss',
-      content:
-        '이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요',
-      user: {
-        userPk: 1,
-        name: '하연',
-        sex: '여자',
-        birthday: '2000/01/15 00:00:00',
-        profileMessage: '안녕',
-        nickname: '하연하이',
-        region: '서울시 광진구',
-        phoneNumber: '01023860370',
-        accountEmail: 'iioo3356@gmail.com',
-        isAdmin: false,
-        createdAt: '2022/02/14: 14:00:00',
-      },
-    },
-    {
-      postId: 4,
-      type: '후기',
-      createdAt: '23-03-20',
-      title: '예시 제목1',
-      status: '매칭중',
-      category: '이동 도움',
-      pay: 120,
-      startTime: '2022/02/17 14:00',
-      endTime: '2022/02/17 16:00',
-      region: '서울시 성북구 정릉3동',
-      attachment: 'sss',
-      content:
-        '이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요이것좀 도와줘요',
-      user: {
-        userPk: 1,
-        name: '하연',
-        sex: '여자',
-        birthday: '2000/01/15 00:00:00',
-        profileMessage: '안녕',
-        nickname: '하연하이',
-        region: '서울시 광진구',
-        phoneNumber: '01023860370',
-        accountEmail: 'iioo3356@gmail.com',
-        isAdmin: false,
-        createdAt: '2022/02/14: 14:00:00',
-      },
-    },
-  ];
+  const { data, fetchNextPage, hasNextPage } = useInfiniteGetSearchBoard({
+    perPage: 10,
+    curPage: 0,
+  });
+  const [ref, inView] = useInView({ threshold: 0.3 });
 
+  useEffect(() => {
+    if (inView && hasNextPage) {
+      fetchNextPage();
+    }
+  }, [inView, fetchNextPage, hasNextPage]);
+
+  const boardsList = useMemo(() => {
+    if (data && data.pages && data.pages.length > 0) {
+      return data.pages.map((page) => page.data.content).flat(1);
+    }
+  }, [data]);
   return (
     <div>
-      {dummyData.map((post, index) => (
-        <SimplePostCard key={post ? post.postId : index} post={post} />
-      ))}
+      {boardsList
+        ? boardsList.map((board, index) => (
+            <SimplePostCard
+              key={board ? board.d_boardId : index}
+              post={board}
+            />
+          ))
+        : null}
+      <div ref={ref} />
     </div>
   );
 };
