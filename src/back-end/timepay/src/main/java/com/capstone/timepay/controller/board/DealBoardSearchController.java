@@ -28,6 +28,7 @@ public class DealBoardSearchController {
     @GetMapping
     public ResponseEntity<Page<DealBoard>> searchDealBoards(
             @RequestParam(value = "title", required = false) String title,
+            @RequestParam(value = "content", required = false) String content,
             @RequestParam(value = "type", required = false) String type,
             @RequestParam(value = "category", required = false) String category,
             @RequestParam(value = "sortType", required = false) String sortType,
@@ -40,6 +41,7 @@ public class DealBoardSearchController {
             @RequestParam(value = "pagingIndex", defaultValue = "0") int curPage
     ) {
         Specification<DealBoard> spec = DealBoardSearch.withTitle(title)
+                .and(DealBoardSearch.withContent(content))
                 .and(DealBoardSearch.withType(type))
                 .and(DealBoardSearch.withCategory(category))
                 .and(DealBoardSearch.withStartTime(startTime))

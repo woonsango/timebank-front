@@ -18,7 +18,8 @@ public class DealBoardSearch {
             if (StringUtils.isEmpty(title)) {
                 return null;
             }
-            return builder.equal(root.get("title"), title);
+            String result = "%" + title + "%";
+            return builder.like(root.get("title"), result);
         };
     }
 
@@ -109,6 +110,17 @@ public class DealBoardSearch {
         return (root, query, criteriaBuilder) -> {
             Join<DealBoard, DealRegister> joinDealRegister = root.join("dealRegisters");
             return joinDealRegister.in(dealRegisters);
+        };
+    }
+
+    public static Specification<DealBoard> withContent(String content)
+    {
+        return (root, query, builder) -> {
+            if (StringUtils.isEmpty(content)) {
+                return null;
+            }
+            String result = "%" + content + "%";
+            return builder.like(root.get("content"), result);
         };
     }
 }
