@@ -143,7 +143,7 @@ const AdminMainTable = () => {
 
   const columns = [
     {
-      title: '관리자 번호',
+      title: '관리자 번1호',
       dataIndex: 'adminId',
       width: '10%',
       editable: false,
@@ -154,11 +154,6 @@ const AdminMainTable = () => {
       width: '10%',
       editable: true,
       ...getColumnSearchProps('adminName'),
-    },
-    {
-      title: '직책',
-      dataIndex: 'authority',
-      width: '10%',
     },
     {
       title: '이메일',
