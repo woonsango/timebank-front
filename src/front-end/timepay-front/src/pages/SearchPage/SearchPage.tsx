@@ -1,13 +1,16 @@
 import { useEffect, useMemo } from 'react';
-import { useInfiniteGetSearchBoard } from '../../api/hooks/post';
+import { useInfiniteGetSearchBoard } from '../../api/hooks/board';
 import SimplePostCard from '../../components/SimplePostCard';
 import { useInView } from 'react-intersection-observer';
+import { useRecoilValue } from 'recoil';
+import { boardSearchState } from '../../states/boardSearch';
 
 const SearchPage = () => {
-  const { data, fetchNextPage, hasNextPage } = useInfiniteGetSearchBoard({
-    pagingSize: 10,
-    pagingIndex: 0,
-  });
+  const boardSearchValue = useRecoilValue(boardSearchState);
+
+  const { data, fetchNextPage, hasNextPage } =
+    useInfiniteGetSearchBoard(boardSearchValue);
+
   const [ref, inView] = useInView({ threshold: 0.3 });
 
   useEffect(() => {

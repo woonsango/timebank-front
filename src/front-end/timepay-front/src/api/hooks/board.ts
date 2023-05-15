@@ -22,7 +22,6 @@ export const useInfiniteGetSearchBoard = (params: IGetSearchBoardRequest) => {
     getNextPageParam: (lastPage, allPages) => {
       if (lastPage.data.totalPages === lastPage.data.pageable.pageNumber)
         return undefined;
-      console.log(lastPage.data);
       return lastPage.data.pageable.pageNumber + 1;
     },
     getPreviousPageParam: (firstPage, allPages) => {

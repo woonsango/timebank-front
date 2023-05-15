@@ -86,8 +86,8 @@ export interface IGetSearchBoardRequest {
   startTime?: string;
   endTime?: string;
   volunteer?: boolean;
-  perPage: number;
-  curPage: number;
+  pagingSize: number;
+  pagingIndex: number;
 }
 
 export interface IGetSearchBoardResponse extends PageableData {

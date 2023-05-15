@@ -41,7 +41,6 @@ export const getType: (type?: string) => IPostType = (type?: string) => {
 };
 
 export const getDateDiffToday = (createdAt: string) => {
-  console.log(dayjs().diff(dayjs().add(-1, 'days'), 'days'));
   const diffDay = dayjs().diff(
     dayjs(createdAt, 'YYYY-MM-DDTHH:mm:ss.SSS'),
     'minutes',
