@@ -9,6 +9,8 @@ export const API_URL = {
   NOTIFICATIONS__SEARCH: 'api/notifications/search',
   ADMIN_REGISTER: '/api/admins/register', //관리자 가입
   ADMINS: '/api/admins',
+  USERINFOS: '/api/admins/normal-user-management/main',
+  USERINFOS__SEARCH: '/api/admins/normal-user-management/search',
   REPORTS: '/api/admins/reports/main',
   REPORTS__SEARCH: '/api/admins/reports/search',
   REPORTS__PENALTY: '/api/admins/reports/penalty',
