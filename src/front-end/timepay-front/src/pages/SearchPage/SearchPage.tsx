@@ -4,11 +4,13 @@ import SimplePostCard from '../../components/SimplePostCard';
 import { useInView } from 'react-intersection-observer';
 import { useRecoilValue } from 'recoil';
 import { boardSearchState } from '../../states/boardSearch';
+import { Spin } from 'antd';
+import { cssNothingStyle, cssSpinStyle } from './SearchPage.styles';
 
 const SearchPage = () => {
   const boardSearchValue = useRecoilValue(boardSearchState);
 
-  const { data, fetchNextPage, hasNextPage } =
+  const { data, fetchNextPage, hasNextPage, isLoading } =
     useInfiniteGetSearchBoard(boardSearchValue);
 
   const [ref, inView] = useInView({ threshold: 0.3 });
@@ -24,16 +26,21 @@ const SearchPage = () => {
       return data.pages.map((page) => page.data.content).flat(1);
     }
   }, [data]);
-  return (
+  return isLoading ? (
+    <Spin size="large" css={cssSpinStyle} />
+  ) : (
     <div>
-      {boardsList
-        ? boardsList.map((board, index) => (
-            <SimplePostCard
-              key={board ? board.d_boardId : index}
-              post={board}
-            />
-          ))
-        : null}
+      {boardsList && boardsList.length > 0 ? (
+        boardsList.map((board, index) => (
+          <SimplePostCard key={board ? board.d_boardId : index} post={board} />
+        ))
+      ) : (
+        <div css={cssNothingStyle}>
+          <span className="emoji">😅</span>
+          <span>해당하는 게시글이 없습니다.</span>
+          <span>다르게 검색해보세요!</span>
+        </div>
+      )}
       <div ref={ref} />
     </div>
   );
