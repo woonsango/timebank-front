@@ -1,7 +1,10 @@
 import { useRecoilValue, useSetRecoilState } from 'recoil';
-import { IGetUserInfoRequest, IUserInfo } from '../../api/interfaces/IUser';
+import {
+  IGetUserInfoUserIdRequest,
+  IUserInfo,
+} from '../../api/interfaces/IUser';
 import { useGetUserInfos } from '../../api/hooks/userManagement';
-import { mainSearchState } from './mainSearchState';
+import { mainSearchStateUserId } from './mainSearchState';
 import { useCallback, useMemo, useState } from 'react';
 import Table, { ColumnsType } from 'antd/es/table';
 import { customPaginationProps } from '../../utils/pagination';
@@ -20,8 +23,8 @@ const MainTable = ({
   setSelectedUserInfoIds,
   setSelectedUserInfos,
 }: MainTableProps) => {
-  const mainSearchValues = useRecoilValue(mainSearchState);
-  const setMainSearch = useSetRecoilState(mainSearchState);
+  const mainSearchValues = useRecoilValue(mainSearchStateUserId);
+  const setMainSearch = useSetRecoilState(mainSearchStateUserId);
 
   const { data, isLoading } = useGetUserInfos(mainSearchValues);
 
@@ -82,6 +85,14 @@ const MainTable = ({
     },
 
     {
+      title: '생년월일',
+      dataIndex: 'birth',
+      align: 'center',
+      render: (birth: string) =>
+        (birth || '').split('.')[0].replaceAll('T09:00:00', ' '),
+    },
+
+    {
       title: '지역',
       dataIndex: 'region',
       align: 'center',
@@ -90,13 +101,6 @@ const MainTable = ({
       title: '성별',
       dataIndex: 'sex',
       align: 'center',
-    },
-    {
-      title: '생년월일',
-      dataIndex: 'birth',
-      align: 'center',
-      render: (birth: string) =>
-        (birth || '').split('.')[0].replaceAll('T00:00:00', ' '),
     },
 
     {
@@ -120,19 +124,17 @@ const MainTable = ({
   return (
     <>
       <div css={cssPushTableRowCountStyle}>
-        {selectedUserInfoIds && selectedUserInfoIds.length > 0
-          ? `${selectedUserInfoIds.length} 개 선택 / `
-          : ''}
-        총 {data?.data.totalElements || 0} 개
+        {selectedUserInfoIds && selectedUserInfoIds.length > 0}총{' '}
+        {data?.data.totalElements || 0} 개
       </div>
       <Table
-        rowSelection={rowSelection}
+        //rowSelection={rowSelection}
         columns={columns}
         scroll={{ x: 1200 }}
         dataSource={dataSource}
         rowKey="UserId"
         loading={isLoading}
-        pagination={customPaginationProps<IGetUserInfoRequest>({
+        pagination={customPaginationProps<IGetUserInfoUserIdRequest>({
           totalElements: data?.data.totalElements,
           currentSearchValues: mainSearchValues,
           setSearchValues: setMainSearch,

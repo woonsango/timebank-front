@@ -1,27 +1,28 @@
 import { css } from '@emotion/react';
 import { Input, Button, Form, Row } from 'antd';
-import { useCallback } from 'react';
+import React, { useCallback } from 'react';
 import { useQueryClient } from 'react-query';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
-import { mainSearchState } from './mainSearchState';
-import { IGetUserInfoRequest } from '../../api/interfaces/IUser';
+import { mainSearchStateUserId } from './mainSearchState';
+import { IGetUserInfoUserIdRequest } from '../../api/interfaces/IUser';
 import { cssPushSearchFormStyle } from '../../components/PushSearchForm/PushSearchForm.styles';
 
 const SearchForm = () => {
   const queryClient = useQueryClient();
 
-  const SearchValue = useRecoilValue(mainSearchState);
-  const setSearch = useSetRecoilState(mainSearchState);
+  const SearchUserId = useRecoilValue(mainSearchStateUserId);
+  const setSearchUserId = useSetRecoilState(mainSearchStateUserId);
 
   /*필터 검색*/
   const handleSearchBtn = useCallback(
-    async (values: IGetUserInfoRequest) => {
-      setSearch(values);
+    async (values: IGetUserInfoUserIdRequest) => {
+      console.log(values);
+      setSearchUserId(values);
       await queryClient.invalidateQueries({
         queryKey: ['userId', values],
       });
     },
-    [setSearch, queryClient],
+    [setSearchUserId, queryClient],
   );
 
   return (
@@ -29,12 +30,21 @@ const SearchForm = () => {
       <Form layout="horizontal" onFinish={handleSearchBtn}>
         <Row>
           <Form.Item
-            label="이름 / 닉네임 / UID"
-            name="title"
-            initialValue={SearchValue?.userId}
+            label="UID"
+            name="userId"
+            initialValue={SearchUserId?.userId}
           >
-            <Input placeholder="입력" />
+            <Input placeholder="UID로 검색" />
           </Form.Item>
+          <Form.Item
+            label="닉네임/이름"
+            name="value"
+            //initialValue={SearchValue?.userId}
+            style={{ marginLeft: '20px' }}
+          >
+            <Input placeholder="닉네임 또는 이름으로 검색" />
+          </Form.Item>
+
           <Button
             style={{ marginLeft: 'auto' }}
             htmlType="submit"

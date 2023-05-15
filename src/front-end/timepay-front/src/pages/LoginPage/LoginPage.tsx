@@ -61,10 +61,6 @@ const LoginPage = () => {
         icon={<img width={300} src={kakao_login_logo}></img>}
         css={cssKakaoLoginBtn}
       ></Button>
-
-      <Button type="text" onClick={() => goTo(PATH.HOME)}>
-        로그인없이 시작하기
-      </Button>
     </Space>
   );
 };

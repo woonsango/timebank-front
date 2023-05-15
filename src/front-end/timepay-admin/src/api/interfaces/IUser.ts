@@ -28,7 +28,7 @@ export interface IUserInfo {
   banned: boolean;
 }
 
-export interface IGetUserInfoRequest extends GetPageableData {
+export interface IGetUserInfoUserIdRequest extends GetPageableData {
   userId?: number;
 }
 export interface IGetUserInfoResponse extends PageableData {

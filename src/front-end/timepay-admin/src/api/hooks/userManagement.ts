@@ -3,9 +3,12 @@ import { useQuery } from 'react-query';
 
 import { apiRequest } from '../request';
 import { API_URL } from '../urls';
-import { IGetUserInfoRequest, IGetUserInfoResponse } from '../interfaces/IUser';
+import {
+  IGetUserInfoUserIdRequest,
+  IGetUserInfoResponse,
+} from '../interfaces/IUser';
 
-export const useGetUserInfos = (params?: IGetUserInfoRequest) => {
+export const useGetUserInfos = (params?: IGetUserInfoUserIdRequest) => {
   return useQuery<AxiosResponse<IGetUserInfoResponse>, AxiosError>({
     queryKey: ['useGetUserInfos', params],
     queryFn: () =>

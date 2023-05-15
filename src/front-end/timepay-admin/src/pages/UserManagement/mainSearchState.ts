@@ -1,7 +1,7 @@
 import { atom } from 'recoil';
-import { IGetUserInfoRequest } from '../../api/interfaces/IUser';
+import { IGetUserInfoUserIdRequest } from '../../api/interfaces/IUser';
 
-export const mainSearchState = atom<IGetUserInfoRequest>({
+export const mainSearchStateUserId = atom<IGetUserInfoUserIdRequest>({
   key: 'userId',
   default: {
     userId: undefined,
