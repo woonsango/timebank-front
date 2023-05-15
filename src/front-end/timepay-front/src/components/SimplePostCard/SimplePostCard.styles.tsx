@@ -98,5 +98,10 @@ export const cssSimplePostCardStyle = css`
   .ant-card-body {
     padding: 0px;
     padding-bottom: 20px;
+    .volunteer-badge {
+      position: absolute;
+      top: 13px;
+      right: 21px;
+    }
   }
 `;

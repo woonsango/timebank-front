@@ -12,6 +12,7 @@ import {
 import { ReactComponent as RegionPin } from '../../assets/images/icons/region-pin.svg';
 import { ReactComponent as Clock } from '../../assets/images/icons/clock.svg';
 import { ReactComponent as Attachment } from '../../assets/images/icons/attachment.svg';
+import { ReactComponent as VolunteerBadge } from '../../assets/images/icons/volunteer-badge.svg';
 import { UserOutlined } from '@ant-design/icons';
 import PostTypeTag from '../PostTypeTag';
 import { cssPostTypeTagStyle } from '../PostTypeTag/PostTypeTag.styles';
@@ -112,6 +113,11 @@ const SimplePostCard = ({ post }: SimplePostCardProps) => {
       onClick={handlePageChange}
     >
       <Spin size="large" spinning={!post}>
+        {post?.volunteer && (
+          <div className="volunteer-badge">
+            <VolunteerBadge />
+          </div>
+        )}
         {postCardContent}
       </Spin>
       {footerComponent(post?.writerNickname, post?.createdAt)}
