@@ -156,11 +156,6 @@ const AdminMainTable = () => {
       ...getColumnSearchProps('adminName'),
     },
     {
-      title: '직책',
-      dataIndex: 'authority',
-      width: '10%',
-    },
-    {
       title: '이메일',
       dataIndex: 'email',
       width: '10%',
