@@ -9,7 +9,7 @@ export const useGetUserInfos = (params?: IGetUserInfoRequest) => {
   return useQuery<AxiosResponse<IGetUserInfoResponse>, AxiosError>({
     queryKey: ['useGetUserInfos', params],
     queryFn: () =>
-      params && params.value
+      params && params.userId
         ? apiRequest.get(API_URL.USERINFOS__SEARCH, { params })
         : apiRequest.get(API_URL.USERINFOS, { params }),
     refetchOnWindowFocus: false,

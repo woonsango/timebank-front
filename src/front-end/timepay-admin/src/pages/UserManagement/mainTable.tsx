@@ -2,11 +2,12 @@ import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { IGetUserInfoRequest, IUserInfo } from '../../api/interfaces/IUser';
 import { useGetUserInfos } from '../../api/hooks/userManagement';
 import { mainSearchState } from './mainSearchState';
-import { useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import Table, { ColumnsType } from 'antd/es/table';
 import { customPaginationProps } from '../../utils/pagination';
 import { Button, Modal } from 'antd';
 import ProfileImageModal from './profileImageModal';
+import { cssPushTableRowCountStyle } from '../../components/PushTable/PushTable.styles';
 
 interface MainTableProps {
   selectedUserInfoIds?: React.Key[];
@@ -23,6 +24,19 @@ const MainTable = ({
   const setMainSearch = useSetRecoilState(mainSearchState);
 
   const { data, isLoading } = useGetUserInfos(mainSearchValues);
+
+  const [isOpen, setIsOpen] = useState(false);
+  const [currentProfile, setCurrentProfile] = useState<IUserInfo>();
+
+  const handleOnShowProfile = useCallback((push: IUserInfo) => {
+    setCurrentProfile(push);
+    setIsOpen(true);
+  }, []);
+
+  const handleOnCloseProfile = useCallback(() => {
+    setCurrentProfile(undefined);
+    setIsOpen(false);
+  }, []);
 
   const dataSource = useMemo(() => {
     if (mainSearchValues) {
@@ -52,10 +66,10 @@ const MainTable = ({
     {
       title: '프로필 사진',
       dataIndex: 'profileUrl',
-      //dataIndex: 'profileModal',
-      render: () => (
-        <Button type="link" onClick={() => showModalProfileImage()}>
-          프로필 사진보기
+
+      render: (_: string, record: IUserInfo) => (
+        <Button type="link" onClick={() => handleOnShowProfile(record)}>
+          프로필 사진 보기
         </Button>
       ),
       align: 'center',
@@ -81,6 +95,8 @@ const MainTable = ({
       title: '생년월일',
       dataIndex: 'birth',
       align: 'center',
+      render: (birth: string) =>
+        (birth || '').split('.')[0].replaceAll('T00:00:00', ' '),
     },
 
     {
@@ -95,42 +111,21 @@ const MainTable = ({
     },
 
     {
-      title: '활동 목록',
-      dataIndex: 'detail',
-      align: 'center',
-    },
-
-    {
       title: '정보 수정',
       dataIndex: 'edit',
       align: 'center',
     },
   ];
 
-  /*프로필 사진 모달 설정 */
-  const [modalProfileImage, setModalProfileImage] = useState(false);
-
-  const showModalProfileImage = () => {
-    setModalProfileImage(true);
-  };
-  const handleOkProfileImage = () => {
-    setModalProfileImage(false);
-  };
-
-  const handleCancelProfileImage = () => {
-    setModalProfileImage(false);
-  };
-
   return (
     <>
-      <div>
+      <div css={cssPushTableRowCountStyle}>
         {selectedUserInfoIds && selectedUserInfoIds.length > 0
           ? `${selectedUserInfoIds.length} 개 선택 / `
           : ''}
         총 {data?.data.totalElements || 0} 개
       </div>
       <Table
-        //css={cssPushTableStyle}
         rowSelection={rowSelection}
         columns={columns}
         scroll={{ x: 1200 }}
@@ -143,14 +138,11 @@ const MainTable = ({
           setSearchValues: setMainSearch,
         })}
       />
-      <Modal
-        title="프로필 사진"
-        open={modalProfileImage}
-        onOk={handleOkProfileImage}
-        onCancel={handleCancelProfileImage}
-        okText="확인"
-        cancelText="취소"
-      ></Modal>
+      <ProfileImageModal
+        isOpen={isOpen}
+        onCancel={handleOnCloseProfile}
+        profile={currentProfile}
+      />
     </>
   );
 };

@@ -5,6 +5,7 @@ import { useQueryClient } from 'react-query';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { mainSearchState } from './mainSearchState';
 import { IGetUserInfoRequest } from '../../api/interfaces/IUser';
+import { cssPushSearchFormStyle } from '../../components/PushSearchForm/PushSearchForm.styles';
 
 const SearchForm = () => {
   const queryClient = useQueryClient();
@@ -17,22 +18,22 @@ const SearchForm = () => {
     async (values: IGetUserInfoRequest) => {
       setSearch(values);
       await queryClient.invalidateQueries({
-        queryKey: ['useGetInfo', values],
+        queryKey: ['userId', values],
       });
     },
     [setSearch, queryClient],
   );
 
   return (
-    <div>
+    <div css={cssPushSearchFormStyle}>
       <Form layout="horizontal" onFinish={handleSearchBtn}>
         <Row>
           <Form.Item
-            label="이름/닉네임"
+            label="이름 / 닉네임 / UID"
             name="title"
-            initialValue={SearchValue?.value}
+            initialValue={SearchValue?.userId}
           >
-            <Input />
+            <Input placeholder="입력" />
           </Form.Item>
           <Button
             style={{ marginLeft: 'auto' }}

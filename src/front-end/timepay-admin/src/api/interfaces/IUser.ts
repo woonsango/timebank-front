@@ -29,7 +29,7 @@ export interface IUserInfo {
 }
 
 export interface IGetUserInfoRequest extends GetPageableData {
-  value?: string;
+  userId?: number;
 }
 export interface IGetUserInfoResponse extends PageableData {
   content: IUserInfo[];
