@@ -13,7 +13,6 @@ import { ReactComponent as RegionPin } from '../../assets/images/icons/region-pi
 import { ReactComponent as Clock } from '../../assets/images/icons/clock.svg';
 import { ReactComponent as Attachment } from '../../assets/images/icons/attachment.svg';
 import { UserOutlined } from '@ant-design/icons';
-import { ReactComponent as PostDetailArrow } from '../../assets/images/icons/post-detail-arrow.svg';
 import PostTypeTag from '../PostTypeTag';
 import { cssPostTypeTagStyle } from '../PostTypeTag/PostTypeTag.styles';
 import { COMMON_COLOR } from '../../styles/constants/colors';
@@ -51,12 +50,6 @@ const SimplePostCard = ({ post }: SimplePostCardProps) => {
           <div className="nickname">
             <UserOutlined />
             {nickname || '-'}
-          </div>
-          <div className="view-more-container">
-            <span className="view-more-text">더보기</span>
-            <span className="view-more-icon">
-              <PostDetailArrow />
-            </span>
           </div>
           <div>{createdAt ? getDateDiffToday(createdAt) : '-'}</div>
         </div>

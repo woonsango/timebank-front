@@ -1,14 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import {
-  Button,
-  Form,
-  Input,
-  Select,
-  Space,
-  message,
-  Image,
-  Typography,
-} from 'antd';
+import { Button, Form, Input, Select, Space, message, Image } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import { headerTitleState } from '../../states/uiState';
 import { useSetRecoilState } from 'recoil';
@@ -19,8 +10,7 @@ import { dongData } from '../JoinPage/Data/DONGDATA';
 
 import { PATH } from '../../utils/paths';
 import './MyEdit_imageSet.css';
-import { getTokenFromCookie } from '../../utils/token';
-import axios from 'axios';
+
 import {
   cssMyEditCenter,
   cssMyEditMargin,
@@ -28,7 +18,6 @@ import {
   topWrapperCSS,
 } from './MyEdit.styles';
 import { cssJoinNick } from '../JoinPage/Join.styles';
-import { overlap } from '../JoinPage/overlapNickname';
 import { apiRequest } from '../../api/request';
 import { API_URL } from '../../api/urls';
 
@@ -36,8 +25,8 @@ import { API_URL } from '../../api/urls';
 type DongName = keyof typeof dongData;
 
 const MyEditPage: React.FC = () => {
+  const [form] = Form.useForm();
   const [messageApi, contextHolder] = message.useMessage();
-  const { Text } = Typography;
 
   const [profileImage, setProfileImage]: any = useState();
   const [finalProfileImage, setfinalProfileImage]: any = useState();
@@ -53,8 +42,8 @@ const MyEditPage: React.FC = () => {
   const [dongText, setDongText] = useState<string>('');
 
   const [viewNickname, setViewNickname] = useState<string>('');
-  const [viewTown, setViewTown] = useState<string>('');
-  const [viewIntroduction, setViewIntroduction] = useState<string>('');
+
+  const [overlap, setOverlap] = useState<boolean>(false);
 
   const handleFileChange = (e: any) => {
     const imageFile = e.target.files[0];
@@ -110,7 +99,7 @@ const MyEditPage: React.FC = () => {
     /*닉네임 수정없이 기존 닉네임 그대로*/
     if (nickName === viewNickname || value === '') {
       return Promise.resolve();
-    } else if (value.search(/\s/) != -1) {
+    } else if (value.search(/\s/) !== -1) {
       return Promise.reject(new Error('닉네임을 공백 없이 입력해 주세요.'));
     }
     if (!nickname_regExp.test(value)) {
@@ -132,18 +121,32 @@ const MyEditPage: React.FC = () => {
     });
   };
 
+  const success_nickNameOverlapping = () => {
+    messageApi.open({
+      type: 'success',
+      content: '사용 가능한 닉네임입니다.',
+    });
+  };
+
   /*닉네임 중복 검사*/
   const overlapNickname = () => {
     /*get*/
-    //   axios
-    //     .get('url 넣기', nickName)
-    //     .then((res) => {
-    //       console.log('닉네임 중복 검사 성공');
-    //       console.log(res);
-    //     })
-    //     .catch((err) => {
-    //       console.log('닉네임 중복 검사 실패');
-    //     });
+    apiRequest
+      .get(`/api/users/check/nickname/${nickName}`)
+      .then((res) => {
+        console.log('닉네임 중복 검사 성공');
+        console.log(res);
+
+        if (res.data === true) {
+          setOverlap(true);
+          success_nickNameOverlapping();
+        } else if (res.data === false) {
+          warning('이미 존재하는 닉네임입니다.');
+        }
+      })
+      .catch((err) => {
+        console.log('닉네임 중복 검사 실패');
+      });
   };
 
   /*From Check*/
@@ -162,37 +165,33 @@ const MyEditPage: React.FC = () => {
 
     if (gu === dongData[guData[0]] && dong === '동') {
       townText = town;
-    } else if (dong === '동') {
-      warning('지역을 입력해 주세요.');
+    } else if (viewNickname !== nickName && overlap === false) {
+      console.log('가입 완료 제출: 닉네임 중복 여부 확인되지 않음');
+      warning('닉네임 중복 여부를 검사해 주세요.');
+    } else {
+      console.log('PUT할 데이터');
+      console.log('프로필 이미지: ', finalProfileImage);
+      console.log('닉네임: ', nickName);
+      console.log('지역: ', townText);
+      console.log('소개: ', introduction);
+
+      /*formData, put */
+      formData.append('image', finalProfileImage);
+      formData.append('nickName', nickName);
+      formData.append('location', townText);
+      formData.append('introduction', introduction);
+
+      apiRequest
+        .put(API_URL.USER_INFO_PUT, formData)
+        .then((res) => {
+          console.log('PUT 완료');
+          console.log(res);
+          handlePageMove(PATH.MY);
+        })
+        .catch((err) => {
+          console.log('PUT 실패');
+        });
     }
-
-    // if (!(nickName === viewNickname)) {
-    //   console.log('닉네임 중복 여부 확인되지 않음');
-    //   warning('닉네임 중복 여부를 검사해 주세요.');
-    // }
-
-    console.log('PUT할 데이터');
-    console.log('프로필 이미지: ', finalProfileImage);
-    console.log('닉네임: ', nickName);
-    console.log('지역: ', townText);
-    console.log('소개: ', introduction);
-
-    /*formData, put */
-    formData.append('image', finalProfileImage);
-    formData.append('nickName', nickName);
-    formData.append('location', townText);
-    formData.append('introduction', introduction);
-
-    apiRequest
-      .put(API_URL.USER_INFO_PUT, formData)
-      .then((res) => {
-        console.log('PUT 완료');
-        console.log(res);
-        handlePageMove(PATH.MY);
-      })
-      .catch((err) => {
-        console.log('PUT 실패');
-      });
   };
 
   const setHeaderTitle = useSetRecoilState(headerTitleState);
@@ -210,10 +209,13 @@ const MyEditPage: React.FC = () => {
         console.log('닉네임: ', res.data.nick_name);
         console.log('지역: ', res.data.location);
         console.log('소개: ', res.data.introduction);
-
-        setViewNickname(res.data.nick_name);
-        setViewTown(res.data.location);
-        setViewIntroduction(res.data.introduction);
+        form.setFieldValue('nickName', res.data.nick_name);
+        form.setFieldValue('introduction', res.data.introduction);
+        setGu(
+          dongData[res.data.location.split(' ')[1] as (typeof guData)[number]],
+        );
+        setGuText(res.data.location.split(' ')[1]);
+        setDong(res.data.location.split(' ')[2]);
 
         setfinalProfileImage(
           res.data.image_url ||
@@ -223,6 +225,7 @@ const MyEditPage: React.FC = () => {
           res.data.image_url ||
             'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png',
         );
+        setViewNickname(res.data.nick_name);
         setNickName(res.data.nick_name);
         setTown(res.data.location);
         setIntroduction(res.data.introduction);
@@ -236,6 +239,7 @@ const MyEditPage: React.FC = () => {
     <Space css={topWrapperCSS} align="baseline">
       {contextHolder}
       <Form
+        form={form}
         name="EditMyPage"
         onFinish={handleSubmitBtn}
         onFinishFailed={onFinishFailedJoin}
@@ -262,19 +266,17 @@ const MyEditPage: React.FC = () => {
           </Space>
         </Form.Item>
 
-        <Space direction="vertical" css={cssMyEditMargin}>
-          <Text strong>기존 닉네임: {viewNickname}</Text>
-          <Text strong>기존 지역: {viewTown}</Text>
-          <Text strong>기존 자기소개: {viewIntroduction}</Text>
-        </Space>
-
         <Form.Item
           label="닉네임"
           name="nickName"
           rules={[{ validator: rightNickname }]}
           css={cssMyEditMargin}
         >
-          <Input onChange={onChangeNickName} defaultValue={nickName} />
+          <Input
+            onChange={onChangeNickName}
+            defaultValue={nickName}
+            placeholder={nickName}
+          />
         </Form.Item>
 
         <Form.Item name="닉네임 중복 검사">
@@ -284,7 +286,7 @@ const MyEditPage: React.FC = () => {
         </Form.Item>
 
         <Form.Item label="지역" name="Town">
-          {' '}
+          현재 설정된 지역: {town}
           <Space align="baseline">
             <Select
               defaultValue={siData[0]}
@@ -295,7 +297,7 @@ const MyEditPage: React.FC = () => {
             />
 
             <Select
-              defaultValue={'구'}
+              value={guText as (typeof guData)[number]}
               onChange={onChangeGu}
               options={guData.map((province) => ({
                 label: province,
@@ -318,7 +320,7 @@ const MyEditPage: React.FC = () => {
           name="introduction"
           rules={[{ required: false, message: '' }]}
         >
-          <Input onChange={onChangeIntroduction} />
+          <Input onChange={onChangeIntroduction} placeholder={introduction} />
         </Form.Item>
 
         <Form.Item name="submit" style={{ textAlign: 'center' }}>

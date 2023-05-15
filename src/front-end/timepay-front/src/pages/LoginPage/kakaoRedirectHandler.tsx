@@ -40,7 +40,7 @@ const KakaoRedirectHandler = () => {
         //signUp에 따른 처리
         if (response.data.signUp === true) {
           /*jwt 토큰 저장*/
-          setTokenToCookie(response.data.jwt, 1);
+          setTokenToCookie(response.data.jwt, 10);
           console.log('토큰 저장:', response.data.jwt);
 
           goTo(PATH.HOME);

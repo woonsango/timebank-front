@@ -244,16 +244,16 @@ export const cssPostTextarea = css`
 export const cssPostBtn = css`
   margin-top: 20px;
   margin-right: 10px;
-  width: 15%;
+  width: 18%;
   height: 40px;
   border: none;
   border-radius: 10px;
   background-color: ${COMMON_COLOR.FONT1};
+  color: ${COMMON_COLOR.BLACK};
   font-weight: 500;
   font-size: 16px;
   letter-spacing: 1.3px;
   :active {
-    border: 1px solid ${COMMON_COLOR.FONT3};
     background-color: ${COMMON_COLOR.GRAY};
   }
 `;

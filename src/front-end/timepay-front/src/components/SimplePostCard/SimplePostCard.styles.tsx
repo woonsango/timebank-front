@@ -90,28 +90,6 @@ export const cssSimplePostCardFooterStyle = css`
       margin-right: 5px;
     }
   }
-  .view-more-container {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, 15%);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    .view-more-text {
-      font-style: normal;
-      font-weight: 700;
-      font-size: 12px;
-      color: ${COMMON_COLOR.FONT2};
-    }
-    .view-more-icon {
-      height: 14px;
-      svg {
-        width: 10px;
-        height: 14px;
-      }
-    }
-  }
 `;
 
 export const cssSimplePostCardStyle = css`

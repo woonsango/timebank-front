@@ -3,84 +3,28 @@ import locale from 'antd/es/date-picker/locale/ko_KR';
 
 import {
   Button,
+  Checkbox,
   Collapse,
   DatePicker,
   Form,
   Input,
   message,
-  Select,
-  Tag,
+  Radio,
 } from 'antd';
 import { cssSearchHeaderStyle } from './SearchHeader.styles';
 import { ReactComponent as BackArrow } from '../../assets/images/icons/header-back-arrow.svg';
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { DownOutlined, UpOutlined } from '@ant-design/icons';
 import dayjs from 'dayjs';
 const SearchHeader = () => {
-  const dummyCategoryGiveHelp = useMemo(() => {
-    return [
-      '도움주기-카테고리1',
-      '도움주기-카테고리2',
-      '도움주기-카테고리3',
-      '도움주기-카테고리4',
-    ];
-  }, []);
-
-  const dummyCategoryReceiveHelp = useMemo(() => {
-    return [
-      '도움받기-카테고리1',
-      '도움받기-카테고리2',
-      '도움받기-카테고리3',
-      '도움받기-카테고리4',
-      '도움받기-카테고리5',
-      '도움받기-카테고리6',
-    ];
-  }, []);
-
-  const dummyCategoryFree = useMemo(() => {
-    return [
-      '자유-카테고리1',
-      '자유-카테고리2',
-      '자유-카테고리3',
-      '자유-카테고리4',
-      '자유-카테고리5',
-      '자유-카테고리6',
-    ];
-  }, []);
-
-  const dummyCategoryReview = useMemo(() => {
-    return [
-      '후기-카테고리1',
-      '후기-카테고리2',
-      '후기-카테고리3',
-      '후기-카테고리4',
-      '후기-카테고리5',
-      '후기-카테고리6',
-    ];
-  }, []);
-
-  const dummyCategory: { [key: string]: string[] } = useMemo(() => {
-    return {
-      도움주기: dummyCategoryGiveHelp,
-      도움받기: dummyCategoryReceiveHelp,
-      자유: dummyCategoryFree,
-      후기: dummyCategoryReview,
-    };
-  }, [
-    dummyCategoryGiveHelp,
-    dummyCategoryReceiveHelp,
-    dummyCategoryFree,
-    dummyCategoryReview,
-  ]);
-
   const navigate = useNavigate();
+
   const [titleSearchForm] = Form.useForm();
   const [optionSearchForm] = Form.useForm();
   const [messageApi, contextHolder] = message.useMessage();
 
   const [panelActiveKey, setPanelActiveKey] = useState<string[]>([]);
-  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
 
   const handleClickBack = useCallback(() => {
     navigate(-1);
@@ -95,65 +39,13 @@ const SearchHeader = () => {
     setPanelActiveKey([]);
   }, []);
 
-  const getCategoryTagItems: (type: string) => string[] = useCallback(
-    (type: string) => {
-      if (type === '전체') {
-        return ['전체'];
-      } else {
-        return ['전체', ...dummyCategory[type]];
-      }
-    },
-    [dummyCategory],
-  );
-
-  const handleOnCategoryChange = useCallback(
-    (clickedCategory: string, checked: boolean) => {
-      if (clickedCategory === '전체') {
-        const type = optionSearchForm.getFieldValue('type');
-        if (type === clickedCategory) {
-          // 유형이 전체인 경우 카테고리 전체 선택 해제 불가(전체 카테고리만 있음)
-          return setSelectedCategories([clickedCategory]);
-        } else {
-          // 특정 유형인 경우 전체 선택 시 모든 카테고리 선택, 전체 선택 해제 시 모든 카테고리 해제(카테고리 여러 개)
-          if (checked) {
-            return setSelectedCategories([
-              clickedCategory,
-              ...dummyCategory[type],
-            ]);
-          } else {
-            return setSelectedCategories([]);
-          }
-        }
-      } else {
-        let nextSelectedCategories: string[] = selectedCategories;
-        if (checked) {
-          nextSelectedCategories = [...selectedCategories, clickedCategory];
-        } else {
-          // 전체 카테고리 조건에 맞지 않게 되어서 전체 카테고리 항상 함께 비활성화
-          nextSelectedCategories = nextSelectedCategories.filter(
-            (category) => category !== clickedCategory && category !== '전체',
-          );
-        }
-        console.log(nextSelectedCategories);
-        setSelectedCategories(nextSelectedCategories);
-      }
-    },
-    [optionSearchForm, dummyCategory, selectedCategories],
-  );
-
   const handleOnChangeOptionSearchForm = useCallback(
     (changedValues: any, values: any) => {
       // 옵션 검색 시 값이 바뀔 때마다 바로 api 호출
-      if (changedValues.type) {
-        // 유형이 바뀔 경우 모든 카테고리 전체 선택 자동으로 해줌
-        if (changedValues.type === '전체') setSelectedCategories(['전체']);
-        else
-          setSelectedCategories(['전체', ...dummyCategory[changedValues.type]]);
-      }
       console.log('변경된 내용', changedValues);
       console.log('현재 전체 내용', values);
     },
-    [dummyCategory],
+    [],
   );
 
   const handleOnSearchTitle = useCallback((values: { title: string }) => {
@@ -228,50 +120,19 @@ const SearchHeader = () => {
             colon={false}
             onValuesChange={handleOnChangeOptionSearchForm}
           >
-            <Form.Item name="type" label="유형" initialValue="전체">
-              <Select>
-                <Select.Option value="전체">전체</Select.Option>
-                <Select.Option value="도움주기">도움주기</Select.Option>
-                <Select.Option value="도움받기">도움받기</Select.Option>
-                <Select.Option value="자유">자유</Select.Option>
-                <Select.Option value="후기">후기</Select.Option>
-              </Select>
-            </Form.Item>
-            <Form.Item
-              noStyle
-              shouldUpdate={(prevValues, current) =>
-                prevValues.type !== current.type
-              }
-            >
-              {({ getFieldValue }) => (
-                <Form.Item
-                  name="category"
-                  label="카테고리"
-                  help={
-                    getFieldValue('type') === '전체'
-                      ? '상세 카테고리 지정은 유형을 지정해야만 가능합니다.'
-                      : null
-                  }
-                >
-                  <div className="available-category-tag-container">
-                    {getCategoryTagItems(getFieldValue('type')).map((tag) => (
-                      <Tag.CheckableTag
-                        checked={
-                          getFieldValue('type') === '전체'
-                            ? true
-                            : selectedCategories.includes(tag)
-                        }
-                        key={tag}
-                        onChange={(checked) =>
-                          handleOnCategoryChange(tag, checked)
-                        }
-                      >
-                        {tag}
-                      </Tag.CheckableTag>
-                    ))}
-                  </div>
-                </Form.Item>
-              )}
+            <Form.Item name="type" initialValue="도움요청">
+              <Radio.Group
+                buttonStyle="solid"
+                style={{
+                  width: '100%',
+                  textAlign: 'center',
+                  marginBottom: '10px',
+                }}
+              >
+                <Radio.Button value="도움요청">도와줘요</Radio.Button>
+                <Radio.Button value="모집">같이해요</Radio.Button>
+                <Radio.Button value="기부">기부해요</Radio.Button>
+              </Radio.Group>
             </Form.Item>
 
             {/* RangePicker 로 넣은 경우 모바일 브라우저보다 크게 나와서 시작 일시, 끝 일시를 따로 받음*/}
@@ -339,11 +200,8 @@ const SearchHeader = () => {
                 />
               </Form.Item>
             </Form.Item>
-            <Form.Item name="sort" label="정렬" initialValue="new">
-              <Select>
-                <Select.Option value="new">최신순</Select.Option>
-                <Select.Option value="old">과거순</Select.Option>
-              </Select>
+            <Form.Item name="isVolunteer" valuePropName="checked">
+              <Checkbox>봉사활동 게시글만 보기</Checkbox>
             </Form.Item>
           </Form>
           <div onClick={handleOnHideSearchOptionCollapse}>

@@ -23,14 +23,19 @@ const BaseLayout = () => {
     location.pathname.includes('/edit/') ||
     location.pathname === PATH.AGENCY_SIGN_UP;
 
+  const isNoHeader = useMemo(() => {
+    return location.pathname === PATH.HOME;
+  }, [location]);
+
   const isSearch = useMemo(() => {
     return location.pathname === PATH.SEARCH;
   }, [location]);
 
   const Header = useMemo(() => {
+    if (isNoHeader) return;
     if (isSearch) return <SearchHeader />;
     if (headerTitle) return <MainHeader />;
-  }, [isSearch, headerTitle]);
+  }, [isNoHeader, isSearch, headerTitle]);
 
   return (
     <Layout css={cssBaseLayoutStyle}>
@@ -39,7 +44,7 @@ const BaseLayout = () => {
         className={`main-section-container ${
           isSearch
             ? 'show-search-header'
-            : headerTitle
+            : !isNoHeader && !!headerTitle
             ? 'show-header'
             : 'no-header'
         }`}

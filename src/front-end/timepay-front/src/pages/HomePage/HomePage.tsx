@@ -10,12 +10,14 @@ import {
   boardSearchState,
   initialBoardSearchState,
 } from '../../states/boardSearch';
+import useFontSize from '../../hooks/useFontSize';
 
 const HomePage = () => {
   const navigate = useNavigate();
 
   const boardSearchValue = useRecoilValue(boardSearchState);
   const setBoardSearchState = useSetRecoilState(boardSearchState);
+  const { scaleValue } = useFontSize();
 
   const { data, isLoading } = useGetCategory({
     type: '도움요청',
@@ -52,7 +54,7 @@ const HomePage = () => {
   );
 
   return (
-    <div css={cssHomePageStyle}>
+    <div css={cssHomePageStyle(scaleValue)}>
       <div className="title-search-container">
         <Logo />
         <div className="title-search">
@@ -68,7 +70,7 @@ const HomePage = () => {
         ) : (
           <>
             <div>당신의 도움이 필요해요!</div>
-            <div css={cssCategoryListStyle}>
+            <div css={cssCategoryListStyle(scaleValue)}>
               {data?.data.map((category) => (
                 <Button
                   key={category.categoryId}

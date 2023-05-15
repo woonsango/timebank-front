@@ -11,17 +11,29 @@ export const useGetReports = (params?: any) => {
       params && params.startTime && params.endTime
         ? apiRequest.get(API_URL.REPORTS__SEARCH, {
             params: {
-              ...params,
-              searchLabel: null,
-              searchValue: null,
-              startTime: params.startTime.format('YYYY-MM-DD HH:mm:ss'),
-              endTime: params.endTime.format('YYYY-MM-DD HH:mm:ss'),
+              query: '',
+              value: '',
+              startDate: params.startTime.format('YYYY-MM-DD HH:mm:ss'),
+              endDate: params.endTime.format('YYYY-MM-DD HH:mm:ss'),
             },
           })
-        : params.reportId || params.reporterName || params.reason
+        : params.reason
         ? apiRequest.get(API_URL.REPORTS__SEARCH, {
             params: {
-              ...params,
+              query: 'content',
+              value: params.reason,
+              searchLabel: null,
+              searchValue: null,
+            },
+          })
+        : params.reportId || params.reporterName
+        ? apiRequest.get(API_URL.REPORTS__SEARCH, {
+            params: {
+              query: params.searchLabel,
+              value:
+                (params.reportId as string) ||
+                params.reporterName ||
+                params.reason,
               searchLabel: null,
               searchValue: null,
             },
