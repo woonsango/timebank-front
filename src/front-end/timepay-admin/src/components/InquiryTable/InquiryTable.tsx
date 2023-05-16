@@ -3,15 +3,20 @@ import type { ColumnsType } from 'antd/es/table';
 import { useCallback, useMemo, useState } from 'react';
 import dayjs from 'dayjs';
 import { cssInquiryTableStyle } from './InquiryTable.styles';
-import { IInquiry } from '../../api/interfaces/IInquiry';
+import { IGetInquiryRequest, IInquiry } from '../../api/interfaces/IInquiry';
 import InquiryDetailModal from '../InquiryDetailModal';
 import { useGetInquiry } from '../../api/hooks/inquiry';
 import { useNavigate } from 'react-router-dom';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { inquirySearchState } from '../../states/inquirySearchState';
+import { customPaginationProps } from '../../utils/pagination';
 
 const InquiryTable = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [currentQnA, setCurrentQnA] = useState<IInquiry>();
-  const { data, isLoading } = useGetInquiry();
+  const inquirySearchValue = useRecoilValue(inquirySearchState);
+  const setInquirySearch = useSetRecoilState(inquirySearchState);
+  const { data, isLoading } = useGetInquiry(inquirySearchValue);
   const navigate = useNavigate();
 
   const dataSource = data?.data.content || [];
@@ -97,6 +102,11 @@ const InquiryTable = () => {
         dataSource={dataSource}
         rowKey="inquiryId"
         loading={isLoading}
+        pagination={customPaginationProps<IGetInquiryRequest>({
+          totalElements: data?.data.totalElements,
+          currentSearchValues: inquirySearchValue,
+          setSearchValues: setInquirySearch,
+        })}
       />
       <InquiryDetailModal
         isOpen={isOpen}

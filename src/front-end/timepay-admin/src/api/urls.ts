@@ -18,6 +18,7 @@ export const API_URL = {
   INQUIRY: '/api/admins/inquiry/main',
   INQUIRY__DETAIL: '/api/admins/inquiry/detail',
   INQUIRY__ANSWER: '/api/admins/inquiry/answer',
+  INQUIRY__SEARCH: '/api/admins/inquiry/search',
 };
 
 /** 토큰을 넣지 않아도 되는 api url 모음 */

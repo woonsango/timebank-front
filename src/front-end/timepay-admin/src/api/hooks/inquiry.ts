@@ -11,7 +11,22 @@ import { apiRequest } from '../request';
 export const useGetInquiry = (params?: IGetInquiryRequest) => {
   return useQuery<AxiosResponse<IGetInquiryResponse>, AxiosError>({
     queryKey: ['useGetInquiry', params],
-    queryFn: () => apiRequest.get(API_URL.INQUIRY, { params }),
+    queryFn: () =>
+      params && params.category && params.state
+        ? apiRequest.get(API_URL.INQUIRY__SEARCH, {
+            params: {
+              ...params,
+              state: params.state,
+              category: params.category,
+            },
+          })
+        : apiRequest.get(API_URL.INQUIRY, {
+            params: {
+              ...params,
+              state: null,
+              category: null,
+            },
+          }),
     refetchOnWindowFocus: false,
     retry: false,
   });

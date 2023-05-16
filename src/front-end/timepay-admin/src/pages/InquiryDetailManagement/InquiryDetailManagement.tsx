@@ -42,7 +42,7 @@ const InquiryDetailManagementPage = () => {
           onSuccess: (result) => {
             messageApi.open({
               type: 'success',
-              content: '공지가 등록되었습니다.',
+              content: '답변이 등록되었습니다.',
             });
           },
           onError: (err) => {
