@@ -1,10 +1,7 @@
 import { useRecoilValue, useSetRecoilState } from 'recoil';
-import {
-  IGetUserInfoUserIdRequest,
-  IUserInfo,
-} from '../../api/interfaces/IUser';
+import { IGetUserInfoRequest, IUserInfo } from '../../api/interfaces/IUser';
 import { useGetUserInfos } from '../../api/hooks/userManagement';
-import { mainSearchStateUserId } from './mainSearchState';
+import { mainSearchState } from './mainSearchState';
 import { useCallback, useMemo, useState } from 'react';
 import Table, { ColumnsType } from 'antd/es/table';
 import { customPaginationProps } from '../../utils/pagination';
@@ -18,14 +15,13 @@ interface MainTableProps {
   setSelectedUserInfos: (args?: IUserInfo[]) => void;
 }
 
-
 const MainTable = ({
   selectedUserInfoIds,
   setSelectedUserInfoIds,
   setSelectedUserInfos,
 }: MainTableProps) => {
-  const mainSearchValues = useRecoilValue(mainSearchStateUserId);
-  const setMainSearch = useSetRecoilState(mainSearchStateUserId);
+  const mainSearchValues = useRecoilValue(mainSearchState);
+  const setMainSearch = useSetRecoilState(mainSearchState);
 
   const { data, isLoading } = useGetUserInfos(mainSearchValues);
 
@@ -57,7 +53,6 @@ const MainTable = ({
   };
 
   const columns: ColumnsType<IUserInfo> = [
-
     {
       title: 'UID',
       dataIndex: 'userId',
@@ -91,7 +86,7 @@ const MainTable = ({
       dataIndex: 'birth',
       align: 'center',
       render: (birth: string) =>
-        (birth || '').split('.')[0].replaceAll('T09:00:00', ' '),
+        (birth || '').split('.')[0].replaceAll('T00:00:00', ' '),
     },
 
     {
@@ -136,7 +131,7 @@ const MainTable = ({
         dataSource={dataSource}
         rowKey="UserId"
         loading={isLoading}
-        pagination={customPaginationProps<IGetUserInfoUserIdRequest>({
+        pagination={customPaginationProps<IGetUserInfoRequest>({
           totalElements: data?.data.totalElements,
           currentSearchValues: mainSearchValues,
           setSearchValues: setMainSearch,

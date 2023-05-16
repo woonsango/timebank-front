@@ -1,14 +1,10 @@
-import { Card, Space, Table } from 'antd';
+import { Card } from 'antd';
 
 import { topWrapperCSS, rightAlignCSS } from './UserManagement.styles';
 import SearchForm from './searchForm';
 
 import React from 'react';
 import { useState } from 'react';
-import type { ColumnsType } from 'antd/es/table';
-
-import ProfileImageModal from './profileImageModal';
-import EditModal from './editModal';
 import { IUserInfo } from '../../api/interfaces/IUser';
 
 import MainTable from './mainTable';
