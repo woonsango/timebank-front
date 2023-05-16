@@ -4,7 +4,6 @@ import { useCallback, useMemo, useState } from 'react';
 import dayjs from 'dayjs';
 import { cssInquiryTableStyle } from './InquiryTable.styles';
 import { IGetInquiryRequest, IInquiry } from '../../api/interfaces/IInquiry';
-import InquiryDetailModal from '../InquiryDetailModal';
 import { useGetInquiry } from '../../api/hooks/inquiry';
 import { useNavigate } from 'react-router-dom';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
@@ -20,11 +19,6 @@ const InquiryTable = () => {
   const navigate = useNavigate();
 
   const dataSource = data?.data.content || [];
-
-  const handleOnShowDetailQnA = useCallback((inquiry: IInquiry) => {
-    setCurrentQnA(inquiry);
-    setIsOpen(true);
-  }, []);
 
   const handleOnCloseDetailQnA = useCallback(() => {
     setCurrentQnA(undefined);
@@ -94,26 +88,19 @@ const InquiryTable = () => {
   }, [navigate]);
 
   return (
-    <>
-      <Table
-        css={cssInquiryTableStyle}
-        columns={columns}
-        scroll={{ x: 1000 }}
-        dataSource={dataSource}
-        rowKey="inquiryId"
-        loading={isLoading}
-        pagination={customPaginationProps<IGetInquiryRequest>({
-          totalElements: data?.data.totalElements,
-          currentSearchValues: inquirySearchValue,
-          setSearchValues: setInquirySearch,
-        })}
-      />
-      <InquiryDetailModal
-        isOpen={isOpen}
-        onCancel={handleOnCloseDetailQnA}
-        inquiry={currentQnA}
-      />
-    </>
+    <Table
+      css={cssInquiryTableStyle}
+      columns={columns}
+      scroll={{ x: 1000 }}
+      dataSource={dataSource}
+      rowKey="inquiryId"
+      loading={isLoading}
+      pagination={customPaginationProps<IGetInquiryRequest>({
+        totalElements: data?.data.totalElements,
+        currentSearchValues: inquirySearchValue,
+        setSearchValues: setInquirySearch,
+      })}
+    />
   );
 };
 
