@@ -31,3 +31,8 @@ export interface IGetInquiryRequest extends GetPageableData {
 export interface IGetInquiryResponse extends PageableData {
   content: IInquiry[];
 }
+
+export interface IGetInquiryDetailResponse extends PageableData {
+  title: string; // 제목
+  content: string; // 내용
+}

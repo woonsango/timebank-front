@@ -5,17 +5,19 @@ import dayjs from 'dayjs';
 import { cssInquiryTableStyle } from './InquiryTable.styles';
 import { IInquiry } from '../../api/interfaces/IInquiry';
 import InquiryDetailModal from '../InquiryDetailModal';
-import { useGetInquiries } from '../../api/hooks/inquiry';
+import { useGetInquiry } from '../../api/hooks/inquiry';
+import { useNavigate } from 'react-router-dom';
 
 const InquiryTable = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [currentQnA, setCurrentQnA] = useState<IInquiry>();
-  const { data, isLoading } = useGetInquiries();
+  const { data, isLoading } = useGetInquiry();
+  const navigate = useNavigate();
 
   const dataSource = data?.data.content || [];
 
-  const handleOnShowDetailQnA = useCallback((report: IInquiry) => {
-    setCurrentQnA(report);
+  const handleOnShowDetailQnA = useCallback((inquiry: IInquiry) => {
+    setCurrentQnA(inquiry);
     setIsOpen(true);
   }, []);
 
@@ -23,19 +25,6 @@ const InquiryTable = () => {
     setCurrentQnA(undefined);
     setIsOpen(false);
   }, []);
-
-  const dummyDataSource: IInquiry[] = [];
-  for (let i = 0; i < 100; i++) {
-    dummyDataSource.push({
-      inquiryId: i,
-      title: `문의 제목 ${i + 1}`,
-      createdAt: `2023-12-34 12:34`,
-      state: i % 2 ? '답변대기' : '답변완료',
-      category: `카테고리 ${i}`,
-      content: `문의 내용 ${i + 1}`,
-      writer: `${i}작성자 이름`,
-    });
-  }
 
   // @ts-ignore
   const columns: ColumnsType<IInquiry> = useMemo(() => {
@@ -70,19 +59,6 @@ const InquiryTable = () => {
         sorter: (a: IInquiry, b: IInquiry) =>
           dayjs(a.createdAt).isAfter(dayjs(b.createdAt)),
       },
-
-      {
-        title: '문의 제목',
-        key: 'title',
-        dataIndex: 'title',
-        width: 100,
-        align: 'center',
-        render: (_: string, record: IInquiry) => (
-          <Button type="link" onClick={() => handleOnShowDetailQnA(record)}>
-            더보기
-          </Button>
-        ),
-      },
       {
         title: '문의 작성자 이름',
         key: 'writer',
@@ -90,8 +66,27 @@ const InquiryTable = () => {
         width: 100,
         align: 'center',
       },
+      {
+        title: '문의 답변작성',
+        key: 'title',
+        dataIndex: 'title',
+        width: 100,
+        align: 'center',
+        render: (_: string, record: IInquiry) => (
+          <Button
+            type="link"
+            onClick={() =>
+              navigate(`/inquiry-management/detail`, {
+                state: { inquiryId: record.inquiryId },
+              })
+            }
+          >
+            문의 보기
+          </Button>
+        ),
+      },
     ];
-  }, [handleOnShowDetailQnA]);
+  }, [navigate]);
 
   return (
     <>
@@ -106,7 +101,7 @@ const InquiryTable = () => {
       <InquiryDetailModal
         isOpen={isOpen}
         onCancel={handleOnCloseDetailQnA}
-        Inquiry={currentQnA}
+        inquiry={currentQnA}
       />
     </>
   );

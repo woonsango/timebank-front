@@ -14,9 +14,6 @@ export const cssInquiryDetailManagementPageStyle = css`
       gap: 10px;
     }
   }
-  .answerBtnBlock {
-    padding-top: 10px;
-  }
   .answerBtn {
     background-color: ${COMMON_COLOR.MAIN1};
   }

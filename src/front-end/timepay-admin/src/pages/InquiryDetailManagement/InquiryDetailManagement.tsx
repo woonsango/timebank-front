@@ -1,9 +1,13 @@
-import { Button, Card, Input, List, Typography } from 'antd';
+import { Button, Card, Form, Input, List, Typography, message } from 'antd';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { cssInquiryDetailManagementPageStyle } from './InquiryDetailManagementPage.style';
-import { useGetInquiryDetail } from '../../api/hooks/inquiry';
+import {
+  useGetInquiryDetail,
+  usePostInquiryAnswer,
+} from '../../api/hooks/inquiry';
 import { useCallback } from 'react';
 import { COMMON_COLOR } from '../../styles/constants/colors';
+import { useQueryClient } from 'react-query';
 
 const { TextArea } = Input;
 
@@ -20,14 +24,49 @@ const InquiryDetailManagementPage = () => {
   console.log(data?.data.inquiryResponse.content);
   const adminAnswerResponses: adminAnswerResponses[] =
     data?.data.adminAnswerResponses || [];
-
   const navigate = useNavigate();
+  const usePostInquiryAnswerMutation = usePostInquiryAnswer();
+  const queryClient = useQueryClient();
+  const [messageApi, contextHolder] = message.useMessage();
+  const [form] = Form.useForm();
 
   const handleClickBack = useCallback(() => {
     navigate(-1);
   }, [navigate]);
 
-  const handleClickAnswerBtn = useCallback(() => {}, []);
+  const handleClickAnswerBtn = useCallback(
+    (values: any) => {
+      usePostInquiryAnswerMutation.mutateAsync(
+        { values, state },
+        {
+          onSuccess: (result) => {
+            messageApi.open({
+              type: 'success',
+              content: '공지가 등록되었습니다.',
+            });
+          },
+          onError: (err) => {
+            messageApi.open({
+              type: 'error',
+              content: (
+                <>
+                  오류 발생: <br />
+                  {err}
+                </>
+              ),
+            });
+          },
+          onSettled: async (data) => {
+            await queryClient.invalidateQueries({
+              queryKey: ['useGetInquiryDetail'],
+            });
+            form.resetFields();
+          },
+        },
+      );
+    },
+    [usePostInquiryAnswerMutation, state, messageApi, queryClient, form],
+  );
 
   return (
     <Card
@@ -52,6 +91,7 @@ const InquiryDetailManagementPage = () => {
         <List
           itemLayout="horizontal"
           dataSource={adminAnswerResponses}
+          locale={{ emptyText: `\n\n등록된 답변이 없습니다\n\n` }}
           renderItem={(item) => (
             <List.Item>
               <Card style={{ width: '100%' }} title={item.adminName}>
@@ -60,24 +100,36 @@ const InquiryDetailManagementPage = () => {
             </List.Item>
           )}
         />
-        <div className="answerInput">
-          <TextArea
-            className="textInput"
-            placeholder="답변을 입력해주세요"
-            autoSize={{ minRows: 5, maxRows: 5 }}
-          />
-          <div className="answerBtnBlock">
+        {contextHolder}
+        <Form
+          className="answerInput"
+          form={form}
+          onFinish={handleClickAnswerBtn}
+          style={{ width: '100%' }}
+        >
+          <Form.Item
+            name="content"
+            rules={[{ required: true, message: '답변을 입력해주세요' }]}
+          >
+            <TextArea
+              className="textInput"
+              placeholder="답변을 입력해주세요"
+              autoSize={{ minRows: 5, maxRows: 5 }}
+            />
+          </Form.Item>
+
+          <Form.Item>
             <Button
               block
               className="answerBtn"
               type="primary"
-              onClick={handleClickAnswerBtn}
+              htmlType="submit"
               style={{ color: COMMON_COLOR.WHITE }}
             >
               답변등록
             </Button>
-          </div>
-        </div>
+          </Form.Item>
+        </Form>
       </div>
     </Card>
   );

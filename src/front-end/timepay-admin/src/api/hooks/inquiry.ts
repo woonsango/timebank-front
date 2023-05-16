@@ -36,7 +36,8 @@ export const usePostInquiryAnswer = () => {
     mutationKey: 'usePostInquiryAnswer',
     mutationFn: (data) =>
       apiRequest.post(API_URL.INQUIRY__ANSWER, {
-        ...data,
+        content: data.values.content,
+        inquiryId: data.state.inquiryId,
       }),
   });
 };
