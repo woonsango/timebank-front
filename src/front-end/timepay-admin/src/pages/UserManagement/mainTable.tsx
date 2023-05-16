@@ -6,7 +6,6 @@ import type { ColumnsType } from 'antd/es/table';
 import { rightAlignCSS } from './UserManagement.styles';
 
 import ProfileImageModal from './profileImageModal';
-import DetailModal from './detailModal';
 import EditModal from './editModal';
 
 const MainTable = () => {

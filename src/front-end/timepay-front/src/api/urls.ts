@@ -12,7 +12,7 @@ export const API_URL = {
   ORGANIZATIONS_DELETE: '/api/organizations/delete',
   USER_INFO_GET: '/api/users/mypage/',
   USER_INFO_POST: '/api/users/create/',
-  USER_INFO_PUT: '/api/users/update',
+  USER_INFO_PUT: '/api/users/mypage/update',
   MY_VOLUNTEER: '/api/users/mypage/certification',
   USERS__CATEGORY: '/api/users/category',
 };
