@@ -44,5 +44,8 @@ export const cssActivityPostCardStyle = css`
     font-size: 14px;
     line-height: 20px;
     color: ${COMMON_COLOR.FONT2};
+    .pay-number {
+      color: ${COMMON_COLOR.BLACK};
+    }
   }
 `;
