@@ -13,7 +13,7 @@ export const cssBaseLayoutStyle = css`
       padding-top: 70px; // 헤더에 가려진만큼 패딩 추가
     }
     &.show-search-header {
-      padding-top: 90px;
+      padding-top: 134px;
     }
     padding-bottom: 80px;
     overflow-y: scroll;

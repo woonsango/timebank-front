@@ -3,7 +3,6 @@ import { useMutation, useQuery } from 'react-query';
 import {
   IGetNotificationRequest,
   IGetNotificationResponse,
-  IPostNotificationRequest,
 } from '../interfaces/INotification';
 import { apiRequest } from '../request';
 import { API_URL } from '../urls';
@@ -20,18 +19,9 @@ export const useGetNotifications = (params?: IGetNotificationRequest) => {
 };
 
 export const useCreateNotifications = () => {
-  return useMutation<
-    AxiosResponse<boolean>,
-    AxiosError,
-    IPostNotificationRequest
-  >({
+  return useMutation<AxiosResponse<boolean>, AxiosError, FormData>({
     mutationKey: 'useCreateNotifications',
-    mutationFn: (data) =>
-      apiRequest.post(API_URL.NOTIFICATIONS, {
-        ...data,
-        isNotice: true,
-        imageUrl: null,
-      }),
+    mutationFn: (data) => apiRequest.postFormData(API_URL.NOTIFICATIONS, data),
   });
 };
 

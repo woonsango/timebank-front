@@ -6,7 +6,7 @@ export interface IAdmin {
   adminId: number;
   adminName: string;
   password: string;
-  authority: string;
+  authority?: string;
   name: string;
   email: string;
   phone: string;

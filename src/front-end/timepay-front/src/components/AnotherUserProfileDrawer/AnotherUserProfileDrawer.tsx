@@ -1,7 +1,7 @@
 import { Drawer, Pagination, Spin, Tabs, TabsProps } from 'antd';
 import { useMemo } from 'react';
 import { ICommentActivity } from '../../api/interfaces/IComment';
-import { IPost } from '../../api/interfaces/IPost';
+import { IBoard } from '../../api/interfaces/IPost';
 import { IUser } from '../../api/interfaces/IUser';
 import { cssTabStyle } from '../../styles/constants/tabStyle';
 import ActivityCommentCard from '../ActivityCommentCard';
@@ -12,7 +12,7 @@ interface AnotherUserProfileDrawerProps {
   open: boolean;
   onClose: () => void;
   user?: IUser;
-  userPosts?: IPost[];
+  userPosts?: IBoard[];
   userComments?: ICommentActivity[];
 }
 const AnotherUserProfileDrawer = ({
@@ -37,7 +37,7 @@ const AnotherUserProfileDrawer = ({
           <div className="activity-list-container">
             <div className="activity-list">
               {userPosts?.map((post) => (
-                <ActivityPostCard key={post.postId} post={post} />
+                <ActivityPostCard key={post.d_boardId} post={post} />
               ))}
             </div>
             <Pagination

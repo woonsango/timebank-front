@@ -1,7 +1,7 @@
 import { Card, Spin } from 'antd';
 import { useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { IPost } from '../../api/interfaces/IPost';
+import { IBoard } from '../../api/interfaces/IPost';
 import PostStatusTag from '../PostStatusTag';
 import {
   cssSimplePostCardBodyStyle,
@@ -12,32 +12,35 @@ import {
 import { ReactComponent as RegionPin } from '../../assets/images/icons/region-pin.svg';
 import { ReactComponent as Clock } from '../../assets/images/icons/clock.svg';
 import { ReactComponent as Attachment } from '../../assets/images/icons/attachment.svg';
+import { ReactComponent as VolunteerBadge } from '../../assets/images/icons/volunteer-badge.svg';
 import { UserOutlined } from '@ant-design/icons';
 import PostTypeTag from '../PostTypeTag';
 import { cssPostTypeTagStyle } from '../PostTypeTag/PostTypeTag.styles';
 import { COMMON_COLOR } from '../../styles/constants/colors';
+import { getDateDiffToday } from '../../utils/board';
+
 interface SimplePostCardProps {
-  post?: IPost;
+  post?: IBoard;
 }
 
 const SimplePostCard = ({ post }: SimplePostCardProps) => {
   const navigate = useNavigate();
   const handlePageChange = () => {
-    navigate(`/post/${post?.postId}`, {
+    navigate(`/post/${post?.d_boardId}`, {
       state: {
-        id: post?.postId,
+        id: post?.d_boardId,
         type: post?.type,
         title: post?.title,
         content: post?.content,
         createdAt: post?.createdAt,
-        status: post?.status,
+        status: post?.boardStatus,
         category: post?.category,
         pay: post?.pay,
         startTime: post?.startTime,
         endTime: post?.endTime,
-        region: post?.region,
-        attachment: post?.attachment,
-        user: post?.user?.name,
+        region: post?.location,
+        attachment: post?.imageUrl,
+        user: post?.writerNickname,
       },
     });
   };
@@ -49,7 +52,7 @@ const SimplePostCard = ({ post }: SimplePostCardProps) => {
             <UserOutlined />
             {nickname || '-'}
           </div>
-          <div>{createdAt || '-'}</div>
+          <div>{createdAt ? getDateDiffToday(createdAt) : '-'}</div>
         </div>
       );
     },
@@ -74,23 +77,22 @@ const SimplePostCard = ({ post }: SimplePostCardProps) => {
             </div>
           </div>
           <div className="title">
-            <PostStatusTag status={post?.status} />
+            <PostStatusTag status={post?.boardStatus} />
             <div>{post?.title || '-'}</div>
-            <div className="attachment">
-              {post?.attachment && <Attachment />}
-            </div>
+            <div className="attachment">{post?.imageUrl && <Attachment />}</div>
           </div>
         </div>
         <div css={cssSimplePostCardBodyStyle}>
-          <div className="post-card-region">
+          <div className="post-card-location">
             <RegionPin />
-            {post?.region || '-'}
+            {post?.location || '-'}
           </div>
           <div className="post-card-time">
             <Clock />
             {post ? (
               <span>
-                {post.startTime} ~ {post.endTime}
+                {post.startTime?.split('.')[0].replace('T', ' ')} ~
+                {post.endTime?.split('.')[0].replace('T', ' ')}
               </span>
             ) : (
               <span>-</span>
@@ -111,9 +113,14 @@ const SimplePostCard = ({ post }: SimplePostCardProps) => {
       onClick={handlePageChange}
     >
       <Spin size="large" spinning={!post}>
+        {post?.volunteer && (
+          <div className="volunteer-badge">
+            <VolunteerBadge />
+          </div>
+        )}
         {postCardContent}
       </Spin>
-      {footerComponent(post?.user.nickname, post?.createdAt)}
+      {footerComponent(post?.writerNickname, post?.createdAt)}
     </Card>
   );
 };

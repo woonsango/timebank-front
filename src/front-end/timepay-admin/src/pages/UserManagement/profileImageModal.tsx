@@ -1,39 +1,38 @@
 import { Modal, Image, Button } from 'antd';
-import { useState } from 'react';
+import { useMemo } from 'react';
+import { IUserInfo } from '../../api/interfaces/IUser';
 
-const ProfileImageModal = () => {
-  /*프로필 사진 모달 설정 */
-  const [modalProfileImage, setModalProfileImage] = useState(false);
-
-  const showModalProfileImage = () => {
-    setModalProfileImage(true);
-  };
-  const handleOkProfileImage = () => {
-    setModalProfileImage(false);
-  };
-
-  const handleCancelProfileImage = () => {
-    setModalProfileImage(false);
-  };
+interface ProfileModalProps {
+  profile?: IUserInfo;
+  isOpen: boolean;
+  onCancel: () => void;
+}
+const ProfileImageModal = ({
+  profile,
+  isOpen,
+  onCancel,
+}: ProfileModalProps) => {
+  const footer = useMemo(() => {
+    return (
+      <Button type="primary" onClick={onCancel}>
+        확인
+      </Button>
+    );
+  }, [onCancel]);
 
   return (
-    <div>
-      <Button onClick={showModalProfileImage}>사진 보기</Button>
-      <Modal
-        title="프로필 사진"
-        open={modalProfileImage}
-        onOk={handleOkProfileImage}
-        onCancel={handleCancelProfileImage}
-        okText="확인"
-        cancelText="취소"
-      >
-        <Image
-          width={200}
-          src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
-        />
-      </Modal>
-    </div>
+    <Modal
+      title="프로필 사진 조회"
+      open={isOpen}
+      onOk={onCancel}
+      onCancel={onCancel}
+      footer={footer}
+      width={900}
+    >
+      <div>
+        <Image src={profile?.profileUrl} />
+      </div>
+    </Modal>
   );
 };
-
 export default ProfileImageModal;

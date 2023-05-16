@@ -1,70 +1,113 @@
-import { Space, Table } from 'antd';
-import React from 'react';
-import { useState } from 'react';
-import type { ColumnsType } from 'antd/es/table';
-
-import { rightAlignCSS } from './UserManagement.styles';
-
+import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { IGetUserInfoRequest, IUserInfo } from '../../api/interfaces/IUser';
+import { useGetUserInfos } from '../../api/hooks/userManagement';
+import { mainSearchState } from './mainSearchState';
+import { useCallback, useMemo, useState } from 'react';
+import Table, { ColumnsType } from 'antd/es/table';
+import { customPaginationProps } from '../../utils/pagination';
+import { Button, Modal } from 'antd';
 import ProfileImageModal from './profileImageModal';
-import DetailModal from './detailModal';
-import EditModal from './editModal';
+import { cssPushTableRowCountStyle } from '../../components/PushTable/PushTable.styles';
 
-const MainTable = () => {
-  /*기본 회원 조회 화면 Table Data 설정 */
-  interface DataType {
-    key: React.Key;
+interface MainTableProps {
+  selectedUserInfoIds?: React.Key[];
+  setSelectedUserInfoIds: (args?: React.Key[]) => void;
+  setSelectedUserInfos: (args?: IUserInfo[]) => void;
+}
 
-    nickName: string;
-    realName: string;
-    town: string;
-    birth: string;
-    profileImg: any;
-    timePay: number;
+const MainTable = ({
+  selectedUserInfoIds,
+  setSelectedUserInfoIds,
+  setSelectedUserInfos,
+}: MainTableProps) => {
+  const mainSearchValues = useRecoilValue(mainSearchState);
+  const setMainSearch = useSetRecoilState(mainSearchState);
 
-    blackList: string;
-    detail: any;
-    edit: any;
-  }
+  const { data, isLoading } = useGetUserInfos(mainSearchValues);
 
-  const columns: ColumnsType<DataType> = [
+  const [isOpen, setIsOpen] = useState(false);
+  const [currentProfile, setCurrentProfile] = useState<IUserInfo>();
+
+  const handleOnShowProfile = useCallback((push: IUserInfo) => {
+    setCurrentProfile(push);
+    setIsOpen(true);
+  }, []);
+
+  const handleOnCloseProfile = useCallback(() => {
+    setCurrentProfile(undefined);
+    setIsOpen(false);
+  }, []);
+
+  const dataSource = useMemo(() => {
+    if (mainSearchValues) {
+      return data?.data.content || [];
+    }
+    return [];
+  }, [mainSearchValues, data]);
+
+  const rowSelection = {
+    onChange: (selectedRowKeys: React.Key[], selectedRows: IUserInfo[]) => {
+      setSelectedUserInfoIds(selectedRowKeys);
+      setSelectedUserInfos(selectedRows);
+    },
+  };
+
+  const columns: ColumnsType<IUserInfo> = [
     {
-      title: '이름',
-      dataIndex: 'nickName',
+      title: 'UID',
+      dataIndex: 'userId',
       align: 'center',
     },
     {
       title: '닉네임',
-      dataIndex: 'realName',
-      align: 'center',
-    },
-    {
-      title: '지역',
-      dataIndex: 'town',
-      align: 'center',
-    },
-    {
-      title: '생년월일',
-      dataIndex: 'birth',
+      dataIndex: 'nickName',
       align: 'center',
     },
     {
       title: '프로필 사진',
-      dataIndex: 'profileImg',
+      dataIndex: 'profileUrl',
+
+      render: (_: string, record: IUserInfo) => (
+        <Button type="link" onClick={() => handleOnShowProfile(record)}>
+          프로필 사진 보기
+        </Button>
+      ),
       align: 'center',
     },
+
+    {
+      title: '이름',
+      dataIndex: 'userName',
+      align: 'center',
+    },
+
+    {
+      title: '생년월일',
+      dataIndex: 'birth',
+      align: 'center',
+      render: (birth: string) =>
+        (birth || '').split('.')[0].replaceAll('T00:00:00', ' '),
+    },
+
+    {
+      title: '지역',
+      dataIndex: 'region',
+      align: 'center',
+    },
+    {
+      title: '성별',
+      dataIndex: 'sex',
+      align: 'center',
+    },
+
     {
       title: '타임페이 보유량',
-      dataIndex: 'timePay',
+      dataIndex: 'timepay',
       align: 'center',
     },
     {
-      title: '활동 목록',
-      dataIndex: 'detail',
-      align: 'center',
-    },
-    {
-      title: '블랙리스트 여부',
-      dataIndex: 'blackList',
+      title: '봉사 시간',
+      dataIndex: 'totalVolunteerTime',
       align: 'center',
     },
 
@@ -75,55 +118,31 @@ const MainTable = () => {
     },
   ];
 
-  const data: DataType[] = [];
-  for (let i = 0; i < 46; i++) {
-    data.push({
-      key: i,
-
-      nickName: `nickname ${i}`,
-      realName: `realname ${i}`,
-      town: `서울특별시 ${i}구 ${i}동`,
-      birth: `0000-00-00`,
-      profileImg: <ProfileImageModal />,
-
-      timePay: i * 100 + i,
-
-      blackList: `X`,
-      detail: <DetailModal />,
-      edit: <EditModal />,
-    });
-  }
-  /*Table */
-  const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
-
-  const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
-    console.log('selectedRowKeys changed: ', newSelectedRowKeys);
-    setSelectedRowKeys(newSelectedRowKeys);
-  };
-
-  const rowSelection = {
-    selectedRowKeys,
-    onChange: onSelectChange,
-  };
-  const hasSelected = selectedRowKeys.length > 0;
-
-  /*메인에서 체크된 row들 데이터 파싱해서 블랙리스트로 넘기기 */
   return (
-    <div>
-      <Space css={rightAlignCSS}>
-        {hasSelected
-          ? `${selectedRowKeys.length}/${data.length}개 선택됨`
-          : `${selectedRowKeys.length}/${data.length}개 선택됨`}
-      </Space>
-      <Space>
-        <Table
-          css={{ width: 1570 }}
-          rowSelection={rowSelection}
-          columns={columns}
-          dataSource={data}
-        />
-      </Space>
-    </div>
+    <>
+      <div css={cssPushTableRowCountStyle}>
+        {selectedUserInfoIds && selectedUserInfoIds.length > 0}총{' '}
+        {data?.data.totalElements || 0} 개
+      </div>
+      <Table
+        //rowSelection={rowSelection}
+        columns={columns}
+        scroll={{ x: 1200 }}
+        dataSource={dataSource}
+        rowKey="UserId"
+        loading={isLoading}
+        pagination={customPaginationProps<IGetUserInfoRequest>({
+          totalElements: data?.data.totalElements,
+          currentSearchValues: mainSearchValues,
+          setSearchValues: setMainSearch,
+        })}
+      />
+      <ProfileImageModal
+        isOpen={isOpen}
+        onCancel={handleOnCloseProfile}
+        profile={currentProfile}
+      />
+    </>
   );
 };
 

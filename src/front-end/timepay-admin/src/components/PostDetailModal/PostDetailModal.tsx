@@ -1,10 +1,10 @@
 import { Button, Modal } from 'antd';
 import { useMemo } from 'react';
-import { IPost } from '../../api/interfaces/IPost';
+import { IDealBoard } from '../../api/interfaces/IBoard';
 import { cssPostDetailModalStyle } from './PostDetailModal.styles';
 
 interface PostDetailModalProps {
-  post?: IPost;
+  post?: IDealBoard;
   isOpen: boolean;
   onCancel: () => void;
 }
@@ -37,9 +37,11 @@ const PostDetailModal = ({ post, isOpen, onCancel }: PostDetailModalProps) => {
       </div>
       <div className="post-detail-container">
         <span className="title">첨부사진</span>
-        <div className="post-detail-inner-container">
-          <img src={post?.attachment} alt="첨부사진" />
-        </div>
+        {post?.dealAttatchments.length === 0
+          ? '-'
+          : post?.dealAttatchments.map((imgUrl) => (
+              <img key={imgUrl} src={imgUrl} alt="첨부" />
+            ))}
       </div>
     </Modal>
   );

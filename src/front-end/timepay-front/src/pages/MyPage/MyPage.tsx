@@ -17,7 +17,7 @@ const MyPage = () => {
 
   useEffect(() => {
     apiRequest
-      .get(API_URL.USER_INFO)
+      .get(API_URL.USER_INFO_GET)
       .then((res) => {
         console.log(res);
 
@@ -130,6 +130,15 @@ const MyPage = () => {
                 onClick={() => handlePageMove(PATH.INQUIRE)}
               >
                 문의하기
+              </button>
+            </div>
+
+            <div className="MyPageMoveBox">
+              <button
+                className="MyPageText"
+                onClick={() => handlePageMove(PATH.CATEGORY_SELECT)}
+              >
+                카테고리 알림 설정
               </button>
             </div>
           </div>

@@ -10,15 +10,32 @@ import {
   Input,
   message,
   Radio,
+  Spin,
+  Tag,
 } from 'antd';
 import { cssSearchHeaderStyle } from './SearchHeader.styles';
 import { ReactComponent as BackArrow } from '../../assets/images/icons/header-back-arrow.svg';
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { DownOutlined, UpOutlined } from '@ant-design/icons';
 import dayjs from 'dayjs';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { boardSearchState } from '../../states/boardSearch';
+import { useGetCategory } from '../../api/hooks/category';
+import { searchDrawerOpenState } from '../../states/uiState';
+
 const SearchHeader = () => {
   const navigate = useNavigate();
+
+  const { data, isLoading } = useGetCategory({
+    type: '도움요청',
+    useYn: 'Y',
+  });
+
+  const boardSearchValue = useRecoilValue(boardSearchState);
+  const setBoardSearch = useSetRecoilState(boardSearchState);
+
+  const setSearchDrawerOpen = useSetRecoilState(searchDrawerOpenState);
 
   const [titleSearchForm] = Form.useForm();
   const [optionSearchForm] = Form.useForm();
@@ -31,26 +48,60 @@ const SearchHeader = () => {
   }, [navigate]);
 
   const handleOnShowSearchOptionCollapse = useCallback(() => {
-    if (panelActiveKey && panelActiveKey.length === 0)
+    if (panelActiveKey && panelActiveKey.length === 0) {
       setPanelActiveKey(['search-option-collapse']);
-  }, [panelActiveKey]);
+      setSearchDrawerOpen(true);
+    }
+  }, [panelActiveKey, setSearchDrawerOpen]);
 
   const handleOnHideSearchOptionCollapse = useCallback(() => {
     setPanelActiveKey([]);
-  }, []);
+    setSearchDrawerOpen(false);
+  }, [setSearchDrawerOpen]);
 
   const handleOnChangeOptionSearchForm = useCallback(
-    (changedValues: any, values: any) => {
+    (changedValues: { [key: string]: any }, values: any) => {
       // 옵션 검색 시 값이 바뀔 때마다 바로 api 호출
-      console.log('변경된 내용', changedValues);
-      console.log('현재 전체 내용', values);
+      if (!values.startDate) {
+        optionSearchForm.setFieldValue('startTime', undefined);
+      }
+      if (!values.endDate) {
+        optionSearchForm.setFieldValue('endTime', undefined);
+      }
+      setBoardSearch({
+        ...boardSearchValue,
+        ...changedValues,
+        startDate: null,
+        endDate: null,
+        startTime: values.startDate
+          ? `${values.startDate.format('YYYY-MM-DD')}T${
+              values.startTime
+                ? values.startTime.format('HH:mm:ss.000000')
+                : '00:00:00.000000'
+            }`
+          : undefined,
+        endTime: values.endDate
+          ? `${values.endDate.format('YYYY-MM-DD')}T${
+              values.endTime
+                ? values.endTime.format('HH:mm:ss.000000')
+                : '00:00:00.000000'
+            }`
+          : undefined,
+      });
     },
-    [],
+    [optionSearchForm, setBoardSearch, boardSearchValue],
   );
 
-  const handleOnSearchTitle = useCallback((values: { title: string }) => {
-    console.log('검색 성공', values);
-  }, []);
+  const handleOnSearchTitle = useCallback(
+    (values: { title: string }) => {
+      setBoardSearch({
+        ...boardSearchValue,
+        title: values.title,
+        pagingIndex: 0,
+      });
+    },
+    [boardSearchValue, setBoardSearch],
+  );
 
   const handleOnFailSearchTitle = useCallback(
     (errorInfo: any) => {
@@ -64,6 +115,23 @@ const SearchHeader = () => {
     [messageApi],
   );
 
+  const handleOnCategoryChange = useCallback(
+    (clickedCategory: string, checked: boolean) => {
+      if (boardSearchValue.category === clickedCategory)
+        setBoardSearch({ ...boardSearchValue, category: undefined });
+      else setBoardSearch({ ...boardSearchValue, category: clickedCategory });
+    },
+    [setBoardSearch, boardSearchValue],
+  );
+
+  useEffect(() => {
+    return () => {
+      // 다른 화면 진입 시 스크롤 초기화
+      window.scrollTo(0, 0);
+      setSearchDrawerOpen(false);
+    };
+  }, [setSearchDrawerOpen]);
+
   return (
     <div css={cssSearchHeaderStyle}>
       {contextHolder}
@@ -75,21 +143,30 @@ const SearchHeader = () => {
           onFinish={handleOnSearchTitle}
           onFinishFailed={handleOnFailSearchTitle}
         >
-          <Form.Item
-            name="title"
-            rules={[
-              {
-                required: true,
-                message: '',
-              },
-            ]}
-          >
+          <Form.Item name="title" initialValue={boardSearchValue.title}>
             <Input placeholder="검색할 게시글의 제목을 입력해주세요" />
           </Form.Item>
           <Button htmlType="submit" type="primary">
             검색
           </Button>
         </Form>
+      </div>
+      <div className="available-category-tag-container">
+        {isLoading ? (
+          <Spin />
+        ) : (
+          data?.data.map((category) => (
+            <Tag.CheckableTag
+              checked={boardSearchValue.category === category.categoryName}
+              key={category.categoryId}
+              onChange={(checked) =>
+                handleOnCategoryChange(category.categoryName, checked)
+              }
+            >
+              {category.categoryName}
+            </Tag.CheckableTag>
+          ))
+        )}
       </div>
       <Collapse
         className="search-option-container"
@@ -120,7 +197,7 @@ const SearchHeader = () => {
             colon={false}
             onValuesChange={handleOnChangeOptionSearchForm}
           >
-            <Form.Item name="type" initialValue="도움요청">
+            <Form.Item name="type" initialValue={boardSearchValue.type}>
               <Radio.Group
                 buttonStyle="solid"
                 style={{
@@ -129,9 +206,9 @@ const SearchHeader = () => {
                   marginBottom: '10px',
                 }}
               >
-                <Radio.Button value="도움요청">도와줘요</Radio.Button>
-                <Radio.Button value="모집">같이해요</Radio.Button>
-                <Radio.Button value="기부">기부해요</Radio.Button>
+                <Radio.Button value="help">도움요청</Radio.Button>
+                <Radio.Button value="helper">같이하기</Radio.Button>
+                <Radio.Button value="event">기부하기</Radio.Button>
               </Radio.Group>
             </Form.Item>
 
@@ -165,6 +242,7 @@ const SearchHeader = () => {
                       optionSearchForm.getFieldsValue(),
                     );
                   }}
+                  disabled={!optionSearchForm.getFieldValue('startDate')}
                 />
               </Form.Item>
             </Form.Item>
@@ -197,10 +275,11 @@ const SearchHeader = () => {
                       optionSearchForm.getFieldsValue(),
                     );
                   }}
+                  disabled={!optionSearchForm.getFieldValue('endDate')}
                 />
               </Form.Item>
             </Form.Item>
-            <Form.Item name="isVolunteer" valuePropName="checked">
+            <Form.Item name="volunteer" valuePropName="checked">
               <Checkbox>봉사활동 게시글만 보기</Checkbox>
             </Form.Item>
           </Form>
