@@ -42,6 +42,10 @@ const ActivityRecordPage = () => {
       setBoardSearchValue({
         ...boardSearchValue,
         ...changedValues,
+        boardStatus:
+          changedValues.boardStatus === 'ALL'
+            ? undefined
+            : changedValues.boardStatus,
         pagingIndex: 0,
       });
     },
