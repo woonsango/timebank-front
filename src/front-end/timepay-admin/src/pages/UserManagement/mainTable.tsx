@@ -18,6 +18,7 @@ interface MainTableProps {
   setSelectedUserInfos: (args?: IUserInfo[]) => void;
 }
 
+
 const MainTable = ({
   selectedUserInfoIds,
   setSelectedUserInfoIds,
@@ -56,6 +57,7 @@ const MainTable = ({
   };
 
   const columns: ColumnsType<IUserInfo> = [
+
     {
       title: 'UID',
       dataIndex: 'userId',
