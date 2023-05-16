@@ -1,11 +1,13 @@
 import { atom } from 'recoil';
-import { IGetUserInfoUserIdRequest } from '../../api/interfaces/IUser';
+import { IGetUserInfoRequest } from '../../api/interfaces/IUser';
 
-export const mainSearchStateUserId = atom<IGetUserInfoUserIdRequest>({
-  key: 'userId',
+export const mainSearchState = atom<IGetUserInfoRequest>({
+  key: 'user-search',
   default: {
     userId: undefined,
+    query: 'name',
+    value: undefined,
     pagingIndex: 0,
-    pagingSize: 20,
+    pagingSize: 10,
   },
 });
