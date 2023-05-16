@@ -69,10 +69,12 @@ public class UserMypageController {
     @ApiOperation(value="마이페이지 댓글 조회",notes = "JWT 토큰에 해당하는 유저의 댓글 조회(마이페이지)")
     public ResponseEntity<?> getMyInfoComment(@RequestParam(defaultValue = "0") int pageIndex,
                                               @RequestParam(defaultValue = "10") int pageSize,
-                                              @RequestParam(required = false) Boolean commentType){
+                                              @RequestParam(required = false) Boolean isApplied,
+                                              @RequestParam(required = false) Boolean isAdopted){
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
-        Specification<DealBoardComment> spec = DealBoardCommentSearch.withCommentType(commentType);
+        Specification<DealBoardComment> spec = DealBoardCommentSearch.withApplied(isApplied)
+                .and(DealBoardCommentSearch.withAdopted(isAdopted));
 
         return ResponseEntity.ok(userInfoService.getMyInfoComment(auth, pageIndex, pageSize, spec));
     }

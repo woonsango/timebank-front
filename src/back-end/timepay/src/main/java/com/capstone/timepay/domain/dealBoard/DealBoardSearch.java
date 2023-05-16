@@ -103,7 +103,14 @@ public class DealBoardSearch {
 //    }
 
     public static Specification<DealBoard> withBoardStatus(BoardStatus boardStatus) {
-        return (root, query, builder) -> builder.equal(root.get("boardStatus"), boardStatus);
+        return (root, query, builder) -> {
+            if (boardStatus == null) {
+                // conjunction을 사용하면 default값일때 builder에 모든 값 넣어짐
+                return builder.conjunction();
+            } else {
+                return builder.equal(root.get("boardStatus"), boardStatus);
+            }
+        };
     }
 
     public static Specification<DealBoard> withDealRegisters(List<DealRegister> dealRegisters) {
