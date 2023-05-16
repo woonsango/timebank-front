@@ -10,6 +10,7 @@ import PushManagementPage from './PushManagement';
 import ReportManagementPage from './ReportManagement';
 import LoginPage from './Login';
 import PasswordEditPage from './PasswordEdit';
+import InquiryDetailManagementPage from './InquiryDetailManagement';
 
 const PageRoutes = {
   LoginPage,
@@ -22,6 +23,7 @@ const PageRoutes = {
   AdminManagementPage,
   PushManagementPage,
   ReportManagementPage,
+  InquiryDetailManagementPage,
 };
 
 export default PageRoutes;

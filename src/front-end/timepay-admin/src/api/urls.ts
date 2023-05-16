@@ -15,7 +15,9 @@ export const API_URL = {
   CATEGORIES: '/api/admins/categories/main',
   CATEGORIES__CREATE: '/api/admins/categories/create',
   CATEGORIES__UPDATE: '/api/admins/categories/update',
-  INQUIRIES: '/api/admins/inquiry/main',
+  INQUIRY: '/api/admins/inquiry/main',
+  INQUIRY__DETAIL: '/api/admins/inquiry/detail',
+  INQUIRY__ANSWER: '/api/admins/inquiry/answer',
 };
 
 /** 토큰을 넣지 않아도 되는 api url 모음 */

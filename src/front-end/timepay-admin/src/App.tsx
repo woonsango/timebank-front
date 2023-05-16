@@ -23,6 +23,10 @@ function App() {
               element={<PageRoutes.InquiryManagementPage />}
             />
             <Route
+              path={PATH.INQUIRY_DETAIL_MANAGEMENT}
+              element={<PageRoutes.InquiryDetailManagementPage />}
+            />
+            <Route
               path={PATH.USER_MANAGEMENT}
               element={<PageRoutes.UserManagementPage />}
             />

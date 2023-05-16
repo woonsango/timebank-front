@@ -2,6 +2,7 @@ export const PATH = {
   LOGIN: '/login',
   PASSWORD_EDIT: '/password-edit',
   INQUIRY_MANAGEMENT: '/inquiry-management',
+  INQUIRY_DETAIL_MANAGEMENT: '/inquiry-management/detail',
   USER_MANAGEMENT: '/user-management',
   POST_MANAGEMENT: '/post-management',
   COMMENT_MANAGEMENT: '/comment-management',
