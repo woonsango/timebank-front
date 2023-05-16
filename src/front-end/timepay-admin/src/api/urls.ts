@@ -9,12 +9,18 @@ export const API_URL = {
   NOTIFICATIONS__SEARCH: 'api/notifications/search',
   ADMIN_REGISTER: '/api/admins/register', //관리자 가입
   ADMINS: '/api/admins',
+  USERINFOS: '/api/admins/normal-user-management/main',
+  USERINFOS__SEARCH: '/api/admins/normal-user-management/search',
   REPORTS: '/api/admins/reports/main',
   REPORTS__SEARCH: '/api/admins/reports/search',
   REPORTS__PENALTY: '/api/admins/reports/penalty',
   CATEGORIES: '/api/admins/categories/main',
   CATEGORIES__CREATE: '/api/admins/categories/create',
   CATEGORIES__UPDATE: '/api/admins/categories/update',
+  BOARDS: '/api/admins/boards',
+  BOARDS__SEARCH: '/api/admins/boards/search',
+  BOARDS__HIDDEN: '/api/admins/boards/hidden',
+  BOARDS__STATUS: '/api/admins/boards/status',
 };
 
 /** 토큰을 넣지 않아도 되는 api url 모음 */

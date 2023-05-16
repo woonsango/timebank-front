@@ -1,3 +1,5 @@
+import { GetPageableData, PageableData } from './ICommon';
+
 export interface IUser {
   userPk: number;
   name: string; // 이름
@@ -11,4 +13,24 @@ export interface IUser {
   createdAt: string; // 계정생성일
   accountEmail: string;
   isAdmin: boolean; // 관리자 여부
+}
+
+export interface IUserInfo {
+  userId: number;
+  userName: string;
+  nickName: string;
+  sex: string;
+  birth: string;
+  region: string;
+  timepay: number;
+  totalVolunteerTime: number;
+  profileUrl: string;
+  banned: boolean;
+}
+
+export interface IGetUserInfoUserIdRequest extends GetPageableData {
+  userId?: number;
+}
+export interface IGetUserInfoResponse extends PageableData {
+  content: IUserInfo[];
 }

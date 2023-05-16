@@ -225,6 +225,7 @@ const MyEditPage: React.FC = () => {
           res.data.image_url ||
             'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png',
         );
+        setViewNickname(res.data.nick_name);
         setNickName(res.data.nick_name);
         setTown(res.data.location);
         setIntroduction(res.data.introduction);

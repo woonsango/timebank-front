@@ -9,3 +9,8 @@ export const fontSizeState = atom<'big' | 'small'>({
   key: 'font-size',
   default: 'small',
 });
+
+export const searchDrawerOpenState = atom<boolean>({
+  key: 'search-drawer-open',
+  default: false,
+});

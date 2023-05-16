@@ -3,13 +3,20 @@ import { ReactComponent as Logo } from '../../assets/images/icons/timepay-charac
 import { Button, Input, Spin } from 'antd';
 import { useGetCategory } from '../../api/hooks/category';
 import { useNavigate } from 'react-router-dom';
-import { useCallback } from 'react';
+import { useCallback, useState } from 'react';
 import { PATH } from '../../utils/paths';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
+import {
+  boardSearchState,
+  initialBoardSearchState,
+} from '../../states/boardSearch';
 import useFontSize from '../../hooks/useFontSize';
 
 const HomePage = () => {
   const navigate = useNavigate();
 
+  const boardSearchValue = useRecoilValue(boardSearchState);
+  const setBoardSearchState = useSetRecoilState(boardSearchState);
   const { scaleValue } = useFontSize();
 
   const { data, isLoading } = useGetCategory({
@@ -17,19 +24,46 @@ const HomePage = () => {
     useYn: 'Y',
   });
 
-  const handleOnSearch = useCallback(() => {
-    // 게시글 검색 state 에 추가
+  const [searchTitleValue, setSearchTitleValue] = useState(
+    boardSearchValue?.title,
+  );
+
+  const handleOnChange = useCallback((e: any) => {
+    setSearchTitleValue(e.target.value);
+  }, []);
+
+  const handleOnSearchTitle = useCallback(() => {
+    setBoardSearchState({
+      ...initialBoardSearchState,
+      title: searchTitleValue,
+    });
     navigate(PATH.SEARCH);
     window.scrollTo(0, 0);
-  }, [navigate]);
+  }, [searchTitleValue, setBoardSearchState, navigate]);
+
+  const handleOnSearchCategory = useCallback(
+    (categoryName: string) => {
+      setBoardSearchState({
+        ...initialBoardSearchState,
+        category: categoryName,
+      });
+      navigate(PATH.SEARCH);
+      window.scrollTo(0, 0);
+    },
+    [navigate, setBoardSearchState],
+  );
 
   return (
     <div css={cssHomePageStyle(scaleValue)}>
       <div className="title-search-container">
         <Logo />
         <div className="title-search">
-          <Input />
-          <Button type="ghost" onClick={handleOnSearch}>
+          <Input
+            defaultValue={boardSearchValue.title}
+            onChange={handleOnChange}
+            onPressEnter={handleOnSearchTitle}
+          />
+          <Button type="ghost" onClick={handleOnSearchTitle}>
             검색
           </Button>
         </div>
@@ -42,7 +76,10 @@ const HomePage = () => {
             <div>당신의 도움이 필요해요!</div>
             <div css={cssCategoryListStyle(scaleValue)}>
               {data?.data.map((category) => (
-                <Button key={category.categoryId} onClick={handleOnSearch}>
+                <Button
+                  key={category.categoryId}
+                  onClick={() => handleOnSearchCategory(category.categoryName)}
+                >
                   {category.categoryName}
                 </Button>
               ))}

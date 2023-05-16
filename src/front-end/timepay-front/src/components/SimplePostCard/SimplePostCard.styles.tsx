@@ -33,7 +33,7 @@ export const cssSimplePostCardHeadStyle = css`
 export const cssSimplePostCardBodyStyle = css`
   padding: 10px 20px;
   padding-bottom: 30px;
-  .post-card-region {
+  .post-card-location {
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -98,5 +98,10 @@ export const cssSimplePostCardStyle = css`
   .ant-card-body {
     padding: 0px;
     padding-bottom: 20px;
+    .volunteer-badge {
+      position: absolute;
+      top: 13px;
+      right: 21px;
+    }
   }
 `;

@@ -47,10 +47,6 @@ const LoginPage = () => {
         icon={<img width={300} src={kakao_login_logo} alt="카카오로 로그인" />}
         css={cssKakaoLoginBtn}
       ></Button>
-
-      <Button type="text" onClick={() => goTo(PATH.HOME)}>
-        로그인없이 시작하기
-      </Button>
     </Space>
   );
 };
