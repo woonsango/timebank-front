@@ -40,3 +40,11 @@ export interface IGetUserBoardResponse {
   time_pay: number;
   deal_boards: IDealBoards;
 }
+
+export interface IGetUserCommentRequest extends GetPageableData {
+  commentType?: string;
+}
+
+export interface IGetUserCommentResponse extends PageableData {
+  content: any[];
+}

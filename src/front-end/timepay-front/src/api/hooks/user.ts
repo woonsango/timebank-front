@@ -3,6 +3,8 @@ import { useQuery } from 'react-query';
 import {
   IGetUserBoardRequest,
   IGetUserBoardResponse,
+  IGetUserCommentRequest,
+  IGetUserCommentResponse,
 } from '../interfaces/IUser';
 import { apiRequest } from '../request';
 import { API_URL } from '../urls';
@@ -16,6 +18,21 @@ export const useGetUserBoards = (params: IGetUserBoardRequest) => {
     retry: false, // api 호출 실패해도 계속 호출하지 않음
     onError: (err: any) => {
       console.log('[ERROR] useGetUserBoards:', err);
+    },
+  });
+};
+
+export const useGetUserComments = (params: IGetUserCommentRequest) => {
+  return useQuery<AxiosResponse<IGetUserCommentResponse>, AxiosError>({
+    queryKey: ['useGetUserComments', params],
+    queryFn: () =>
+      apiRequest.get(`${API_URL.API_USERS__MYPAGE__COMMENT}`, {
+        params: params,
+      }),
+    refetchOnWindowFocus: false,
+    retry: false, // api 호출 실패해도 계속 호출하지 않음
+    onError: (err: any) => {
+      console.log('[ERROR] useGetUserComments:', err);
     },
   });
 };

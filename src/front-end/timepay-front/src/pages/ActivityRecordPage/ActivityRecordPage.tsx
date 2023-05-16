@@ -1,9 +1,11 @@
 import { Form, Pagination, Select, Spin, Tabs, TabsProps } from 'antd';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useSetRecoilState } from 'recoil';
-import { useGetUserBoards } from '../../api/hooks/user';
-import { ICommentActivity } from '../../api/interfaces/IComment';
-import { IGetUserBoardRequest } from '../../api/interfaces/IUser';
+import { useGetUserBoards, useGetUserComments } from '../../api/hooks/user';
+import {
+  IGetUserBoardRequest,
+  IGetUserCommentRequest,
+} from '../../api/interfaces/IUser';
 import ActivityCommentCard from '../../components/ActivityCommentCard';
 import ActivityPostCard from '../../components/ActivityPostCard';
 import { headerTitleState } from '../../states/uiState';
@@ -22,7 +24,16 @@ const ActivityRecordPage = () => {
       pagingSize: 5,
     });
 
-  const { data: boardData, isLoading } = useGetUserBoards(boardSearchValue);
+  const [commentSearchValue, setCommentSearchValue] =
+    useState<IGetUserCommentRequest>({
+      pagingIndex: 0,
+      pagingSize: 5,
+    });
+
+  const { data: boardData, isLoading: boardDataLoading } =
+    useGetUserBoards(boardSearchValue);
+  const { data: commentData, isLoading: commentDataLoading } =
+    useGetUserComments(commentSearchValue);
 
   const [postForm] = Form.useForm();
   const [commentForm] = Form.useForm();
@@ -35,6 +46,10 @@ const ActivityRecordPage = () => {
   const boards = useMemo(() => {
     return boardData?.data.deal_boards.content;
   }, [boardData]);
+
+  const comments = useMemo(() => {
+    return commentData?.data.content;
+  }, [commentData]);
 
   const handleOnChangeBoardForm = useCallback(
     (changedValues: { [key: string]: any }) => {
@@ -49,7 +64,7 @@ const ActivityRecordPage = () => {
         pagingIndex: 0,
       });
     },
-    [setBoardSearchValue, boardSearchValue],
+    [boardSearchValue],
   );
 
   const handleOnChangePageBoard = useCallback(
@@ -60,70 +75,31 @@ const ActivityRecordPage = () => {
         pagingIndex: page - 1,
       });
     },
-    [setBoardSearchValue, boardSearchValue],
+    [boardSearchValue],
   );
 
-  //@ts-ignore
-  const dummyActivities: {
-    [key in typeof ACTIVITY_TAB_KEYS.COMMENT]: ICommentActivity[];
-  } = useMemo(() => {
-    return {
-      [ACTIVITY_TAB_KEYS.COMMENT]: [
-        {
-          postId: 1,
-          postTitle: '예시 제목1',
-          commentId: 2,
-          user: {
-            userPk: 1,
-            name: '하연',
-            sex: '여자',
-            birthday: '2000/01/15 00:00:00',
-            profileMessage: '안녕',
-            nickname: '하연하이',
-            region: '서울시 광진구',
-            phoneNumber: '01023860370',
-            accountEmail: 'iioo3356@gmail.com',
-            isAdmin: false,
-            createdAt: '2022/02/14: 14:00:00',
-          },
-          parentCommentId: null,
-          isApply: true,
-          isSelected: true,
-          isAuthorOfPost: false,
-          isHidden: false,
-          createdAt: '2023/04/02 00:00:00',
-          updatedAt: undefined,
-          content: '저 여기 근처 살아요 지원하겠습니다!',
-        },
-        {
-          postId: 2,
-          postTitle: '예시 제목2',
-          commentId: 1,
-          user: {
-            userPk: 1,
-            name: '하연',
-            sex: '여자',
-            birthday: '2000/01/15 00:00:00',
-            profileMessage: '안녕',
-            nickname: '하연하이',
-            region: '서울시 광진구',
-            phoneNumber: '01023860370',
-            accountEmail: 'iioo3356@gmail.com',
-            isAdmin: false,
-            createdAt: '2022/02/14: 14:00:00',
-          },
-          parentCommentId: null,
-          isApply: false,
-          isSelected: false,
-          isAuthorOfPost: true,
-          isHidden: false,
-          createdAt: '2023/04/02 00:00:00',
-          updatedAt: undefined,
-          content: '넵 여기로 오세요',
-        },
-      ],
-    };
-  }, [ACTIVITY_TAB_KEYS]);
+  const handleOnChangeCommentForm = useCallback(
+    (changedValues: { [key: string]: any }) => {
+      // 옵션 검색 시 값이 바뀔 때마다 바로 api 호출, 페이지 초기화
+      setCommentSearchValue({
+        ...commentSearchValue,
+        ...changedValues,
+        pagingIndex: 0,
+      });
+    },
+    [commentSearchValue],
+  );
+
+  const handleOnChangePageComment = useCallback(
+    (page: number, pageSize: number) => {
+      // 옵션 검색 시 값이 바뀔 때마다 바로 api 호출
+      setCommentSearchValue({
+        ...commentSearchValue,
+        pagingIndex: page - 1,
+      });
+    },
+    [commentSearchValue],
+  );
 
   const items: TabsProps['items'] = useMemo(() => {
     return [
@@ -171,10 +147,12 @@ const ActivityRecordPage = () => {
                   </Select>
                 </Form.Item>
               </div>
-              <div> 총 {boardData?.data.deal_boards.numberOfElements} 개</div>
+              <div>
+                총 {boardData?.data.deal_boards.numberOfElements || 0} 개
+              </div>
             </Form>
             <div>
-              {!isLoading && boards ? (
+              {!boardDataLoading && boards ? (
                 boards.length > 0 ? (
                   <>
                     {boards?.map((post) => (
@@ -209,35 +187,62 @@ const ActivityRecordPage = () => {
               form={commentForm}
               css={cssHorizontalForm}
               layout="horizontal"
+              onValuesChange={handleOnChangeCommentForm}
             >
-              <Form.Item name="type" style={{ width: 120 }} noStyle>
+              <Form.Item name="commentType" style={{ width: 120 }} noStyle>
                 <Select placeholder="유형 선택">
-                  <Select.Option value="전체">전체</Select.Option>
+                  <Select.Option value="ALL">전체</Select.Option>
                   <Select.Option value="지원">지원</Select.Option>
                   <Select.Option value="선정">선정</Select.Option>
                 </Select>
               </Form.Item>
+              <div> 총 {commentData?.data.numberOfElements || 0} 개</div>
             </Form>
-            {(
-              dummyActivities[ACTIVITY_TAB_KEYS.COMMENT] as ICommentActivity[]
-            ).map((comment) => (
-              <ActivityCommentCard key={comment.commentId} comment={comment} />
-            ))}
+            {!commentDataLoading && comments ? (
+              comments.length > 0 ? (
+                <>
+                  {comments.map((comment) => (
+                    <ActivityCommentCard
+                      key={comment.commentId}
+                      comment={comment}
+                    />
+                  ))}
+                  <Pagination
+                    current={(commentSearchValue.pagingIndex || 0) + 1}
+                    pageSize={5}
+                    total={commentData?.data.numberOfElements}
+                    onChange={handleOnChangePageComment}
+                  />
+                </>
+              ) : (
+                <div css={cssNothingStyle}>
+                  <span className="emoji">😅</span>
+                  <span>해당하는 댓글이 없습니다.</span>
+                </div>
+              )
+            ) : (
+              <Spin size="large" css={cssSpinStyle} />
+            )}
           </div>
         ),
       },
     ];
   }, [
     boardSearchValue,
+    commentSearchValue,
     boardData,
-    isLoading,
+    commentData,
     boards,
+    comments,
+    boardDataLoading,
+    commentDataLoading,
     postForm,
     commentForm,
     ACTIVITY_TAB_KEYS,
     handleOnChangeBoardForm,
+    handleOnChangeCommentForm,
     handleOnChangePageBoard,
-    dummyActivities,
+    handleOnChangePageComment,
   ]);
 
   useEffect(() => {
