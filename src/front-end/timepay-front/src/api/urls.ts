@@ -16,6 +16,7 @@ export const API_URL = {
   USER_INFO_PUT: '/api/users/update',
   MY_VOLUNTEER: '/api/users/mypage/certification',
   USERS__CATEGORY: '/api/users/category',
+  API_USERS__MYPAGE__BOARD: '/api/users/mypage/board',
 };
 
 // 토큰 필요 없는 애들
