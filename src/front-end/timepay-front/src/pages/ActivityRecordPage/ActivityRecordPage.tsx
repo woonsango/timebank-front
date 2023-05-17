@@ -87,7 +87,8 @@ const ActivityRecordPage = () => {
       // 옵션 검색 시 값이 바뀔 때마다 바로 api 호출, 페이지 초기화
       setCommentSearchValue({
         ...commentSearchValue,
-        ...changedValues,
+        isApplied: changedValues.commentType === 'APPLIED' ? true : undefined,
+        isAdopted: changedValues.commentType === 'ADOPTED' ? true : undefined,
         pageIndex: 0,
       });
     },
@@ -194,8 +195,8 @@ const ActivityRecordPage = () => {
               <Form.Item name="commentType" style={{ width: 120 }} noStyle>
                 <Select placeholder="유형 선택">
                   <Select.Option value="ALL">전체</Select.Option>
-                  <Select.Option value="지원">지원</Select.Option>
-                  <Select.Option value="선정">선정</Select.Option>
+                  <Select.Option value="APPLIED">지원</Select.Option>
+                  <Select.Option value="ADOPTED">선정</Select.Option>
                 </Select>
               </Form.Item>
               <div> 총 {commentData?.data.totalElements || 0} 개</div>

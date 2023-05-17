@@ -47,7 +47,8 @@ export interface IGetUserBoardResponse {
 export interface IGetUserCommentRequest {
   pageIndex: number;
   pageSize: number;
-  commentType?: string;
+  isApplied?: boolean;
+  isAdopted?: boolean;
 }
 
 export interface IGetUserCommentResponse extends PageableData {
