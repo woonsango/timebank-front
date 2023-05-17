@@ -1,9 +1,7 @@
 import { useMemo } from 'react';
 import { IBoard } from '../../api/interfaces/IPost';
-import { COMMON_COLOR } from '../../styles/constants/colors';
 import PostStatusTag from '../PostStatusTag';
 import PostTypeTag from '../PostTypeTag';
-import { cssPostTypeTagStyle } from '../PostTypeTag/PostTypeTag.styles';
 import { cssActivityPostCardStyle } from './ActivityPostCard.styles';
 
 interface ActivityPostCardProps {
@@ -23,18 +21,12 @@ const ActivityPostCard = ({ post }: ActivityPostCardProps) => {
       {isHelpActivity ? (
         <>
           <div className="activity-post-date-time">
-            활동시간 : {post.startTime} ~ {post.endTime.split(' ')[1]}
+            활동시간 : {post.startTime || '-'} ~{' '}
+            {post.endTime ? post.endTime.split(' ')[1] : '-'}
           </div>
           <div className="activity-post-pay">
             {post.type === 'help' ? '소모 예정 타임페이' : '획득 예정 타임페이'}
-            <div
-              className="amount"
-              css={cssPostTypeTagStyle({
-                backgroundColor: COMMON_COLOR.MAIN1,
-              })}
-            >
-              {post?.pay || '-'} TP
-            </div>
+            <div className="pay-number">{post?.pay || '-'} TP</div>
           </div>
         </>
       ) : (

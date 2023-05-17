@@ -18,6 +18,7 @@ export const cssActivityCommentCardStyle = css`
     text-overflow: ellipsis;
     white-space: nowrap;
     word-break: break-all;
+    margin-bottom: 15px;
   }
   .activity-origin-post-title {
     font-style: normal;
@@ -29,8 +30,6 @@ export const cssActivityCommentCardStyle = css`
     display: flex;
     flex-direction: row;
     gap: 5px;
-
-    margin-bottom: 15px;
   }
   .activity-comment-date-time {
     font-style: normal;

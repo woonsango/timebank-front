@@ -24,3 +24,8 @@ export interface Sort {
   sorted: boolean;
   unsorted: boolean;
 }
+
+export interface GetPageableData {
+  pagingIndex?: number;
+  pagingSize?: number;
+}
