@@ -349,6 +349,7 @@ public class UserInfoService {
                                 .originCommentId(dealBoardComment.getD_commentId())
                                 .applyYN(dealBoardComment.isApplied())
                                 .selectYN(dealBoardComment.isAdopted())
+                                .boardTitle(dealBoardComment.getDealBoard().getTitle())
                                 .content(dealBoardComment.getContent())
                                 .writerId(dealBoardComment.getUser().getUserId())// dealBoardComment.getUser().getUserId()
                                 .writerName(dealBoardComment.getUser().getName()) //dealBoardComment.getUser().getName()
