@@ -1,3 +1,4 @@
+import { ICommentActivity } from './IComment';
 import { PageableData } from './ICommon';
 import { IBoard } from './IPost';
 
@@ -52,5 +53,5 @@ export interface IGetUserCommentRequest {
 }
 
 export interface IGetUserCommentResponse extends PageableData {
-  content: any[];
+  content: ICommentActivity[];
 }
