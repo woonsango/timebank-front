@@ -86,9 +86,10 @@ export const cssSimplePostCardFooterStyle = css`
   font-size: 13px;
   line-height: 15px;
   .nickname {
-    .anticon {
-      margin-right: 5px;
-    }
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 5px;
   }
 `;
 
