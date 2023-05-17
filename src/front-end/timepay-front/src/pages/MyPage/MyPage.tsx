@@ -11,8 +11,11 @@ import { agencyState } from '../../states/user';
 import { useAgencyLogout, useDeleteAgency } from '../../api/hooks/agency';
 import { message, Modal } from 'antd';
 import { setTokenToCookie } from '../../utils/token';
+import { useDelete, useLogout } from '../../api/hooks/user';
 
 const MyPage = () => {
+  const useLogoutMutation = useLogout();
+  const useDeleteMutation = useDelete();
   const useAgencyLogoutMutation = useAgencyLogout();
   const useDeleteAgencyMutation = useDeleteAgency();
 
@@ -64,12 +67,12 @@ const MyPage = () => {
   );
 
   const handleOnLogOut = useCallback(async () => {
-    if (agencyValue) {
-      Modal.confirm({
-        content: '정말 로그아웃 하시겠습니까?',
-        okText: '확인',
-        cancelText: '취소',
-        onOk: async () => {
+    Modal.confirm({
+      content: '정말 로그아웃 하시겠습니까?',
+      okText: '확인',
+      cancelText: '취소',
+      onOk: async () => {
+        if (agencyValue) {
           await useAgencyLogoutMutation.mutateAsync(
             {},
             {
@@ -97,19 +100,52 @@ const MyPage = () => {
               },
             },
           );
-        },
-      });
-    } else {
-    }
-  }, [agencyValue, messageApi, useAgencyLogoutMutation, navigate]);
+        } else {
+          await useLogoutMutation.mutateAsync(
+            {},
+            {
+              onSuccess: async (data) => {
+                messageApi.open({
+                  type: 'success',
+                  content: '로그아웃 완료',
+                  duration: 0.5,
+                  onClose() {
+                    setTokenToCookie('', 0);
+                    navigate(PATH.LOGIN);
+                  },
+                });
+              },
+              onError: (err) => {
+                messageApi.open({
+                  type: 'error',
+                  content: (
+                    <>
+                      오류 발생: <br />
+                      {err}
+                    </>
+                  ),
+                });
+              },
+            },
+          );
+        }
+      },
+    });
+  }, [
+    agencyValue,
+    messageApi,
+    useLogoutMutation,
+    useAgencyLogoutMutation,
+    navigate,
+  ]);
 
   const handleOnCloseWithdraw = useCallback(() => {
-    if (agencyValue) {
-      Modal.confirm({
-        content: '정말 탈퇴하시겠습니까?',
-        okText: '확인',
-        cancelText: '취소',
-        onOk: async () => {
+    Modal.confirm({
+      content: '정말 탈퇴하시겠습니까?',
+      okText: '확인',
+      cancelText: '취소',
+      onOk: async () => {
+        if (agencyValue) {
           await useDeleteAgencyMutation.mutateAsync(undefined, {
             onSuccess: async (data) => {
               messageApi.open({
@@ -134,11 +170,41 @@ const MyPage = () => {
               });
             },
           });
-        },
-      });
-    } else {
-    }
-  }, [agencyValue, messageApi, useDeleteAgencyMutation, navigate]);
+        } else {
+          await useDeleteMutation.mutateAsync(undefined, {
+            onSuccess: async (data) => {
+              messageApi.open({
+                type: 'success',
+                content: '탈퇴 완료',
+                duration: 0.5,
+                onClose() {
+                  setTokenToCookie('', 0);
+                  navigate(PATH.AGENCY_SIGN_IN);
+                },
+              });
+            },
+            onError: (err) => {
+              messageApi.open({
+                type: 'error',
+                content: (
+                  <>
+                    오류 발생: <br />
+                    {err}
+                  </>
+                ),
+              });
+            },
+          });
+        }
+      },
+    });
+  }, [
+    agencyValue,
+    messageApi,
+    useDeleteAgencyMutation,
+    useDeleteMutation,
+    navigate,
+  ]);
 
   return (
     <div className="MyPage">

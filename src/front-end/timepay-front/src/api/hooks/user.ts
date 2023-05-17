@@ -1,5 +1,5 @@
 import { AxiosError, AxiosResponse } from 'axios';
-import { useQuery } from 'react-query';
+import { useMutation, useQuery } from 'react-query';
 import {
   IGetUserBoardRequest,
   IGetUserBoardResponse,
@@ -8,6 +8,20 @@ import {
 } from '../interfaces/IUser';
 import { apiRequest } from '../request';
 import { API_URL } from '../urls';
+
+export const useLogout = () => {
+  return useMutation<AxiosResponse<any>, AxiosError, any>({
+    mutationKey: 'useLogout',
+    mutationFn: () => apiRequest.post(API_URL.LOGOUT),
+  });
+};
+
+export const useDelete = () => {
+  return useMutation<AxiosResponse<any>, AxiosError>({
+    mutationKey: 'useDelete',
+    mutationFn: () => apiRequest.delete(API_URL.DELETE),
+  });
+};
 
 export const useGetUserBoards = (params: IGetUserBoardRequest) => {
   return useQuery<AxiosResponse<IGetUserBoardResponse>, AxiosError>({

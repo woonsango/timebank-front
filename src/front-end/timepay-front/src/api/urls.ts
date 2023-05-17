@@ -18,6 +18,8 @@ export const API_URL = {
   USERS__CATEGORY: '/api/users/category',
   API_USERS__MYPAGE__BOARD: '/api/users/mypage/board',
   API_USERS__MYPAGE__COMMENT: '/api/users/mypage/comment',
+  LOGOUT: '/api/users/logout',
+  DELETE: '/api/users/delete',
 };
 
 // 토큰 필요 없는 애들
