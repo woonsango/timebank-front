@@ -16,7 +16,6 @@ export const cssHorizontalForm = css`
   gap: 5px;
   padding: 5px;
   justify-content: space-between;
-  /* padding-right: 5px; */
   .ant-select {
     padding-right: 5px;
   }

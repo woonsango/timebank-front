@@ -161,12 +161,14 @@ const ActivityRecordPage = () => {
                     {boards?.map((post) => (
                       <ActivityPostCard key={post.d_boardId} post={post} />
                     ))}
-                    <Pagination
-                      current={(boardSearchValue.pageIndex || 0) + 1}
-                      pageSize={5}
-                      total={boardData?.data.deal_boards.totalElements}
-                      onChange={handleOnChangePageBoard}
-                    />
+                    {boardData && boardData.data.deal_boards.totalPages > 1 && (
+                      <Pagination
+                        current={(boardSearchValue.pageIndex || 0) + 1}
+                        pageSize={5}
+                        total={boardData?.data.deal_boards.totalElements}
+                        onChange={handleOnChangePageBoard}
+                      />
+                    )}
                   </>
                 ) : (
                   <div css={cssNothingStyle}>
@@ -210,12 +212,14 @@ const ActivityRecordPage = () => {
                       comment={comment}
                     />
                   ))}
-                  <Pagination
-                    current={(commentSearchValue.pageIndex || 0) + 1}
-                    pageSize={5}
-                    total={commentData?.data.totalElements}
-                    onChange={handleOnChangePageComment}
-                  />
+                  {commentData && commentData.data.totalPages > 1 && (
+                    <Pagination
+                      current={(commentSearchValue.pageIndex || 0) + 1}
+                      pageSize={5}
+                      total={commentData?.data.totalElements}
+                      onChange={handleOnChangePageComment}
+                    />
+                  )}
                 </>
               ) : (
                 <div css={cssNothingStyle}>
