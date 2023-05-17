@@ -185,7 +185,7 @@ const ActivityRecordPage = () => {
         key: ACTIVITY_TAB_KEYS.COMMENT,
         label: ACTIVITY_TAB_KEYS.COMMENT,
         children: (
-          <div style={{ width: '100%' }}>
+          <div css={cssActivityRecordPageStyle} style={{ width: '100%' }}>
             <Form
               form={commentForm}
               css={cssHorizontalForm}
