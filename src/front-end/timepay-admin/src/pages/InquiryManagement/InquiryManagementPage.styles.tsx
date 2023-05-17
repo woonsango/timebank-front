@@ -1,6 +1,6 @@
 import { css } from '@emotion/react';
 
-export const cssQnAManagementPageStyle = css`
+export const cssInquiryManagementPageStyle = css`
   margin: 10px;
   .ant-card-body {
     display: flex;
