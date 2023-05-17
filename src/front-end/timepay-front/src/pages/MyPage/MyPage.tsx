@@ -1,19 +1,30 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
-import { useSetRecoilState } from 'recoil';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 
 import { headerTitleState } from '../../states/uiState';
 import { PATH } from '../../utils/paths';
 import './My.css';
 import { apiRequest } from '../../api/request';
 import { API_URL } from '../../api/urls';
+import { agencyState } from '../../states/user';
+import { useAgencyLogout, useDeleteAgency } from '../../api/hooks/agency';
+import { message, Modal } from 'antd';
+import { setTokenToCookie } from '../../utils/token';
 
 const MyPage = () => {
+  const useAgencyLogoutMutation = useAgencyLogout();
+  const useDeleteAgencyMutation = useDeleteAgency();
+
+  const agencyValue = useRecoilValue(agencyState);
   const setHeaderTitle = useSetRecoilState(headerTitleState);
 
+  const [messageApi, contextHolder] = message.useMessage();
+
   useEffect(() => {
-    setHeaderTitle('내정보');
-  }, [setHeaderTitle]);
+    if (agencyValue) setHeaderTitle('기관 정보');
+    else setHeaderTitle('내정보');
+  }, [agencyValue, setHeaderTitle]);
 
   useEffect(() => {
     apiRequest
@@ -52,8 +63,86 @@ const MyPage = () => {
     [navigate],
   );
 
+  const handleOnLogOut = useCallback(async () => {
+    if (agencyValue) {
+      Modal.confirm({
+        content: '정말 로그아웃 하시겠습니까?',
+        okText: '확인',
+        cancelText: '취소',
+        onOk: async () => {
+          await useAgencyLogoutMutation.mutateAsync(
+            {},
+            {
+              onSuccess: async (data) => {
+                messageApi.open({
+                  type: 'success',
+                  content: '로그아웃 완료',
+                  duration: 0.5,
+                  onClose() {
+                    setTokenToCookie('', 0);
+                    navigate(PATH.AGENCY_SIGN_IN);
+                  },
+                });
+              },
+              onError: (err) => {
+                messageApi.open({
+                  type: 'error',
+                  content: (
+                    <>
+                      오류 발생: <br />
+                      {err}
+                    </>
+                  ),
+                });
+              },
+            },
+          );
+        },
+      });
+    } else {
+    }
+  }, [agencyValue, messageApi, useAgencyLogoutMutation, navigate]);
+
+  const handleOnCloseWithdraw = useCallback(() => {
+    if (agencyValue) {
+      Modal.confirm({
+        content: '정말 탈퇴하시겠습니까?',
+        okText: '확인',
+        cancelText: '취소',
+        onOk: async () => {
+          await useDeleteAgencyMutation.mutateAsync(undefined, {
+            onSuccess: async (data) => {
+              messageApi.open({
+                type: 'success',
+                content: '탈퇴 완료',
+                duration: 0.5,
+                onClose() {
+                  setTokenToCookie('', 0);
+                  navigate(PATH.AGENCY_SIGN_IN);
+                },
+              });
+            },
+            onError: (err) => {
+              messageApi.open({
+                type: 'error',
+                content: (
+                  <>
+                    오류 발생: <br />
+                    {err}
+                  </>
+                ),
+              });
+            },
+          });
+        },
+      });
+    } else {
+    }
+  }, [agencyValue, messageApi, useDeleteAgencyMutation, navigate]);
+
   return (
     <div className="MyPage">
+      {contextHolder}
       <div className="MyContentWrap">
         <div className="MyEdit">
           <button className="Edit" onClick={() => handlePageMove(PATH.MY_EDIT)}>
@@ -139,6 +228,16 @@ const MyPage = () => {
                 onClick={() => handlePageMove(PATH.CATEGORY_SELECT)}
               >
                 카테고리 알림 설정
+              </button>
+            </div>
+            <div className="MyPageMoveBox">
+              <button className="MyPageText" onClick={handleOnLogOut}>
+                로그아웃
+              </button>
+            </div>
+            <div className="MyPageMoveBox">
+              <button className="MyPageText" onClick={handleOnCloseWithdraw}>
+                탈퇴하기
               </button>
             </div>
           </div>
