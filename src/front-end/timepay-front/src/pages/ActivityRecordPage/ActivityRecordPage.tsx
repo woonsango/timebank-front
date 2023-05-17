@@ -20,14 +20,14 @@ import {
 const ActivityRecordPage = () => {
   const [boardSearchValue, setBoardSearchValue] =
     useState<IGetUserBoardRequest>({
-      pagingIndex: 0,
-      pagingSize: 5,
+      pageIndex: 0,
+      pageSize: 5,
     });
 
   const [commentSearchValue, setCommentSearchValue] =
     useState<IGetUserCommentRequest>({
-      pagingIndex: 0,
-      pagingSize: 5,
+      pageIndex: 0,
+      pageSize: 5,
     });
 
   const { data: boardData, isLoading: boardDataLoading } =
@@ -57,11 +57,15 @@ const ActivityRecordPage = () => {
       setBoardSearchValue({
         ...boardSearchValue,
         ...changedValues,
+        boardType:
+          changedValues.boardType === 'ALL'
+            ? undefined
+            : changedValues.boardType,
         boardStatus:
           changedValues.boardStatus === 'ALL'
             ? undefined
             : changedValues.boardStatus,
-        pagingIndex: 0,
+        pageIndex: 0,
       });
     },
     [boardSearchValue],
@@ -72,7 +76,7 @@ const ActivityRecordPage = () => {
       // 옵션 검색 시 값이 바뀔 때마다 바로 api 호출
       setBoardSearchValue({
         ...boardSearchValue,
-        pagingIndex: page - 1,
+        pageIndex: page - 1,
       });
     },
     [boardSearchValue],
@@ -84,7 +88,7 @@ const ActivityRecordPage = () => {
       setCommentSearchValue({
         ...commentSearchValue,
         ...changedValues,
-        pagingIndex: 0,
+        pageIndex: 0,
       });
     },
     [commentSearchValue],
@@ -95,7 +99,7 @@ const ActivityRecordPage = () => {
       // 옵션 검색 시 값이 바뀔 때마다 바로 api 호출
       setCommentSearchValue({
         ...commentSearchValue,
-        pagingIndex: page - 1,
+        pageIndex: page - 1,
       });
     },
     [commentSearchValue],
@@ -115,9 +119,9 @@ const ActivityRecordPage = () => {
               onValuesChange={handleOnChangeBoardForm}
             >
               <div>
-                <Form.Item name="type" style={{ width: 120 }} noStyle>
+                <Form.Item name="boardType" style={{ width: 120 }} noStyle>
                   <Select placeholder="유형 선택">
-                    <Select.Option value="전체">전체</Select.Option>
+                    <Select.Option value="ALL">전체</Select.Option>
                     <Select.Option value="help">도움요청</Select.Option>
                     <Select.Option value="helper">같이하기</Select.Option>
                     <Select.Option value="event">이벤트</Select.Option>
@@ -147,9 +151,7 @@ const ActivityRecordPage = () => {
                   </Select>
                 </Form.Item>
               </div>
-              <div>
-                총 {boardData?.data.deal_boards.numberOfElements || 0} 개
-              </div>
+              <div>총 {boardData?.data.deal_boards.totalElements || 0} 개</div>
             </Form>
             <div>
               {!boardDataLoading && boards ? (
@@ -159,9 +161,9 @@ const ActivityRecordPage = () => {
                       <ActivityPostCard key={post.d_boardId} post={post} />
                     ))}
                     <Pagination
-                      current={(boardSearchValue.pagingIndex || 0) + 1}
+                      current={(boardSearchValue.pageIndex || 0) + 1}
                       pageSize={5}
-                      total={boardData?.data.deal_boards.numberOfElements}
+                      total={boardData?.data.deal_boards.totalElements}
                       onChange={handleOnChangePageBoard}
                     />
                   </>
@@ -196,7 +198,7 @@ const ActivityRecordPage = () => {
                   <Select.Option value="선정">선정</Select.Option>
                 </Select>
               </Form.Item>
-              <div> 총 {commentData?.data.numberOfElements || 0} 개</div>
+              <div> 총 {commentData?.data.totalElements || 0} 개</div>
             </Form>
             {!commentDataLoading && comments ? (
               comments.length > 0 ? (
@@ -208,9 +210,9 @@ const ActivityRecordPage = () => {
                     />
                   ))}
                   <Pagination
-                    current={(commentSearchValue.pagingIndex || 0) + 1}
+                    current={(commentSearchValue.pageIndex || 0) + 1}
                     pageSize={5}
-                    total={commentData?.data.numberOfElements}
+                    total={commentData?.data.totalElements}
                     onChange={handleOnChangePageComment}
                   />
                 </>

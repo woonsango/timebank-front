@@ -1,4 +1,4 @@
-import { GetPageableData, PageableData } from './ICommon';
+import { PageableData } from './ICommon';
 import { IBoard } from './IPost';
 
 export interface IUser {
@@ -16,7 +16,9 @@ export interface IUser {
   isAdmin: boolean; // 관리자 여부
 }
 
-export interface IGetUserBoardRequest extends GetPageableData {
+export interface IGetUserBoardRequest {
+  pageIndex: number;
+  pageSize: number;
   boardStatus?:
     | 'ACTIVITY_CANCEL'
     | 'ACTIVITY_COMPLETE'
@@ -25,6 +27,7 @@ export interface IGetUserBoardRequest extends GetPageableData {
     | 'FREE_BOARD'
     | 'MATCHING_COMPLETE'
     | 'MATCHING_IN_PROGRESS';
+  boardType?: 'help' | 'helper' | 'event';
 }
 
 export interface IDealBoards extends PageableData {
@@ -41,7 +44,9 @@ export interface IGetUserBoardResponse {
   deal_boards: IDealBoards;
 }
 
-export interface IGetUserCommentRequest extends GetPageableData {
+export interface IGetUserCommentRequest {
+  pageIndex: number;
+  pageSize: number;
   commentType?: string;
 }
 
