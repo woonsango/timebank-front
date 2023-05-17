@@ -269,7 +269,16 @@ const MyPage = () => {
                 활동 기록
               </button>
             </div>
-
+            {!agencyValue && (
+              <div className="MyPageMoveBox">
+                <button
+                  className="MyPageText"
+                  onClick={() => handlePageMove(PATH.MY_VOLUNTEER)}
+                >
+                  봉사활동 기록
+                </button>
+              </div>
+            )}
             <div className="MyPageMoveBox">
               <button
                 className="MyPageText"
