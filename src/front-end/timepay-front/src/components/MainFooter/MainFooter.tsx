@@ -9,29 +9,36 @@ import { ReactComponent as ActivityRecord } from '../../assets/images/icons/acti
 import { ReactComponent as Home } from '../../assets/images/icons/home.svg';
 import { Link, NavLink } from 'react-router-dom';
 import { PATH } from '../../utils/paths';
-import { useCallback } from 'react';
-import { useSetRecoilState } from 'recoil';
+import { useCallback, useMemo } from 'react';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { fontSizeState } from '../../states/uiState';
 import useFontSize from '../../hooks/useFontSize';
+import { agencyState } from '../../states/user';
 
 const MainFooter = () => {
   const { isBig } = useFontSize();
   const setFontSize = useSetRecoilState(fontSizeState);
 
-  const items: MenuProps['items'] = [
-    {
-      key: '/register/help-request',
-      label: <Link to="/register/help-request">도움받기</Link>,
-    },
-    {
-      key: '/register/help-serve',
-      label: <Link to="/register/help-serve">도움주기</Link>,
-    },
-    {
-      key: '/register/free',
-      label: <Link to="/register/free">자유</Link>,
-    },
-  ];
+  const agencyValue = useRecoilValue(agencyState);
+
+  const items: MenuProps['items'] = useMemo(() => {
+    const items = [
+      {
+        key: PATH.Register_HR,
+        label: <Link to={PATH.Register_HR}>도움요청</Link>,
+      },
+      {
+        key: PATH.Register_HS,
+        label: <Link to={PATH.Register_HS}>같이하기</Link>,
+      },
+    ];
+    if (agencyValue)
+      items.push({
+        key: PATH.Register_EVENT,
+        label: <Link to={PATH.Register_EVENT}>이벤트</Link>,
+      });
+    return items;
+  }, [agencyValue]);
 
   const handleOnClickModifyFontSize = useCallback(() => {
     if (isBig) setFontSize('small');
