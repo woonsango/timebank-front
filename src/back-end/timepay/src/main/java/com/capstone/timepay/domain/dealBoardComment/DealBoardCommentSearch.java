@@ -10,12 +10,19 @@ import javax.persistence.criteria.Join;
 import java.util.List;
 
 public class DealBoardCommentSearch {
-    public static Specification<DealBoardComment> withApplied(Boolean applied) {
-        return (root, query, builder) -> builder.equal(root.get("isApplied"), applied);
+    public static Specification<DealBoardComment> withApplied(Boolean isApplied) {
+        if (isApplied == null) {
+            return null;
+        }
+        return (root, query, builder) -> builder.equal(root.get("isApplied"), isApplied);
     }
 
-    public static Specification<DealBoardComment> withAdopted(Boolean adopted) {
-        return (root, query, builder) -> builder.equal(root.get("isAdopted"), adopted);
+
+    public static Specification<DealBoardComment> withAdopted(Boolean isAdopted) {
+        if (isAdopted == null) {
+            return null;
+        }
+        return (root, query, builder) -> builder.equal(root.get("isAdopted"), isAdopted);
     }
 
     public static Specification<DealBoardComment> withUser(User user) {

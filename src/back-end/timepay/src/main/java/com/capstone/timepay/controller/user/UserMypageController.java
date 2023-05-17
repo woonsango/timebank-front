@@ -56,8 +56,16 @@ public class UserMypageController {
                                             ){
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
-        Specification<DealBoard> spec = DealBoardSearch.withType(boardType)
-                .and(DealBoardSearch.withBoardStatus(boardStatus));
+        Specification<DealBoard> spec = Specification.where(null);
+
+        if (boardStatus != null) {
+            spec = spec.and(DealBoardSearch.withBoardStatus(boardStatus));
+        }
+
+        if (boardType != null) {
+            spec = spec.and(DealBoardSearch.withType(boardType));
+        }
+
         GetResponseDTO responseData = userInfoService.getMyInfoBoard(auth, pageIndex, pageSize, spec);
         return ResponseEntity.ok(responseData);
     }
@@ -73,8 +81,15 @@ public class UserMypageController {
                                               @RequestParam(required = false) Boolean isAdopted){
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
-        Specification<DealBoardComment> spec = DealBoardCommentSearch.withApplied(isApplied)
-                .and(DealBoardCommentSearch.withAdopted(isAdopted));
+        Specification<DealBoardComment> spec = Specification.where(null);
+
+        if (isApplied != null) {
+            spec = spec.and(DealBoardCommentSearch.withApplied(isApplied));
+        }
+
+        if (isAdopted != null) {
+            spec = spec.and(DealBoardCommentSearch.withAdopted(isAdopted));
+        }
 
         return ResponseEntity.ok(userInfoService.getMyInfoComment(auth, pageIndex, pageSize, spec));
     }
