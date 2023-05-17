@@ -106,7 +106,7 @@ public class UserMypageController {
 
     @Transactional(readOnly = true)
     @GetMapping("/{id}/board")
-    @ApiOperation(value="유저 데이터 조회",notes = "주소로 id를 받아 해당하는 유저 정보 및 게시글 조회")
+    @ApiOperation(value="유저 게시글 조회",notes = "주소로 id를 받아 해당하는 유저 정보 및 게시글 조회")
     public ResponseEntity<?> getUserInfoBoard(@PathVariable Long id,
                                          @RequestParam(defaultValue = "0") int pageIndex,
                                          @RequestParam(defaultValue = "10") int pageSize){
@@ -116,7 +116,7 @@ public class UserMypageController {
 
     @Transactional(readOnly = true)
     @GetMapping("/{id}/comment")
-    @ApiOperation(value="유저 데이터 조회",notes = "주소로 id를 받아 해당하는 유저의 댓글 조회")
+    @ApiOperation(value="유저 댓글 조회",notes = "주소로 id를 받아 해당하는 유저의 댓글 조회")
     public ResponseEntity<?> getUserInfoComment(@PathVariable Long id,
                                          @RequestParam(defaultValue = "0") int pageIndex,
                                          @RequestParam(defaultValue = "10") int pageSize){

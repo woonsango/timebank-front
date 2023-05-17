@@ -222,8 +222,8 @@ public class UserInfoService {
         Pageable pageable = PageRequest.of(pageIndex, pageSize);
 
 
-        Page<CommentResponse> dealBoardComments = new PageImpl<>(
-                convertDCommentsToResponse(dealBoardCommentRepository.findAllByUser(userData)), pageable, pageSize);
+        Page<CommentResponse> dealBoardComments = new CustomPageImpl<>(
+                convertDCommentsToResponse(dealBoardCommentRepository.findAllByUser(userData)), pageable);
 
 
         return (dealBoardComments);
@@ -290,11 +290,14 @@ public class UserInfoService {
 //        Page<CommentResponse> dealBoardComments = new PageImpl<>(
 //                convertDCommentsToResponse(dealBoardCommentRepository.findAllByUser(userData)), pageable, pageSize);
 
-        Page<CommentResponse> dealBoardComments = new PageImpl<>(
-                convertDCommentsToResponse(
-                dealBoardCommentRepository.findAll(Specification
-                .where(DealBoardCommentSearch.withUser(userData))
-                .and(spec))), pageable, pageSize);
+//        Page<CommentResponse> dealBoardComments = new PageImpl<>(
+//                convertDCommentsToResponse(
+//                dealBoardCommentRepository.findAll(Specification
+//                .where(DealBoardCommentSearch.withUser(userData))
+//                .and(spec))), pageable, pageSize);
+
+        Page<CommentResponse> dealBoardComments = new CustomPageImpl<>(
+                convertDCommentsToResponse(dealBoardCommentRepository.findAll(Specification.where(DealBoardCommentSearch.withUser(userData)).and(spec))), pageable);
 
         return (dealBoardComments);
     }
@@ -375,5 +378,4 @@ public class UserInfoService {
         user.setBookmark(bookmarkDTO.getBookmark());
         userRepository.save(user);
     }
-
 }
