@@ -39,6 +39,10 @@ function App() {
               element={<PageRoutes.RegisterServePage />}
             />
             <Route
+              path={PATH.Register_EVENT}
+              element={<PageRoutes.RegisterEventPage />}
+            />
+            <Route
               path={PATH.Register_F}
               element={<PageRoutes.RegisterFreePage />}
             />
