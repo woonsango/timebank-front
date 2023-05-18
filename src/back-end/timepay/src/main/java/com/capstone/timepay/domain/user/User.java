@@ -75,7 +75,6 @@ public class User extends BaseTimeEntity {
 
     @JsonIgnore
     @OneToMany(mappedBy = "user", orphanRemoval = true, cascade = CascadeType.ALL)
-    @OnDelete(action = OnDeleteAction.CASCADE)
     private List<DealBoardComment> dealBoardComments = new ArrayList<>();
 
     @JsonIgnore

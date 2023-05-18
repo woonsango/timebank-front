@@ -14,6 +14,7 @@ public interface DealBoardRepository extends JpaRepository<DealBoard,Long>, JpaS
     List<DealBoard> findByDealRegistersIn(List<DealRegister> dealRegisters);
     Page<DealBoard> findByIsHiddenFalse(Pageable pageable);
     Page<DealBoard> findByType(Pageable pageable, String Type);
+    //DealBoard findByDealRegister(DealRegister dealRegister);
 
     long countByIsHiddenFalse();
 }

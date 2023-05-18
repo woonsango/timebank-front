@@ -1,6 +1,7 @@
 package com.capstone.timepay.domain.dealBoardComment;
 
 import com.capstone.timepay.domain.BaseTimeEntity;
+import com.capstone.timepay.domain.comment.Comment;
 import com.capstone.timepay.domain.dealBoard.DealBoard;
 import com.capstone.timepay.domain.dealCommentReport.DealCommentReport;
 import com.capstone.timepay.domain.user.User;
@@ -48,6 +49,4 @@ public class DealBoardComment extends BaseTimeEntity {
     public void updateIsHidden(boolean isHidden){
         this.isHidden = isHidden;
     }
-
-
 }

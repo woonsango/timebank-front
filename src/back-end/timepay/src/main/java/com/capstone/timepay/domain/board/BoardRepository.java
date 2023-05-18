@@ -1,5 +1,6 @@
 package com.capstone.timepay.domain.board;
 
+import com.capstone.timepay.domain.dealBoard.DealBoard;
 import com.capstone.timepay.domain.dealBoardComment.DealBoardComment;
 import com.capstone.timepay.domain.freeBoard.FreeBoard;
 import com.capstone.timepay.domain.user.User;
@@ -12,4 +13,5 @@ import java.util.List;
 import java.util.Optional;
 
 public interface BoardRepository extends JpaRepository<Board,Long>, JpaSpecificationExecutor<Board> {
+    List<Board> findByDealBoardIn(List<DealBoard> dealBoard);
 }
