@@ -454,14 +454,13 @@ public class UserInfoService {
             List<DealBoardReport> dealBoardReports = userData.getDealBoardReports();
             for (DealBoardReport dealBoardReport : dealBoardReports) {
                 reportRepository.delete(reportRepository.findByDealBoardReport(dealBoardReport));
-                //dealBoardReportRepository.delete(dealBoardReport);
             }
 
             List<DealCommentReport> dealCommentReports = userData.getDealCommentReports();
             for (DealCommentReport dealCommentReport : dealCommentReports) {
                 reportRepository.delete(reportRepository.findByDealCommentReport(dealCommentReport));
-                //dealCommentReportRepository.delete(dealCommentReport);
             }
+
             userTokenRepository.delete(userData.getUserToken());
             userRepository.delete(userData);
             userProfileRepository.delete(userData.getUserProfile());
