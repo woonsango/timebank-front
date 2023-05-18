@@ -64,9 +64,7 @@ public class UserMypageController {
         if (boardType != null) {
             spec = spec.and(DealBoardSearch.withType(boardType));
         }
-
-        GetResponseDTO responseData = userInfoService.getMyInfoBoard(auth, pageIndex, pageSize, spec);
-        return ResponseEntity.ok(responseData);
+        return ResponseEntity.ok(userInfoService.getMyInfoBoard(auth, pageIndex, pageSize, spec));
     }
 
 
@@ -99,8 +97,7 @@ public class UserMypageController {
     public ResponseEntity<?> getUserInfo(@PathVariable Long id,
                                          @RequestParam(defaultValue = "0") int pageIndex,
                                          @RequestParam(defaultValue = "10") int pageSize){
-        GetResponseDTO responseData = userInfoService.getUserInfo(id, pageIndex, pageSize);
-        return ResponseEntity.ok(responseData);
+        return ResponseEntity.ok(userInfoService.getUserInfo(id, pageIndex, pageSize));
     }
 
     @Transactional(readOnly = true)
@@ -109,8 +106,7 @@ public class UserMypageController {
     public ResponseEntity<?> getUserInfoBoard(@PathVariable Long id,
                                          @RequestParam(defaultValue = "0") int pageIndex,
                                          @RequestParam(defaultValue = "10") int pageSize){
-        GetResponseDTO responseData = userInfoService.getUserInfoBoard(id, pageIndex, pageSize);
-        return ResponseEntity.ok(responseData);
+        return ResponseEntity.ok(userInfoService.getUserInfoBoard(id, pageIndex, pageSize));
     }
 
     @Transactional(readOnly = true)
