@@ -18,6 +18,7 @@ import {
 } from './ActivityRecordPage.styles';
 import { ICommentActivity } from '../../api/interfaces/IComment';
 import { IBoard } from '../../api/interfaces/IPost';
+import TimeTable from '../../components/TimeTable';
 
 const ActivityRecordPage = () => {
   const [boardSearchValue, setBoardSearchValue] =
@@ -264,11 +265,14 @@ const ActivityRecordPage = () => {
   });
 
   return (
-    <Tabs
-      css={cssTabStyle}
-      defaultActiveKey={ACTIVITY_TAB_KEYS.POST}
-      items={items}
-    />
+    <>
+      <TimeTable />
+      <Tabs
+        css={cssTabStyle}
+        defaultActiveKey={ACTIVITY_TAB_KEYS.POST}
+        items={items}
+      />
+    </>
   );
 };
 
