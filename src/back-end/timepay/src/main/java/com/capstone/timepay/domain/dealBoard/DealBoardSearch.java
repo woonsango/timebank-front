@@ -18,7 +18,7 @@ public class DealBoardSearch {
             if (StringUtils.isEmpty(title)) {
                 return null;
             }
-            return builder.equal(root.get("title"), title);
+            return builder.like(root.get("title"), "%" + title + "%");
         };
     }
 
@@ -33,7 +33,7 @@ public class DealBoardSearch {
             // DealRegister와 User를 참조하는 join
             Join<DealRegister, User> userJoin = dealRegisterJoin.join("user", JoinType.INNER);
 
-            return builder.equal(userJoin.get("name"), name);
+            return builder.like(userJoin.get("name"), "%" + name + "%");
         };
     }
 
@@ -48,7 +48,7 @@ public class DealBoardSearch {
             // DealRegister와 User를 참조하는 join
             Join<DealRegister, User> userJoin = dealRegisterJoin.join("user", JoinType.INNER);
 
-            return builder.equal(userJoin.get("nickname"), nickname);
+            return builder.like(userJoin.get("nickname"), "%" + nickname + "%");
         };
     }
 
@@ -57,7 +57,7 @@ public class DealBoardSearch {
             if (StringUtils.isEmpty(type)) {
                 return null;
             }
-            return builder.equal(root.get("type"), type);
+            return builder.like(root.get("type"), "%" + type + "%");
         };
     }
 
@@ -66,7 +66,7 @@ public class DealBoardSearch {
             if (StringUtils.isEmpty(category)) {
                 return null;
             }
-            return builder.equal(root.get("category"), category);
+            return builder.like(root.get("category"), "%" + category + "%");
         };
     }
 
