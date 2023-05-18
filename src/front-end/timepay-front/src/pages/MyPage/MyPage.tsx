@@ -33,17 +33,15 @@ const MyPage = () => {
     apiRequest
       .get(API_URL.USER_INFO_GET)
       .then((res) => {
-        console.log(res);
-
         setImage(
-          res.data.image_url ||
+          res.data.body.image_url ||
             'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png',
         );
-        setNickName(res.data.nick_name);
-        setTown(res.data.location);
-        setIntroduction(res.data.introduction);
-        setPersonalNum(res.data.id);
-        setTimePay(res.data.time_pay);
+        setNickName(res.data.body.nick_name);
+        setTown(res.data.body.location);
+        setIntroduction(res.data.body.introduction);
+        setPersonalNum(res.data.body.id);
+        setTimePay(res.data.body.time_pay);
       })
       .catch((error) => {
         console.error('Error sending GET request:', error);
