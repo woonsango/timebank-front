@@ -6,6 +6,7 @@ import PageRoutes from './pages';
 import { PATH } from './utils/paths';
 import { RecoilRoot } from 'recoil';
 import CategorySelectPage from './pages/CategorySelectPage/CategorySelectPage';
+import AgencyEditPage from './pages/AgencyEditPage';
 function App() {
   return (
     <RecoilRoot>
@@ -86,6 +87,7 @@ function App() {
               path={PATH.CATEGORY_SELECT}
               element={<CategorySelectPage />}
             />
+            <Route path={PATH.AGENCY_EDIT} element={<AgencyEditPage />} />
           </Route>
         </Routes>
       </ConfigProvider>

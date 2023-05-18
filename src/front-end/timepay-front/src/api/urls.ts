@@ -10,6 +10,7 @@ export const API_URL = {
   ORGANIZATIONS_REGISTER: '/api/organizations/register',
   ORGANIZATIONS_LOGIN: '/api/organizations/login',
   ORGANIZATIONS_LOGOUT: '/api/organizations/logout',
+  ORGANIZATIONS_EDIT: '/api/organizations/update',
   ORGANIZATIONS_DELETE: '/api/organizations/delete',
   USER_INFO_GET: '/api/users/mypage/',
   USER_INFO_POST: '/api/users/create/',
@@ -32,6 +33,7 @@ export const HEADER_NOT_REQUIRED_URLS = [
 // form data로 전송 필요한 url
 export const FORM_DATA_REQUIRED_URLS = [
   API_URL.ORGANIZATIONS_REGISTER,
+  API_URL.ORGANIZATIONS_EDIT,
   API_URL.USER_INFO_POST,
   API_URL.USER_INFO_PUT,
   API_URL.DEAL_BOARDS_WRITE,

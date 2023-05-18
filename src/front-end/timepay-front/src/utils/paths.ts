@@ -25,6 +25,7 @@ export const PATH = {
   CATEGORY_SELECT: '/category-select',
   AGENCY_SIGN_IN: '/agency/sign-in',
   AGENCY_SIGN_UP: '/agency/sign-up',
+  AGENCY_EDIT: '/agency/edit',
   MY_VOLUNTEER: '/my-volunteer',
   PAYMENT_CERTIFICATION: '/payment-certification',
 };

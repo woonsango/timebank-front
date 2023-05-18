@@ -37,7 +37,7 @@ const AgencySignInPage = () => {
     async (values: any) => {
       await postAgencyLoginMutation.mutateAsync(values, {
         onSuccess: (result) => {
-          setTokenToCookie(result.data.jwt, 1);
+          setTokenToCookie(result.data.jwt, 10);
           setAgencyState(result.data.organization);
           setUserState(null);
           messageApi.open({
