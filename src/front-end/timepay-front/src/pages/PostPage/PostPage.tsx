@@ -8,8 +8,6 @@ import {
   cssPostDetailFirst,
   cssPostDetailUser,
   cssPostDetailTitle,
-  cssLine1,
-  cssLine3,
   cssLine4,
   cssPostDetailCreatedAt,
   cssPostDetailProfile,
@@ -23,14 +21,12 @@ import {
   cssPostDetailRegion,
   cssPostDetailTime,
   cssPostDetailFifth,
-  cssPostDetailContent1,
   cssPostDetailContent2,
   cssPostDetailAttachment,
   cssReportContainer,
   cssReportBtnStyle,
   cssPostFooter,
   cssPostDetail,
-  cssPostTextarea,
   cssLine2,
   cssPostBtn,
   cssPostFooter2,
@@ -40,10 +36,6 @@ import {
   cssEditBtnStyle,
   cssLike,
   cssLikeContainer,
-  cssCommentContainer,
-  cssCollectButton,
-  cssCollectBtn,
-  cssApplicant,
 } from './PostPage.style';
 import PostStatusTag from '../../components/PostStatusTag';
 import { ClockCircleOutlined, FlagFilled } from '@ant-design/icons';
@@ -52,7 +44,8 @@ import PostButton from '../../components/post/PostButton';
 import { IPost } from '../../api/interfaces/IPost';
 import { ReactComponent as LikeDefault } from '../../assets/images/icons/like_default.svg';
 import { ReactComponent as LikeClick } from '../../assets/images/icons/like_click.svg';
-
+import { apiRequest } from '../../api/request';
+import { API_URL } from '../../api/urls';
 import Item from '../../components/post/Item';
 import InputText from '../../components/post/InputText';
 import { ApplicantButton } from '../../components/post/ApplicantButton';
@@ -72,6 +65,18 @@ const Footer = Layout;
 
 const PostPage = ({ post }: PostPageProps) => {
   const [like, setLike] = useState(false);
+  const [nickName, setNickName]: any = useState();
+
+  useEffect(() => {
+    apiRequest
+      .get(API_URL.USER_INFO_GET)
+      .then((res) => {
+        setNickName(res.data.body.nick_name);
+      })
+      .catch((error) => {
+        console.error('Error sending GET request:', error);
+      });
+  }, []);
 
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const showModal = () => {
@@ -105,6 +110,43 @@ const PostPage = ({ post }: PostPageProps) => {
     setIsReportModalOpen(false);
   };
 
+  const navigate = useNavigate();
+  const location = useLocation();
+  const {
+    id,
+    type,
+    title,
+    content,
+    createdAt,
+    category,
+    attachment,
+    status,
+    pay,
+    startTime,
+    endTime,
+    region,
+    user,
+  } = location.state;
+
+  const handleEditPageChange = () => {
+    navigate(`/edit/${id}`, {
+      state: {
+        id,
+        type,
+        title,
+        content,
+        status,
+        category,
+        pay,
+        startTime,
+        endTime,
+        region,
+        attachment,
+        user,
+      },
+    });
+  };
+
   // 지원자 목록 모달 창
 
   const [selectedItem, setSelectedItem] = useState(null);
@@ -117,6 +159,15 @@ const PostPage = ({ post }: PostPageProps) => {
   const onCancel2 = () => {
     setIsListModalOpen(false);
   };
+
+  // 수정 및 삭제 버튼 표시 여부를 결정하는 함수
+  let [author, setAuthor] = useState(false);
+  const isAuthor = useMemo(() => {
+    if (user === nickName) {
+      setAuthor(true);
+    } else setAuthor(false);
+  }, [user, nickName]);
+
   const onApplicantClick = (applicant: any) => {
     console.log(`Selected applicant: ${applicant}`);
   };
@@ -156,43 +207,6 @@ const PostPage = ({ post }: PostPageProps) => {
     },
   ]);
   const nextId = useRef(4);
-
-  const navigate = useNavigate();
-  const location = useLocation();
-  const {
-    id,
-    type,
-    title,
-    content,
-    createdAt,
-    category,
-    attachment,
-    status,
-    pay,
-    startTime,
-    endTime,
-    region,
-    user,
-  } = location.state;
-
-  const handleEditPageChange = () => {
-    navigate(`/edit/${id}`, {
-      state: {
-        id,
-        type,
-        title,
-        content,
-        status,
-        category,
-        pay,
-        startTime,
-        endTime,
-        region,
-        attachment,
-        user,
-      },
-    });
-  };
 
   const handleClickBack = useCallback(() => {
     navigate(-1);
@@ -236,71 +250,79 @@ const PostPage = ({ post }: PostPageProps) => {
     <Layout css={cssPostDetail}>
       <div css={cssMainHeaderStyle}>
         <BackArrow onClick={handleClickBack} />
-        <span>{type}</span>
+        <span>도움요청</span>
       </div>
       <div css={cssPostDetailPage}>
-        <div css={cssQnaDeleteStyle}>
-          {}
-          <Button css={cssEditBtnStyle} onClick={handleEditPageChange}>
-            수정
-          </Button>
-          <Button css={cssDeleteBtnStyle} onClick={showModal}>
-            삭제
-          </Button>
-        </div>
-        <Modal
-          title="정말 게시글을 삭제하시겠습니까?"
-          open={isDeleteModalOpen}
-          onOk={handleOk}
-          onCancel={handleCancel}
-          okText="확인"
-          cancelText="취소"
-        ></Modal>
-
-        <div css={cssReportContainer}>
-          <Button css={cssReportBtnStyle} onClick={showReportModal}>
-            게시글 신고하기
-          </Button>
-        </div>
-        <Modal
-          title="게시글 신고하기"
-          open={isReportModalOpen}
-          onOk={onOk}
-          onCancel={onCancel}
-          footer={null}
-        >
-          <Form {...layout} form={form} style={{ width: '100%' }}>
-            <Form.Item
-              name="content"
-              label="신고사유"
-              rules={[{ required: true, message: '신고 사유를 적어주세요.' }]}
-            >
-              <TextArea
-                rows={10}
-                maxLength={100}
-                style={{ resize: 'none', fontSize: 20 }}
-              />
-            </Form.Item>
-            <div className="control-box">
-              <Button
-                style={{ marginRight: 20 }}
-                onClick={() => {
-                  onCancel();
-                  form.resetFields();
-                }}
-              >
-                취소
+        {author && (
+          <>
+            <div css={cssQnaDeleteStyle}>
+              <Button css={cssEditBtnStyle} onClick={handleEditPageChange}>
+                수정
               </Button>
-              <Button
-                type="primary"
-                htmlType="submit"
-                style={{ resize: 'none' }}
-              >
-                신고하기
+              <Button css={cssDeleteBtnStyle} onClick={showModal}>
+                삭제
               </Button>
             </div>
-          </Form>
-        </Modal>
+            <Modal
+              title="정말 게시글을 삭제하시겠습니까?"
+              open={isDeleteModalOpen}
+              onOk={handleOk}
+              onCancel={handleCancel}
+              okText="확인"
+              cancelText="취소"
+            ></Modal>
+          </>
+        )}
+        {!author && (
+          <>
+            <div css={cssReportContainer}>
+              <Button css={cssReportBtnStyle} onClick={showReportModal}>
+                게시글 신고하기
+              </Button>
+            </div>
+            <Modal
+              title="게시글 신고하기"
+              open={isReportModalOpen}
+              onOk={onOk}
+              onCancel={onCancel}
+              footer={null}
+            >
+              <Form {...layout} form={form} style={{ width: '100%' }}>
+                <Form.Item
+                  name="content"
+                  label="신고사유"
+                  rules={[
+                    { required: true, message: '신고 사유를 적어주세요.' },
+                  ]}
+                >
+                  <TextArea
+                    rows={10}
+                    maxLength={100}
+                    style={{ resize: 'none', fontSize: 20 }}
+                  />
+                </Form.Item>
+                <div className="control-box">
+                  <Button
+                    style={{ marginRight: 20 }}
+                    onClick={() => {
+                      onCancel();
+                      form.resetFields();
+                    }}
+                  >
+                    취소
+                  </Button>
+                  <Button
+                    type="primary"
+                    htmlType="submit"
+                    style={{ resize: 'none' }}
+                  >
+                    신고하기
+                  </Button>
+                </div>
+              </Form>
+            </Modal>
+          </>
+        )}
 
         <div css={cssPostDetailSecond}>
           <div css={cssPostDetailTitle}>{title}</div>
@@ -332,7 +354,7 @@ const PostPage = ({ post }: PostPageProps) => {
         </div>
 
         <div css={cssPostDetailFirst}>
-          <div css={cssPostDetailCreatedAt}>{createdAt}</div>
+          <div css={cssPostDetailCreatedAt}>{createdAt.substring(0, 10)}</div>
           <div css={cssPostDetailProfile}></div>
           <div css={cssPostDetailUser}>{user}</div>
           <div css={cssLikeContainer}>

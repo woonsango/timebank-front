@@ -50,7 +50,7 @@ export const cssPostDetail = css`
 export const cssPostDetailPage = css`
   display: flex;
   flex-direction: column;
-  margin-top: 70px;
+  margin-top: 20px;
 `;
 
 // 1st block
@@ -175,7 +175,7 @@ export const cssReportContainer = css`
   display: flex;
   justify-content: flex-end;
   margin-right: 25px;
-  margin-top: 30px;
+  margin-top: 15px;
 `;
 export const cssReportBtnStyle = css`
   letter-spacing: 1.5px;

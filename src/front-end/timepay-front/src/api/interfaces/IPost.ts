@@ -16,6 +16,7 @@ export interface IPost {
   attachment?: string; // 첨부파일
   user: IUser; // 작성자 정보
   content: string; // 게시글 내용
+  writer_nickname: string;
 }
 
 export interface IPostFreeBoard {
