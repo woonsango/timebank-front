@@ -6,6 +6,8 @@ import com.capstone.timepay.controller.user.request.RequestDTO;
 import com.capstone.timepay.controller.user.request.UpdateRequestDTO;
 import com.capstone.timepay.controller.user.response.GetResponseDTO;
 import com.capstone.timepay.controller.user.response.UpdateResponseDTO;
+import com.capstone.timepay.domain.board.Board;
+import com.capstone.timepay.domain.board.BoardRepository;
 import com.capstone.timepay.domain.comment.CommentRepository;
 import com.capstone.timepay.domain.dealBoard.DealBoard;
 import com.capstone.timepay.domain.dealBoard.DealBoardRepository;
@@ -13,9 +15,14 @@ import com.capstone.timepay.domain.dealBoard.DealBoardSearch;
 import com.capstone.timepay.domain.dealBoardComment.DealBoardComment;
 import com.capstone.timepay.domain.dealBoardComment.DealBoardCommentRepository;
 import com.capstone.timepay.domain.dealBoardComment.DealBoardCommentSearch;
+import com.capstone.timepay.domain.dealBoardReport.DealBoardReport;
+import com.capstone.timepay.domain.dealBoardReport.DealBoardReportRepository;
+import com.capstone.timepay.domain.dealCommentReport.DealCommentReport;
+import com.capstone.timepay.domain.dealCommentReport.DealCommentReportRepository;
 import com.capstone.timepay.domain.dealRegister.DealRegister;
 import com.capstone.timepay.domain.organization.Organization;
 import com.capstone.timepay.domain.organization.OrganizationRepository;
+import com.capstone.timepay.domain.report.ReportRepository;
 import com.capstone.timepay.domain.user.User;
 import com.capstone.timepay.domain.user.UserRepository;
 import com.capstone.timepay.domain.userProfile.UserProfile;
@@ -58,6 +65,10 @@ public class UserInfoService {
     private final CommentRepository commentRepository;
     private final UserTokenRepository userTokenRepository;
     private final OrganizationRepository organizationRepository;
+    private final BoardRepository boardRepository;
+    private final DealBoardReportRepository dealBoardReportRepository;
+    private final DealCommentReportRepository dealCommentReportRepository;
+    private final ReportRepository reportRepository;
 
     @Transactional
     public void createUserInfo(RequestDTO userData){
@@ -424,9 +435,36 @@ public class UserInfoService {
 
         /* deleteById를 사용하지 않고 에러 메세지를 직접 커스텀 */
         if(userData != null) {
-            UserProfile userProfileData = userData.getUserProfile();
+
+            /* 유저가 작성한 모든 댓글 삭제 */
+            List<DealBoardComment> dealBoardComments = userData.getDealBoardComments();
+            for (DealBoardComment dealBoardComment : dealBoardComments) {
+                commentRepository.delete(commentRepository.findByDealBoardComment(dealBoardComment));
+            }
+
+            /* 유저가 작성한 모든 게시글 삭제 */
+            List<DealRegister> dealRegisters = userData.getDealRegisters();
+            List<Board> boards = boardRepository.findByDealBoardIn(
+                    dealBoardRepository.findByDealRegistersIn(dealRegisters));
+            for (Board board : boards) {
+                boardRepository.delete(board);
+            }
+
+            /* 유저가 신고한 모든 목록 삭제 */
+            List<DealBoardReport> dealBoardReports = userData.getDealBoardReports();
+            for (DealBoardReport dealBoardReport : dealBoardReports) {
+                reportRepository.delete(reportRepository.findByDealBoardReport(dealBoardReport));
+                //dealBoardReportRepository.delete(dealBoardReport);
+            }
+
+            List<DealCommentReport> dealCommentReports = userData.getDealCommentReports();
+            for (DealCommentReport dealCommentReport : dealCommentReports) {
+                reportRepository.delete(reportRepository.findByDealCommentReport(dealCommentReport));
+                //dealCommentReportRepository.delete(dealCommentReport);
+            }
+            userTokenRepository.delete(userData.getUserToken());
             userRepository.delete(userData);
-            userProfileRepository.delete(userProfileData);
+            userProfileRepository.delete(userData.getUserProfile());
 
         } else{
             System.out.println("존재하지 않는 회원이랍니다~");
