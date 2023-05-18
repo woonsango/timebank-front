@@ -9,6 +9,7 @@ export const PATH = {
   Register_HR: '/register/help-request',
   Register_HS: '/register/help-serve',
   Register_F: '/register/free',
+  Register_EVENT: '/register/event',
   NOTIFICATION: '/notification',
   Qna_List: '/inquire',
   Qna_Register: '/inquire/register',

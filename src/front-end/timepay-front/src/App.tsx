@@ -39,6 +39,10 @@ function App() {
               element={<PageRoutes.RegisterServePage />}
             />
             <Route
+              path={PATH.Register_EVENT}
+              element={<PageRoutes.RegisterEventPage />}
+            />
+            <Route
               path={PATH.Register_F}
               element={<PageRoutes.RegisterFreePage />}
             />
@@ -69,10 +73,6 @@ function App() {
             <Route
               path={PATH.AGENCY_SIGN_UP}
               element={<PageRoutes.AgencySignUpPage />}
-            />
-            <Route
-              path={PATH.MY_VOLUNTEER}
-              element={<PageRoutes.MyVolunteerPage />}
             />
             <Route
               path={PATH.MY_VOLUNTEER}

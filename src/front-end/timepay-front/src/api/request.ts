@@ -35,7 +35,7 @@ request.interceptors.response.use();
 
 export const apiRequest = {
   get: (url: string, params?: object) => request.get(url, { ...params }),
-  post: (url: string, data: unknown) => request.post(url, data),
+  post: (url: string, data?: unknown) => request.post(url, data),
   postFormData: (url: string, formData: FormData) =>
     request.post(url, formData),
   patch: (url: string, data: unknown) => request.patch(url, data),

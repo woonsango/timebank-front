@@ -13,6 +13,7 @@ import { ReactComponent as RegionPin } from '../../assets/images/icons/region-pi
 import { ReactComponent as Clock } from '../../assets/images/icons/clock.svg';
 import { ReactComponent as Attachment } from '../../assets/images/icons/attachment.svg';
 import { ReactComponent as VolunteerBadge } from '../../assets/images/icons/volunteer-badge.svg';
+import { ReactComponent as AgencyUser } from '../../assets/images/icons/agency-user.svg';
 import { UserOutlined } from '@ant-design/icons';
 import PostTypeTag from '../PostTypeTag';
 import { cssPostTypeTagStyle } from '../PostTypeTag/PostTypeTag.styles';
@@ -45,11 +46,11 @@ const SimplePostCard = ({ post }: SimplePostCardProps) => {
     });
   };
   const footerComponent = useCallback(
-    (nickname?: string, createdAt?: string) => {
+    (nickname?: string, createdAt?: string, writerType?: string) => {
       return (
         <div css={cssSimplePostCardFooterStyle}>
           <div className="nickname">
-            <UserOutlined />
+            {writerType === '개인 유저' ? <UserOutlined /> : <AgencyUser />}
             {nickname || '-'}
           </div>
           <div>{createdAt ? getDateDiffToday(createdAt) : '-'}</div>
@@ -120,7 +121,7 @@ const SimplePostCard = ({ post }: SimplePostCardProps) => {
         )}
         {postCardContent}
       </Spin>
-      {footerComponent(post?.writerNickname, post?.createdAt)}
+      {footerComponent(post?.writerNickname, post?.createdAt, post?.writerType)}
     </Card>
   );
 };
