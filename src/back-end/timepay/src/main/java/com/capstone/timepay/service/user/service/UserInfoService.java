@@ -322,8 +322,8 @@ public class UserInfoService {
             return ResponseEntity.ok(getResponseDTO);
         }
         else if(auth.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ORGANIZATION"))){
-            Long userID = Long.valueOf(auth.getName());
-            Organization org = organizationRepository.findById(userID).orElseThrow(
+            String userID = auth.getName();
+            Organization org = organizationRepository.findByAccount(userID).orElseThrow(
                     ()->new IllegalArgumentException("존재하지 않는 기관입니다."));
             User user = userRepository.findByOrganization(org).orElseThrow(
                     () -> new IllegalArgumentException("존재하지 않는 기관 매니저입니다."));
@@ -371,9 +371,9 @@ public class UserInfoService {
             return ResponseEntity.ok(getResponseDTO);
         }
         else if(auth.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ORGANIZATION"))){
-            Long userID = Long.valueOf(auth.getName());
+            String userID = auth.getName();
 
-            Organization org = organizationRepository.findById(userID).orElseThrow(
+            Organization org = organizationRepository.findByAccount(userID).orElseThrow(
                     ()->new IllegalArgumentException("존재하지 않는 기관입니다."));
             User user = userRepository.findByOrganization(org).orElseThrow(
                     () -> new IllegalArgumentException("존재하지 않는 기관 매니저입니다."));
@@ -413,9 +413,9 @@ public class UserInfoService {
             return ResponseEntity.ok(dealBoardComments);
         }
         else if(auth.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ORGANIZATION"))){
-            Long userID = Long.valueOf(auth.getName());
+            String userID = auth.getName();
 
-            Organization org = organizationRepository.findById(userID).orElseThrow(
+            Organization org = organizationRepository.findByAccount(userID).orElseThrow(
                     ()->new IllegalArgumentException("존재하지 않는 기관입니다."));
             User user = userRepository.findByOrganization(org).orElseThrow(
                     () -> new IllegalArgumentException("존재하지 않는 기관 매니저입니다."));
