@@ -36,6 +36,9 @@ public class DealBoardResponse {
     private String userName;
     private String userNickname;
 
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
+
     public DealBoardResponse(DealBoard dealBoard) {
         this.d_boardId = dealBoard.getD_boardId();
         this.title = dealBoard.getTitle();
@@ -54,8 +57,18 @@ public class DealBoardResponse {
         this.isVolunteer = dealBoard.isVolunteer();
         this.volunteerPeople = dealBoard.getVolunteerPeople();
         this.dealAttatchments = dealBoard.getDealAttatchments();
-        this.userId = dealBoard.getDealRegisters().get(0).getUser().getUserId();
-        this.userName = dealBoard.getDealRegisters().get(0).getUser().getName();
-        this.userNickname = dealBoard.getDealRegisters().get(0).getUser().getNickname();
+
+        if (dealBoard.getDealRegisters() != null && !dealBoard.getDealRegisters().isEmpty()) {
+            this.userId = dealBoard.getDealRegisters().get(0).getUser().getUserId();
+            this.userName = dealBoard.getDealRegisters().get(0).getUser().getName();
+            this.userNickname = dealBoard.getDealRegisters().get(0).getUser().getNickname();
+        } else {
+            this.userId = null;
+            this.userName = null;
+            this.userNickname = null;
+        }
+
+        this.createdAt = dealBoard.getCreatedAt();
+        this.updatedAt = dealBoard.getUpdatedAt();
     }
 }
