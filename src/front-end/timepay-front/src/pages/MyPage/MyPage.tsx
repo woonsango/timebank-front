@@ -214,7 +214,12 @@ const MyPage = () => {
       {contextHolder}
       <div className="MyContentWrap">
         <div className="MyEdit">
-          <button className="Edit" onClick={() => handlePageMove(PATH.MY_EDIT)}>
+          <button
+            className="Edit"
+            onClick={() =>
+              handlePageMove(agencyInfo ? PATH.AGENCY_EDIT : PATH.MY_EDIT)
+            }
+          >
             {agencyInfo ? '기관정보 수정' : '프로필 수정'}
           </button>
         </div>

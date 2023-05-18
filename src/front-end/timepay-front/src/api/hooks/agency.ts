@@ -27,6 +27,14 @@ export const usePostAgencyRegister = () => {
   });
 };
 
+export const usePatchAgencyUpdate = () => {
+  return useMutation<AxiosResponse<any>, AxiosError, FormData>({
+    mutationKey: 'usePatchAgencyUpdate',
+    mutationFn: (data) =>
+      apiRequest.patchFormData(API_URL.ORGANIZATIONS_EDIT, data),
+  });
+};
+
 export const useDeleteAgency = () => {
   return useMutation<AxiosResponse<any>, AxiosError>({
     mutationKey: 'useDeleteAgency',
