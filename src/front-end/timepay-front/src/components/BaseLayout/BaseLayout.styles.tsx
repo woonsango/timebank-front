@@ -19,3 +19,17 @@ export const cssBaseLayoutStyle = css`
     overflow-y: scroll;
   }
 `;
+
+export const cssHomeHeaderNotificationStyle = css`
+  font-size: 28px;
+  margin-top: 10px;
+  margin-left: auto;
+  margin-right: 10px;
+  margin-bottom: 5px;
+  color: ${COMMON_COLOR.FONT2};
+  .ant-badge-dot {
+    width: 9px;
+    height: 9px;
+    background: ${COMMON_COLOR.MAIN1};
+  }
+`;
