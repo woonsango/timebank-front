@@ -2,6 +2,7 @@ package com.capstone.timepay.domain.user;
 
 import com.capstone.timepay.domain.BaseTimeEntity;
 import com.capstone.timepay.domain.certification.Certification;
+import com.capstone.timepay.domain.comment.Comment;
 import com.capstone.timepay.domain.dealBoardComment.DealBoardComment;
 import com.capstone.timepay.domain.dealBoardReport.DealBoardReport;
 import com.capstone.timepay.domain.dealCommentReport.DealCommentReport;
@@ -74,6 +75,7 @@ public class User extends BaseTimeEntity {
 
     @JsonIgnore
     @OneToMany(mappedBy = "user", orphanRemoval = true, cascade = CascadeType.ALL)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private List<DealBoardComment> dealBoardComments = new ArrayList<>();
 
     @JsonIgnore
