@@ -3,13 +3,17 @@ package com.capstone.timepay.service.board.service;
 import com.capstone.timepay.domain.board.Board;
 import com.capstone.timepay.domain.board.BoardRepository;
 import com.capstone.timepay.domain.board.BoardStatus;
+import com.capstone.timepay.domain.comment.CommentRepository;
 import com.capstone.timepay.domain.dealAttatchment.DealAttatchment;
 import com.capstone.timepay.domain.dealAttatchment.DealAttatchmentRepository;
 import com.capstone.timepay.domain.dealBoard.DealBoard;
 import com.capstone.timepay.domain.dealBoard.DealBoardRepository;
 import com.capstone.timepay.domain.dealBoardComment.DealBoardComment;
+import com.capstone.timepay.domain.dealBoardReport.DealBoardReport;
+import com.capstone.timepay.domain.dealBoardReport.DealBoardReportRepository;
 import com.capstone.timepay.domain.dealRegister.DealRegister;
 import com.capstone.timepay.domain.dealRegister.DealRegisterRepository;
+import com.capstone.timepay.domain.report.ReportRepository;
 import com.capstone.timepay.domain.user.User;
 import com.capstone.timepay.domain.user.UserRepository;
 import com.capstone.timepay.firebase.FirebaseService;
@@ -43,7 +47,8 @@ public class DealBoardService
     private final FirebaseService firebaseService;
     private final DealAttatchmentRepository dealAttatchmentRepository;
     private final OrganizationManageService organizationManageService;
-
+    private final CommentRepository commentRepository;
+    private final ReportRepository reportRepository;
     public DealBoard getId(Long id)
     {
         return dealBoardRepository.findById(id).orElse(null);
@@ -259,17 +264,39 @@ public class DealBoardService
     @Transactional
     public void delete(Long id) {
         // 매개변수 id를 기반으로, 게시글이 존재하는지 먼저 찾음
-        // 게시글이 없으면 오류 처리
         DealBoard dealBoard = dealBoardRepository.findById(id).orElseThrow(() -> {
-            return new IllegalArgumentException("Board Id를 찾을 수 없습니다!");
-        });
-        DealRegister dealRegister = dealRegisterRepository.findById(id).orElseThrow(() -> {
-            return new IllegalArgumentException("레지스터를 찾을 수 없습니다.");
+                return new IllegalArgumentException("게시판을 찾지 못했습니다");
         });
 
-        // 게시글이 있는 경우 삭제처리
-        dealBoardRepository.deleteById(id);
-        dealRegisterRepository.deleteById(id);
+        if (dealBoard != null)
+        {
+            // dealBoard 안의 모든 Comment 테이블 데이터 삭제
+            List<DealBoardComment> dealBoardComments = dealBoard.getDealBoardComments();
+            for (DealBoardComment dealBoardComment : dealBoardComments)
+            {
+                commentRepository.delete(commentRepository.findByDealBoardComment(dealBoardComment));
+            }
+
+            // dealBoard의 Board 테이블 데이터 삭제
+            List<DealRegister> dealRegisters = dealBoard.getDealRegisters();
+            List<Board> boards = boardRepository.findByDealBoardIn(
+                    dealBoardRepository.findByDealRegistersIn(dealRegisters));
+            for (Board board : boards) {
+                boardRepository.delete(board);
+            }
+
+            // dealBoard의 Report 테이블 데이터 삭제
+            List<DealBoardReport> dealBoardReports = dealBoard.getDealBoardReports();
+            for (DealBoardReport dealBoardReport : dealBoardReports) {
+                reportRepository.delete(reportRepository.findByDealBoardReport(dealBoardReport));
+            }
+
+            dealBoardRepository.delete(dealBoard);
+        }
+        else
+        {
+            System.out.println("존재하지 않는 게시판입니다");
+        }
     }
 
     @Transactional
