@@ -16,4 +16,5 @@ export interface IComment {
 
 export interface ICommentActivity extends IComment {
   boardTitle: string; // 게시글 제목
+  body: string;
 }
