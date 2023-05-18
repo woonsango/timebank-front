@@ -208,7 +208,7 @@ const RegisterRequestPage = () => {
         onSuccess: (result) => {
           messageApi.open({
             type: 'success',
-            content: '회원가입을 성공했습니다.',
+            content: '게시글이 등록되었습니다.',
             duration: 1,
             onClose: () => {
               navigate(-1);
