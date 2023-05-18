@@ -16,6 +16,8 @@ import {
   cssNothingStyle,
   cssSpinStyle,
 } from './ActivityRecordPage.styles';
+import { ICommentActivity } from '../../api/interfaces/IComment';
+import { IBoard } from '../../api/interfaces/IPost';
 
 const ActivityRecordPage = () => {
   const [boardSearchValue, setBoardSearchValue] =
@@ -44,12 +46,14 @@ const ActivityRecordPage = () => {
   const setHeaderTitle = useSetRecoilState(headerTitleState);
 
   const boards = useMemo(() => {
-    return boardData?.data.deal_boards.content;
+    return boardData?.data.body.deal_boards.content;
   }, [boardData]);
 
   const comments = useMemo(() => {
-    return commentData?.data.content;
+    return commentData?.data.body.content;
   }, [commentData]);
+
+  // console.log(commentData?.data.body.content);
 
   const handleOnChangeBoardForm = useCallback(
     (changedValues: { [key: string]: any }) => {
@@ -152,23 +156,26 @@ const ActivityRecordPage = () => {
                   </Select>
                 </Form.Item>
               </div>
-              <div>총 {boardData?.data.deal_boards.totalElements || 0} 개</div>
+              <div>
+                총 {boardData?.data.body.deal_boards.totalElements || 0} 개
+              </div>
             </Form>
             <div>
               {!boardDataLoading && boards ? (
                 boards.length > 0 ? (
                   <>
-                    {boards?.map((post) => (
+                    {boards?.map((post: IBoard) => (
                       <ActivityPostCard key={post.d_boardId} post={post} />
                     ))}
-                    {boardData && boardData.data.deal_boards.totalPages > 1 && (
-                      <Pagination
-                        current={(boardSearchValue.pageIndex || 0) + 1}
-                        pageSize={5}
-                        total={boardData?.data.deal_boards.totalElements}
-                        onChange={handleOnChangePageBoard}
-                      />
-                    )}
+                    {boardData &&
+                      boardData.data.body.deal_boards.totalPages > 1 && (
+                        <Pagination
+                          current={(boardSearchValue.pageIndex || 0) + 1}
+                          pageSize={5}
+                          total={boardData?.data.body.deal_boards.totalElements}
+                          onChange={handleOnChangePageBoard}
+                        />
+                      )}
                   </>
                 ) : (
                   <div css={cssNothingStyle}>
@@ -201,22 +208,22 @@ const ActivityRecordPage = () => {
                   <Select.Option value="ADOPTED">선정</Select.Option>
                 </Select>
               </Form.Item>
-              <div> 총 {commentData?.data.totalElements || 0} 개</div>
+              <div> 총 {commentData?.data.body.totalElements || 0} 개</div>
             </Form>
             {!commentDataLoading && comments ? (
               comments.length > 0 ? (
                 <>
-                  {comments.map((comment) => (
+                  {comments.map((comment: ICommentActivity) => (
                     <ActivityCommentCard
                       key={comment.commentId}
                       comment={comment}
                     />
                   ))}
-                  {commentData && commentData.data.totalPages > 1 && (
+                  {commentData && commentData.data.body.totalPages > 1 && (
                     <Pagination
                       current={(commentSearchValue.pageIndex || 0) + 1}
                       pageSize={5}
-                      total={commentData?.data.totalElements}
+                      total={commentData?.data.body.totalElements}
                       onChange={handleOnChangePageComment}
                     />
                   )}

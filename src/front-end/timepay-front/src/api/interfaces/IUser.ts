@@ -42,7 +42,8 @@ export interface IGetUserBoardResponse {
   location: string;
   introduction: string;
   time_pay: number;
-  deal_boards: IDealBoards;
+  deal_boards: string;
+  body: string;
 }
 
 export interface IGetUserCommentRequest {
