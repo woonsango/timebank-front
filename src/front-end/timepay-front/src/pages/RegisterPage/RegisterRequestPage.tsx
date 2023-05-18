@@ -267,13 +267,12 @@ const RegisterRequestPage = () => {
             css={cssPostCategoryStyle}
           >
             <Radio.Group>
-              <Radio.Button value="1">산책</Radio.Button>
-              <Radio.Button value="2">봉사</Radio.Button>
-              <Radio.Button value="3">교육</Radio.Button>
-              <Radio.Button value="4">친목</Radio.Button>
-              <Radio.Button value="5">생활</Radio.Button>
-              <Radio.Button value="6">건강</Radio.Button>
-              <Radio.Button value="7">도와주세요</Radio.Button>
+              <Radio.Button value="심부름">심부름</Radio.Button>
+              <Radio.Button value="교육">교육</Radio.Button>
+              <Radio.Button value="돌봄">돌봄</Radio.Button>
+              <Radio.Button value="청소,가사">청소,가사</Radio.Button>
+              <Radio.Button value="수리,설치">수리,설치</Radio.Button>
+              <Radio.Button value="이동">이동</Radio.Button>
             </Radio.Group>
           </Form.Item>
 
