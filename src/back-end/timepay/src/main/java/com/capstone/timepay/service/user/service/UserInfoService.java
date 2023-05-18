@@ -15,6 +15,8 @@ import com.capstone.timepay.domain.dealBoardComment.DealBoardComment;
 import com.capstone.timepay.domain.dealBoardComment.DealBoardCommentRepository;
 import com.capstone.timepay.domain.dealBoardComment.DealBoardCommentSearch;
 import com.capstone.timepay.domain.dealRegister.DealRegister;
+import com.capstone.timepay.domain.organization.Organization;
+import com.capstone.timepay.domain.organization.OrganizationRepository;
 import com.capstone.timepay.domain.user.User;
 import com.capstone.timepay.domain.user.UserRepository;
 import com.capstone.timepay.domain.userProfile.UserProfile;
@@ -22,6 +24,7 @@ import com.capstone.timepay.domain.userProfile.UserProfileRepository;
 import com.capstone.timepay.domain.userToken.UserToken;
 import com.capstone.timepay.domain.userToken.UserTokenRepository;
 import com.capstone.timepay.firebase.FirebaseService;
+import com.capstone.timepay.service.organization.dto.OrgUserInfoDTO;
 import com.google.firebase.auth.FirebaseAuthException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -29,7 +32,10 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -53,6 +59,8 @@ public class UserInfoService {
     private final DealBoardCommentRepository dealBoardCommentRepository;
     private final CommentRepository commentRepository;
     private final UserTokenRepository userTokenRepository;
+    private final OrganizationRepository organizationRepository;
+
     @Transactional
     public void createUserInfo(RequestDTO userData){
         /* 유저 프로필 데이터 저장 */
@@ -230,31 +238,58 @@ public class UserInfoService {
     }
 
     @Transactional(readOnly = true)
-    public GetResponseDTO getMyInfo(Authentication auth, int pageIndex, int pageSize){
-        String userEmail = auth.getName();
-        User userData = userRepository.findByEmail(userEmail).orElseThrow(IllegalArgumentException::new);
-        Pageable pageable = PageRequest.of(pageIndex, pageSize);
+    public ResponseEntity<?> getMyInfo(Authentication auth, int pageIndex, int pageSize){
 
-        /* 유저 테이블에서 데이터 가져오기 */
-        String nickName = userData.getNickname();
-        String location = userData.getLocation();
+        /* 일반 유저일 경우 */
+        if(auth.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_USER"))){
+            String userEmail = auth.getName();
+            User userData = userRepository.findByEmail(userEmail).orElseThrow(IllegalArgumentException::new);
+            Pageable pageable = PageRequest.of(pageIndex, pageSize);
 
-        List<DealRegister> dealRegisters = userData.getDealRegisters();
-        Page<DealBoard> dealBoards = new PageImpl<>(dealBoardRepository.findByDealRegistersIn(userData.getDealRegisters()),
-                pageable, userData.getDealRegisters().size());
+            /* 유저 테이블에서 데이터 가져오기 */
+            String nickName = userData.getNickname();
+            String location = userData.getLocation();
 
-        Page<CommentResponse> dealBoardComments = new PageImpl<>(
-                convertDCommentsToResponse(dealBoardCommentRepository.findAllByUser(userData)), pageable, pageSize);
+            List<DealRegister> dealRegisters = userData.getDealRegisters();
+            Page<DealBoard> dealBoards = new PageImpl<>(dealBoardRepository.findByDealRegistersIn(userData.getDealRegisters()),
+                    pageable, userData.getDealRegisters().size());
+
+            Page<CommentResponse> dealBoardComments = new PageImpl<>(
+                    convertDCommentsToResponse(dealBoardCommentRepository.findAllByUser(userData)), pageable, pageSize);
 
 
-        /* 유저 프로필 테이블에서 데이터 가져오기 */
-        String imageUrl = userData.getUserProfile().getImageUrl();
-        String introduction = userData.getUserProfile().getIntroduction();
-        int timePay = userData.getUserProfile().getTimepay();
+            /* 유저 프로필 테이블에서 데이터 가져오기 */
+            String imageUrl = userData.getUserProfile().getImageUrl();
+            String introduction = userData.getUserProfile().getIntroduction();
+            int timePay = userData.getUserProfile().getTimepay();
 
-        /* 생성자를 사용하여 객체 생성 */
-        GetResponseDTO getResponseDTO = new GetResponseDTO(userData.getUserId(), imageUrl, nickName, location, introduction, timePay, dealBoards, dealBoardComments);
-        return getResponseDTO;
+            /* 생성자를 사용하여 객체 생성 */
+            GetResponseDTO getResponseDTO = new GetResponseDTO(userData.getUserId(), imageUrl, nickName, location, introduction, timePay, dealBoards, dealBoardComments);
+            return ResponseEntity.ok(getResponseDTO);
+        }
+        else if(auth.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ORGANIZATION"))){
+            Long userID = Long.valueOf(auth.getName());
+            Organization org = organizationRepository.findById(userID).orElseThrow(
+                    ()->new IllegalArgumentException("존재하지 않는 기관입니다."));
+            User user = userRepository.findByOrganization(org).orElseThrow(
+                    () -> new IllegalArgumentException("존재하지 않는 기관 매니저입니다."));
+
+            OrgUserInfoDTO orgData = new OrgUserInfoDTO(
+                    org.getOrganizationName(),
+                    user.getName(),
+                    user.getPhone(),
+                    org.getBusinessCode(),
+                    org.getEmployeeNum(),
+                    org.getTimepay(),
+                    org.getAccount(),
+                    org.getImageUrl(),
+                    org.getCertificationUrl()
+            );
+            return ResponseEntity.ok(orgData);
+        }
+
+
+        return ResponseEntity.ok("접근 권한이 유효하지 않거나(ROLE) 알 수 없는 문제가 발생했습니다.");
     }
 
     @Transactional(readOnly = true)

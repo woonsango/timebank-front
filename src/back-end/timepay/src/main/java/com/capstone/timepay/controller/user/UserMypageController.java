@@ -40,8 +40,7 @@ public class UserMypageController {
     public ResponseEntity<?> getMyInfo(@RequestParam(defaultValue = "0") int pageIndex,
                                        @RequestParam(defaultValue = "10") int pageSize){
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        GetResponseDTO responseData = userInfoService.getMyInfo(auth, pageIndex, pageSize);
-        return ResponseEntity.ok(responseData);
+        return ResponseEntity.ok(userInfoService.getMyInfo(auth, pageIndex, pageSize));
     }
 
 

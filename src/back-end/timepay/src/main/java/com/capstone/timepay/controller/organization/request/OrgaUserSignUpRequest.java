@@ -12,7 +12,7 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 public class OrgaUserSignUpRequest {
     @NotNull
-    private String organizationName;
+    private String organizationName; //
     @NotNull
     private String managerName;
     @NotNull
