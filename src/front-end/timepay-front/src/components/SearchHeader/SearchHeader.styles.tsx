@@ -3,7 +3,7 @@ import { COMMON_COLOR } from '../../styles/constants/colors';
 
 export const cssSearchHeaderStyle = css`
   position: fixed;
-  top: 0;
+  top: 39px;
   width: 100%;
   display: flex;
   flex-direction: column;
