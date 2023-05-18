@@ -171,7 +171,7 @@ const AgencyEditPage = () => {
               {
                 uid: 0,
                 status: 'done',
-                name: '봉사활동 자격서류(기존)',
+                name: data.data.body.certificationUrl.split('_')[1],
                 url: data.data.body.certificationUrl,
               },
             ],
