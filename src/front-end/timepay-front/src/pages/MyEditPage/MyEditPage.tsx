@@ -195,6 +195,7 @@ const MyEditPage: React.FC = () => {
   };
 
   const setHeaderTitle = useSetRecoilState(headerTitleState);
+
   useEffect(() => {
     console.log('enter edit page');
     setHeaderTitle('내 정보 수정');
@@ -203,37 +204,36 @@ const MyEditPage: React.FC = () => {
       .get(API_URL.USER_INFO_GET)
       .then((res) => {
         console.log(res);
-
-        console.log('GET한 데이터');
-        console.log('프로필 이미지: ', res.data.image_url);
-        console.log('닉네임: ', res.data.nick_name);
-        console.log('지역: ', res.data.location);
-        console.log('소개: ', res.data.introduction);
-        form.setFieldValue('nickName', res.data.nick_name);
-        form.setFieldValue('introduction', res.data.introduction);
+        form.setFieldValue('nickName', res.data.body.nick_name);
+        form.setFieldValue('introduction', res.data.body.introduction);
         setGu(
-          dongData[res.data.location.split(' ')[1] as (typeof guData)[number]],
+          dongData[
+            res.data.body.location.split(' ')[1] as (typeof guData)[number]
+          ],
         );
-        setGuText(res.data.location.split(' ')[1]);
-        setDong(res.data.location.split(' ')[2]);
+        setGuText(res.data.body.location.split(' ')[1]);
+        setDong(res.data.body.location.split(' ')[2]);
 
         setfinalProfileImage(
-          res.data.image_url ||
+          res.data.body.image_url ||
             'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png',
         );
         setProfileImage(
-          res.data.image_url ||
+          res.data.body.image_url ||
             'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png',
         );
-        setViewNickname(res.data.nick_name);
-        setNickName(res.data.nick_name);
-        setTown(res.data.location);
-        setIntroduction(res.data.introduction);
+        console.log(res.data);
+        console.log(res.data.body.image_url);
+
+        setViewNickname(res.data.body.nick_name);
+        setNickName(res.data.body.nick_name);
+        setTown(res.data.body.location);
+        setIntroduction(res.data.body.introduction);
       })
       .catch((error) => {
         console.error('Error sending GET request:', error);
       });
-  }, []);
+  }, [form, setHeaderTitle]);
 
   return (
     <Space css={topWrapperCSS} align="baseline">
