@@ -7,6 +7,7 @@ import com.capstone.timepay.domain.dealBoard.DealBoardRepository;
 import com.capstone.timepay.domain.dealBoardComment.DealBoardComment;
 import com.capstone.timepay.service.board.dto.DealBoardCommentDTO;
 import com.capstone.timepay.service.board.service.DealBoardCommentService;
+import com.capstone.timepay.service.board.service.DealRegisterService;
 import com.capstone.timepay.service.board.service.ReportService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -31,6 +32,7 @@ public class DealBoardCommentController {
     private final DealBoardCommentService dealBoardCommentService;
     private final DealBoardRepository dealBoardRepository;
     private final DealBoardController dealBoardController;
+    private final DealRegisterService dealRegisterService;
 
     private final ReportService reportService;
 
@@ -67,29 +69,21 @@ public class DealBoardCommentController {
 
     // 댓글 삭제
     @ApiOperation(value = "거래게시글 댓글 삭제")
-    @DeleteMapping("/comments/{boardId}/{commentId}")
-    public Map<String, Object> deleteDealBoardComment(@RequestBody DealBoardCommentDTO dealBoardCommentDTO,
-                                                      @PathVariable("boardId") Long boardId,
-                                                      @PathVariable("commentId") Long commentId,
-                                                      Principal principal) {
-        Map<String, Object> deleteMap = new HashMap<>();
-        DealBoardComment dealBoardComment = dealBoardCommentService.getCommentId(commentId);
-        String userEmail = dealBoardCommentService.getEmail(commentId);
-
-        if (dealBoardComment == null)
-        {
-            deleteMap.put("success", false);
-            deleteMap.put("message", "해당 댓글을 찾을 수가 없습니다");
+    @DeleteMapping("delete/{boardId}/{commentId}")
+    public ResponseEntity<String> deleteComment(@PathVariable("boardId") Long boardId,
+                                                @PathVariable("commentId") Long commentId,
+                                                Principal principal) {
+        String userEmail = dealRegisterService.getEmail(boardId);
+        if (!principal.getName().equals(userEmail)) {
+            throw new IllegalArgumentException("해당 댓글을 지울 권한이 없습니다");
         }
 
-        if (!userEmail.equals(principal.getName()))
-        {
-            deleteMap.put("success", false);
-            deleteMap.put("message", "삭제 권한이 없습니다");
+        boolean isDeleted = dealBoardCommentService.deleteCommentById(commentId);
+        if (isDeleted) {
+            return new ResponseEntity<>("댓글이 삭제되었습니다.", HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("댓글 삭제에 실패했습니다.", HttpStatus.BAD_REQUEST);
         }
-        dealBoardCommentService.delete(commentId);
-        deleteMap.put("success", true);
-        return deleteMap;
     }
 
     @PostMapping("/{boardId}/{commentId}/report")
