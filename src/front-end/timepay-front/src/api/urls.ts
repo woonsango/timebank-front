@@ -1,5 +1,6 @@
 export const API_URL = {
   DEAL_BOARDS: '/api/deal-boards',
+  DEAL_BOARDS__SEARCH: 'deal-boards/search',
   FREE_BOARDS: '/api/free-boards',
   FREE_BOARDS_WRITE: '/api/free-boards/write',
   DEAL_BOARDS_WRITE: '/api/deal-boards/write/help', // 도움받기
@@ -10,11 +11,15 @@ export const API_URL = {
   ORGANIZATIONS_LOGIN: '/api/organizations/login',
   ORGANIZATIONS_LOGOUT: '/api/organizations/logout',
   ORGANIZATIONS_DELETE: '/api/organizations/delete',
-  USER_INFO: '/api/users/mypage',
+  USER_INFO_GET: '/api/users/mypage/',
   USER_INFO_POST: '/api/users/create/',
-  USER_INFO_PUT: '/api/users/update',
+  USER_INFO_PUT: '/api/users/mypage/update',
   MY_VOLUNTEER: '/api/users/mypage/certification',
   USERS__CATEGORY: '/api/users/category',
+  API_USERS__MYPAGE__BOARD: '/api/users/mypage/board',
+  API_USERS__MYPAGE__COMMENT: '/api/users/mypage/comment',
+  LOGOUT: '/api/users/logout',
+  DELETE: '/api/users/delete',
 };
 
 // 토큰 필요 없는 애들

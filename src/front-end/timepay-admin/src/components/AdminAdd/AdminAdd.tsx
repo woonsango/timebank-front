@@ -70,13 +70,6 @@ const AdminAdd = () => {
         <Input />
       </Form.Item>
       <Form.Item
-        name={['authority']}
-        label="직책"
-        rules={[{ required: true, message: '직책을 입력해주세요' }]}
-      >
-        <Input />
-      </Form.Item>
-      <Form.Item
         name={['email']}
         label="이메일"
         rules={[

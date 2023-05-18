@@ -1,3 +1,4 @@
+import { PageableData } from './ICommon';
 import { IUser } from './IUser';
 
 export interface IPost {
@@ -59,8 +60,51 @@ export interface IGetDealBoard {
 export type IPostState =
   | '매칭중'
   | '매칭완료'
-  | '활동시작'
+  | '활동중'
   | '활동완료'
+  | '활동지연'
   | '활동취소';
 
-export type IPostType = '도움요청' | '도움주기' | '자유' | '후기';
+export type IPostType = '도움요청' | '같이하기' | '기부하기';
+
+export interface IBoard {
+  createdAt: string;
+  updatedAt: string;
+  d_boardId: number;
+  title: string;
+  content: string;
+  type: string;
+  category?: string;
+  location?: string;
+  startTime: any;
+  endTime: any;
+  pay: number;
+  boardStatus: string;
+  state: any;
+  volunteerTime: number;
+  volunteerPeople: number;
+  hidden: boolean;
+  auto: boolean;
+  volunteer: boolean;
+  writerName?: string;
+  writerNickname?: string;
+  writerType?: string;
+  imageUrl?: string;
+}
+export interface IGetSearchBoardRequest {
+  title?: string;
+  type?: string;
+  category?: string;
+  sortType?: string;
+  startDate: null; // 프론트에서만 사용
+  startTime?: string;
+  endDate: null; // 프론트에서만 사용
+  endTime?: string;
+  volunteer?: boolean;
+  pagingSize: number;
+  pagingIndex: number;
+}
+
+export interface IGetSearchBoardResponse extends PageableData {
+  content: IBoard[];
+}

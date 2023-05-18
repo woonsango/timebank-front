@@ -20,7 +20,7 @@ export const cssMiddleText = css`
 
 export const cssLogo = css`
   margin-top: 30px;
-  width: 150px;
+  //width: 150px;
 `;
 
 export const cssBottomText = css`

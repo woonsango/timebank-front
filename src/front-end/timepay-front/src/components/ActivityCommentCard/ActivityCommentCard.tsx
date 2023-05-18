@@ -11,10 +11,10 @@ const ActivityCommentCard = ({ comment }: ActivityCommentCardProps) => {
       <div className="activity-comment-content">{comment.content}</div>
       <div className="activity-origin-post-title">
         <SelectOutlined />
-        {comment.postTitle}
+        {comment.boardTitle}
       </div>
       <div className="activity-comment-date-time">
-        작성시간 : {comment.createdAt}
+        작성시간 : {comment.writtenTime?.split('.')[0].replace('T', ' ')}
       </div>
     </div>
   );

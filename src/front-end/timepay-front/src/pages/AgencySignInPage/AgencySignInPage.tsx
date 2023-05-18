@@ -1,5 +1,5 @@
 import { Button, Form, Input, message, Typography } from 'antd';
-import { useCallback, useEffect } from 'react';
+import { useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSetRecoilState } from 'recoil';
 import { usePostAgencyLogin } from '../../api/hooks/agency';
@@ -7,7 +7,7 @@ import agencyLogo from '../../assets/images/icons/agency-logo.png';
 import { agencyState, userState } from '../../states/user';
 import { PATH } from '../../utils/paths';
 import { passwordRegex } from '../../utils/regex';
-import { getTokenFromCookie, setTokenToCookie } from '../../utils/token';
+import { setTokenToCookie } from '../../utils/token';
 import { cssAgencySignInPaeStyle } from './AgencySignInPage.styles';
 
 const AgencySignInPage = () => {
@@ -69,11 +69,6 @@ const AgencySignInPage = () => {
       setUserState,
     ],
   );
-
-  useEffect(() => {
-    // 이미 토큰이 있다면 자동 로그인
-    if (getTokenFromCookie()) navigate(PATH.HOME);
-  }, [navigate]);
 
   return (
     <div css={cssAgencySignInPaeStyle}>

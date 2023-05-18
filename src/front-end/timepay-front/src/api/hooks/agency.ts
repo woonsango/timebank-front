@@ -15,8 +15,7 @@ export const usePostAgencyLogin = () => {
 export const useAgencyLogout = () => {
   return useMutation<AxiosResponse<any>, AxiosError, any>({
     mutationKey: 'useAgencyLogout',
-    mutationFn: (data) =>
-      apiRequest.post(API_URL.ORGANIZATIONS_LOGOUT, { ...data }),
+    mutationFn: () => apiRequest.post(API_URL.ORGANIZATIONS_LOGOUT),
   });
 };
 

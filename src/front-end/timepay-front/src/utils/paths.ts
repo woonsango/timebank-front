@@ -9,6 +9,7 @@ export const PATH = {
   Register_HR: '/register/help-request',
   Register_HS: '/register/help-serve',
   Register_F: '/register/free',
+  Register_EVENT: '/register/event',
   NOTIFICATION: '/notification',
   Qna_List: '/inquire',
   Qna_Register: '/inquire/register',
@@ -21,6 +22,7 @@ export const PATH = {
   REPORT: '/report', //신고기록
   INQUIRE: '/inquire', //문의기록
   BOOKMARK: '/bookmark', //즐겨찾기
+  CATEGORY_SELECT: '/category-select',
   AGENCY_SIGN_IN: '/agency/sign-in',
   AGENCY_SIGN_UP: '/agency/sign-up',
   MY_VOLUNTEER: '/my-volunteer',
