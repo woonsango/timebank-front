@@ -23,8 +23,8 @@ export const useDelete = () => {
   });
 };
 
-export const useGetUserBoards = (params: IGetUserBoardRequest) => {
-  return useQuery<AxiosResponse<IGetUserBoardResponse>, AxiosError>({
+export const useGetUserBoards = (params?: any) => {
+  return useQuery<AxiosResponse<any>, AxiosError>({
     queryKey: ['useGetUserBoards', params],
     queryFn: () =>
       apiRequest.get(`${API_URL.API_USERS__MYPAGE__BOARD}`, { params: params }),
@@ -36,8 +36,8 @@ export const useGetUserBoards = (params: IGetUserBoardRequest) => {
   });
 };
 
-export const useGetUserComments = (params: IGetUserCommentRequest) => {
-  return useQuery<AxiosResponse<IGetUserCommentResponse>, AxiosError>({
+export const useGetUserComments = (params: any) => {
+  return useQuery<AxiosResponse<any>, AxiosError>({
     queryKey: ['useGetUserComments', params],
     queryFn: () =>
       apiRequest.get(`${API_URL.API_USERS__MYPAGE__COMMENT}`, {
