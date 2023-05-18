@@ -436,13 +436,13 @@ public class UserInfoService {
         /* deleteById를 사용하지 않고 에러 메세지를 직접 커스텀 */
         if(userData != null) {
 
-            /* 유저가 작성한 모든 댓글 삭제 */
+            /* 유저가 작성한 모든 Comment 테이블 데이터 삭제 */
             List<DealBoardComment> dealBoardComments = userData.getDealBoardComments();
             for (DealBoardComment dealBoardComment : dealBoardComments) {
                 commentRepository.delete(commentRepository.findByDealBoardComment(dealBoardComment));
             }
 
-            /* 유저가 작성한 모든 게시글 삭제 */
+            /* 유저가 작성한 모든 Board 테이블 데이터 삭제 */
             List<DealRegister> dealRegisters = userData.getDealRegisters();
             List<Board> boards = boardRepository.findByDealBoardIn(
                     dealBoardRepository.findByDealRegistersIn(dealRegisters));
@@ -450,7 +450,7 @@ public class UserInfoService {
                 boardRepository.delete(board);
             }
 
-            /* 유저가 신고한 모든 목록 삭제 */
+            /* 유저가 신고한 모든 Report 테이블 데이터 삭제 */
             List<DealBoardReport> dealBoardReports = userData.getDealBoardReports();
             for (DealBoardReport dealBoardReport : dealBoardReports) {
                 reportRepository.delete(reportRepository.findByDealBoardReport(dealBoardReport));
