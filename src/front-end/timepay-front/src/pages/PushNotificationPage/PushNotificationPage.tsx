@@ -2,13 +2,16 @@ import { Spin, Tabs, TabsProps } from 'antd';
 import { useEffect, useMemo } from 'react';
 import { useSetRecoilState } from 'recoil';
 import { useGetNotifications } from '../../api/hooks/push';
-import { INotification, IPush, PUSH_TYPE } from '../../api/interfaces/IPush';
+import { INotification, PUSH_TYPE } from '../../api/interfaces/IPush';
 import PushCollapse from '../../components/PushCollapse';
 import { headerTitleState } from '../../states/uiState';
 import { cssTabStyle } from '../../styles/constants/tabStyle';
 
 const PushNotificationPage = () => {
-  const { data, isLoading } = useGetNotifications();
+  const { data, isLoading } = useGetNotifications({
+    pagingIndex: 0,
+    pagingSize: 999,
+  });
 
   const setHeaderTitle = useSetRecoilState(headerTitleState);
 
@@ -24,30 +27,16 @@ const PushNotificationPage = () => {
     }));
   }, [data]);
 
-  const dummyPushes: {
+  const pushes: {
     [key in typeof PUSH_TYPE.ACTIVITY | typeof PUSH_TYPE.ALL]:
-      | IPush[]
       | INotification[]
       | undefined;
   } = useMemo(() => {
     return {
       [PUSH_TYPE.ALL]: notifications,
-      [PUSH_TYPE.ACTIVITY]: [
-        {
-          pushId: 4,
-          type: 'activity',
-          title: '## 게시글 활동 시작 시간입니다.',
-          link: '/post/7',
-          isAlreadyRead: true,
-        },
-        {
-          pushId: 5,
-          type: 'activity',
-          title: '@@ 게시글에 선정되었습니다.',
-          link: '/post/8',
-          isAlreadyRead: true,
-        },
-      ],
+      [PUSH_TYPE.ACTIVITY]: notifications?.filter(
+        (item) => item.notice === false,
+      ),
     };
   }, [notifications]);
 
@@ -59,16 +48,17 @@ const PushNotificationPage = () => {
         children: isLoading ? (
           <Spin size="large" />
         ) : (
-          <PushCollapse pushes={dummyPushes[PUSH_TYPE.ALL]} />
+          <PushCollapse pushes={pushes[PUSH_TYPE.ALL]} />
         ),
       },
       {
         key: PUSH_TYPE.ACTIVITY,
         label: PUSH_TYPE.ACTIVITY,
-        children: <PushCollapse pushes={dummyPushes[PUSH_TYPE.ACTIVITY]} />,
+        children: <PushCollapse pushes={pushes[PUSH_TYPE.ACTIVITY]} />,
       },
     ];
-  }, [isLoading, dummyPushes]);
+  }, [isLoading, pushes]);
+
   return (
     <Tabs css={cssTabStyle} defaultActiveKey={PUSH_TYPE.ALL} items={items} />
   );

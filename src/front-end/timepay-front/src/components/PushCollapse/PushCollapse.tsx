@@ -6,17 +6,18 @@ import {
 } from '@ant-design/icons';
 import { Collapse } from 'antd';
 import { useCallback } from 'react';
+import { useQueryClient } from 'react-query';
 import { useNavigate } from 'react-router-dom';
-import { INotification, IPush } from '../../api/interfaces/IPush';
+import { usePutNotificationViewed } from '../../api/hooks/push';
+import { INotification } from '../../api/interfaces/IPush';
 import { cssPushCollapseStyle, cssPushPanelStyle } from './PushCollapse.styles';
 
-const PushCollapse = ({
-  pushes,
-}: {
-  pushes: IPush[] | INotification[] | undefined;
-}) => {
+const PushCollapse = ({ pushes }: { pushes: INotification[] | undefined }) => {
+  const queryClient = useQueryClient();
+  const usePutNotificationViewedMutation = usePutNotificationViewed();
+
   const navigate = useNavigate();
-  const getIcon = useCallback((push: IPush | INotification) => {
+  const getIcon = useCallback((push: INotification) => {
     switch (push.type) {
       case 'bookmark':
         return <HeartOutlined />;
@@ -29,7 +30,7 @@ const PushCollapse = ({
     }
   }, []);
 
-  const getTitle = useCallback((push: IPush | INotification) => {
+  const getTitle = useCallback((push: INotification) => {
     if (push.type === 'comment')
       return (
         <>
@@ -55,16 +56,25 @@ const PushCollapse = ({
   }, []);
 
   const handleOnClickHeader = useCallback(
-    (push: IPush | INotification) => {
-      if (push.type !== 'notice' && push.link) {
-        navigate(push.link);
-      }
+    async (push: INotification) => {
+      await usePutNotificationViewedMutation.mutateAsync(push.notificationId, {
+        onSuccess: () => {
+          queryClient.invalidateQueries({
+            queryKey: ['useGetNotifications'],
+          });
+        },
+        onSettled: () => {
+          if (push.type !== 'notice' && push.link) {
+            navigate(push.link);
+          }
+        },
+      });
     },
-    [navigate],
+    [navigate, queryClient, usePutNotificationViewedMutation],
   );
 
   const getHeader = useCallback(
-    (push: IPush | INotification) => {
+    (push: INotification) => {
       return (
         <div className="push-header" onClick={() => handleOnClickHeader(push)}>
           <span className="icon">{getIcon(push)}</span>
@@ -83,7 +93,7 @@ const PushCollapse = ({
     >
       {pushes?.map((push, index) => (
         <Collapse.Panel
-          className={push.isAlreadyRead ? 'is-already-read' : 'not-read'}
+          className={push.viewed ? 'is-already-read' : 'not-read'}
           css={cssPushPanelStyle}
           key={index}
           header={getHeader(push)}
