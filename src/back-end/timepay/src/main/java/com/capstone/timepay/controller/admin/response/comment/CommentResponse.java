@@ -24,5 +24,6 @@ public class CommentResponse {
     private LocalDateTime writtenTime;
     private LocalDateTime updatedTime;
     private String content;
+    private String boardTitle;
 
 }

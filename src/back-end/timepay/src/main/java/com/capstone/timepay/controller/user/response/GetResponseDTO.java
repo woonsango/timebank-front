@@ -33,9 +33,6 @@ public class GetResponseDTO {
     private Page<DealBoard> dealBoards;
     private Page<CommentResponse> dealBoardComments;
 
-    private Page<Board> boards;
-    private Page<Comment> comments;
-
 
     /* 타유저 프로필 정보 조회를 위한 DTO */
     public GetResponseDTO(Long id, String imageUrl, String nickName, String location, String intoroduction, int timePay,

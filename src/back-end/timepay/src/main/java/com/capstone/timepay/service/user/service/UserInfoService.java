@@ -6,7 +6,6 @@ import com.capstone.timepay.controller.user.request.RequestDTO;
 import com.capstone.timepay.controller.user.request.UpdateRequestDTO;
 import com.capstone.timepay.controller.user.response.GetResponseDTO;
 import com.capstone.timepay.controller.user.response.UpdateResponseDTO;
-import com.capstone.timepay.domain.board.BoardStatus;
 import com.capstone.timepay.domain.comment.CommentRepository;
 import com.capstone.timepay.domain.dealBoard.DealBoard;
 import com.capstone.timepay.domain.dealBoard.DealBoardRepository;
@@ -15,6 +14,8 @@ import com.capstone.timepay.domain.dealBoardComment.DealBoardComment;
 import com.capstone.timepay.domain.dealBoardComment.DealBoardCommentRepository;
 import com.capstone.timepay.domain.dealBoardComment.DealBoardCommentSearch;
 import com.capstone.timepay.domain.dealRegister.DealRegister;
+import com.capstone.timepay.domain.organization.Organization;
+import com.capstone.timepay.domain.organization.OrganizationRepository;
 import com.capstone.timepay.domain.user.User;
 import com.capstone.timepay.domain.user.UserRepository;
 import com.capstone.timepay.domain.userProfile.UserProfile;
@@ -22,6 +23,7 @@ import com.capstone.timepay.domain.userProfile.UserProfileRepository;
 import com.capstone.timepay.domain.userToken.UserToken;
 import com.capstone.timepay.domain.userToken.UserTokenRepository;
 import com.capstone.timepay.firebase.FirebaseService;
+import com.capstone.timepay.service.user.dto.OrgUserInfoDTO;
 import com.google.firebase.auth.FirebaseAuthException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -29,7 +31,9 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -53,6 +57,8 @@ public class UserInfoService {
     private final DealBoardCommentRepository dealBoardCommentRepository;
     private final CommentRepository commentRepository;
     private final UserTokenRepository userTokenRepository;
+    private final OrganizationRepository organizationRepository;
+
     @Transactional
     public void createUserInfo(RequestDTO userData){
         /* 유저 프로필 데이터 저장 */
@@ -164,101 +170,252 @@ public class UserInfoService {
     }
 
     @Transactional(readOnly = true)
-    public GetResponseDTO getUserInfo(Long id, int pageIndex, int pageSize){
+    public ResponseEntity<?> getUserInfo(Long id, int pageIndex, int pageSize){
         User userData = userRepository.findById(id).orElseThrow(()->new IllegalArgumentException("존재하지 않는 유저입니다."));
-        UserProfile userProfileData = userData.getUserProfile();
         Pageable pageable = PageRequest.of(pageIndex, pageSize);
 
+        if(userData.getOrganization() == null) {
+            UserProfile userProfileData = userData.getUserProfile();
 
-        /* 유저 테이블에서 데이터 가져오기 */
-        String nickName = userData.getNickname();
-        String location = userData.getLocation();
+            /* 유저 테이블에서 데이터 가져오기 */
+            String nickName = userData.getNickname();
+            String location = userData.getLocation();
 
-        Page<DealBoard> dealBoards = new PageImpl<>(dealBoardRepository.findByDealRegistersIn(userData.getDealRegisters()),
-                pageable, userData.getDealRegisters().size());
+            Page<DealBoard> dealBoards = new PageImpl<>(dealBoardRepository.findByDealRegistersIn(userData.getDealRegisters()),
+                    pageable, userData.getDealRegisters().size());
 
-        Page<CommentResponse> dealBoardComments = new PageImpl<>(
-                convertDCommentsToResponse(dealBoardCommentRepository.findAllByUser(userData)), pageable, pageSize);
+            Page<CommentResponse> dealBoardComments = new PageImpl<>(
+                    convertDCommentsToResponse(dealBoardCommentRepository.findAllByUser(userData)), pageable, pageSize);
 
-        /* 유저 프로필 테이블에서 데이터 가져오기 */
-        String imageUrl = userProfileData.getImageUrl();
-        String introduction = userProfileData.getIntroduction();
-        int timePay = userData.getUserProfile().getTimepay();
+            /* 유저 프로필 테이블에서 데이터 가져오기 */
+            String imageUrl = userProfileData.getImageUrl();
+            String introduction = userProfileData.getIntroduction();
+            int timePay = userData.getUserProfile().getTimepay();
 
 
-        /* 생성자를 사용하여 객체 생성 */
-        GetResponseDTO getResponseDTO = new GetResponseDTO(id, imageUrl, nickName, location, introduction, timePay, dealBoards, dealBoardComments);
-        return getResponseDTO;
+            /* 생성자를 사용하여 객체 생성 */
+            GetResponseDTO getResponseDTO = new GetResponseDTO(id, imageUrl, nickName, location, introduction, timePay, dealBoards, dealBoardComments);
+            return ResponseEntity.ok(getResponseDTO);
+        }
+        else if(userData.getOrganization() != null){
+            Organization org = userData.getOrganization();
+
+            OrgUserInfoDTO orgData = new OrgUserInfoDTO(
+                    org.getOrganizationName(),
+                    userData.getName(),
+                    userData.getPhone(),
+                    org.getBusinessCode(),
+                    org.getEmployeeNum(),
+                    org.getTimepay(),
+                    org.getAccount(),
+                    org.getImageUrl(),
+                    org.getCertificationUrl()
+            );
+            return ResponseEntity.ok(orgData);
+        }
+        return ResponseEntity.ok("접근 권한이 유효하지 않거나(ROLE) 알 수 없는 문제가 발생했습니다.");
     }
 
     @Transactional(readOnly = true)
-    public GetResponseDTO getMyInfo(Authentication auth, int pageIndex, int pageSize){
-        String userEmail = auth.getName();
-        User userData = userRepository.findByEmail(userEmail).orElseThrow(IllegalArgumentException::new);
+    public ResponseEntity<?> getUserInfoBoard(Long id, int pageIndex, int pageSize){
+        User userData = userRepository.findById(id).orElseThrow(()->new IllegalArgumentException("존재하지 않는 유저입니다."));
         Pageable pageable = PageRequest.of(pageIndex, pageSize);
 
-        /* 유저 테이블에서 데이터 가져오기 */
-        String nickName = userData.getNickname();
-        String location = userData.getLocation();
+        if(userData.getOrganization() == null) {
+            UserProfile userProfileData = userData.getUserProfile();
 
-        List<DealRegister> dealRegisters = userData.getDealRegisters();
-        Page<DealBoard> dealBoards = new PageImpl<>(dealBoardRepository.findByDealRegistersIn(userData.getDealRegisters()),
-                pageable, userData.getDealRegisters().size());
+            /* 유저 테이블에서 데이터 가져오기 */
+            String nickName = userData.getNickname();
+            String location = userData.getLocation();
 
-        Page<CommentResponse> dealBoardComments = new PageImpl<>(
-                convertDCommentsToResponse(dealBoardCommentRepository.findAllByUser(userData)), pageable, pageSize);
+            Page<DealBoard> dealBoards = new PageImpl<>(dealBoardRepository.findByDealRegistersIn(userData.getDealRegisters()),
+                    pageable, userData.getDealRegisters().size());
+
+            /* 유저 프로필 테이블에서 데이터 가져오기 */
+            String imageUrl = userProfileData.getImageUrl();
+            String introduction = userProfileData.getIntroduction();
+            int timePay = userData.getUserProfile().getTimepay();
 
 
-        /* 유저 프로필 테이블에서 데이터 가져오기 */
-        String imageUrl = userData.getUserProfile().getImageUrl();
-        String introduction = userData.getUserProfile().getIntroduction();
-        int timePay = userData.getUserProfile().getTimepay();
+            /* 생성자를 사용하여 객체 생성 */
+            GetResponseDTO getResponseDTO = new GetResponseDTO(id, imageUrl, nickName, location, introduction, timePay, dealBoards);
+            return ResponseEntity.ok(getResponseDTO);
+        }
+        else if(userData.getOrganization() != null){
 
-        /* 생성자를 사용하여 객체 생성 */
-        GetResponseDTO getResponseDTO = new GetResponseDTO(userData.getUserId(), imageUrl, nickName, location, introduction, timePay, dealBoards, dealBoardComments);
-        return getResponseDTO;
+            Organization org = userData.getOrganization();
+
+
+            Page<DealBoard> dealBoards = new PageImpl<>(dealBoardRepository.findByDealRegistersIn(userData.getDealRegisters()),
+                    pageable, userData.getDealRegisters().size());
+
+            OrgUserInfoDTO orgData = new OrgUserInfoDTO(
+                    org.getOrganizationName(),
+                    userData.getName(),
+                    userData.getPhone(),
+                    org.getBusinessCode(),
+                    org.getEmployeeNum(),
+                    org.getTimepay(),
+                    org.getAccount(),
+                    org.getImageUrl(),
+                    org.getCertificationUrl(),
+                    dealBoards
+            );
+
+            return ResponseEntity.ok(orgData);
+        }
+
+        return ResponseEntity.ok("접근 권한이 유효하지 않거나(ROLE) 알 수 없는 문제가 발생했습니다.");
     }
 
     @Transactional(readOnly = true)
-    public GetResponseDTO getMyInfoBoard(Authentication auth, int pageIndex, int pageSize, Specification<DealBoard> spec){
-        String userEmail = auth.getName();
-        User userData = userRepository.findByEmail(userEmail).orElseThrow(IllegalArgumentException::new);
+    public ResponseEntity<?> getUserInfoComment(Long id, int pageIndex, int pageSize){
         Pageable pageable = PageRequest.of(pageIndex, pageSize);
+        User userData = userRepository.findById(id).orElseThrow(()->new IllegalArgumentException("존재하지 않는 유저입니다."));
 
+        Page<CommentResponse> dealBoardComments = new CustomPageImpl<>(
+                convertDCommentsToResponse(dealBoardCommentRepository.findAllByUser(userData)), pageable);
 
-        /* 유저 테이블에서 데이터 가져오기 */
-        String nickName = userData.getNickname();
-        String location = userData.getLocation();
-
-        Page<DealBoard> dealBoards = dealBoardRepository.findAll(Specification.where(spec)
-                .and(DealBoardSearch.withDealRegisters(userData.getDealRegisters())), pageable);
-
-        /* 유저 프로필 테이블에서 데이터 가져오기 */
-        String imageUrl = userData.getUserProfile().getImageUrl();
-        String introduction = userData.getUserProfile().getIntroduction();
-        int timePay = userData.getUserProfile().getTimepay();
-
-        /* 생성자를 사용하여 객체 생성 */
-        GetResponseDTO getResponseDTO = new GetResponseDTO(userData.getUserId(), imageUrl, nickName, location, introduction, timePay, dealBoards);
-        return getResponseDTO;
+        return ResponseEntity.ok(dealBoardComments);
     }
 
     @Transactional(readOnly = true)
-    public Page<CommentResponse> getMyInfoComment(Authentication auth, int pageIndex, int pageSize, Specification<DealBoardComment> spec){
-        String userEmail = auth.getName();
-        User userData = userRepository.findByEmail(userEmail).orElseThrow(IllegalArgumentException::new);
+    public ResponseEntity<?> getMyInfo(Authentication auth, int pageIndex, int pageSize){
         Pageable pageable = PageRequest.of(pageIndex, pageSize);
 
-//        Page<CommentResponse> dealBoardComments = new PageImpl<>(
-//                convertDCommentsToResponse(dealBoardCommentRepository.findAllByUser(userData)), pageable, pageSize);
+        /* 일반 유저일 경우 */
+        if(auth.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_USER"))){
+            String userEmail = auth.getName();
+            User userData = userRepository.findByEmail(userEmail).orElseThrow(IllegalArgumentException::new);
 
-        Page<CommentResponse> dealBoardComments = new PageImpl<>(
-                convertDCommentsToResponse(
-                dealBoardCommentRepository.findAll(Specification
-                .where(DealBoardCommentSearch.withUser(userData))
-                .and(spec))), pageable, pageSize);
 
-        return (dealBoardComments);
+            /* 유저 테이블에서 데이터 가져오기 */
+            String nickName = userData.getNickname();
+            String location = userData.getLocation();
+
+            List<DealRegister> dealRegisters = userData.getDealRegisters();
+            Page<DealBoard> dealBoards = new PageImpl<>(dealBoardRepository.findByDealRegistersIn(userData.getDealRegisters()),
+                    pageable, userData.getDealRegisters().size());
+
+            Page<CommentResponse> dealBoardComments = new PageImpl<>(
+                    convertDCommentsToResponse(dealBoardCommentRepository.findAllByUser(userData)), pageable, pageSize);
+
+
+            /* 유저 프로필 테이블에서 데이터 가져오기 */
+            String imageUrl = userData.getUserProfile().getImageUrl();
+            String introduction = userData.getUserProfile().getIntroduction();
+            int timePay = userData.getUserProfile().getTimepay();
+
+            /* 생성자를 사용하여 객체 생성 */
+            GetResponseDTO getResponseDTO = new GetResponseDTO(userData.getUserId(), imageUrl, nickName, location, introduction, timePay, dealBoards, dealBoardComments);
+            return ResponseEntity.ok(getResponseDTO);
+        }
+        else if(auth.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ORGANIZATION"))){
+            Long userID = Long.valueOf(auth.getName());
+            Organization org = organizationRepository.findById(userID).orElseThrow(
+                    ()->new IllegalArgumentException("존재하지 않는 기관입니다."));
+            User user = userRepository.findByOrganization(org).orElseThrow(
+                    () -> new IllegalArgumentException("존재하지 않는 기관 매니저입니다."));
+
+            OrgUserInfoDTO orgData = new OrgUserInfoDTO(
+                    org.getOrganizationName(),
+                    user.getName(),
+                    user.getPhone(),
+                    org.getBusinessCode(),
+                    org.getEmployeeNum(),
+                    org.getTimepay(),
+                    org.getAccount(),
+                    org.getImageUrl(),
+                    org.getCertificationUrl()
+            );
+            return ResponseEntity.ok(orgData);
+        }
+
+
+        return ResponseEntity.ok("접근 권한이 유효하지 않거나(ROLE) 알 수 없는 문제가 발생했습니다.");
+    }
+
+    @Transactional(readOnly = true)
+    public ResponseEntity<?> getMyInfoBoard(Authentication auth, int pageIndex, int pageSize, Specification<DealBoard> spec){
+        Pageable pageable = PageRequest.of(pageIndex, pageSize);
+
+        if(auth.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_USER"))) {
+            String userEmail = auth.getName();
+            User userData = userRepository.findByEmail(userEmail).orElseThrow(IllegalArgumentException::new);
+
+            /* 유저 테이블에서 데이터 가져오기 */
+            String nickName = userData.getNickname();
+            String location = userData.getLocation();
+
+            Page<DealBoard> dealBoards = dealBoardRepository.findAll(Specification.where(spec)
+                    .and(DealBoardSearch.withDealRegisters(userData.getDealRegisters())), pageable);
+
+            /* 유저 프로필 테이블에서 데이터 가져오기 */
+            String imageUrl = userData.getUserProfile().getImageUrl();
+            String introduction = userData.getUserProfile().getIntroduction();
+            int timePay = userData.getUserProfile().getTimepay();
+
+            /* 생성자를 사용하여 객체 생성 */
+            GetResponseDTO getResponseDTO = new GetResponseDTO(userData.getUserId(), imageUrl, nickName, location, introduction, timePay, dealBoards);
+            return ResponseEntity.ok(getResponseDTO);
+        }
+        else if(auth.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ORGANIZATION"))){
+            Long userID = Long.valueOf(auth.getName());
+
+            Organization org = organizationRepository.findById(userID).orElseThrow(
+                    ()->new IllegalArgumentException("존재하지 않는 기관입니다."));
+            User user = userRepository.findByOrganization(org).orElseThrow(
+                    () -> new IllegalArgumentException("존재하지 않는 기관 매니저입니다."));
+
+            Page<DealBoard> dealBoards = dealBoardRepository.findAll(Specification.where(spec)
+                    .and(DealBoardSearch.withDealRegisters(user.getDealRegisters())), pageable);
+
+            OrgUserInfoDTO orgData = new OrgUserInfoDTO(
+                    org.getOrganizationName(),
+                    user.getName(),
+                    user.getPhone(),
+                    org.getBusinessCode(),
+                    org.getEmployeeNum(),
+                    org.getTimepay(),
+                    org.getAccount(),
+                    org.getImageUrl(),
+                    org.getCertificationUrl(),
+                    dealBoards
+            );
+
+            return ResponseEntity.ok(orgData);
+        }
+        return ResponseEntity.ok("접근 권한이 유효하지 않거나(ROLE) 알 수 없는 문제가 발생했습니다.");
+    }
+
+    @Transactional(readOnly = true)
+    public ResponseEntity<?> getMyInfoComment(Authentication auth, int pageIndex, int pageSize, Specification<DealBoardComment> spec){
+        Pageable pageable = PageRequest.of(pageIndex, pageSize);
+
+        if(auth.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_USER"))) {
+            String userEmail = auth.getName();
+            User userData = userRepository.findByEmail(userEmail).orElseThrow(IllegalArgumentException::new);
+
+            Page<CommentResponse> dealBoardComments = new CustomPageImpl<>(
+                    convertDCommentsToResponse(dealBoardCommentRepository.findAll(Specification.where(DealBoardCommentSearch.withUser(userData)).and(spec))), pageable);
+
+            return ResponseEntity.ok(dealBoardComments);
+        }
+        else if(auth.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ORGANIZATION"))){
+            Long userID = Long.valueOf(auth.getName());
+
+            Organization org = organizationRepository.findById(userID).orElseThrow(
+                    ()->new IllegalArgumentException("존재하지 않는 기관입니다."));
+            User user = userRepository.findByOrganization(org).orElseThrow(
+                    () -> new IllegalArgumentException("존재하지 않는 기관 매니저입니다."));
+
+            Page<CommentResponse> dealBoardComments = new CustomPageImpl<>(
+                    convertDCommentsToResponse(dealBoardCommentRepository.findAll(Specification.where(DealBoardCommentSearch.withUser(user)).and(spec))), pageable);
+
+            return ResponseEntity.ok(dealBoardComments);
+        }
+
+        return ResponseEntity.ok("접근 권한이 유효하지 않거나(ROLE) 알 수 없는 문제가 발생했습니다.");
     }
 
     @Transactional
@@ -311,6 +468,7 @@ public class UserInfoService {
                                 .originCommentId(dealBoardComment.getD_commentId())
                                 .applyYN(dealBoardComment.isApplied())
                                 .selectYN(dealBoardComment.isAdopted())
+                                .boardTitle(dealBoardComment.getDealBoard().getTitle())
                                 .content(dealBoardComment.getContent())
                                 .writerId(dealBoardComment.getUser().getUserId())// dealBoardComment.getUser().getUserId()
                                 .writerName(dealBoardComment.getUser().getName()) //dealBoardComment.getUser().getName()
@@ -336,5 +494,4 @@ public class UserInfoService {
         user.setBookmark(bookmarkDTO.getBookmark());
         userRepository.save(user);
     }
-
 }

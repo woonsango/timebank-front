@@ -54,18 +54,18 @@ public class DealBoard extends BaseTimeEntity {
     private String imageUrl;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "dealBoard", orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "dealBoard", orphanRemoval = true, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<DealBoardComment> dealBoardComments = new ArrayList<>();
 
     @JsonIgnore
-    @OneToMany(mappedBy = "dealBoard", orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "dealBoard", orphanRemoval = true, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<DealAttatchment> dealAttatchments = new ArrayList<>();
 
     @JsonIgnore
-    @OneToMany(mappedBy = "dealBoard", orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "dealBoard", orphanRemoval = true, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<DealRegister> dealRegisters = new ArrayList<>();
 
     @JsonIgnore
-    @OneToMany(mappedBy = "dealBoard", orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "dealBoard", orphanRemoval = true, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<DealBoardReport> dealBoardReports = new ArrayList<>();
 }

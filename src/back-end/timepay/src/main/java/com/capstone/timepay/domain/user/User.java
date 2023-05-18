@@ -2,6 +2,7 @@ package com.capstone.timepay.domain.user;
 
 import com.capstone.timepay.domain.BaseTimeEntity;
 import com.capstone.timepay.domain.certification.Certification;
+import com.capstone.timepay.domain.comment.Comment;
 import com.capstone.timepay.domain.dealBoardComment.DealBoardComment;
 import com.capstone.timepay.domain.dealBoardReport.DealBoardReport;
 import com.capstone.timepay.domain.dealCommentReport.DealCommentReport;
@@ -69,48 +70,39 @@ public class User extends BaseTimeEntity {
                 .collect(Collectors.toList());
     }
     @JsonIgnore
-    @OneToMany(mappedBy = "user", orphanRemoval = true)
-    @OnDelete(action = OnDeleteAction.CASCADE)
+    @OneToMany(mappedBy = "user", orphanRemoval = true, cascade = CascadeType.ALL)
     private List<Inquiry> inquiries = new ArrayList<>();
 
     @JsonIgnore
-    @OneToMany(mappedBy = "user", orphanRemoval = true)
+    @OneToMany(mappedBy = "user", orphanRemoval = true, cascade = CascadeType.ALL)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private List<DealBoardComment> dealBoardComments = new ArrayList<>();
 
     @JsonIgnore
-    @OneToMany(mappedBy = "user", orphanRemoval = true)
-    @OnDelete(action = OnDeleteAction.CASCADE)
+    @OneToMany(mappedBy = "user", orphanRemoval = true, cascade = CascadeType.ALL)
     private List<DealRegister> dealRegisters = new ArrayList<>();
 
-    @OneToMany(mappedBy = "user", orphanRemoval = true)
-    @OnDelete(action = OnDeleteAction.CASCADE)
+    @OneToMany(mappedBy = "user", orphanRemoval = true, cascade = CascadeType.ALL)
     private List<Certification> certifications = new ArrayList<>();
 
     @JsonIgnore
-    @OneToMany(mappedBy = "user", orphanRemoval = true)
-    @OnDelete(action = OnDeleteAction.CASCADE)
+    @OneToMany(mappedBy = "user", orphanRemoval = true, cascade = CascadeType.ALL)
     private List<DealBoardReport> dealBoardReports = new ArrayList<>();
     @JsonIgnore
-    @OneToMany(mappedBy = "user", orphanRemoval = true)
-    @OnDelete(action = OnDeleteAction.CASCADE)
+    @OneToMany(mappedBy = "user", orphanRemoval = true, cascade = CascadeType.ALL)
     private List<FreeBoardReport> freeBoardReports = new ArrayList<>();
     @JsonIgnore
-    @OneToMany(mappedBy = "user", orphanRemoval = true)
-    @OnDelete(action = OnDeleteAction.CASCADE)
+    @OneToMany(mappedBy = "user", orphanRemoval = true, cascade = CascadeType.ALL)
     private List<DealCommentReport> dealCommentReports = new ArrayList<>();
 
-    @OneToMany(mappedBy = "user", orphanRemoval = true)
-    @OnDelete(action = OnDeleteAction.CASCADE)
+    @OneToMany(mappedBy = "user", orphanRemoval = true, cascade = CascadeType.ALL)
     private List<FreeCommentReport> freeCommentReports = new ArrayList<>();
     @JsonIgnore
-    @OneToMany(mappedBy = "user", orphanRemoval = true)
-    @OnDelete(action = OnDeleteAction.CASCADE)
+    @OneToMany(mappedBy = "user", orphanRemoval = true, cascade = CascadeType.ALL)
     private List<FreeBoardComment> freeBoardComments = new ArrayList<>();
 
     @JsonIgnore
-    @OneToMany(mappedBy = "user", orphanRemoval = true)
-    @OnDelete(action = OnDeleteAction.CASCADE)
+    @OneToMany(mappedBy = "user", orphanRemoval = true, cascade = CascadeType.ALL)
     private List<FreeRegister> freeRegisters = new ArrayList<>();
 
     @OneToOne
