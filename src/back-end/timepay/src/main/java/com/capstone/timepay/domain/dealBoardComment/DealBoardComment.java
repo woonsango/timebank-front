@@ -32,19 +32,17 @@ public class DealBoardComment extends BaseTimeEntity {
     private boolean isHidden;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "dealBoardComment", orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "dealBoardComment", orphanRemoval = true, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<DealCommentReport> dealCommentReports = new ArrayList<>();
 
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="d_boardId")
-    @OnDelete(action = OnDeleteAction.CASCADE)
     private DealBoard dealBoard;
 
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="user_id")
-    @OnDelete(action = OnDeleteAction.CASCADE)
     private User user;
 
     public void updateIsHidden(boolean isHidden){
