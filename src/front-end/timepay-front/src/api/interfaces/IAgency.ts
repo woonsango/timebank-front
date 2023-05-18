@@ -4,18 +4,21 @@ export interface IAgencyLoginRequest {
 }
 
 export interface IAgency {
-  createdAt: string;
+  createdAt?: string;
   updatedAt?: string;
-  organizationId: number;
+  organizationId?: number;
   organizationName: string;
   businessCode?: string;
   employeeNum: number;
   timepay: number;
-  account: string;
-  pw: string;
-  authority: string;
+  account?: string;
+  pw?: string;
+  authority?: string;
   imageUrl?: string;
   certificationUrl?: string;
-  roles: any[];
-  authorities: any[];
+  roles?: any[];
+  authorities?: any[];
+  id?: string;
+  managerName?: string;
+  managerPhone?: string;
 }

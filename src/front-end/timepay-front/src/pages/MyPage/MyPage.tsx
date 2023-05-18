@@ -1,52 +1,31 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
-import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { useSetRecoilState } from 'recoil';
 
 import { headerTitleState } from '../../states/uiState';
 import { PATH } from '../../utils/paths';
 import './My.css';
 import { apiRequest } from '../../api/request';
 import { API_URL } from '../../api/urls';
-import { agencyState } from '../../states/user';
 import { useAgencyLogout, useDeleteAgency } from '../../api/hooks/agency';
 import { message, Modal } from 'antd';
 import { setTokenToCookie } from '../../utils/token';
 import { useDelete, useLogout } from '../../api/hooks/user';
+import { cssMyInfoStyle } from './MyPage.styles';
+import { IAgency } from '../../api/interfaces/IAgency';
+import { CheckCircleFilled, CloseCircleFilled } from '@ant-design/icons';
 
 const MyPage = () => {
+  const navigate = useNavigate();
+
   const useLogoutMutation = useLogout();
   const useDeleteMutation = useDelete();
   const useAgencyLogoutMutation = useAgencyLogout();
   const useDeleteAgencyMutation = useDeleteAgency();
 
-  const agencyValue = useRecoilValue(agencyState);
   const setHeaderTitle = useSetRecoilState(headerTitleState);
 
   const [messageApi, contextHolder] = message.useMessage();
-
-  useEffect(() => {
-    if (agencyValue) setHeaderTitle('기관 정보');
-    else setHeaderTitle('내정보');
-  }, [agencyValue, setHeaderTitle]);
-
-  useEffect(() => {
-    apiRequest
-      .get(API_URL.USER_INFO_GET)
-      .then((res) => {
-        setImage(
-          res.data.body.image_url ||
-            'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png',
-        );
-        setNickName(res.data.body.nick_name);
-        setTown(res.data.body.location);
-        setIntroduction(res.data.body.introduction);
-        setPersonalNum(res.data.body.id);
-        setTimePay(res.data.body.time_pay);
-      })
-      .catch((error) => {
-        console.error('Error sending GET request:', error);
-      });
-  }, []);
 
   const [image, setImage]: any = useState();
   const [nickName, setNickName]: any = useState();
@@ -54,8 +33,7 @@ const MyPage = () => {
   const [introduction, setIntroduction]: any = useState();
   const [personalNum, setPersonalNum]: any = useState();
   const [timePay, setTimePay]: any = useState();
-
-  const navigate = useNavigate();
+  const [agencyInfo, setAgencyInfo] = useState<IAgency>();
 
   const handlePageMove = useCallback(
     (path: string) => {
@@ -70,7 +48,7 @@ const MyPage = () => {
       okText: '확인',
       cancelText: '취소',
       onOk: async () => {
-        if (agencyValue) {
+        if (agencyInfo) {
           await useAgencyLogoutMutation.mutateAsync(
             {},
             {
@@ -130,7 +108,7 @@ const MyPage = () => {
       },
     });
   }, [
-    agencyValue,
+    agencyInfo,
     messageApi,
     useLogoutMutation,
     useAgencyLogoutMutation,
@@ -143,7 +121,7 @@ const MyPage = () => {
       okText: '확인',
       cancelText: '취소',
       onOk: async () => {
-        if (agencyValue) {
+        if (agencyInfo) {
           await useDeleteAgencyMutation.mutateAsync(undefined, {
             onSuccess: async (data) => {
               messageApi.open({
@@ -197,12 +175,39 @@ const MyPage = () => {
       },
     });
   }, [
-    agencyValue,
+    agencyInfo,
     messageApi,
     useDeleteAgencyMutation,
     useDeleteMutation,
     navigate,
   ]);
+
+  useEffect(() => {
+    if (agencyInfo) setHeaderTitle('기관 정보');
+    else setHeaderTitle('내정보');
+  }, [agencyInfo, setHeaderTitle]);
+
+  useEffect(() => {
+    apiRequest
+      .get(API_URL.USER_INFO_GET)
+      .then((res) => {
+        setImage(
+          res.data.body.image_url ||
+            'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png',
+        );
+        setNickName(res.data.body.nick_name);
+        setTown(res.data.body.location);
+        setIntroduction(res.data.body.introduction);
+        setPersonalNum(res.data.body.id);
+        setTimePay(res.data.body.time_pay);
+        if (res.data.body.businessCode) {
+          setAgencyInfo(res.data.body);
+        }
+      })
+      .catch((error) => {
+        console.error('Error sending GET request:', error);
+      });
+  }, []);
 
   return (
     <div className="MyPage">
@@ -210,52 +215,108 @@ const MyPage = () => {
       <div className="MyContentWrap">
         <div className="MyEdit">
           <button className="Edit" onClick={() => handlePageMove(PATH.MY_EDIT)}>
-            프로필 수정
+            {agencyInfo ? '기관정보 수정' : '프로필 수정'}
           </button>
         </div>
 
-        <div className="MyBlock">
-          {' '}
-          <div className="MyTopBox">
-            <div className="MyImageWrap">
-              <img src={image} className="MyProfileImage" alt="내 프로필" />
+        {agencyInfo ? (
+          <div css={cssMyInfoStyle}>
+            <div className="info-header">
+              <img
+                src={
+                  !agencyInfo.imageUrl || agencyInfo.imageUrl === 'none'
+                    ? 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png'
+                    : agencyInfo.imageUrl
+                }
+                alt="내 프로필"
+              />
+              <div>{agencyInfo.organizationName}</div>
             </div>
-            <div className="space"></div>
-
-            <div className="MyNameWrap">
-              <div className="MyName">{nickName}</div>
-              <div className="MyPersonalNum"> {'#' + personalNum}</div>
+            <div className="info-detail">
+              <div>
+                <span className="label">이메일(아이디)</span>
+                <span className="value">{agencyInfo.id}</span>
+              </div>
+              <div>
+                <span className="label">사업자등록번호</span>
+                <span className="value">{agencyInfo.businessCode}</span>
+              </div>
+              <div>
+                <span className="label">종사자 수</span>
+                <span className="value">{agencyInfo.employeeNum} 명</span>
+              </div>
+              <div>
+                <span className="label">현재 타임페이</span>
+                <span className="value">{agencyInfo.timepay} TP</span>
+              </div>
+              <div>
+                <span className="label">봉사활동 자격 서류 인증</span>
+                <span className="value">
+                  {agencyInfo.certificationUrl &&
+                  agencyInfo.certificationUrl !== 'none' ? (
+                    <CheckCircleFilled className="yes" />
+                  ) : (
+                    <CloseCircleFilled className="no" />
+                  )}
+                </span>
+              </div>
+              <div></div>
+              <div>
+                <span className="label">담당자 이름</span>
+                <span className="value">{agencyInfo.managerName}</span>
+              </div>
+              <div>
+                <span className="label">담당자 전화번호</span>
+                <span className="value">{agencyInfo.managerPhone}</span>
+              </div>
             </div>
           </div>
-        </div>
+        ) : (
+          <>
+            <div className="MyBlock">
+              {' '}
+              <div className="MyTopBox">
+                <div className="MyImageWrap">
+                  <img src={image} className="MyProfileImage" alt="내 프로필" />
+                </div>
+                <div className="space"></div>
 
-        <div className="MyBlock">
-          <div className="MyTotalBox">
-            <div className="MyLeftBox">
-              <div className="MyLeft">
-                <div className="MyTitleText">나의 타임페이</div>
-              </div>
-              <div className="MyLeft">
-                <div className="MyTitleText">나의 동네</div>
-              </div>
-              <div className="MyLeft">
-                <div className="MyTitleText">나의 소개</div>
+                <div className="MyNameWrap">
+                  <div className="MyName">{nickName}</div>
+                  <div className="MyPersonalNum"> {'#' + personalNum}</div>
+                </div>
               </div>
             </div>
 
-            <div className="MyRightBox">
-              <div className="MyRight">
-                <div className="MyContentText">{timePay}</div>
-              </div>
-              <div className="MyRight">
-                <div className="MyContentText">{town}</div>
-              </div>
-              <div className="MyRight">
-                <div className="MyContentText">{introduction}</div>
+            <div className="MyBlock">
+              <div className="MyTotalBox">
+                <div className="MyLeftBox">
+                  <div className="MyLeft">
+                    <div className="MyTitleText">나의 타임페이</div>
+                  </div>
+                  <div className="MyLeft">
+                    <div className="MyTitleText">나의 동네</div>
+                  </div>
+                  <div className="MyLeft">
+                    <div className="MyTitleText">나의 소개</div>
+                  </div>
+                </div>
+
+                <div className="MyRightBox">
+                  <div className="MyRight">
+                    <div className="MyContentText">{timePay}</div>
+                  </div>
+                  <div className="MyRight">
+                    <div className="MyContentText">{town}</div>
+                  </div>
+                  <div className="MyRight">
+                    <div className="MyContentText">{introduction}</div>
+                  </div>
+                </div>
               </div>
             </div>
-          </div>
-        </div>
+          </>
+        )}
 
         <div className="MyBlock">
           <div className="MyBlockBox">
@@ -267,7 +328,7 @@ const MyPage = () => {
                 활동 기록
               </button>
             </div>
-            {!agencyValue && (
+            {!agencyInfo && (
               <div className="MyPageMoveBox">
                 <button
                   className="MyPageText"
