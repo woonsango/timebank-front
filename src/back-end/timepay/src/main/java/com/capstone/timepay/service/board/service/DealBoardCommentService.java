@@ -68,15 +68,6 @@ public class DealBoardCommentService {
         return commentDTOS;
     }
 
-    // 삭제
-    @Transactional(readOnly = true)
-    public void delete(Long commentId) {
-        DealBoardComment dealBoardComment = dealBoardCommentRepository.findById(commentId).orElseThrow(() -> {
-            return new IllegalArgumentException("Comment Id를 찾을 수 없습니다");
-        });
-        dealBoardCommentRepository.deleteById(commentId);
-    }
-
     @Transactional(readOnly = true)
     public DealBoardComment getCommentId(Long id)
     {
@@ -113,5 +104,21 @@ public class DealBoardCommentService {
         DealBoard dealBoard = dealBoardRepository.findById(boardId).get();
         List<DealBoardComment> comments = dealBoardCommentRepository.findAllByDealBoardAndIsAdoptedTrue(dealBoard);
         return DealBoardCommentDTO.toDealBoardCommentDTOs(comments);
+    }
+
+    @Transactional
+    public boolean deleteCommentById(Long commentId) {
+        DealBoardComment dealBoardComment = dealBoardCommentRepository.findById(commentId)
+                .orElseThrow(() -> new IllegalArgumentException("댓글을 찾을 수 없습니다."));
+
+        // Comment 엔티티 삭제
+        Comment comment = commentRepository.findByDealBoardComment(dealBoardComment);
+        if (comment != null) {
+            commentRepository.delete(comment);
+        }
+
+        // DealBoardComment 엔티티 삭제
+        dealBoardCommentRepository.delete(dealBoardComment);
+        return true;
     }
 }
