@@ -20,7 +20,7 @@ const TimeTable = () => {
         end: data.endTime,
       }),
     ) || [];
-  console.log(data?.data.body);
+  // console.log(data?.data.body);
 
   return (
     <div className="calendarContainer" css={cssTimeTable}>
