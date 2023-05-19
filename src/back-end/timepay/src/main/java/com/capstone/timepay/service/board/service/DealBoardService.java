@@ -160,7 +160,7 @@ public class DealBoardService
                dealRegisterRepository.save(dealRegister);
 
         dealBoardRepository.save(dealBoard);
-        return DealBoardDTO.toDealBoardDTO(dealBoard);
+        return DealBoardDTO.toDealBoardAndUserDTO(dealBoard, user);
     }
 
     @Transactional
@@ -208,7 +208,7 @@ public class DealBoardService
         dealRegisterRepository.save(dealRegister);
 
         dealBoardRepository.save(dealBoard);
-        return DealBoardDTO.toDealBoardDTO(dealBoard);
+        return DealBoardDTO.toDealBoardAndUserDTO(dealBoard, user);
     }
 
     // 게시물 수정
