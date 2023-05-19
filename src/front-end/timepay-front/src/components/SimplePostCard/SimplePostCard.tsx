@@ -41,16 +41,16 @@ const SimplePostCard = ({ post }: SimplePostCardProps) => {
         endTime: post?.endTime,
         region: post?.location,
         attachment: post?.imageUrl,
-        user: post?.writerNickname,
+        user: post?.userNickname,
       },
     });
   };
   const footerComponent = useCallback(
-    (nickname?: string, createdAt?: string, writerType?: string) => {
+    (nickname?: string, createdAt?: string, userType?: string) => {
       return (
         <div css={cssSimplePostCardFooterStyle}>
           <div className="nickname">
-            {writerType === '개인 유저' ? <UserOutlined /> : <AgencyUser />}
+            {userType === '일반 유저' ? <UserOutlined /> : <AgencyUser />}
             {nickname || '-'}
           </div>
           <div>{createdAt ? getDateDiffToday(createdAt) : '-'}</div>
@@ -121,7 +121,7 @@ const SimplePostCard = ({ post }: SimplePostCardProps) => {
         )}
         {postCardContent}
       </Spin>
-      {footerComponent(post?.writerNickname, post?.createdAt, post?.writerType)}
+      {footerComponent(post?.userNickname, post?.createdAt, post?.userType)}
     </Card>
   );
 };

@@ -46,7 +46,7 @@ const PostButton = () => {
   };
 
   const handleOk = () => {
-    setButtonState('completed');
+    setButtonState('theEnd');
     setIsModalOpen(false);
   };
 
@@ -105,17 +105,19 @@ const PostButton = () => {
         )}
       </div>
       <Modal
+        className="modal"
         open={isModalOpen}
         onOk={handleOk}
         onCancel={handleCancel}
         okText="확인"
         cancelText="취소"
       >
-        <h2>
-          🔆 버튼을 누르시면 이전 상태로 되돌아갈 수 없으니 신중하게 눌러주세요!
-          🔆
-        </h2>
-        <h3>확인 버튼을 누르시면, 타임페이가 교환됩니다.</h3>
+        <h3 style={{ fontWeight: 500 }}>
+          버튼을 누르시면 이전 상태로 되돌아갈 수 없으니 신중하게 눌러주세요!
+        </h3>
+        <h4 style={{ fontWeight: 400 }}>
+          확인 버튼을 누르시면, 타임페이가 교환됩니다.
+        </h4>
       </Modal>
     </>
   );

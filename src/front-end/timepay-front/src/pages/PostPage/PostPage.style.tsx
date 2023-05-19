@@ -4,7 +4,7 @@ import '../../styles/fonts/pretendard/pretendard.css';
 
 export const cssQnaDeleteStyle = css`
   text-align: right;
-  margin-top: 15px;
+  margin-top: 60px;
   margin-right: 25px;
 `;
 export const cssEditBtnStyle = css`
@@ -177,13 +177,20 @@ export const cssPostDetailSixth = css`
   margin-left: 25px;
   margin-right: 25px;
   margin-bottom: 200px;
+  p {
+    text-align: center;
+    font-size: 15px;
+    font-weight: 500;
+    color: ${COMMON_COLOR.FONT2};
+    line-height: 20px;
+  }
 `;
 
 export const cssReportContainer = css`
   display: flex;
   justify-content: flex-end;
   margin-right: 25px;
-  margin-top: 15px;
+  margin-top: 60px;
 `;
 export const cssReportBtnStyle = css`
   letter-spacing: 1.5px;

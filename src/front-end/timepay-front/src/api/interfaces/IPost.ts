@@ -104,8 +104,8 @@ export interface IBoard {
   auto: boolean;
   volunteer: boolean;
   writerName?: string;
-  writerNickname?: string;
-  writerType?: string;
+  userNickname?: string;
+  userType?: string;
   imageUrl?: string;
 }
 export interface IGetSearchBoardRequest {
