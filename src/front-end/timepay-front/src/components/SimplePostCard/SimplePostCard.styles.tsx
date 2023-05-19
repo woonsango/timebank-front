@@ -23,6 +23,11 @@ export const cssSimplePostCardHeadStyle = (scaleValue: number) => css`
     font-weight: 700;
     font-size: calc(16px * ${scaleValue});
     line-height: calc(15px * ${scaleValue});
+    .title-div {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
     font-style: normal;
     .attachment {
       height: calc(14px * ${scaleValue});

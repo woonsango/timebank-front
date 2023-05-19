@@ -86,7 +86,7 @@ const SimplePostCard = ({ post }: SimplePostCardProps) => {
           </div>
           <div className="title">
             <PostStatusTag status={post?.boardStatus} />
-            <div>{post?.title || '-'}</div>
+            <div className="title-div">{post?.title || '-'}</div>
             <div className="attachment">{post?.imageUrl && <Attachment />}</div>
           </div>
         </div>
