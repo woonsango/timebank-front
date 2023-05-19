@@ -42,7 +42,7 @@ export interface IGetUserBoardResponse {
   location: string;
   introduction: string;
   time_pay: number;
-  deal_boards: string;
+  deal_boards: IDealBoards;
   body: string;
 }
 
