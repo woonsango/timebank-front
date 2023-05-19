@@ -6,19 +6,19 @@ export interface IAgencyLoginRequest {
 export interface IAgency {
   createdAt?: string;
   updatedAt?: string;
-  organizationId?: number;
-  organizationName: string;
-  businessCode?: string;
-  employeeNum: number;
+  organization_id?: number;
+  organization_name: string;
+  business_code?: string;
+  employee_num: number;
   timepay: number;
   account?: string;
   pw?: string;
   authority?: string;
-  imageUrl?: string;
-  certificationUrl?: string;
+  image_url?: string;
+  certification_url?: string;
   roles?: any[];
   authorities?: any[];
   id?: string;
-  managerName?: string;
-  managerPhone?: string;
+  manager_name?: string;
+  manager_phone?: string;
 }

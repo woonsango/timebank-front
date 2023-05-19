@@ -27,7 +27,7 @@ const MainFooter = () => {
   const navigate = useNavigate();
 
   const isAgency = useMemo(() => {
-    if (data?.data.body.managerName) return true;
+    if (data?.data.body.manager_name) return true;
     return false;
   }, [data]);
 
