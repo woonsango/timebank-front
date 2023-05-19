@@ -10,7 +10,7 @@ import {
   DatePicker,
 } from 'antd';
 import { RcFile, UploadChangeParam, UploadProps } from 'antd/es/upload';
-import { useCallback, useState, useMemo } from 'react';
+import { useCallback, useState, useMemo, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { PATH } from '../../utils/paths';
 import { ReactComponent as BackArrow } from '../../assets/images/icons/header-back-arrow.svg';
@@ -31,6 +31,8 @@ import { useRecoilState } from 'recoil';
 import { DateRange, startTime, endTime } from '../../states/register';
 import { useCreateDealBoards } from '../../api/hooks/register';
 import dummyProfileImg from '../../assets/images/icons/dummy-profile-img.png';
+import { apiRequest } from '../../api/request';
+import { API_URL } from '../../api/urls';
 
 const { Header, Content, Footer } = Layout;
 const { TextArea } = Input;
@@ -39,6 +41,20 @@ const { RangePicker } = DatePicker;
 const MAX_IMAGES = 5;
 
 const RegisterRequestPage = () => {
+  const [userId, setUserId] = useState(0);
+  const [nickName, setNickName] = useState('');
+  useEffect(() => {
+    apiRequest
+      .get(API_URL.USER_INFO_GET)
+      .then((res) => {
+        setUserId(res.data.body.id);
+        setNickName(res.data.body.nick_name);
+      })
+      .catch((error) => {
+        console.error('Error sending GET request:', error);
+      });
+  }, []);
+
   const [form] = Form.useForm();
   const [imgFileList, setImgFileList] = useState<UploadFile[]>([]);
   const [previewImage, setPreviewImage] = useState('');
@@ -51,24 +67,6 @@ const RegisterRequestPage = () => {
   const [title, setTitle] = useState<string>('');
   const [location, setLocation] = useState<string>('');
   const [content, setContent] = useState<string>('');
-  const [selectedCategory, setSelectedCategory] = useState<string>('');
-  const categories = [
-    '산책',
-    '봉사',
-    '교육',
-    '친목',
-    '생활',
-    '건강',
-    '도와주세요',
-  ];
-
-  const handleCategoryClick = (category: string) => {
-    setSelectedCategory((prevCategory) =>
-      prevCategory === category ? '' : category,
-    );
-    console.log(category);
-    console.log(typeof category);
-  };
 
   const normFile = (e: any) => {
     if (Array.isArray(e)) {
@@ -80,23 +78,6 @@ const RegisterRequestPage = () => {
   // 사진
   const [images, setImages] = useState<File[]>([]);
   const [previewUrls, setPreviewUrls] = useState<string[]>([]);
-
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = Array.from(e.target.files as FileList);
-    const urls = files.map((file) => URL.createObjectURL(file));
-    // 최대 5개의 이미지를 업로드할 수 있도록 하고 이미지가 5개가 넘을 경우 추가로 업로드하지 못하도록 합니다.
-    if (images.length + files.length > MAX_IMAGES) {
-      alert(`최대 ${MAX_IMAGES}개의 이미지까지 업로드할 수 있습니다.`);
-      return;
-    }
-    setImages([...images, ...files]);
-    setPreviewUrls([...previewUrls, ...urls]);
-  };
-
-  const handleDeleteImage = (index: number) => {
-    setImages((prevState) => prevState.filter((_, i) => i !== index));
-    setPreviewUrls((prevState) => prevState.filter((_, i) => i !== index));
-  };
 
   //////////
 
