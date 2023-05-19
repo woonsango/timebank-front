@@ -31,23 +31,7 @@ const SimplePostCard = ({ post }: SimplePostCardProps) => {
   const { scaleValue } = useFontSize();
 
   const handlePageChange = () => {
-    navigate(`/post/${post?.d_boardId}`, {
-      state: {
-        id: post?.d_boardId,
-        type: post?.type,
-        title: post?.title,
-        content: post?.content,
-        createdAt: post?.createdAt,
-        status: post?.boardStatus,
-        category: post?.category,
-        pay: post?.pay,
-        startTime: post?.startTime,
-        endTime: post?.endTime,
-        region: post?.location,
-        attachment: post?.imageUrl,
-        user: post?.userNickname,
-      },
-    });
+    navigate(`/post/${post?.d_boardId}`, {});
   };
   const footerComponent = useCallback(
     (nickname?: string, createdAt?: string, userType?: string) => {
