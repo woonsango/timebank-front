@@ -9,8 +9,8 @@ export const cssHomeHeaderStyle = css`
   height: 70px;
   padding: 30px 20px 15px 20px;
 
-  background-color: ${COMMON_COLOR.WHITE};
-  border-bottom: 1px solid ${COMMON_COLOR.SILVER_GRAY};
+  background-color: ${COMMON_COLOR.LOGO1};
+
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -18,19 +18,12 @@ export const cssHomeHeaderStyle = css`
   z-index: 100;
 `;
 
-export const cssHomeHeaderMenuStyle = css`
-  font-style: normal;
-  font-weight: 700;
-  font-size: 15px;
-  line-height: 20px;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: 5px;
-`;
-
 export const cssHomeHeaderNotificationStyle = css`
-  font-size: 28px;
+  font-size: 25px;
+  margin-top: 6px;
+  margin-left: auto;
+  margin-bottom: 15px;
+  color: ${COMMON_COLOR.WHITE};
   .ant-badge-dot {
     width: 9px;
     height: 9px;

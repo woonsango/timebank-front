@@ -3,7 +3,7 @@ import { COMMON_COLOR } from '../../styles/constants/colors';
 
 export const cssSearchHeaderStyle = css`
   position: fixed;
-  top: 39px;
+  top: 0px;
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -126,3 +126,15 @@ export const cssSearchHeaderStyle = css`
     }
   }
 `;
+
+// export const cssHomeHeaderNotificationStyle = css`
+//   font-size: 25px;
+//   margin-top: 10px;
+//   margin-bottom: 15px;
+//   color: ${COMMON_COLOR.FONT2};
+//   .ant-badge-dot {
+//     width: 9px;
+//     height: 9px;
+//     background: ${COMMON_COLOR.MAIN1};
+//   }
+// `;

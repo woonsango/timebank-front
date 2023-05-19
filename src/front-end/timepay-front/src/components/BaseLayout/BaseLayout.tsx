@@ -1,24 +1,17 @@
-import { Badge, Layout, Typography } from 'antd';
-import { useCallback, useMemo } from 'react';
-import { Outlet, useLocation, useNavigate } from 'react-router-dom';
+import { Layout } from 'antd';
+import { useMemo } from 'react';
+import { Outlet, useLocation } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
 import { headerTitleState } from '../../states/uiState';
 import { PATH } from '../../utils/paths';
 import MainFooter from '../MainFooter';
 import MainHeader from '../MainHeader';
 import SearchHeader from '../SearchHeader';
-import {
-  cssBaseLayoutStyle,
-  cssHomeHeaderNotificationStyle,
-} from './BaseLayout.styles';
-import { BellOutlined } from '@ant-design/icons';
-
-const { Text, Link } = Typography;
+import { cssBaseLayoutStyle } from './BaseLayout.styles';
 
 const BaseLayout = () => {
   const headerTitle = useRecoilValue(headerTitleState);
   const location = useLocation();
-  const navigate = useNavigate();
 
   const isnoFooter =
     location.pathname === PATH.Register_F ||
@@ -44,15 +37,8 @@ const BaseLayout = () => {
     if (headerTitle) return <MainHeader />;
   }, [isNoHeader, isSearch, headerTitle]);
 
-  const handleOnLinkNotification = useCallback(() => {
-    navigate(PATH.NOTIFICATION);
-  }, [navigate]);
-
   return (
     <Layout css={cssBaseLayoutStyle}>
-      <Badge dot css={cssHomeHeaderNotificationStyle}>
-        <BellOutlined onClick={handleOnLinkNotification} />
-      </Badge>
       {Header}
       <Layout.Content
         className={`main-section-container ${

@@ -1,13 +1,18 @@
-import { cssMainFooterStyle, cssPlusPostBtnStyle } from './MainFooter.styles';
-import type { MenuProps } from 'antd';
+import {
+  cssFloating,
+  cssHomeBtnStyle,
+  cssMainFooterStyle,
+  cssPlusPostBtnStyle,
+} from './MainFooter.styles';
+import { MenuProps } from 'antd';
 import { Button, Dropdown, Layout } from 'antd';
-import { UserOutlined } from '@ant-design/icons';
+import { BellOutlined, UserOutlined } from '@ant-design/icons';
 import { ReactComponent as ModifyFontSizeBig } from '../../assets/images/icons/modify-font-size-big.svg';
 import { ReactComponent as ModifyFontSizeSmall } from '../../assets/images/icons/modify-font-size-small.svg';
 import { ReactComponent as WriteBoard } from '../../assets/images/icons/write-board.svg';
 import { ReactComponent as ActivityRecord } from '../../assets/images/icons/activity-record.svg';
 import { ReactComponent as Home } from '../../assets/images/icons/home.svg';
-import { Link, NavLink } from 'react-router-dom';
+import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { PATH } from '../../utils/paths';
 import { useCallback, useMemo } from 'react';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
@@ -20,6 +25,7 @@ const MainFooter = () => {
   const setFontSize = useSetRecoilState(fontSizeState);
 
   const agencyValue = useRecoilValue(agencyState);
+  const navigate = useNavigate();
 
   const items: MenuProps['items'] = useMemo(() => {
     const items = [
@@ -45,44 +51,61 @@ const MainFooter = () => {
     else setFontSize('big');
   }, [isBig, setFontSize]);
 
+  const handleOnLinkNotification = useCallback(() => {
+    navigate(PATH.NOTIFICATION);
+  }, [navigate]);
+
   return (
-    <Layout.Footer css={cssMainFooterStyle}>
-      <NavLink
-        to={PATH.HOME}
-        className={({ isActive }) => (isActive ? 'active' : undefined)}
-      >
-        <Button>
-          <Home width={30} height={30} />
+    <>
+      <div className="float" css={cssFloating}>
+        <Dropdown menu={{ items }} placement="top" arrow trigger={['click']}>
+          <Button
+            css={cssPlusPostBtnStyle}
+            shape="circle"
+            size="large"
+            // style={{ fontSize: 10 }}
+          >
+            <WriteBoard width={30} height={30} />
+          </Button>
+        </Dropdown>
+      </div>
+      <Layout.Footer css={cssMainFooterStyle}>
+        <Button onClick={handleOnClickModifyFontSize}>
+          <ModifyFontSizeSmall style={{ display: isBig ? 'none' : 'block' }} />
+          <ModifyFontSizeBig style={{ display: isBig ? 'block' : 'none' }} />
         </Button>
-      </NavLink>
-      <Button onClick={handleOnClickModifyFontSize}>
-        <ModifyFontSizeSmall style={{ display: isBig ? 'none' : 'block' }} />
-        <ModifyFontSizeBig style={{ display: isBig ? 'block' : 'none' }} />
-      </Button>
-      <Dropdown menu={{ items }} placement="top" arrow trigger={['click']}>
-        <Button css={cssPlusPostBtnStyle}>
-          <WriteBoard width={30} height={30} />
-        </Button>
-      </Dropdown>
 
-      <NavLink
-        to={PATH.MY_ACTIVITY_RECORD}
-        className={({ isActive }) => (isActive ? 'active' : undefined)}
-      >
-        <Button>
-          <ActivityRecord width={30} height={30} />
+        <Button className="cssHomeHeaderNotificationStyle">
+          <BellOutlined onClick={handleOnLinkNotification} />
         </Button>
-      </NavLink>
+        <NavLink
+          to={PATH.HOME}
+          className={({ isActive }) => (isActive ? 'active' : undefined)}
+        >
+          <Button css={cssHomeBtnStyle}>
+            <Home width={30} height={30} />
+          </Button>
+        </NavLink>
 
-      <NavLink
-        to={PATH.MY}
-        className={({ isActive }) => (isActive ? 'active' : undefined)}
-      >
-        <Button>
-          <UserOutlined />
-        </Button>
-      </NavLink>
-    </Layout.Footer>
+        <NavLink
+          to={PATH.MY_ACTIVITY_RECORD}
+          className={({ isActive }) => (isActive ? 'active' : undefined)}
+        >
+          <Button>
+            <ActivityRecord width={30} height={30} />
+          </Button>
+        </NavLink>
+
+        <NavLink
+          to={PATH.MY}
+          className={({ isActive }) => (isActive ? 'active' : undefined)}
+        >
+          <Button>
+            <UserOutlined />
+          </Button>
+        </NavLink>
+      </Layout.Footer>
+    </>
   );
 };
 
