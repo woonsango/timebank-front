@@ -58,13 +58,16 @@ const MainFooter = () => {
   return (
     <>
       <div className="float" css={cssFloating}>
-        <Dropdown menu={{ items }} placement="top" arrow trigger={['click']}>
-          <Button
-            css={cssPlusPostBtnStyle}
-            shape="circle"
-            size="large"
-            // style={{ fontSize: 10 }}
-          >
+        <Dropdown
+          menu={{ items }}
+          placement="top"
+          arrow
+          trigger={['click']}
+          overlayClassName={`${
+            isBig ? 'big-post-dropdown' : 'small-post-dropdown'
+          }`}
+        >
+          <Button css={cssPlusPostBtnStyle} shape="circle" size="large">
             <WriteBoard width={30} height={30} />
           </Button>
         </Dropdown>
