@@ -4,10 +4,13 @@ import { useSetRecoilState } from 'recoil';
 import { useGetNotifications } from '../../api/hooks/push';
 import { INotification, PUSH_TYPE } from '../../api/interfaces/IPush';
 import PushCollapse from '../../components/PushCollapse';
+import useFontSize from '../../hooks/useFontSize';
 import { headerTitleState } from '../../states/uiState';
 import { cssTabStyle } from '../../styles/constants/tabStyle';
 
 const PushNotificationPage = () => {
+  const { scaleValue } = useFontSize();
+
   const { data, isLoading } = useGetNotifications({
     pagingIndex: 0,
     pagingSize: 999,
@@ -60,7 +63,11 @@ const PushNotificationPage = () => {
   }, [isLoading, pushes]);
 
   return (
-    <Tabs css={cssTabStyle} defaultActiveKey={PUSH_TYPE.ALL} items={items} />
+    <Tabs
+      css={cssTabStyle(scaleValue)}
+      defaultActiveKey={PUSH_TYPE.ALL}
+      items={items}
+    />
   );
 };
 
