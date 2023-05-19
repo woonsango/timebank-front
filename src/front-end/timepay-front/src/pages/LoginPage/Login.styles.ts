@@ -1,4 +1,16 @@
 import { css } from '@emotion/react';
+import { COMMON_COLOR } from '../../styles/constants/colors';
+
+export const cssLinkAgencyBtnStyle = css`
+  span {
+    color: ${COMMON_COLOR.FONT2};
+    text-decoration: underline;
+  }
+  position: absolute;
+  right: 10px;
+  top: 5px;
+  right: 5px;
+`;
 
 /*수직 수평 중앙 정렬*/
 export const topWrapperCSS = css`
