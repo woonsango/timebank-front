@@ -20,6 +20,7 @@ import { cssPostTypeTagStyle } from '../PostTypeTag/PostTypeTag.styles';
 import { COMMON_COLOR } from '../../styles/constants/colors';
 import { getDateDiffToday } from '../../utils/board';
 import useFontSize from '../../hooks/useFontSize';
+import dayjs from 'dayjs';
 
 interface SimplePostCardProps {
   post?: IBoard;
@@ -98,8 +99,17 @@ const SimplePostCard = ({ post }: SimplePostCardProps) => {
             <Clock />
             {post ? (
               <span>
-                {post.startTime?.split('.')[0].replace('T', ' ')} ~
-                {post.endTime?.split('.')[0].replace('T', ' ')}
+                {post.startTime
+                  ? dayjs(post.startTime, 'YYYY-MM-DDTHH:mm:ss').format(
+                      'MM월 DD일 HH시 mm분',
+                    )
+                  : '-'}{' '}
+                ~{' '}
+                {post.endTime
+                  ? dayjs(post.endTime, 'YYYY-MM-DDTHH:mm:ss').format(
+                      'HH시 mm분',
+                    )
+                  : '-'}
               </span>
             ) : (
               <span>-</span>
