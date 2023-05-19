@@ -1,6 +1,6 @@
 import { useCallback, useState, useRef, useEffect, useMemo } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { List, Modal, Form, Input } from 'antd';
+import { List, Modal, Form, Input, message } from 'antd';
 import { ReactComponent as BackArrow } from '../../assets/images/icons/header-back-arrow.svg';
 import { cssMainHeaderStyle } from '../../components/MainHeader/MainHeader.styles';
 import {
@@ -8,8 +8,6 @@ import {
   cssPostDetailFirst,
   cssPostDetailUser,
   cssPostDetailTitle,
-  cssLine1,
-  cssLine3,
   cssLine4,
   cssPostDetailCreatedAt,
   cssPostDetailProfile,
@@ -23,14 +21,13 @@ import {
   cssPostDetailRegion,
   cssPostDetailTime,
   cssPostDetailFifth,
-  cssPostDetailContent1,
+  cssPostDetailSixth,
   cssPostDetailContent2,
   cssPostDetailAttachment,
   cssReportContainer,
   cssReportBtnStyle,
   cssPostFooter,
   cssPostDetail,
-  cssPostTextarea,
   cssLine2,
   cssPostBtn,
   cssPostFooter2,
@@ -40,10 +37,6 @@ import {
   cssEditBtnStyle,
   cssLike,
   cssLikeContainer,
-  cssCommentContainer,
-  cssCollectButton,
-  cssCollectBtn,
-  cssApplicant,
 } from './PostPage.style';
 import PostStatusTag from '../../components/PostStatusTag';
 import { ClockCircleOutlined, FlagFilled } from '@ant-design/icons';
@@ -52,12 +45,21 @@ import PostButton from '../../components/post/PostButton';
 import { IPost } from '../../api/interfaces/IPost';
 import { ReactComponent as LikeDefault } from '../../assets/images/icons/like_default.svg';
 import { ReactComponent as LikeClick } from '../../assets/images/icons/like_click.svg';
-
+import { apiRequest } from '../../api/request';
+import { API_URL } from '../../api/urls';
 import Item from '../../components/post/Item';
 import InputText from '../../components/post/InputText';
 import { ApplicantButton } from '../../components/post/ApplicantButton';
 
 import axios from 'axios';
+import { useDeleteBoard } from '../../api/hooks/board';
+import { PATH } from '../../utils/paths';
+import { COMMON_COLOR } from '../../styles/constants/colors';
+
+import { AxiosError, AxiosResponse } from 'axios';
+import { IReportBoard } from '../../api/interfaces/IPost';
+import { useMutation } from 'react-query';
+import { api } from '../../services';
 
 interface PostPageProps {
   post?: IPost;
@@ -68,21 +70,140 @@ interface TList {
   text: string;
 }
 
+interface Applicant {
+  id: number;
+  content: string;
+  hidden: boolean;
+  applied: boolean;
+  adopted: boolean;
+}
+
 const Footer = Layout;
 
 const PostPage = ({ post }: PostPageProps) => {
-  const [like, setLike] = useState(false);
+  const [applicants, setApplicants] = useState<Applicant[]>([]);
 
-  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-  const showModal = () => {
-    setIsDeleteModalOpen(true);
+  const navigate = useNavigate();
+
+  const [like, setLike] = useState(false);
+  const [nickName, setNickName] = useState('');
+
+  const location = useLocation();
+  const {
+    id,
+    type,
+    title,
+    content,
+    createdAt,
+    category,
+    attachment,
+    status,
+    pay,
+    startTime,
+    endTime,
+    region,
+    user,
+  } = location.state;
+
+  console.log('user', user);
+  console.log('id', id);
+  console.log('title', title);
+  console.log('region', region);
+
+  const handleEditPageChange = () => {
+    navigate(`/edit/${id}`, {
+      state: {
+        id,
+        type,
+        title,
+        content,
+        status,
+        category,
+        pay,
+        startTime,
+        endTime,
+        region,
+        attachment,
+        user,
+      },
+    });
   };
-  const handleOk = () => {
-    setIsDeleteModalOpen(false);
+
+  useEffect(() => {
+    apiRequest
+      .get(API_URL.USER_INFO_GET)
+      .then((res) => {
+        setNickName(res.data.body.nick_name);
+      })
+      .catch((error) => {
+        console.error('Error sending GET request:', error);
+      });
+  }, []);
+
+  useEffect(() => {
+    apiRequest
+      .get(`/api/deal-boards/comments/${id}`)
+      .then((res) => {
+        setApplicants(res.data);
+      })
+      .catch((error) => {
+        console.error('Error sending GET request:', error);
+      });
+  }, []);
+
+  console.log(applicants);
+  applicants.map((data) => {
+    console.log(data.content);
+  });
+
+  const useCreateReports = () => {
+    return useMutation<AxiosResponse<boolean>, AxiosError, IReportBoard>({
+      mutationKey: 'useReports',
+      mutationFn: (data) =>
+        apiRequest.post(`/api/deal-boards/${id}/report`, {
+          ...data,
+        }),
+    });
   };
-  const handleCancel = () => {
-    setIsDeleteModalOpen(false);
-  };
+
+  const useReportMutation = useCreateReports();
+
+  const useDeleteBoardMutation = useDeleteBoard();
+  const [messageApi, contextHolder] = message.useMessage();
+  const url = window.location.pathname;
+  const real_id = url.substring(6);
+
+  // 지금 에러 뜨는 곳. body를 넣어줘야 함!!
+  const handleDelete = useCallback(async () => {
+    Modal.confirm({
+      content: '정말 게시글을 삭제하시겠습니까?',
+      okText: '삭제',
+      cancelText: '취소',
+      okButtonProps: {
+        style: {
+          background: `${COMMON_COLOR.MAIN1}`,
+          borderColor: `${COMMON_COLOR.MAIN1}`,
+        },
+      },
+      onOk: (result) => {
+        useDeleteBoardMutation.mutateAsync(real_id, {
+          onSuccess: (data) => {
+            messageApi.open({
+              type: 'success',
+              content: '게시글 삭제 완료',
+              duration: 0.5,
+              onClose() {
+                navigate(PATH.HOME);
+              },
+            });
+          },
+          onError: (err) => {
+            console.log(err);
+          },
+        });
+      },
+    });
+  }, [useDeleteBoardMutation, messageApi]);
 
   const [form] = Form.useForm();
   const { TextArea } = Input;
@@ -90,33 +211,57 @@ const PostPage = ({ post }: PostPageProps) => {
     labelCol: { span: 6 },
     wrapperCol: { span: 16 },
   };
-  const [isReportModalOpen, setIsReportModalOpen] = useState(false);
-  const showReportModal = () => {
-    setIsReportModalOpen(true);
-  };
+
+  const onReport = useCallback(async () => {
+    Modal.confirm({
+      title: '신고하기',
+      content: (
+        <Form>
+          <Form.Item
+            name="reason"
+            label="신고사유"
+            rules={[
+              {
+                required: true,
+                message: '신고 사유를 입력해주세요.',
+              },
+            ]}
+          >
+            <Input.TextArea rows={4} />
+          </Form.Item>
+        </Form>
+      ),
+      okText: '신고',
+      cancelText: '취소',
+      onOk: (e) => {
+        const reason = e.reason;
+        useReportMutation.mutate(
+          { boardId: id, report_body: reason },
+          {
+            onSuccess: () => {
+              messageApi.success('게시글이 신고되었습니다.');
+            },
+            onError: (error: AxiosError) => {
+              console.error('Error reporting post:', error);
+            },
+          },
+        );
+      },
+    });
+  }, [messageApi, useReportMutation]);
+
+  // 수정 및 삭제 버튼 표시 여부를 결정하는 함수
+  let [author, setAuthor] = useState(false);
+  const isAuthor = useMemo(() => {
+    if (user === nickName) {
+      setAuthor(true);
+    } else setAuthor(false);
+  }, [user, nickName]);
+
+  console.log(nickName);
+
   const [isListModalOpen, setIsListModalOpen] = useState(false);
-  const showListModal = () => {
-    setIsListModalOpen(true);
-  };
-  const onOk = () => {
-    setIsReportModalOpen(false);
-  };
-  const onCancel = () => {
-    setIsReportModalOpen(false);
-  };
 
-  // 지원자 목록 모달 창
-
-  const [selectedItem, setSelectedItem] = useState(null);
-  const onOk2 = () => {
-    if (selectedItem) {
-      console.log('선택된 지원자: ', selectedItem);
-      setIsListModalOpen(false);
-    }
-  };
-  const onCancel2 = () => {
-    setIsListModalOpen(false);
-  };
   const onApplicantClick = (applicant: any) => {
     console.log(`Selected applicant: ${applicant}`);
   };
@@ -138,6 +283,20 @@ const PostPage = ({ post }: PostPageProps) => {
     '지원자3',
   ]);
 
+  // 지원자 목록 모달 창
+  const [selectedItem, setSelectedItem] = useState(null);
+  const onOk2 = () => {
+    if (selectedItem) {
+      console.log('선택된 지원자: ', selectedItem);
+      setIsListModalOpen(false);
+    }
+  };
+  const onCancel2 = () => {
+    setIsListModalOpen(false);
+  };
+
+  console.log('user', user);
+
   // 댓글 입력
   const [inputText, setInputText] = useState('');
   // 댓글
@@ -156,43 +315,6 @@ const PostPage = ({ post }: PostPageProps) => {
     },
   ]);
   const nextId = useRef(4);
-
-  const navigate = useNavigate();
-  const location = useLocation();
-  const {
-    id,
-    type,
-    title,
-    content,
-    createdAt,
-    category,
-    attachment,
-    status,
-    pay,
-    startTime,
-    endTime,
-    region,
-    user,
-  } = location.state;
-
-  const handleEditPageChange = () => {
-    navigate(`/edit/${id}`, {
-      state: {
-        id,
-        type,
-        title,
-        content,
-        status,
-        category,
-        pay,
-        startTime,
-        endTime,
-        region,
-        attachment,
-        user,
-      },
-    });
-  };
 
   const handleClickBack = useCallback(() => {
     navigate(-1);
@@ -218,7 +340,7 @@ const PostPage = ({ post }: PostPageProps) => {
     nextId.current += 1;
 
     axios
-      .post(`/api/free-boards/comments/write/${id}`, { inputText })
+      .post(`/api/deal-boards/comments/write/${id}`, { inputText })
       .then((response) => {
         // 요청이 성공적으로 처리되었을 때 실행될 코드 작성
 
@@ -236,71 +358,30 @@ const PostPage = ({ post }: PostPageProps) => {
     <Layout css={cssPostDetail}>
       <div css={cssMainHeaderStyle}>
         <BackArrow onClick={handleClickBack} />
-        <span>{type}</span>
+        <span>도움요청</span>
       </div>
       <div css={cssPostDetailPage}>
-        <div css={cssQnaDeleteStyle}>
-          {}
-          <Button css={cssEditBtnStyle} onClick={handleEditPageChange}>
-            수정
-          </Button>
-          <Button css={cssDeleteBtnStyle} onClick={showModal}>
-            삭제
-          </Button>
-        </div>
-        <Modal
-          title="정말 게시글을 삭제하시겠습니까?"
-          open={isDeleteModalOpen}
-          onOk={handleOk}
-          onCancel={handleCancel}
-          okText="확인"
-          cancelText="취소"
-        ></Modal>
-
-        <div css={cssReportContainer}>
-          <Button css={cssReportBtnStyle} onClick={showReportModal}>
-            게시글 신고하기
-          </Button>
-        </div>
-        <Modal
-          title="게시글 신고하기"
-          open={isReportModalOpen}
-          onOk={onOk}
-          onCancel={onCancel}
-          footer={null}
-        >
-          <Form {...layout} form={form} style={{ width: '100%' }}>
-            <Form.Item
-              name="content"
-              label="신고사유"
-              rules={[{ required: true, message: '신고 사유를 적어주세요.' }]}
-            >
-              <TextArea
-                rows={10}
-                maxLength={100}
-                style={{ resize: 'none', fontSize: 20 }}
-              />
-            </Form.Item>
-            <div className="control-box">
-              <Button
-                style={{ marginRight: 20 }}
-                onClick={() => {
-                  onCancel();
-                  form.resetFields();
-                }}
-              >
-                취소
+        {author && (
+          <>
+            <div css={cssQnaDeleteStyle}>
+              <Button css={cssEditBtnStyle} onClick={handleEditPageChange}>
+                수정
               </Button>
-              <Button
-                type="primary"
-                htmlType="submit"
-                style={{ resize: 'none' }}
-              >
-                신고하기
+              <Button css={cssDeleteBtnStyle} onClick={handleDelete}>
+                삭제
               </Button>
             </div>
-          </Form>
-        </Modal>
+          </>
+        )}
+        {!author && (
+          <>
+            <div css={cssReportContainer}>
+              <Button css={cssReportBtnStyle} onClick={onReport}>
+                게시글 신고하기
+              </Button>
+            </div>
+          </>
+        )}
 
         <div css={cssPostDetailSecond}>
           <div css={cssPostDetailTitle}>{title}</div>
@@ -332,7 +413,7 @@ const PostPage = ({ post }: PostPageProps) => {
         </div>
 
         <div css={cssPostDetailFirst}>
-          <div css={cssPostDetailCreatedAt}>{createdAt}</div>
+          <div css={cssPostDetailCreatedAt}>{createdAt.substring(0, 10)}</div>
           <div css={cssPostDetailProfile}></div>
           <div css={cssPostDetailUser}>{user}</div>
           <div css={cssLikeContainer}>
@@ -353,6 +434,11 @@ const PostPage = ({ post }: PostPageProps) => {
           applicantList={applicantList}
           onItemClick={onApplicantClick}
         />
+        <div css={cssPostDetailSixth}>
+          {applicants.map((data) => (
+            <Item c={data} key={data.id} />
+          ))}
+        </div>
       </div>
       <Footer css={cssPostFooter}>
         <div css={cssLine2} />

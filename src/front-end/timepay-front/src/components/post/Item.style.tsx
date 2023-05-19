@@ -2,6 +2,10 @@ import { css } from '@emotion/react';
 import { COMMON_COLOR } from '../../styles/constants/colors';
 import '../../styles/fonts/pretendard/pretendard.css';
 
+export const cssComments = css`
+  height: 100px;
+  z-index: 1;
+`;
 export const cssCommentItem = css`
   display: flex;
   flex-direction: row;
@@ -14,7 +18,6 @@ export const cssCommentItem = css`
   align-items: center;
 `;
 export const cssPostDetailProfile = css`
-  width: 15%;
   margin-right: 20px;
   border-radius: 50px;
   background-color: ${COMMON_COLOR.BLUE_GRAY};

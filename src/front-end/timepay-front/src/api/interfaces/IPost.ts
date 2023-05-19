@@ -16,6 +16,7 @@ export interface IPost {
   attachment?: string; // 첨부파일
   user: IUser; // 작성자 정보
   content: string; // 게시글 내용
+  writer_nickname: string;
 }
 
 export interface IPostFreeBoard {
@@ -55,6 +56,22 @@ export interface IGetDealBoard {
   endtime?: string;
   hidden?: boolean;
   pay?: 100;
+}
+
+export interface IDeleteBoard {
+  title: string;
+  content: string;
+  location: string;
+  state: string;
+  starttime?: string;
+  endtime?: string;
+  hidden?: boolean;
+  pay?: 0;
+}
+
+export interface IReportBoard {
+  boardId: number;
+  report_body: string;
 }
 
 export type IPostState =
