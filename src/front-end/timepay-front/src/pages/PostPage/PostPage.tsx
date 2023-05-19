@@ -93,17 +93,6 @@ const PostPage = ({ post }: BoardProps) => {
   const real_id = url.substring(6);
   const { data, isLoading } = useGetBoard(parseInt(real_id));
 
-  // useEffect(() => {
-  //   apiRequest
-  //     .get(API_URL.DEAL_BOARDS)
-  //     .then((res) => {
-  //       setNickName(res.data.body.nick_name);
-  //     })
-  //     .catch((error) => {
-  //       console.error('Error sending GET request:', error);
-  //     });
-  // });
-
   useEffect(() => {
     apiRequest
       .get(API_URL.USER_INFO_GET)
@@ -143,7 +132,6 @@ const PostPage = ({ post }: BoardProps) => {
 
   const useReportMutation = useCreateReports();
 
-  // 지금 에러 뜨는 곳. body를 넣어줘야 함!!
   const handleDelete = useCallback(async () => {
     Modal.confirm({
       content: '정말 게시글을 삭제하시겠습니까?',
@@ -155,22 +143,20 @@ const PostPage = ({ post }: BoardProps) => {
           borderColor: `${COMMON_COLOR.MAIN1}`,
         },
       },
-      onOk: (result) => {
-        useDeleteBoardMutation.mutateAsync(real_id, {
-          onSuccess: (data) => {
-            messageApi.open({
-              type: 'success',
-              content: '게시글 삭제 완료',
-              duration: 0.5,
-              onClose() {
-                navigate(PATH.HOME);
-              },
-            });
-          },
-          onError: (err) => {
-            console.log(err);
-          },
-        });
+      onOk: async (result) => {
+        try {
+          await useDeleteBoardMutation.mutateAsync(real_id);
+          messageApi.open({
+            type: 'success',
+            content: '게시글 삭제 완료',
+            duration: 0.5,
+            onClose() {
+              navigate(PATH.SEARCH);
+            },
+          });
+        } catch (error) {
+          console.log(error);
+        }
       },
     });
   }, [useDeleteBoardMutation, messageApi]);
@@ -223,10 +209,12 @@ const PostPage = ({ post }: BoardProps) => {
   // 수정 및 삭제 버튼 표시 여부를 결정하는 함수
   let [author, setAuthor] = useState(false);
   const isAuthor = useMemo(() => {
-    if (data?.data.userNickname === nickName) {
-      setAuthor(true);
-    } else setAuthor(false);
-  }, [nickName]);
+    return data?.data.userNickname === nickName;
+  }, [data?.data.userNickname, nickName]);
+
+  useEffect(() => {
+    setAuthor(isAuthor);
+  }, [isAuthor]);
 
   console.log(nickName);
 
