@@ -47,6 +47,11 @@ const MainFooter = () => {
         key: PATH.Register_EVENT,
         label: <Link to={PATH.Register_EVENT}>이벤트</Link>,
       });
+    else
+      items.push({
+        key: '바로활동',
+        label: <Button type="link">바로활동</Button>,
+      });
     return items;
   }, [isAgency]);
 
@@ -64,7 +69,7 @@ const MainFooter = () => {
       <div className="float" css={cssFloating}>
         <Dropdown
           menu={{ items }}
-          placement="top"
+          placement="topRight"
           arrow
           trigger={['click']}
           overlayClassName={`${

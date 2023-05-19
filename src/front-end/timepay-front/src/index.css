@@ -22,8 +22,17 @@ body {
   font-size: 14px;
 }
 
-.big-post-dropdown .ant-dropdown-menu-item {
-  padding: 5px 0px !important;
+.small-post-dropdown .ant-btn {
+  padding: 0px;
+  color: rgba(0, 0, 0, 0.88);
+  height: max-content;
+}
+
+.big-post-dropdown .ant-btn {
+  padding: 0px !important;
+  color: rgba(0, 0, 0, 0.88);
+  height: max-content;
+  font-size: 21px;
 }
 
 .select-small .ant-select-item {
