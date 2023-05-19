@@ -14,6 +14,14 @@ export interface IComment {
   hidden: boolean;
 }
 
+export interface IPostComment {
+  adopted: boolean;
+  applied: boolean;
+  content: string;
+  hidden: boolean;
+  id: number;
+}
+
 export interface ICommentActivity extends IComment {
   boardTitle: string; // 게시글 제목
   body: string;

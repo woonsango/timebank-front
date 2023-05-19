@@ -1,8 +1,10 @@
 import { AxiosError, AxiosResponse } from 'axios';
 import { useInfiniteQuery } from 'react-query';
 import {
+  IDeleteBoard,
   IGetSearchBoardRequest,
   IGetSearchBoardResponse,
+  IReportBoard,
 } from '../interfaces/IPost';
 import { apiRequest } from '../request';
 import { API_URL } from '../urls';
@@ -33,8 +35,19 @@ export const useInfiniteGetSearchBoard = (params: IGetSearchBoardRequest) => {
 };
 
 export const useDeleteBoard = () => {
-  return useMutation<AxiosResponse<any>, AxiosError, string>({
+  return useMutation<AxiosResponse<IDeleteBoard>, AxiosError, string>({
     mutationKey: 'useDeleteBoard',
     mutationFn: (id) => apiRequest.delete(`/api/deal-boards/delete/${id}`),
+  });
+};
+// 여기에 ...data를 추가해야 하는데......
+
+export const useCreateReports = () => {
+  return useMutation<AxiosResponse<boolean>, AxiosError, IReportBoard>({
+    mutationKey: 'useReports',
+    mutationFn: (data) =>
+      apiRequest.post(API_URL.FREE_BOARDS_WRITE, {
+        ...data,
+      }),
   });
 };

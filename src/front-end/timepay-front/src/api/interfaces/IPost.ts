@@ -58,6 +58,22 @@ export interface IGetDealBoard {
   pay?: 100;
 }
 
+export interface IDeleteBoard {
+  title: string;
+  content: string;
+  location: string;
+  state: string;
+  starttime?: string;
+  endtime?: string;
+  hidden?: boolean;
+  pay?: 0;
+}
+
+export interface IReportBoard {
+  boardId: number;
+  report_body: string;
+}
+
 export type IPostState =
   | '매칭중'
   | '매칭완료'
