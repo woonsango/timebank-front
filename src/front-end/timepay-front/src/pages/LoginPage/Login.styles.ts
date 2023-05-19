@@ -5,7 +5,7 @@ export const topWrapperCSS = css`
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 10%;
+  height: 100vh;
 `;
 
 export const cssTopText = css`

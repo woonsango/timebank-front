@@ -1,8 +1,4 @@
 import { Button, Space, Typography } from 'antd';
-import { useNavigate } from 'react-router-dom';
-import { useCallback } from 'react';
-import { PATH } from '../../utils/paths';
-
 import KAKAO_AUTH_URL from './Authorization_kakao';
 import kakao_login_logo from '../../assets/images/icons/kakao_login_medium_wide.png';
 import timepayLogo from '../../assets/images/icons/timepayLogo.png';
@@ -18,21 +14,8 @@ import {
 const LoginPage = () => {
   const { Text } = Typography;
 
-  const navigate = useNavigate();
-  const goTo = useCallback(
-    (path: string) => {
-      navigate(path);
-    },
-    [navigate],
-  );
-
   return (
-    <Space
-      direction="vertical"
-      size="middle"
-      style={{ display: 'flex' }}
-      css={topWrapperCSS}
-    >
+    <Space direction="vertical" size="middle" css={topWrapperCSS}>
       <Text css={cssTopText}>모두에게 동일한 시간</Text>
       <Text css={cssMiddleText}>시간을 거래하는 타임페이</Text>
       <img src={timepayLogo} className="logo" css={cssLogo} alt="타임페이" />
