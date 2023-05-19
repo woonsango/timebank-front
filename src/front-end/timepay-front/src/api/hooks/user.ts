@@ -36,8 +36,8 @@ export const useGetUserInfo = () => {
   });
 };
 
-export const useGetUserBoards = (params?: any) => {
-  return useQuery<AxiosResponse<any>, AxiosError>({
+export const useGetUserBoards = (params?: IGetUserBoardRequest) => {
+  return useQuery<AxiosResponse<{ body: IGetUserBoardResponse }>, AxiosError>({
     queryKey: ['useGetUserBoards', params],
     queryFn: () =>
       apiRequest.get(`${API_URL.API_USERS__MYPAGE__BOARD}`, { params: params }),
@@ -49,17 +49,19 @@ export const useGetUserBoards = (params?: any) => {
   });
 };
 
-export const useGetUserComments = (params: any) => {
-  return useQuery<AxiosResponse<any>, AxiosError>({
-    queryKey: ['useGetUserComments', params],
-    queryFn: () =>
-      apiRequest.get(`${API_URL.API_USERS__MYPAGE__COMMENT}`, {
-        params: params,
-      }),
-    refetchOnWindowFocus: false,
-    retry: false, // api 호출 실패해도 계속 호출하지 않음
-    onError: (err: any) => {
-      console.log('[ERROR] useGetUserComments:', err);
+export const useGetUserComments = (params: IGetUserCommentRequest) => {
+  return useQuery<AxiosResponse<{ body: IGetUserCommentResponse }>, AxiosError>(
+    {
+      queryKey: ['useGetUserComments', params],
+      queryFn: () =>
+        apiRequest.get(`${API_URL.API_USERS__MYPAGE__COMMENT}`, {
+          params: params,
+        }),
+      refetchOnWindowFocus: false,
+      retry: false, // api 호출 실패해도 계속 호출하지 않음
+      onError: (err: any) => {
+        console.log('[ERROR] useGetUserComments:', err);
+      },
     },
-  });
+  );
 };
