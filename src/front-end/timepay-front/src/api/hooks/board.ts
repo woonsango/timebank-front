@@ -6,6 +6,7 @@ import {
 } from '../interfaces/IPost';
 import { apiRequest } from '../request';
 import { API_URL } from '../urls';
+import { useMutation } from 'react-query';
 
 export const useInfiniteGetSearchBoard = (params: IGetSearchBoardRequest) => {
   return useInfiniteQuery<AxiosResponse<IGetSearchBoardResponse>, AxiosError>({
@@ -28,5 +29,12 @@ export const useInfiniteGetSearchBoard = (params: IGetSearchBoardRequest) => {
       if (firstPage.data.pageable.pageNumber === 0) return undefined;
       return firstPage.data.pageable.pageNumber - 1;
     },
+  });
+};
+
+export const useDeleteBoard = () => {
+  return useMutation<AxiosResponse<any>, AxiosError, string>({
+    mutationKey: 'useDeleteBoard',
+    mutationFn: (id) => apiRequest.delete(`/api/deal-boards/delete/${id}`),
   });
 };

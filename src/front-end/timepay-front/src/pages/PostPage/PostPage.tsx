@@ -1,6 +1,6 @@
 import { useCallback, useState, useRef, useEffect, useMemo } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { List, Modal, Form, Input } from 'antd';
+import { List, Modal, Form, Input, message } from 'antd';
 import { ReactComponent as BackArrow } from '../../assets/images/icons/header-back-arrow.svg';
 import { cssMainHeaderStyle } from '../../components/MainHeader/MainHeader.styles';
 import {
@@ -51,6 +51,9 @@ import InputText from '../../components/post/InputText';
 import { ApplicantButton } from '../../components/post/ApplicantButton';
 
 import axios from 'axios';
+import { useDeleteBoard } from '../../api/hooks/board';
+import { PATH } from '../../utils/paths';
+import { COMMON_COLOR } from '../../styles/constants/colors';
 
 interface PostPageProps {
   post?: IPost;
@@ -65,7 +68,7 @@ const Footer = Layout;
 
 const PostPage = ({ post }: PostPageProps) => {
   const [like, setLike] = useState(false);
-  const [nickName, setNickName]: any = useState();
+  const [nickName, setNickName] = useState('');
 
   useEffect(() => {
     apiRequest
@@ -78,16 +81,45 @@ const PostPage = ({ post }: PostPageProps) => {
       });
   }, []);
 
-  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-  const showModal = () => {
-    setIsDeleteModalOpen(true);
-  };
-  const handleOk = () => {
-    setIsDeleteModalOpen(false);
-  };
-  const handleCancel = () => {
-    setIsDeleteModalOpen(false);
-  };
+  const useDeleteBoardMutation = useDeleteBoard();
+  const [messageApi, contextHolder] = message.useMessage();
+  const url = window.location.pathname;
+  const real_id = url.substring(6);
+
+  const handleDelete = useCallback(async () => {
+    Modal.confirm({
+      content: '정말 게시글을 삭제하시겠습니까?',
+      okText: '삭제',
+      cancelText: '취소',
+      okButtonProps: {
+        style: {
+          background: `${COMMON_COLOR.MAIN1}`,
+          borderColor: `${COMMON_COLOR.MAIN1}`,
+        },
+      },
+      onOk: async () => {
+        try {
+          await useDeleteBoardMutation.mutateAsync(real_id, {
+            onSuccess: async (data) => {
+              messageApi.open({
+                type: 'success',
+                content: '게시글 삭제 완료',
+                duration: 0.5,
+                onClose() {
+                  navigate(PATH.HOME);
+                },
+              });
+            },
+            onError: (err) => {
+              console.log(err);
+            },
+          });
+        } catch (err) {
+          console.log('2', err);
+        }
+      },
+    });
+  }, [useDeleteBoardMutation]);
 
   const [form] = Form.useForm();
   const { TextArea } = Input;
@@ -259,18 +291,10 @@ const PostPage = ({ post }: PostPageProps) => {
               <Button css={cssEditBtnStyle} onClick={handleEditPageChange}>
                 수정
               </Button>
-              <Button css={cssDeleteBtnStyle} onClick={showModal}>
+              <Button css={cssDeleteBtnStyle} onClick={handleDelete}>
                 삭제
               </Button>
             </div>
-            <Modal
-              title="정말 게시글을 삭제하시겠습니까?"
-              open={isDeleteModalOpen}
-              onOk={handleOk}
-              onCancel={handleCancel}
-              okText="확인"
-              cancelText="취소"
-            ></Modal>
           </>
         )}
         {!author && (
