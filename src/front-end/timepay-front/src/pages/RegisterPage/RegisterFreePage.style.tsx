@@ -213,3 +213,15 @@ export const cssPostCategoryStyle = css`
   margin-top: 20px;
   margin-left: 20px;
 `;
+
+export const cssPostDateStyle = css`
+  margin-top: 20px;
+  margin-left: 20px;
+  .time {
+    width: 100px;
+    margin-left: 20px;
+  }
+  .time1 {
+    width: 100px;
+  }
+`;

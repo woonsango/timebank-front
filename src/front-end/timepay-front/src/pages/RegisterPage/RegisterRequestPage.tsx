@@ -8,7 +8,14 @@ import {
   UploadFile,
   Radio,
   DatePicker,
+  TimePicker,
 } from 'antd';
+import dayjs from 'dayjs';
+import moment from 'moment';
+import 'moment/locale/ko';
+import locale from 'antd/lib/locale/ko_KR';
+import { ConfigProvider } from 'antd';
+
 import { RcFile, UploadChangeParam, UploadProps } from 'antd/es/upload';
 import { useCallback, useState, useMemo, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
@@ -23,6 +30,7 @@ import {
   cssPostBtnStyle,
   cssPostFooterStyle,
   cssPostCategoryStyle,
+  cssPostDateStyle,
 } from './RegisterFreePage.style';
 import { FlagFilled } from '@ant-design/icons';
 import { KoDatePicker } from '../../components/register/KoDatePicker';
@@ -217,6 +225,25 @@ const RegisterRequestPage = () => {
     return <img width="100%" height="100%" src={dummyProfileImg} alt="+" />;
   }, []);
 
+  // date-picker
+  let today = new Date();
+  let year = today.getFullYear();
+  let month = String(today.getMonth() + 1).padStart(2, '0');
+  let date = String(today.getDate()).padStart(2, '0');
+  const todayDate = year + '-' + month + '-' + date;
+  console.log(todayDate);
+
+  const onChange = (value: any) => {
+    console.log(value.format('YYYY-MM-DD'));
+  };
+
+  // time-picker
+  const format = 'HH:mm';
+
+  const onChange2 = (value: any) => {
+    console.log(value.format('HH:mm:ss'));
+  };
+
   return (
     <div css={cssPostPageStyle}>
       <div className="wrapper">
@@ -259,15 +286,37 @@ const RegisterRequestPage = () => {
 
           <div css={cssLineStyle} />
           <Form.Item
-            name="range-picker"
-            label="날짜"
-            css={cssPostCategoryStyle}
+            name="date-picker"
+            label="활동할 날짜"
+            css={cssPostDateStyle}
           >
-            <RangePicker />
+            <ConfigProvider locale={locale}>
+              <DatePicker
+                onChange={onChange}
+                defaultValue={dayjs(todayDate, 'YYYY-MM-DD')}
+                size="large"
+              />
+            </ConfigProvider>
           </Form.Item>
 
-          <Form.Item name="time">
-            <TimeSelct />
+          <Form.Item name="time" label="활동할 시간" css={cssPostDateStyle}>
+            <div style={{ display: 'flex', alignItems: 'center' }}>
+              <TimePicker
+                defaultValue={dayjs('9:00', format)}
+                format={format}
+                className="time1"
+                size="large"
+                onChange={onChange2}
+              />
+              <p> ~ </p>
+              <TimePicker
+                defaultValue={dayjs('16:00', format)}
+                format={format}
+                className="time"
+                size="large"
+                onChange={onChange2}
+              />
+            </div>
           </Form.Item>
           <div>
             <p>내 타임페이 : {pay}</p>
