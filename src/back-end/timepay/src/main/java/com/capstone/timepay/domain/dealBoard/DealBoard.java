@@ -47,12 +47,6 @@ public class DealBoard extends BaseTimeEntity {
     private boolean isVolunteer;
     private int volunteerPeople;
 
-    // 검색화면을 위한 컬럼
-    private String writerName;
-    private String writerNickname;
-    private String writerType;
-    private String imageUrl;
-
     @JsonIgnore
     @OneToMany(mappedBy = "dealBoard", orphanRemoval = true, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<DealBoardComment> dealBoardComments = new ArrayList<>();

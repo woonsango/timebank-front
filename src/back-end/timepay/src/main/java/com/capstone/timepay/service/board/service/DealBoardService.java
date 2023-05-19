@@ -1,5 +1,6 @@
 package com.capstone.timepay.service.board.service;
 
+import com.capstone.timepay.controller.admin.response.board.DealBoardResponse;
 import com.capstone.timepay.domain.board.Board;
 import com.capstone.timepay.domain.board.BoardRepository;
 import com.capstone.timepay.domain.board.BoardStatus;
@@ -143,21 +144,7 @@ public class DealBoardService
                 .isHidden(dealBoardDTO.isHidden())
                 .isAuto(dealBoardDTO.isAuto())
                 .volunteerPeople(dealBoardDTO.getVolunteerPeople())
-                .writerName(user.getName())
-                .writerNickname(user.getNickname())
                 .build();
-
-        // 이미지가 있는지 없는지 판단
-        if (images != null)
-            dealBoard.setImageUrl(images.get(0).getOriginalFilename());
-        else
-            dealBoard.setImageUrl(null);
-
-        // 유저가 기관유저인지 일반 유저인지
-        if (user.getOrganization() == null)
-            dealBoard.setWriterType("개인 유저");
-        else
-            dealBoard.setWriterType("기관 유저");
 
         Board board = Board.builder().
                 freeBoard(null).
@@ -205,21 +192,7 @@ public class DealBoardService
                 .startTime(dealBoardDTO.getStartTime())
                 .endTime(dealBoardDTO.getEndTime())
                 .isHidden(dealBoardDTO.isHidden())
-                .writerName(user.getName())
-                .writerNickname(user.getNickname())
                 .build();
-
-        // 이미지가 있는지 없는지 판단
-        if (images != null)
-            dealBoard.setImageUrl(images.get(0).getOriginalFilename());
-        else
-            dealBoard.setImageUrl(null);
-
-        // 유저가 기관유저인지 일반 유저인지
-        if (user.getOrganization() == null)
-            dealBoard.setWriterType("개인 유저");
-        else
-            dealBoard.setWriterType("기관 유저");
 
         Board board = Board.builder().
                 freeBoard(null).
@@ -331,7 +304,8 @@ public class DealBoardService
         dealBoard.getDealBoardComments().add(dealBoardComment);
     }
 
-    public Page<DealBoard> search(Specification<DealBoard> spec, Pageable pageable) {
-        return dealBoardRepository.findAll(spec, pageable);
+    public Page<DealBoardResponse> search(Specification<DealBoard> spec, Pageable pageable) {
+        Page<DealBoard> dealBoards=  dealBoardRepository.findAll(spec, pageable);
+        return dealBoards.map(DealBoardResponse::new);
     }
 }
