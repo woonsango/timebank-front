@@ -13,3 +13,15 @@ body {
 .time-picker-no-footer .ant-picker-footer {
   display: none !important;
 }
+
+.big-post-dropdown a {
+  font-size: 21px;
+}
+
+.small-post-dropdown a {
+  font-size: 14px;
+}
+
+.big-post-dropdown .ant-dropdown-menu-item {
+  padding: 5px 0px !important;
+}

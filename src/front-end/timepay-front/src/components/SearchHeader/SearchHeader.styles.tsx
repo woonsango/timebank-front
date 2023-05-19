@@ -1,7 +1,7 @@
 import { css } from '@emotion/react';
 import { COMMON_COLOR } from '../../styles/constants/colors';
 
-export const cssSearchHeaderStyle = css`
+export const cssSearchHeaderStyle = (scaleValue: number) => css`
   position: fixed;
   top: 0px;
   width: 100%;
@@ -12,9 +12,13 @@ export const cssSearchHeaderStyle = css`
   z-index: 120;
   background-color: ${COMMON_COLOR.WHITE};
   border-bottom: 1px solid ${COMMON_COLOR.SILVER_GRAY};
-  padding-bottom: 15px;
+  padding-bottom: calc(15px * ${scaleValue});
   border-radius: 0px 0px 25px 25px;
   box-shadow: 0px 3px 10px rgba(0, 0, 0, 0.05);
+  .submit-btn {
+    font-size: calc(14px * ${scaleValue});
+    height: max-content;
+  }
   .back-arrow {
     width: 20px;
     height: auto;
@@ -24,7 +28,7 @@ export const cssSearchHeaderStyle = css`
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
-    padding: 15px 20px;
+    padding: calc(15px * ${scaleValue}) calc(20px * ${scaleValue});
     padding-bottom: 0px;
   }
   .title-form {
@@ -40,7 +44,8 @@ export const cssSearchHeaderStyle = css`
     }
     .ant-input {
       width: 100%;
-      height: 36px;
+      height: ${scaleValue === 1 ? '36px' : '43px'};
+      font-size: calc(14px * ${scaleValue});
     }
     .ant-btn {
       background-color: ${COMMON_COLOR.MAIN1};
@@ -60,8 +65,8 @@ export const cssSearchHeaderStyle = css`
       border-radius: 20px;
       font-style: normal;
       font-weight: 600;
-      font-size: 14px;
-      line-height: 15px;
+      font-size: calc(14px * ${scaleValue});
+      line-height: calc(15px * ${scaleValue});
       color: black;
       border: unset;
       background: ${COMMON_COLOR.LIGHT_GRAY};
@@ -75,8 +80,8 @@ export const cssSearchHeaderStyle = css`
     text-align: right;
     font-style: normal;
     font-weight: 600;
-    font-size: 14px;
-    line-height: 15px;
+    font-size: calc(14px * ${scaleValue});
+    line-height: calc(15px * ${scaleValue});
     color: black;
     background: ${COMMON_COLOR.WHITE};
     padding: 0px 20px 0px 20px;
@@ -85,12 +90,12 @@ export const cssSearchHeaderStyle = css`
     }
     .ant-collapse-content-box {
       padding: 0;
-      padding-top: 22px;
+      padding-top: calc(22px * ${scaleValue});
     }
 
     .option-form {
       .ant-form-item {
-        margin-bottom: 5px;
+        margin-bottom: calc(5px * ${scaleValue});
       }
       .ant-form-item-row {
         display: flex;
@@ -103,8 +108,8 @@ export const cssSearchHeaderStyle = css`
               width: 90px;
               font-style: normal;
               font-weight: 600;
-              font-size: 14px;
-              line-height: 15px;
+              font-size: calc(14px * ${scaleValue});
+              line-height: calc(15px * ${scaleValue});
               color: black;
             }
           }
@@ -113,9 +118,19 @@ export const cssSearchHeaderStyle = css`
             .ant-form-item-control-input-content {
               display: flex;
               flex-direction: row;
-              gap: 5px;
+              gap: calc(5px * ${scaleValue});
               opacity: 100;
             }
+          }
+        }
+      }
+      .type-div {
+        .ant-radio-group {
+          width: 100%;
+          text-align: center;
+          margin-bottom: 10px;
+          .ant-radio-button-wrapper {
+            font-size: calc(14px * ${scaleValue});
           }
         }
       }
@@ -123,18 +138,9 @@ export const cssSearchHeaderStyle = css`
       .ant-select {
         width: 100px;
       }
+      .volunteer-check {
+        font-size: calc(14px * ${scaleValue});
+      }
     }
   }
 `;
-
-// export const cssHomeHeaderNotificationStyle = css`
-//   font-size: 25px;
-//   margin-top: 10px;
-//   margin-bottom: 15px;
-//   color: ${COMMON_COLOR.FONT2};
-//   .ant-badge-dot {
-//     width: 9px;
-//     height: 9px;
-//     background: ${COMMON_COLOR.MAIN1};
-//   }
-// `;
