@@ -3,6 +3,7 @@ import { useMemo } from 'react';
 import { ICommentActivity } from '../../api/interfaces/IComment';
 import { IBoard } from '../../api/interfaces/IPost';
 import { IUser } from '../../api/interfaces/IUser';
+import useFontSize from '../../hooks/useFontSize';
 import { cssTabStyle } from '../../styles/constants/tabStyle';
 import ActivityCommentCard from '../ActivityCommentCard';
 import ActivityPostCard from '../ActivityPostCard';
@@ -23,6 +24,7 @@ const AnotherUserProfileDrawer = ({
   userComments,
 }: AnotherUserProfileDrawerProps) => {
   // api 합칠 때 user와 user의 활동기록을 api 로 받아오게 처리할 예정
+  const { scaleValue } = useFontSize();
 
   const ACTIVITY_TAB_KEYS = useMemo(() => {
     return { POST: '게시글', COMMENT: '댓글' } as const;
@@ -102,7 +104,7 @@ const AnotherUserProfileDrawer = ({
           </div>
           <div className="activity-container">
             <Tabs
-              css={cssTabStyle}
+              css={cssTabStyle(scaleValue)}
               defaultActiveKey={ACTIVITY_TAB_KEYS.POST}
               items={items}
             />

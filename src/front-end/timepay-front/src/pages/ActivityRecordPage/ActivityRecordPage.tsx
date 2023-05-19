@@ -19,8 +19,11 @@ import {
 import { ICommentActivity } from '../../api/interfaces/IComment';
 import { IBoard } from '../../api/interfaces/IPost';
 import TimeTable from '../../components/TimeTable';
+import useFontSize from '../../hooks/useFontSize';
 
 const ActivityRecordPage = () => {
+  const { scaleValue } = useFontSize();
+
   const [boardSearchValue, setBoardSearchValue] =
     useState<IGetUserBoardRequest>({
       pageIndex: 0,
@@ -117,16 +120,24 @@ const ActivityRecordPage = () => {
         key: ACTIVITY_TAB_KEYS.POST,
         label: ACTIVITY_TAB_KEYS.POST,
         children: (
-          <div css={cssActivityRecordPageStyle} style={{ width: '100%' }}>
+          <div
+            css={cssActivityRecordPageStyle(scaleValue)}
+            style={{ width: '100%' }}
+          >
             <Form
               form={postForm}
-              css={cssHorizontalForm}
+              css={cssHorizontalForm(scaleValue)}
               layout="horizontal"
               onValuesChange={handleOnChangeBoardForm}
             >
               <div>
-                <Form.Item name="boardType" style={{ width: 120 }} noStyle>
-                  <Select placeholder="유형 선택">
+                <Form.Item name="boardType" noStyle>
+                  <Select
+                    placeholder="유형 선택"
+                    popupClassName={`select-${
+                      scaleValue === 1 ? 'small' : 'big'
+                    }`}
+                  >
                     <Select.Option value="ALL">전체</Select.Option>
                     <Select.Option value="help">도움요청</Select.Option>
                     <Select.Option value="helper">같이하기</Select.Option>
@@ -134,7 +145,12 @@ const ActivityRecordPage = () => {
                   </Select>
                 </Form.Item>
                 <Form.Item name="boardStatus" style={{ width: 120 }} noStyle>
-                  <Select placeholder="상태 선택">
+                  <Select
+                    placeholder="상태 선택"
+                    popupClassName={`select-${
+                      scaleValue === 1 ? 'small' : 'big'
+                    }`}
+                  >
                     <Select.Option value="ALL">전체</Select.Option>
                     <Select.Option value="MATCHING_IN_PROGRESS">
                       매칭중
@@ -179,7 +195,7 @@ const ActivityRecordPage = () => {
                       )}
                   </>
                 ) : (
-                  <div css={cssNothingStyle}>
+                  <div css={cssNothingStyle(scaleValue)}>
                     <span className="emoji">😅</span>
                     <span>해당하는 게시글이 없습니다.</span>
                   </div>
@@ -195,15 +211,23 @@ const ActivityRecordPage = () => {
         key: ACTIVITY_TAB_KEYS.COMMENT,
         label: ACTIVITY_TAB_KEYS.COMMENT,
         children: (
-          <div css={cssActivityRecordPageStyle} style={{ width: '100%' }}>
+          <div
+            css={cssActivityRecordPageStyle(scaleValue)}
+            style={{ width: '100%' }}
+          >
             <Form
               form={commentForm}
-              css={cssHorizontalForm}
+              css={cssHorizontalForm(scaleValue)}
               layout="horizontal"
               onValuesChange={handleOnChangeCommentForm}
             >
               <Form.Item name="commentType" style={{ width: 120 }} noStyle>
-                <Select placeholder="유형 선택">
+                <Select
+                  placeholder="유형 선택"
+                  popupClassName={`select-${
+                    scaleValue === 1 ? 'small' : 'big'
+                  }`}
+                >
                   <Select.Option value="ALL">전체</Select.Option>
                   <Select.Option value="APPLIED">지원</Select.Option>
                   <Select.Option value="ADOPTED">선정</Select.Option>
@@ -230,7 +254,7 @@ const ActivityRecordPage = () => {
                   )}
                 </>
               ) : (
-                <div css={cssNothingStyle}>
+                <div css={cssNothingStyle(scaleValue)}>
                   <span className="emoji">😅</span>
                   <span>해당하는 댓글이 없습니다.</span>
                 </div>
@@ -243,6 +267,7 @@ const ActivityRecordPage = () => {
       },
     ];
   }, [
+    scaleValue,
     boardSearchValue,
     commentSearchValue,
     boardData,
@@ -268,7 +293,7 @@ const ActivityRecordPage = () => {
     <>
       <TimeTable />
       <Tabs
-        css={cssTabStyle}
+        css={cssTabStyle(scaleValue)}
         defaultActiveKey={ACTIVITY_TAB_KEYS.POST}
         items={items}
       />

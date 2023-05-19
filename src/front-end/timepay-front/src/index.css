@@ -25,3 +25,11 @@ body {
 .big-post-dropdown .ant-dropdown-menu-item {
   padding: 5px 0px !important;
 }
+
+.select-small .ant-select-item {
+  font-size: 14px;
+}
+
+.select-big .ant-select-item {
+  font-size: calc(14px * 1.5);
+}

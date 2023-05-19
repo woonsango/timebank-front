@@ -1,7 +1,7 @@
 import { css } from '@emotion/react';
 import { COMMON_COLOR } from './colors';
 
-export const cssTabStyle = css`
+export const cssTabStyle = (scaleValue: number) => css`
   height: 100%;
   .ant-tabs-nav {
     margin-bottom: 0px;
@@ -25,8 +25,8 @@ export const cssTabStyle = css`
   .ant-tabs-tab-btn {
     font-style: normal;
     font-weight: 700;
-    font-size: 16px;
-    line-height: 20px;
+    font-size: calc(16px * ${scaleValue});
+    line-height: calc(20px * ${scaleValue});
     color: ${COMMON_COLOR.FONT2} !important;
   }
   .ant-tabs-tab-active {
@@ -41,6 +41,6 @@ export const cssTabStyle = css`
 
   .ant-tabs-content-holder {
     height: 100%;
-    padding-bottom: 10px;
+    padding-bottom: calc(10px * ${scaleValue});
   }
 `;
