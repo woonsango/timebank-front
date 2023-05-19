@@ -1,5 +1,6 @@
 import { Tag } from 'antd';
 import { useMemo } from 'react';
+import useFontSize from '../../hooks/useFontSize';
 import { COMMON_COLOR } from '../../styles/constants/colors';
 import { getStatus } from '../../utils/board';
 import { cssPostStatusTagStyle } from './PostStatusTag.styles';
@@ -9,6 +10,7 @@ export interface PostStatusTagColorProps {
   backgroundColor?: string;
 }
 const PostStatusTag = ({ status }: { status?: string }) => {
+  const { scaleValue } = useFontSize();
   const statusColor: PostStatusTagColorProps = useMemo(() => {
     switch (getStatus(status)) {
       case '매칭중':
@@ -39,7 +41,7 @@ const PostStatusTag = ({ status }: { status?: string }) => {
     }
   }, [status]);
   return (
-    <Tag css={cssPostStatusTagStyle(statusColor)}>
+    <Tag css={cssPostStatusTagStyle(statusColor, scaleValue)}>
       {getStatus(status) || '로딩 중'}
     </Tag>
   );

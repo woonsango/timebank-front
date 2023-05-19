@@ -6,11 +6,11 @@ export const cssSpinStyle = css`
   width: 100%;
 `;
 
-export const cssNothingStyle = css`
+export const cssNothingStyle = (scaleValue: number) => css`
   display: flex;
   flex-direction: column;
   .emoji {
-    font-size: 25px;
+    font-size: calc(25px * ${scaleValue});
   }
   text-align: center !important;
   padding-top: 250px;

@@ -19,6 +19,8 @@ import PostTypeTag from '../PostTypeTag';
 import { cssPostTypeTagStyle } from '../PostTypeTag/PostTypeTag.styles';
 import { COMMON_COLOR } from '../../styles/constants/colors';
 import { getDateDiffToday } from '../../utils/board';
+import useFontSize from '../../hooks/useFontSize';
+import dayjs from 'dayjs';
 
 interface SimplePostCardProps {
   post?: IBoard;
@@ -26,13 +28,15 @@ interface SimplePostCardProps {
 
 const SimplePostCard = ({ post }: SimplePostCardProps) => {
   const navigate = useNavigate();
+  const { scaleValue } = useFontSize();
+
   const handlePageChange = () => {
     navigate(`/post/${post?.d_boardId}`, {});
   };
   const footerComponent = useCallback(
     (nickname?: string, createdAt?: string, userType?: string) => {
       return (
-        <div css={cssSimplePostCardFooterStyle}>
+        <div css={cssSimplePostCardFooterStyle(scaleValue)}>
           <div className="nickname">
             {userType === '일반 유저' ? <UserOutlined /> : <AgencyUser />}
             {nickname || '-'}
@@ -41,33 +45,36 @@ const SimplePostCard = ({ post }: SimplePostCardProps) => {
         </div>
       );
     },
-    [],
+    [scaleValue],
   );
 
   const postCardContent = useMemo(() => {
     return (
       <div>
-        <div css={cssSimplePostCardHeadStyle}>
+        <div css={cssSimplePostCardHeadStyle(scaleValue)}>
           <div className="tag">
             <div className="type">
               <PostTypeTag type={post?.type} />
             </div>
             <div
               className="amount"
-              css={cssPostTypeTagStyle({
-                backgroundColor: COMMON_COLOR.MAIN1,
-              })}
+              css={cssPostTypeTagStyle(
+                {
+                  backgroundColor: COMMON_COLOR.MAIN1,
+                },
+                scaleValue,
+              )}
             >
               {post?.pay || '-'} TP
             </div>
           </div>
           <div className="title">
             <PostStatusTag status={post?.boardStatus} />
-            <div>{post?.title || '-'}</div>
+            <div className="title-div">{post?.title || '-'}</div>
             <div className="attachment">{post?.imageUrl && <Attachment />}</div>
           </div>
         </div>
-        <div css={cssSimplePostCardBodyStyle}>
+        <div css={cssSimplePostCardBodyStyle(scaleValue)}>
           <div className="post-card-location">
             <RegionPin />
             {post?.location || '-'}
@@ -76,8 +83,17 @@ const SimplePostCard = ({ post }: SimplePostCardProps) => {
             <Clock />
             {post ? (
               <span>
-                {post.startTime?.split('.')[0].replace('T', ' ')} ~
-                {post.endTime?.split('.')[0].replace('T', ' ')}
+                {post.startTime
+                  ? dayjs(post.startTime, 'YYYY-MM-DDTHH:mm:ss').format(
+                      'MM월 DD일 HH시 mm분',
+                    )
+                  : '-'}{' '}
+                ~{' '}
+                {post.endTime
+                  ? dayjs(post.endTime, 'YYYY-MM-DDTHH:mm:ss').format(
+                      'HH시 mm분',
+                    )
+                  : '-'}
               </span>
             ) : (
               <span>-</span>
@@ -89,12 +105,12 @@ const SimplePostCard = ({ post }: SimplePostCardProps) => {
         </div>
       </div>
     );
-  }, [post]);
+  }, [post, scaleValue]);
 
   return (
     <Card
       bordered={false}
-      css={cssSimplePostCardStyle}
+      css={cssSimplePostCardStyle(scaleValue)}
       onClick={handlePageChange}
     >
       <Spin size="large" spinning={!post}>

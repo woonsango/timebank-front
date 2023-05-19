@@ -23,6 +23,7 @@ import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { boardSearchState } from '../../states/boardSearch';
 import { useGetCategory } from '../../api/hooks/category';
 import { searchDrawerOpenState } from '../../states/uiState';
+import useFontSize from '../../hooks/useFontSize';
 
 const SearchHeader = () => {
   const navigate = useNavigate();
@@ -31,6 +32,7 @@ const SearchHeader = () => {
     type: '도움요청',
     useYn: 'Y',
   });
+  const { scaleValue } = useFontSize();
 
   const boardSearchValue = useRecoilValue(boardSearchState);
   const setBoardSearch = useSetRecoilState(boardSearchState);
@@ -133,7 +135,7 @@ const SearchHeader = () => {
   }, [setSearchDrawerOpen]);
 
   return (
-    <div css={cssSearchHeaderStyle}>
+    <div css={cssSearchHeaderStyle(scaleValue)}>
       {contextHolder}
       <div className="search-title-container">
         <BackArrow className="back-arrow" onClick={handleClickBack} />
@@ -146,7 +148,7 @@ const SearchHeader = () => {
           <Form.Item name="title" initialValue={boardSearchValue.title}>
             <Input placeholder="검색할 게시글의 제목을 입력해주세요" />
           </Form.Item>
-          <Button htmlType="submit" type="primary">
+          <Button htmlType="submit" type="primary" className="submit-btn">
             검색
           </Button>
         </Form>
@@ -197,15 +199,12 @@ const SearchHeader = () => {
             colon={false}
             onValuesChange={handleOnChangeOptionSearchForm}
           >
-            <Form.Item name="type" initialValue={boardSearchValue.type}>
-              <Radio.Group
-                buttonStyle="solid"
-                style={{
-                  width: '100%',
-                  textAlign: 'center',
-                  marginBottom: '10px',
-                }}
-              >
+            <Form.Item
+              name="type"
+              className="type-div"
+              initialValue={boardSearchValue.type}
+            >
+              <Radio.Group buttonStyle="solid">
                 <Radio.Button value="help">도움요청</Radio.Button>
                 <Radio.Button value="helper">같이하기</Radio.Button>
                 <Radio.Button value="event">기부하기</Radio.Button>
@@ -280,7 +279,9 @@ const SearchHeader = () => {
               </Form.Item>
             </Form.Item>
             <Form.Item name="volunteer" valuePropName="checked">
-              <Checkbox>봉사활동 게시글만 보기</Checkbox>
+              <Checkbox className="volunteer-check">
+                봉사활동 게시글만 보기
+              </Checkbox>
             </Form.Item>
           </Form>
           <div onClick={handleOnHideSearchOptionCollapse}>
