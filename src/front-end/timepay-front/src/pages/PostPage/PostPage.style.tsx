@@ -171,6 +171,14 @@ export const cssPostDetailAttachment = css`
   margin-bottom: 10px;
 `;
 
+// 6th
+export const cssPostDetailSixth = css`
+  margin-top: 25px;
+  margin-left: 25px;
+  margin-right: 25px;
+  margin-bottom: 200px;
+`;
+
 export const cssReportContainer = css`
   display: flex;
   justify-content: flex-end;
@@ -187,7 +195,6 @@ export const cssCommentContainer = css`
   margin-top: 10px;
   margin-left: 25px;
   margin-right: 25px;
-  margin-bottom: 200px;
   p {
     font-size: 22px;
     font-weight: 500;
