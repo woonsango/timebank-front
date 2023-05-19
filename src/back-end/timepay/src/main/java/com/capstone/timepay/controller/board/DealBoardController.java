@@ -10,7 +10,6 @@ import com.capstone.timepay.service.board.service.ReportService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -34,6 +33,7 @@ public class DealBoardController
     private final ReportService reportService;
 
     private final DealRegisterService dealRegisterService;
+
 
 
     @ApiOperation(value = "거래게시판 모든 게시판 불러오기")
@@ -136,8 +136,7 @@ public class DealBoardController
 
     @ApiOperation(value = "거래게시판 게시글 삭제")
     @DeleteMapping ("/delete/{id}")
-    public Map<String, Object> delete(@RequestBody DealBoardDTO dealBoardDTO,
-                                      @PathVariable("id") Long id,
+    public Map<String, Object> delete(@PathVariable("id") Long id,
                                       Principal principal)
     {
         Map<String, Object> deleteMap = new HashMap<>();
