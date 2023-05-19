@@ -46,10 +46,10 @@ export const useGetBoard = (postPk: number) => {
 export const useDeleteBoard = () => {
   return useMutation<AxiosResponse<IDeleteBoard>, AxiosError, string>({
     mutationKey: 'useDeleteBoard',
-    mutationFn: (id) => apiRequest.delete(`/api/deal-boards/delete/${id}`),
+    mutationFn: (id) =>
+      apiRequest.delete(`${API_URL.DEAL_BOARDS_DELETE}/${id}`),
   });
 };
-// 여기에 ...data를 추가해야 하는데......
 
 export const useCreateReports = () => {
   return useMutation<AxiosResponse<boolean>, AxiosError, IReportBoard>({

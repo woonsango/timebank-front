@@ -1,6 +1,6 @@
 export const API_URL = {
   DEAL_BOARDS: '/api/deal-boards',
-  DEAL_BOARDS_DELETE: '/api/deal-boards/delete/:id',
+  DEAL_BOARDS_DELETE: '/api/deal-boards/delete',
   DEAL_BOARDS__SEARCH: 'deal-boards/search',
   DEAL_REPORT: '/deal-boards/:id/report',
   DEAL_BOARDS_COMMENT: 'api/deal-boards/comments/:id/applied',
