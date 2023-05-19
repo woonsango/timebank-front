@@ -11,6 +11,7 @@ import {
   cssSpinStyle,
 } from './SearchPage.styles';
 import { searchDrawerOpenState } from '../../states/uiState';
+import useFontSize from '../../hooks/useFontSize';
 
 const SearchPage = () => {
   const boardSearchValue = useRecoilValue(boardSearchState);
@@ -18,6 +19,8 @@ const SearchPage = () => {
 
   const { data, fetchNextPage, hasNextPage, isLoading } =
     useInfiniteGetSearchBoard(boardSearchValue);
+
+  const { scaleValue } = useFontSize();
 
   const [ref, inView] = useInView({ threshold: 0.3 });
 
@@ -42,7 +45,7 @@ const SearchPage = () => {
           <SimplePostCard key={board ? board.d_boardId : index} post={board} />
         ))
       ) : (
-        <div css={cssNothingStyle}>
+        <div css={cssNothingStyle(scaleValue)}>
           <span className="emoji">😅</span>
           <span>해당하는 게시글이 없습니다.</span>
           <span>다르게 검색해보세요!</span>
