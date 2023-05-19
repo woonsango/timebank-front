@@ -177,6 +177,13 @@ export const cssPostDetailSixth = css`
   margin-left: 25px;
   margin-right: 25px;
   margin-bottom: 200px;
+  p {
+    text-align: center;
+    font-size: 15px;
+    font-weight: 500;
+    color: ${COMMON_COLOR.FONT2};
+    line-height: 20px;
+  }
 `;
 
 export const cssReportContainer = css`

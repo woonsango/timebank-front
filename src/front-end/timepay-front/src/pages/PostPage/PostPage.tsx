@@ -435,9 +435,15 @@ const PostPage = ({ post }: PostPageProps) => {
           onItemClick={onApplicantClick}
         />
         <div css={cssPostDetailSixth}>
-          {applicants.map((data) => (
-            <Item c={data} key={data.id} />
-          ))}
+          {applicants.length > 0 ? (
+            applicants.map((data) => (
+              <Item c={data} id={data.id} key={data.id} />
+            ))
+          ) : (
+            <p>
+              아직 댓글이 없어요🥹 <br /> 첫 댓글을 입력해보세요!
+            </p>
+          )}
         </div>
       </div>
       <Footer css={cssPostFooter}>
