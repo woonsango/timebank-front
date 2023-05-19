@@ -17,6 +17,8 @@ import com.capstone.timepay.domain.organization.Organization;
 import com.capstone.timepay.domain.organization.OrganizationRepository;
 import com.capstone.timepay.domain.user.User;
 import com.capstone.timepay.domain.user.UserRepository;
+import com.capstone.timepay.domain.userProfile.UserProfile;
+import com.capstone.timepay.domain.userToken.UserToken;
 import com.capstone.timepay.firebase.FirebaseService;
 import com.capstone.timepay.service.admin.dto.AdminRegisterDTO;
 import com.capstone.timepay.service.organization.dto.OrgaUserSignUpDto;
@@ -75,26 +77,38 @@ public class OrganizationUserService {
                 .pw(encodedPassword)
                 .employeeNum(dto.getEmployeeNum())
                 .timepay(dto.getTimepay())
+                .deviceToken(dto.getDeviceToken())
                 .authority("normal")    // 일단 기본 권한 부여
                 .imageUrl(imageUrl)
                 .certificationUrl(certificationUrl)
                 .roles(Collections.singletonList("ROLE_ORGANIZATION"))
                 .build();
             organizationRepository.save(newOrganization);
+            UserProfile userProfile = UserProfile.builder()
+                    .introduction("null")
+                    .imageUrl("null")
+                    .boardCnt(0)
+                    .timepay(0)
+                    .commentCnt(0)
+                    .build();
+            UserToken userToken = UserToken.builder()
+                    .accessToken("null")
+                    .refrechToken("null")
+                    .build();
             User newUser = User.builder()
                     .birthday(null)
-                    .email(null)    // 나중에 추가로 받을 수도 있을 듯
-                    .encodedPassword(null)
+                    .email("null")    // 나중에 추가로 받을 수도 있을 듯
+                    .encodedPassword("null")
                     .isBanned(false)
                     .isSignUp(false)
-                    .location(null)
+                    .location("null")
                     .name(dto.getManagerName()) // 담당자 이름 저장
                     .nickname(dto.getManagerName())
                     .phone(dto.getManagerPhone())   // 담당자 폰 번호 저장
-                    .sex(null)
+                    .sex("null")
                     .organization(newOrganization)
-                    .userProfile(null)
-                    .userToken(null)
+                    .userProfile(userProfile)
+                    .userToken(userToken)
                     .totalVolunteerTime(0)
                     .build();
             userRepository.save(newUser);

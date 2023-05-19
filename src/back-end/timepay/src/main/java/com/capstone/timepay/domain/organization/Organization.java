@@ -30,6 +30,7 @@ public class Organization extends BaseTimeEntity {
     private String businessCode;
     private int employeeNum;
     private int timepay;
+    private String deviceToken;
     private String account;
     private String pw;
     private String authority;

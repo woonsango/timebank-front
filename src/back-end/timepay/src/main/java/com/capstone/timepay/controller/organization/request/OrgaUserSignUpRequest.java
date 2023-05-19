@@ -20,13 +20,14 @@ public class OrgaUserSignUpRequest {
     private String businessCode;
     private int employeeNum;
     private int timepay;
+    private String deviceToken;
     @NotNull
     private String id;
     @NotNull
     private String pw;
 
     public OrgaUserSignUpDto toServiceDto(){
-        return OrgaUserSignUpDto.of(organizationName,managerName,managerPhone,businessCode,employeeNum,timepay,id,pw);
+        return OrgaUserSignUpDto.of(organizationName,managerName,managerPhone,businessCode,employeeNum,timepay,deviceToken,id,pw);
     }
 
 }
