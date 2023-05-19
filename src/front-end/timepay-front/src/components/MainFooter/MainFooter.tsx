@@ -15,17 +15,21 @@ import { ReactComponent as Home } from '../../assets/images/icons/home.svg';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { PATH } from '../../utils/paths';
 import { useCallback, useMemo } from 'react';
-import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { useSetRecoilState } from 'recoil';
 import { fontSizeState } from '../../states/uiState';
 import useFontSize from '../../hooks/useFontSize';
-import { agencyState } from '../../states/user';
+import { useGetUserInfo } from '../../api/hooks/user';
 
 const MainFooter = () => {
+  const { data } = useGetUserInfo();
   const { isBig } = useFontSize();
   const setFontSize = useSetRecoilState(fontSizeState);
-
-  const agencyValue = useRecoilValue(agencyState);
   const navigate = useNavigate();
+
+  const isAgency = useMemo(() => {
+    if (data?.data.body.managerName) return true;
+    return false;
+  }, [data]);
 
   const items: MenuProps['items'] = useMemo(() => {
     const items = [
@@ -38,13 +42,13 @@ const MainFooter = () => {
         label: <Link to={PATH.Register_HS}>같이하기</Link>,
       },
     ];
-    if (agencyValue)
+    if (isAgency)
       items.push({
         key: PATH.Register_EVENT,
         label: <Link to={PATH.Register_EVENT}>이벤트</Link>,
       });
     return items;
-  }, [agencyValue]);
+  }, [isAgency]);
 
   const handleOnClickModifyFontSize = useCallback(() => {
     if (isBig) setFontSize('small');

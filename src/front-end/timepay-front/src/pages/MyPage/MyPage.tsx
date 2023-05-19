@@ -210,7 +210,7 @@ const MyPage = () => {
         setIntroduction(res.data.body.introduction);
         setPersonalNum(res.data.body.id);
         setTimePay(res.data.body.time_pay);
-        if (res.data.body.businessCode) {
+        if (res.data.body.managerName) {
           setAgencyInfo(res.data.body);
         }
       })
@@ -289,7 +289,6 @@ const MyPage = () => {
         ) : (
           <div css={cssMyPage}>
             <div css={cssMyPageProfileBlock(scaleValue)}>
-              {' '}
               <div className="MyTopBox">
                 <div className="MyImageWrap">
                   <img src={image} className="MyProfileImage" alt="내 프로필" />
