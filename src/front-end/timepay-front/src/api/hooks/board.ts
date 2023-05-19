@@ -5,10 +5,11 @@ import {
   IGetSearchBoardRequest,
   IGetSearchBoardResponse,
   IReportBoard,
+  IBoard,
 } from '../interfaces/IPost';
 import { apiRequest } from '../request';
 import { API_URL } from '../urls';
-import { useMutation } from 'react-query';
+import { useMutation, useQuery } from 'react-query';
 
 export const useInfiniteGetSearchBoard = (params: IGetSearchBoardRequest) => {
   return useInfiniteQuery<AxiosResponse<IGetSearchBoardResponse>, AxiosError>({
@@ -31,6 +32,14 @@ export const useInfiniteGetSearchBoard = (params: IGetSearchBoardRequest) => {
       if (firstPage.data.pageable.pageNumber === 0) return undefined;
       return firstPage.data.pageable.pageNumber - 1;
     },
+  });
+};
+
+export const useGetBoard = (postPk: number) => {
+  return useQuery<AxiosResponse<IBoard>, AxiosError>({
+    queryKey: ['useGetBoard'],
+    queryFn: () => apiRequest.get(`${API_URL.DEAL_BOARDS}/${postPk}`),
+    refetchOnWindowFocus: false,
   });
 };
 

@@ -42,7 +42,7 @@ import PostStatusTag from '../../components/PostStatusTag';
 import { ClockCircleOutlined, FlagFilled } from '@ant-design/icons';
 import { Button, Layout } from 'antd';
 import PostButton from '../../components/post/PostButton';
-import { IPost } from '../../api/interfaces/IPost';
+import { IBoard } from '../../api/interfaces/IPost';
 import { ReactComponent as LikeDefault } from '../../assets/images/icons/like_default.svg';
 import { ReactComponent as LikeClick } from '../../assets/images/icons/like_click.svg';
 import { apiRequest } from '../../api/request';
@@ -52,17 +52,16 @@ import InputText from '../../components/post/InputText';
 import { ApplicantButton } from '../../components/post/ApplicantButton';
 
 import axios from 'axios';
-import { useDeleteBoard } from '../../api/hooks/board';
+import { useDeleteBoard, useGetBoard } from '../../api/hooks/board';
 import { PATH } from '../../utils/paths';
 import { COMMON_COLOR } from '../../styles/constants/colors';
 
 import { AxiosError, AxiosResponse } from 'axios';
 import { IReportBoard } from '../../api/interfaces/IPost';
 import { useMutation } from 'react-query';
-import { api } from '../../services';
 
-interface PostPageProps {
-  post?: IPost;
+interface BoardProps {
+  post?: IBoard;
 }
 
 interface TList {
@@ -80,7 +79,7 @@ interface Applicant {
 
 const Footer = Layout;
 
-const PostPage = ({ post }: PostPageProps) => {
+const PostPage = ({ post }: BoardProps) => {
   const [applicants, setApplicants] = useState<Applicant[]>([]);
 
   const navigate = useNavigate();
@@ -88,46 +87,22 @@ const PostPage = ({ post }: PostPageProps) => {
   const [like, setLike] = useState(false);
   const [nickName, setNickName] = useState('');
 
-  const location = useLocation();
-  const {
-    id,
-    type,
-    title,
-    content,
-    createdAt,
-    category,
-    attachment,
-    status,
-    pay,
-    startTime,
-    endTime,
-    region,
-    user,
-  } = location.state;
+  const useDeleteBoardMutation = useDeleteBoard();
+  const [messageApi, contextHolder] = message.useMessage();
+  const url = window.location.pathname;
+  const real_id = url.substring(6);
+  const { data, isLoading } = useGetBoard(parseInt(real_id));
 
-  console.log('user', user);
-  console.log('id', id);
-  console.log('title', title);
-  console.log('region', region);
-
-  const handleEditPageChange = () => {
-    navigate(`/edit/${id}`, {
-      state: {
-        id,
-        type,
-        title,
-        content,
-        status,
-        category,
-        pay,
-        startTime,
-        endTime,
-        region,
-        attachment,
-        user,
-      },
-    });
-  };
+  // useEffect(() => {
+  //   apiRequest
+  //     .get(API_URL.DEAL_BOARDS)
+  //     .then((res) => {
+  //       setNickName(res.data.body.nick_name);
+  //     })
+  //     .catch((error) => {
+  //       console.error('Error sending GET request:', error);
+  //     });
+  // });
 
   useEffect(() => {
     apiRequest
@@ -142,7 +117,7 @@ const PostPage = ({ post }: PostPageProps) => {
 
   useEffect(() => {
     apiRequest
-      .get(`/api/deal-boards/comments/${id}`)
+      .get(`/api/deal-boards/comments/${real_id}`)
       .then((res) => {
         setApplicants(res.data);
       })
@@ -160,18 +135,13 @@ const PostPage = ({ post }: PostPageProps) => {
     return useMutation<AxiosResponse<boolean>, AxiosError, IReportBoard>({
       mutationKey: 'useReports',
       mutationFn: (data) =>
-        apiRequest.post(`/api/deal-boards/${id}/report`, {
+        apiRequest.post(`/api/deal-boards/${real_id}/report`, {
           ...data,
         }),
     });
   };
 
   const useReportMutation = useCreateReports();
-
-  const useDeleteBoardMutation = useDeleteBoard();
-  const [messageApi, contextHolder] = message.useMessage();
-  const url = window.location.pathname;
-  const real_id = url.substring(6);
 
   // 지금 에러 뜨는 곳. body를 넣어줘야 함!!
   const handleDelete = useCallback(async () => {
@@ -236,7 +206,7 @@ const PostPage = ({ post }: PostPageProps) => {
       onOk: (e) => {
         const reason = e.reason;
         useReportMutation.mutate(
-          { boardId: id, report_body: reason },
+          { boardId: parseInt(real_id), report_body: reason },
           {
             onSuccess: () => {
               messageApi.success('게시글이 신고되었습니다.');
@@ -253,10 +223,10 @@ const PostPage = ({ post }: PostPageProps) => {
   // 수정 및 삭제 버튼 표시 여부를 결정하는 함수
   let [author, setAuthor] = useState(false);
   const isAuthor = useMemo(() => {
-    if (user === nickName) {
+    if (data?.data.userNickname === nickName) {
       setAuthor(true);
     } else setAuthor(false);
-  }, [user, nickName]);
+  }, [nickName]);
 
   console.log(nickName);
 
@@ -294,8 +264,6 @@ const PostPage = ({ post }: PostPageProps) => {
   const onCancel2 = () => {
     setIsListModalOpen(false);
   };
-
-  console.log('user', user);
 
   // 댓글 입력
   const [inputText, setInputText] = useState('');
@@ -340,7 +308,7 @@ const PostPage = ({ post }: PostPageProps) => {
     nextId.current += 1;
 
     axios
-      .post(`/api/deal-boards/comments/write/${id}`, { inputText })
+      .post(`/api/deal-boards/comments/write/${real_id}`, { inputText })
       .then((response) => {
         // 요청이 성공적으로 처리되었을 때 실행될 코드 작성
 
@@ -364,9 +332,7 @@ const PostPage = ({ post }: PostPageProps) => {
         {author && (
           <>
             <div css={cssQnaDeleteStyle}>
-              <Button css={cssEditBtnStyle} onClick={handleEditPageChange}>
-                수정
-              </Button>
+              <Button css={cssEditBtnStyle}>수정</Button>
               <Button css={cssDeleteBtnStyle} onClick={handleDelete}>
                 삭제
               </Button>
@@ -384,38 +350,39 @@ const PostPage = ({ post }: PostPageProps) => {
         )}
 
         <div css={cssPostDetailSecond}>
-          <div css={cssPostDetailTitle}>{title}</div>
+          <div css={cssPostDetailTitle}>{data?.data.title}</div>
           <div css={cssPostDetailStatus}>
-            <PostStatusTag status={status} />
+            <PostStatusTag status={data?.data.boardStatus} />
           </div>
         </div>
 
         <div css={cssPostDetailThird}>
           <div css={cssPostDetailCategory1}>카테고리</div>
-          <div css={cssPostDetailCategory2}>{category}</div>
-          <div css={cssPostDetailPay}>{pay} TP</div>
+          <div css={cssPostDetailCategory2}>{data?.data.category}</div>
+          <div css={cssPostDetailPay}>{data?.data.pay} TP</div>
         </div>
 
         <div css={cssPostDetailFourth}>
           <div css={cssPostDetailRegion}>
             <FlagFilled style={{ marginRight: 10 }} />
-            {region}
+            {data?.data.location}
           </div>
           <div css={cssPostDetailTime}>
             <ClockCircleOutlined style={{ marginRight: 10 }} />
-            {startTime} ~ {endTime}
+            {data?.data.startTime} ~ {data?.data.endTime}
           </div>
         </div>
 
         <div css={cssPostDetailFifth}>
-          <div css={cssPostDetailContent2}>{content}</div>
-          <div css={cssPostDetailAttachment}>{attachment}</div>
+          <div css={cssPostDetailContent2}>{data?.data.content}</div>
+          <div css={cssPostDetailAttachment}>{data?.data.imageUrl}</div>
         </div>
-
         <div css={cssPostDetailFirst}>
-          <div css={cssPostDetailCreatedAt}>{createdAt.substring(0, 10)}</div>
+          <div css={cssPostDetailCreatedAt}>
+            {data?.data.createdAt.substring(0, 10)}
+          </div>
           <div css={cssPostDetailProfile}></div>
-          <div css={cssPostDetailUser}>{user}</div>
+          <div css={cssPostDetailUser}>{data?.data.userNickname}</div>
           <div css={cssLikeContainer}>
             <p>관심 </p>
             {like === true ? (
