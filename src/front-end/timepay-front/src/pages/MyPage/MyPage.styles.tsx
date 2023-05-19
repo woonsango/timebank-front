@@ -1,6 +1,22 @@
 import { css } from '@emotion/react';
 import { COMMON_COLOR } from '../../styles/constants/colors';
 
+export const cssMyStyle = (scaleValue: number) => css`
+  .MyEdit {
+    margin-top: 20px;
+    text-align: right;
+    margin-right: 30px;
+  }
+  .Edit {
+    width: calc(90px * ${scaleValue});
+    height: calc(30px * ${scaleValue});
+    border-radius: calc(15px * ${scaleValue});
+    border: none;
+    background-color: ${COMMON_COLOR.FONT1};
+    font-size: calc(15px * ${scaleValue});
+  }
+`;
+
 export const cssMyInfoStyle = (scaleValue: number) => css`
   margin-bottom: 25px;
   width: 100%;

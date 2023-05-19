@@ -17,6 +17,7 @@ import {
   cssMyPageProfileBlock,
   cssMyPageInfoBlock,
   cssMyPageButtonBlock,
+  cssMyStyle,
 } from './MyPage.styles';
 import { IAgency } from '../../api/interfaces/IAgency';
 import { CheckCircleFilled, CloseCircleFilled } from '@ant-design/icons';
@@ -219,7 +220,7 @@ const MyPage = () => {
   }, []);
 
   return (
-    <div className="MyPage">
+    <div css={cssMyStyle(scaleValue)}>
       {contextHolder}
       <div className="MyContentWrap">
         <div className="MyEdit">
