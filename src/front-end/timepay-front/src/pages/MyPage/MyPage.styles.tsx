@@ -1,8 +1,9 @@
 import { css } from '@emotion/react';
+import { COMMON_COLOR } from '../../styles/constants/colors';
 
 export const cssMyInfoStyle = (scaleValue: number) => css`
-  margin: 0 10%;
   margin-bottom: 25px;
+  width: 100%;
   .info-header {
     display: flex;
     flex-direction: row;
@@ -62,7 +63,6 @@ export const cssMyPage = css`
 export const cssMyPageProfileBlock = (scaleValue: number) => css`
   .MyTopBox {
     display: flex;
-    width: 80%;
   }
   .MyImageWrap {
     width: 25%;
@@ -96,7 +96,7 @@ export const cssMyPageInfoBlock = (scaleValue: number) => css`
     display: flex;
     width: 100%;
     margin-top: 20px;
-    margin-bottom: 40px;
+    margin-bottom: 30px;
   }
   MyLeftBox {
     display: inline-block;
@@ -104,24 +104,23 @@ export const cssMyPageInfoBlock = (scaleValue: number) => css`
   }
   .MyRightBox {
     display: inline-block;
-    width: 60%;
-    margin-left: 8%;
+    width: 55%;
+    margin-left: 5%;
   }
   .MyTitleText {
     font-size: calc(13px * ${scaleValue});
     font-weight: 600;
     color: #f1af23;
-    margin-top: 10px;
+    margin-top: calc(20px * ${scaleValue});
   }
   .MyContentText {
     font-size: calc(13px * ${scaleValue});
     font-weight: 600;
     color: gray;
-    margin-top: 10px;
+    margin-top: calc(20px * ${scaleValue});
     overflow: hidden;
     width: 100%;
 
-    /*벗어난 텍스트 처리*/
     text-overflow: ellipsis;
     overflow: hidden;
   }
@@ -129,15 +128,18 @@ export const cssMyPageInfoBlock = (scaleValue: number) => css`
 
 export const cssMyPageButtonBlock = (scaleValue: number) => css`
   .MyBlockBox {
-    width: 80%;
     justify-content: center;
+    align-items: center;
     border: 2px solid #e0dfdf;
     border-radius: 8px;
     margin: 0px 30px;
+    margin-bottom: 30px;
   }
   .MyPageMoveBox {
+    padding-left: calc(10px * ${scaleValue});
     width: 80%;
     height: 40px;
+    margin-top: calc(7px * ${scaleValue});
   }
   .MyPageText {
     width: 100%;
