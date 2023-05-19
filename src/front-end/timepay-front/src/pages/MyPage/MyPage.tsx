@@ -302,7 +302,7 @@ const MyPage = () => {
               </div>
             </div>
 
-            <div css={cssMyPageInfoBlock}>
+            <div css={cssMyPageInfoBlock(scaleValue)}>
               <div className="MyTotalBox">
                 <div className="MyLeftBox">
                   <div className="MyTitleText">나의 타임페이</div>
@@ -319,7 +319,7 @@ const MyPage = () => {
           </div>
         )}
 
-        <div css={cssMyPageButtonBlock}>
+        <div css={cssMyPageButtonBlock(scaleValue)}>
           <div className="MyBlockBox">
             <div className="MyPageMoveBox">
               <button

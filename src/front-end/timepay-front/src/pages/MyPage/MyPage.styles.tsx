@@ -91,7 +91,7 @@ export const cssMyPageProfileBlock = (scaleValue: number) => css`
   }
 `;
 
-export const cssMyPageInfoBlock = css`
+export const cssMyPageInfoBlock = (scaleValue: number) => css`
   .MyTotalBox {
     display: flex;
     width: 100%;
@@ -108,13 +108,13 @@ export const cssMyPageInfoBlock = css`
     margin-left: 8%;
   }
   .MyTitleText {
-    font-size: 13px;
+    font-size: calc(13px * ${scaleValue});
     font-weight: 600;
     color: #f1af23;
     margin-top: 10px;
   }
   .MyContentText {
-    font-size: 13px;
+    font-size: calc(13px * ${scaleValue});
     font-weight: 600;
     color: gray;
     margin-top: 10px;
@@ -127,7 +127,7 @@ export const cssMyPageInfoBlock = css`
   }
 `;
 
-export const cssMyPageButtonBlock = css`
+export const cssMyPageButtonBlock = (scaleValue: number) => css`
   .MyBlockBox {
     width: 80%;
     justify-content: center;
@@ -149,7 +149,7 @@ export const cssMyPageButtonBlock = css`
 
     border: 1px solid white;
     border-radius: 8px;
-    font-size: 15px;
+    font-size: calc(15px * ${scaleValue});
     font-weight: 700;
   }
 `;
