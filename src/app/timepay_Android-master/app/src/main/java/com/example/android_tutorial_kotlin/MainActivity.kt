@@ -1,4 +1,4 @@
-package com.example.android_tutorial_kotlin
+package com.timepay
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle

@@ -4,11 +4,11 @@ plugins {
 }
 
 android {
-    namespace 'com.example.android_tutorial_kotlin'
+    namespace 'com.timepay'
     compileSdk 33
 
     defaultConfig {
-        applicationId "com.example.android_tutorial_kotlin"
+        applicationId "com.timepay"
         minSdk 28
         targetSdk 33
         versionCode 1

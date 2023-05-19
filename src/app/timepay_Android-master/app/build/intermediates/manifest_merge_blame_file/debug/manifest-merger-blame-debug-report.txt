@@ -1,0 +1,104 @@
+1<?xml version="1.0" encoding="utf-8"?>
+2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+3    package="com.timepay"
+4    android:versionCode="1"
+5    android:versionName="1.0" >
+6
+7    <uses-sdk
+8        android:minSdkVersion="28"
+8-->/Users/suyun/Git/capstone-2023-09/src/app/timepay_Android-master/app/src/main/AndroidManifest.xml
+9        android:targetSdkVersion="33" />
+9-->/Users/suyun/Git/capstone-2023-09/src/app/timepay_Android-master/app/src/main/AndroidManifest.xml
+10    <!-- WebView 인터넷 동작을 위한 인터넷 관련 permisson 1줄 -->
+11    <queries>
+11-->/Users/suyun/Git/capstone-2023-09/src/app/timepay_Android-master/app/src/main/AndroidManifest.xml:5:5-7:15
+12        <package android:name="com.kakao.talk" />
+12-->/Users/suyun/Git/capstone-2023-09/src/app/timepay_Android-master/app/src/main/AndroidManifest.xml:6:9-50
+12-->/Users/suyun/Git/capstone-2023-09/src/app/timepay_Android-master/app/src/main/AndroidManifest.xml:6:18-47
+13    </queries>
+14
+15    <uses-permission android:name="android.permission.INTERNET" />
+15-->/Users/suyun/Git/capstone-2023-09/src/app/timepay_Android-master/app/src/main/AndroidManifest.xml:8:5-66
+15-->/Users/suyun/Git/capstone-2023-09/src/app/timepay_Android-master/app/src/main/AndroidManifest.xml:8:22-64
+16
+17    <permission
+17-->[androidx.core:core:1.9.0] /Users/suyun/.gradle/caches/transforms-3/24c8031572ced1a9ec505ef2513af626/transformed/core-1.9.0/AndroidManifest.xml:22:5-24:47
+18        android:name="com.timepay.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"
+18-->[androidx.core:core:1.9.0] /Users/suyun/.gradle/caches/transforms-3/24c8031572ced1a9ec505ef2513af626/transformed/core-1.9.0/AndroidManifest.xml:23:9-81
+19        android:protectionLevel="signature" />
+19-->[androidx.core:core:1.9.0] /Users/suyun/.gradle/caches/transforms-3/24c8031572ced1a9ec505ef2513af626/transformed/core-1.9.0/AndroidManifest.xml:24:9-44
+20
+21    <uses-permission android:name="com.timepay.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION" />
+21-->[androidx.core:core:1.9.0] /Users/suyun/.gradle/caches/transforms-3/24c8031572ced1a9ec505ef2513af626/transformed/core-1.9.0/AndroidManifest.xml:26:5-97
+21-->[androidx.core:core:1.9.0] /Users/suyun/.gradle/caches/transforms-3/24c8031572ced1a9ec505ef2513af626/transformed/core-1.9.0/AndroidManifest.xml:26:22-94
+22
+23    <application
+23-->/Users/suyun/Git/capstone-2023-09/src/app/timepay_Android-master/app/src/main/AndroidManifest.xml:9:5-29:19
+24        android:allowBackup="true"
+24-->/Users/suyun/Git/capstone-2023-09/src/app/timepay_Android-master/app/src/main/AndroidManifest.xml:10:9-35
+25        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
+25-->[androidx.core:core:1.9.0] /Users/suyun/.gradle/caches/transforms-3/24c8031572ced1a9ec505ef2513af626/transformed/core-1.9.0/AndroidManifest.xml:28:18-86
+26        android:dataExtractionRules="@xml/data_extraction_rules"
+26-->/Users/suyun/Git/capstone-2023-09/src/app/timepay_Android-master/app/src/main/AndroidManifest.xml:11:9-65
+27        android:debuggable="true"
+28        android:extractNativeLibs="false"
+29        android:fullBackupContent="@xml/backup_rules"
+29-->/Users/suyun/Git/capstone-2023-09/src/app/timepay_Android-master/app/src/main/AndroidManifest.xml:12:9-54
+30        android:icon="@mipmap/timepay_launcher_foreground"
+30-->/Users/suyun/Git/capstone-2023-09/src/app/timepay_Android-master/app/src/main/AndroidManifest.xml:13:9-59
+31        android:label="@string/app_name"
+31-->/Users/suyun/Git/capstone-2023-09/src/app/timepay_Android-master/app/src/main/AndroidManifest.xml:14:9-41
+32        android:supportsRtl="true"
+32-->/Users/suyun/Git/capstone-2023-09/src/app/timepay_Android-master/app/src/main/AndroidManifest.xml:15:9-35
+33        android:testOnly="true"
+34        android:theme="@style/Theme.Android_Tutorial_Kotlin"
+34-->/Users/suyun/Git/capstone-2023-09/src/app/timepay_Android-master/app/src/main/AndroidManifest.xml:16:9-61
+35        android:usesCleartextTraffic="true" > <!-- https가 아닌 http로 호출하였을 경우, 발생하는 오류 해결 코드 -->
+35-->/Users/suyun/Git/capstone-2023-09/src/app/timepay_Android-master/app/src/main/AndroidManifest.xml:18:9-44
+36        <activity
+36-->/Users/suyun/Git/capstone-2023-09/src/app/timepay_Android-master/app/src/main/AndroidManifest.xml:19:9-28:20
+37            android:name="com.timepay.MainActivity"
+37-->/Users/suyun/Git/capstone-2023-09/src/app/timepay_Android-master/app/src/main/AndroidManifest.xml:20:13-41
+38            android:exported="true"
+38-->/Users/suyun/Git/capstone-2023-09/src/app/timepay_Android-master/app/src/main/AndroidManifest.xml:21:13-36
+39            android:theme="@style/Theme.App.Starting" > <!-- 스플래시 테마 적용 -->
+39-->/Users/suyun/Git/capstone-2023-09/src/app/timepay_Android-master/app/src/main/AndroidManifest.xml:22:13-54
+40            <intent-filter>
+40-->/Users/suyun/Git/capstone-2023-09/src/app/timepay_Android-master/app/src/main/AndroidManifest.xml:23:13-27:29
+41                <action android:name="android.intent.action.MAIN" />
+41-->/Users/suyun/Git/capstone-2023-09/src/app/timepay_Android-master/app/src/main/AndroidManifest.xml:24:17-69
+41-->/Users/suyun/Git/capstone-2023-09/src/app/timepay_Android-master/app/src/main/AndroidManifest.xml:24:25-66
+42
+43                <category android:name="android.intent.category.LAUNCHER" />
+43-->/Users/suyun/Git/capstone-2023-09/src/app/timepay_Android-master/app/src/main/AndroidManifest.xml:26:17-77
+43-->/Users/suyun/Git/capstone-2023-09/src/app/timepay_Android-master/app/src/main/AndroidManifest.xml:26:27-74
+44            </intent-filter>
+45        </activity>
+46        <activity android:name="androidx.core.splashscreen.test.SplashScreenAppCompatTestActivity" />
+46-->[androidx.core:core-splashscreen:1.0.0-alpha01] /Users/suyun/.gradle/caches/transforms-3/de75da71607797f72583787f7153cc90/transformed/core-splashscreen-1.0.0-alpha01/AndroidManifest.xml:25:9-102
+46-->[androidx.core:core-splashscreen:1.0.0-alpha01] /Users/suyun/.gradle/caches/transforms-3/de75da71607797f72583787f7153cc90/transformed/core-splashscreen-1.0.0-alpha01/AndroidManifest.xml:25:19-99
+47
+48        <provider
+48-->[androidx.emoji2:emoji2:1.2.0] /Users/suyun/.gradle/caches/transforms-3/ae62b2ed57c08e4ce03649c04da30a3c/transformed/emoji2-1.2.0/AndroidManifest.xml:24:9-32:20
+49            android:name="androidx.startup.InitializationProvider"
+49-->[androidx.emoji2:emoji2:1.2.0] /Users/suyun/.gradle/caches/transforms-3/ae62b2ed57c08e4ce03649c04da30a3c/transformed/emoji2-1.2.0/AndroidManifest.xml:25:13-67
+50            android:authorities="com.timepay.androidx-startup"
+50-->[androidx.emoji2:emoji2:1.2.0] /Users/suyun/.gradle/caches/transforms-3/ae62b2ed57c08e4ce03649c04da30a3c/transformed/emoji2-1.2.0/AndroidManifest.xml:26:13-68
+51            android:exported="false" >
+51-->[androidx.emoji2:emoji2:1.2.0] /Users/suyun/.gradle/caches/transforms-3/ae62b2ed57c08e4ce03649c04da30a3c/transformed/emoji2-1.2.0/AndroidManifest.xml:27:13-37
+52            <meta-data
+52-->[androidx.emoji2:emoji2:1.2.0] /Users/suyun/.gradle/caches/transforms-3/ae62b2ed57c08e4ce03649c04da30a3c/transformed/emoji2-1.2.0/AndroidManifest.xml:29:13-31:52
+53                android:name="androidx.emoji2.text.EmojiCompatInitializer"
+53-->[androidx.emoji2:emoji2:1.2.0] /Users/suyun/.gradle/caches/transforms-3/ae62b2ed57c08e4ce03649c04da30a3c/transformed/emoji2-1.2.0/AndroidManifest.xml:30:17-75
+54                android:value="androidx.startup" />
+54-->[androidx.emoji2:emoji2:1.2.0] /Users/suyun/.gradle/caches/transforms-3/ae62b2ed57c08e4ce03649c04da30a3c/transformed/emoji2-1.2.0/AndroidManifest.xml:31:17-49
+55            <meta-data
+55-->[androidx.lifecycle:lifecycle-process:2.4.1] /Users/suyun/.gradle/caches/transforms-3/2882a1b6f8a4e98c7a1903336c452fc8/transformed/lifecycle-process-2.4.1/AndroidManifest.xml:31:13-33:52
+56                android:name="androidx.lifecycle.ProcessLifecycleInitializer"
+56-->[androidx.lifecycle:lifecycle-process:2.4.1] /Users/suyun/.gradle/caches/transforms-3/2882a1b6f8a4e98c7a1903336c452fc8/transformed/lifecycle-process-2.4.1/AndroidManifest.xml:32:17-78
+57                android:value="androidx.startup" />
+57-->[androidx.lifecycle:lifecycle-process:2.4.1] /Users/suyun/.gradle/caches/transforms-3/2882a1b6f8a4e98c7a1903336c452fc8/transformed/lifecycle-process-2.4.1/AndroidManifest.xml:33:17-49
+58        </provider>
+59    </application>
+60
+61</manifest>
