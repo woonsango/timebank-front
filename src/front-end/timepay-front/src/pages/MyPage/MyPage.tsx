@@ -4,16 +4,24 @@ import { useSetRecoilState } from 'recoil';
 
 import { headerTitleState } from '../../states/uiState';
 import { PATH } from '../../utils/paths';
-import './My.css';
+
 import { apiRequest } from '../../api/request';
 import { API_URL } from '../../api/urls';
 import { useAgencyLogout, useDeleteAgency } from '../../api/hooks/agency';
 import { message, Modal } from 'antd';
 import { setTokenToCookie } from '../../utils/token';
 import { useDelete, useLogout } from '../../api/hooks/user';
-import { cssMyInfoStyle } from './MyPage.styles';
+import {
+  cssMyInfoStyle,
+  cssMyPage,
+  cssMyPageProfileBlock,
+  cssMyPageInfoBlock,
+  cssMyPageButtonBlock,
+  cssMyStyle,
+} from './MyPage.styles';
 import { IAgency } from '../../api/interfaces/IAgency';
 import { CheckCircleFilled, CloseCircleFilled } from '@ant-design/icons';
+import useFontSize from '../../hooks/useFontSize';
 
 const MyPage = () => {
   const navigate = useNavigate();
@@ -26,6 +34,8 @@ const MyPage = () => {
   const setHeaderTitle = useSetRecoilState(headerTitleState);
 
   const [messageApi, contextHolder] = message.useMessage();
+
+  const { scaleValue } = useFontSize();
 
   const [image, setImage]: any = useState();
   const [nickName, setNickName]: any = useState();
@@ -210,7 +220,7 @@ const MyPage = () => {
   }, []);
 
   return (
-    <div className="MyPage">
+    <div css={cssMyStyle(scaleValue)}>
       {contextHolder}
       <div className="MyContentWrap">
         <div className="MyEdit">
@@ -225,7 +235,7 @@ const MyPage = () => {
         </div>
 
         {agencyInfo ? (
-          <div css={cssMyInfoStyle}>
+          <div css={cssMyInfoStyle(scaleValue)}>
             <div className="info-header">
               <img
                 src={
@@ -277,8 +287,8 @@ const MyPage = () => {
             </div>
           </div>
         ) : (
-          <>
-            <div className="MyBlock">
+          <div css={cssMyPage}>
+            <div css={cssMyPageProfileBlock(scaleValue)}>
               {' '}
               <div className="MyTopBox">
                 <div className="MyImageWrap">
@@ -293,37 +303,24 @@ const MyPage = () => {
               </div>
             </div>
 
-            <div className="MyBlock">
+            <div css={cssMyPageInfoBlock(scaleValue)}>
               <div className="MyTotalBox">
                 <div className="MyLeftBox">
-                  <div className="MyLeft">
-                    <div className="MyTitleText">나의 타임페이</div>
-                  </div>
-                  <div className="MyLeft">
-                    <div className="MyTitleText">나의 동네</div>
-                  </div>
-                  <div className="MyLeft">
-                    <div className="MyTitleText">나의 소개</div>
-                  </div>
+                  <div className="MyTitleText">나의 타임페이</div>
+                  <div className="MyTitleText">나의 동네</div>
+                  <div className="MyTitleText">나의 소개</div>
                 </div>
-
                 <div className="MyRightBox">
-                  <div className="MyRight">
-                    <div className="MyContentText">{timePay}</div>
-                  </div>
-                  <div className="MyRight">
-                    <div className="MyContentText">{town}</div>
-                  </div>
-                  <div className="MyRight">
-                    <div className="MyContentText">{introduction}</div>
-                  </div>
+                  <div className="MyContentText">{timePay}</div>
+                  <div className="MyContentText">{town}</div>
+                  <div className="MyContentText">{introduction}</div>
                 </div>
               </div>
             </div>
-          </>
+          </div>
         )}
 
-        <div className="MyBlock">
+        <div css={cssMyPageButtonBlock(scaleValue)}>
           <div className="MyBlockBox">
             <div className="MyPageMoveBox">
               <button
