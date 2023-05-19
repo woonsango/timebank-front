@@ -4,7 +4,6 @@ import { useCallback, useMemo } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import {
   cssHomeHeaderMenuItemStyle,
-  cssHomeHeaderMenuStyle,
   cssHomeHeaderNotificationStyle,
   cssHomeHeaderStyle,
 } from './HomeHeader.styles';
@@ -108,7 +107,7 @@ const HomeHeader = () => {
   return (
     <div css={cssHomeHeaderStyle}>
       <Dropdown
-        css={cssHomeHeaderMenuStyle}
+        css={cssHomeHeaderStyle}
         menu={{ items }}
         placement="bottomLeft"
         arrow
