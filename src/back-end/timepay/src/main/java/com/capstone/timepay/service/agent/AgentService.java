@@ -64,14 +64,15 @@ public class AgentService {
             List<Applicant> applicants = new ArrayList<>();
 
             for (Agent agent : assignedUsers) {
-                Applicant applicant = new Applicant();
-                applicant.setAppliUid(agent.getAssignedUser().getUserId());
-                applicant.setAppliName(agent.getAssignedUser().getName());
-                applicants.add(applicant);
+                if (agent.isAccept()) {
+                    Applicant applicant = new Applicant();
+                    applicant.setAppliUid(agent.getAssignedUser().getUserId());
+                    applicant.setAppliName(agent.getAssignedUser().getName());
+                    applicants.add(applicant);
+                }
             }
-
             agentInfoResponse = new AgentInfoResponse(true, applicants,
-                    user.getUserId(),user.getName());
+                    user.getUserId(), user.getName());
         }
 
         return agentInfoResponse;
