@@ -66,7 +66,7 @@ class _WebViewAppState extends State<WebViewApp> {
   void getMyDeviceToken() async {
     final token = await FirebaseMessaging.instance.getToken();
     setState(() {
-      deviceToken = token!; // 가져온 이미지를 _image에 저장
+      deviceToken = token!;
     });
     print("내 디바이스 토큰: $deviceToken");
   }
