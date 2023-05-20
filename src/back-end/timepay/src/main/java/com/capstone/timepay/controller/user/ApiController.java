@@ -6,16 +6,23 @@ import com.capstone.timepay.controller.user.request.RequestDTO;
 import com.capstone.timepay.controller.user.request.UpdateRequestDTO;
 import com.capstone.timepay.controller.user.response.GetResponseDTO;
 import com.capstone.timepay.controller.user.response.UpdateResponseDTO;
+import com.capstone.timepay.domain.user.User;
+import com.capstone.timepay.domain.user.UserRepository;
+import com.capstone.timepay.domain.user.model.AuthenticationResponse;
 import com.capstone.timepay.service.admin.CategoryManageService;
+import com.capstone.timepay.service.user.service.UserDetailService;
 import com.capstone.timepay.service.user.service.UserInfoService;
+import com.capstone.timepay.utility.JwtUtils;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -33,6 +40,14 @@ import java.util.List;
 public class ApiController {
     private final UserInfoService userInfoService;
     private final CategoryManageService categoryManageService;
+
+    @Autowired
+    private JwtUtils jwtUtils;
+
+    @Autowired
+    private UserDetailService userDetailService;
+    private final UserRepository userRepository;
+
     /* 회원가입 버튼 클릭하면 데이터가 Post로 format형식으로 넘어옴 */
     /* json 형식의 데이터를 받아서 createUserService로 넘겨줌 */
     /* 카카오 데이터와 어떻게 매칭해줄지 생각 필요 */
@@ -95,4 +110,12 @@ public class ApiController {
         return ResponseEntity.ok(responses);
     }
     // -----------------------------------------------------------------------------------
+
+    @GetMapping("/test/test/{id}")
+    public String test(@PathVariable Long id){
+        User user = userRepository.findById(id).orElse(null);
+        final UserDetails userDetails = userDetailService.loadUserByUsername(user.getEmail());
+        final String token = jwtUtils.createToken(userDetails.getUsername(), user.getRoles());
+        return token;
+    }
 }
