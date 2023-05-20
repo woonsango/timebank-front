@@ -100,9 +100,8 @@ export const cssMyPageProfileBlock = (scaleValue: number) => css`
     font-weight: 600;
     color: gray;
     margin-top: 10px;
-    overflow: hidden;
-
     text-overflow: ellipsis;
+    overflow: hidden;
     height: calc(30px * ${scaleValue});
     word-wrap: brek-word;
     display: -webkit-box;
