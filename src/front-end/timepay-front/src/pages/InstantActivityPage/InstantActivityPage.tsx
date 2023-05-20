@@ -12,12 +12,15 @@ import { useSetRecoilState } from 'recoil';
 import { headerTitleState } from '../../states/uiState';
 import { useGetUserInfo } from '../../api/hooks/user';
 import { PATH } from '../../utils/paths';
+import useFontSize from '../../hooks/useFontSize';
 
 const InstantActivityPage = () => {
   const navigate = useNavigate();
   const setHeaderTitle = useSetRecoilState(headerTitleState);
   const { data } = useGetUserInfo();
   const { helpPk } = useParams();
+
+  const { scaleValue } = useFontSize();
 
   const [timeForm] = Form.useForm();
   const [contentForm] = Form.useForm();
@@ -91,27 +94,26 @@ const InstantActivityPage = () => {
     () => [
       { key: '확인', title: '확인' },
       {
-        key: '활동일시 선택',
-        title: '활동일시 선택',
+        key: '활동일시',
+        title: '활동일시',
       },
       {
-        key: '활동내용 요약',
-
-        title: '활동내용 요약',
+        key: '활동내용',
+        title: '활동내용',
       },
     ],
     [],
   );
 
   return (
-    <div css={cssInstantActivityPageStyle}>
+    <div css={cssInstantActivityPageStyle(scaleValue)}>
       <Steps
         direction="horizontal"
         current={current}
         items={steps}
         onChange={handleOnChangeStep}
       />
-      <div css={cssInstantActivityStepItemStyle(current === 0)}>
+      <div css={cssInstantActivityStepItemStyle(current === 0, scaleValue)}>
         <div>
           <p className="helper-user-nickname">
             안녕하세요 {data?.data.body.nick_name || '-'} 님!
@@ -133,7 +135,7 @@ const InstantActivityPage = () => {
           </Button>
         </div>
       </div>
-      <div css={cssInstantActivityStepItemStyle(current === 1)}>
+      <div css={cssInstantActivityStepItemStyle(current === 1, scaleValue)}>
         <Form
           form={timeForm}
           layout="horizontal"
@@ -202,7 +204,7 @@ const InstantActivityPage = () => {
           </Button>
         </div>
       </div>
-      <div css={cssInstantActivityStepItemStyle(current === 2)}>
+      <div css={cssInstantActivityStepItemStyle(current === 2, scaleValue)}>
         <Form form={contentForm}>
           <div className="form-info">
             어떤 활동을 했는지 간략하게 적어주세요.

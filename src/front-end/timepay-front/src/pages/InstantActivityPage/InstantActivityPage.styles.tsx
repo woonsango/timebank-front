@@ -1,7 +1,7 @@
 import { css } from '@emotion/react';
 import { COMMON_COLOR } from '../../styles/constants/colors';
 
-export const cssInstantActivityPageStyle = css`
+export const cssInstantActivityPageStyle = (scaleValue: number) => css`
   padding: 20px 30px;
 
   .ant-steps {
@@ -24,8 +24,10 @@ export const cssInstantActivityPageStyle = css`
   }
 `;
 
-export const cssInstantActivityStepItemStyle = (isCurrent: boolean) => css`
-  height: 500px;
+export const cssInstantActivityStepItemStyle = (
+  isCurrent: boolean,
+  scaleValue: number,
+) => css`
   display: ${isCurrent ? 'flex' : 'none'};
   flex-direction: column;
   align-items: center;
@@ -34,7 +36,7 @@ export const cssInstantActivityStepItemStyle = (isCurrent: boolean) => css`
     font-size: 16px;
     font-weight: 700;
     padding-bottom: 20px;
-    padding-top: 150px;
+    padding-top: 30px;
   }
   .help-user {
     font-size: 18px;
@@ -50,6 +52,7 @@ export const cssInstantActivityStepItemStyle = (isCurrent: boolean) => css`
     width: 100%;
     justify-content: flex-end;
     gap: 10px;
+    margin-top: 30px;
   }
   .ant-form {
     .form-info {
