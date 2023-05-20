@@ -121,6 +121,7 @@ public class InstantMatchingService {
 
         instantMatchingResponseDTO.setStatus("즉석 매칭을 성공적으로 완료했습니다.");
         instantMatchingResponseDTO.setSuccess(true);
+        instantMatchingResponseDTO.setDealBoardId(dealBoard.getD_boardId());
         return instantMatchingResponseDTO;
     }
 }

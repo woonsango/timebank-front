@@ -14,7 +14,7 @@ import java.security.Principal;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/users/agents")
+@RequestMapping("/api/users/applicants")
 public class AgentUserController {
 
     private final UserRepository userRepository;
