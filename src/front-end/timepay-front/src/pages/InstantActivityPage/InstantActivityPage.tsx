@@ -1,4 +1,4 @@
-import { Button, DatePicker, Form, Input, Modal, Steps } from 'antd';
+import { Button, DatePicker, Form, Input, message, Steps } from 'antd';
 import { useNavigate, useParams } from 'react-router-dom';
 import {
   cssInstantActivityPageStyle,
@@ -13,8 +13,14 @@ import { headerTitleState } from '../../states/uiState';
 import { useGetUserInfo } from '../../api/hooks/user';
 import { PATH } from '../../utils/paths';
 import useFontSize from '../../hooks/useFontSize';
+import { usePostInstantMatching } from '../../api/hooks/instantMatching';
+import { IPostInstantMatchingRequest } from '../../api/interfaces/IInstantMatching';
+import { useQueryClient } from 'react-query';
 
 const InstantActivityPage = () => {
+  const queryClient = useQueryClient();
+
+  const usePostInstantMatchingMutation = usePostInstantMatching();
   const navigate = useNavigate();
   const setHeaderTitle = useSetRecoilState(headerTitleState);
   const { data } = useGetUserInfo();
@@ -26,6 +32,8 @@ const InstantActivityPage = () => {
   const [contentForm] = Form.useForm();
   const [current, setCurrent] = useState(0);
   const [exchangeTimepay, setExchangeTimepay] = useState(60);
+
+  const [messageApi, contextHolder] = message.useMessage();
 
   const next = useCallback(() => {
     setCurrent(current + 1);
@@ -44,51 +52,84 @@ const InstantActivityPage = () => {
   }, [setHeaderTitle]);
 
   useEffect(() => {
-    timeForm.setFieldValue('startTime', dayjs().add(-1, 'hours'));
-    timeForm.setFieldValue('endTime', dayjs());
+    timeForm.setFieldValue('startTime', dayjs());
+    timeForm.setFieldValue('rangeTime', dayjs('01:00', 'HH:mm'));
   }, [timeForm]);
 
-  const handleOnChangeTime = useCallback(
-    (changedValues: any, values: any) => {
-      if (values.startTime && values.endTime) {
-        if (values.endTime.diff(values.startTime, 'minutes') <= 0) {
-          Modal.error({ content: '끝 시간은 시작 시간보다 커야합니다.' });
-          timeForm.setFieldValue(
-            'endTime',
-            dayjs(values.startTime).add(1, 'hours'),
-          );
-          setExchangeTimepay(60);
-        } else
-          setExchangeTimepay(values.endTime.diff(values.startTime, 'minutes'));
-      } else setExchangeTimepay(0);
-    },
-    [timeForm],
-  );
+  const handleOnChangeTime = useCallback((changedValues: any, values: any) => {
+    if (values.rangeTime) {
+      setExchangeTimepay(
+        values.rangeTime.hour() * 60 + values.rangeTime.minute(),
+      );
+    } else {
+      setExchangeTimepay(30);
+    }
+  }, []);
 
-  const handleOnSubmit = useCallback(() => {
+  const handleOnSubmit = useCallback(async () => {
     const timeFormValues = timeForm.getFieldsValue();
     const contentFormValues = contentForm.getFieldsValue();
 
-    const newActivity = {
+    const newActivity: IPostInstantMatchingRequest = {
       title: timeFormValues.activityDate.format(
-        'YYYY년 HH월 mm일 바로 도움 활동',
+        'YYYY년 MM월 DD일 바로 도움 활동',
       ),
       category: '바로도움',
       content: contentFormValues.content,
       startTime: `${timeFormValues.activityDate.format(
-        'YYYY-HH-ddT',
-      )}${timeFormValues.startTime.format('HH:mm:ss.000Z')}`,
-      endTime: `${timeFormValues.activityDate.format(
-        'YYYY-HH-ddT',
-      )}${timeFormValues.endTime.format('HH:mm:ss.000Z')}`,
+        'YYYY-MM-DDT',
+      )}${timeFormValues.startTime.format('HH:mm:ss.000')}Z`,
+      endTime: `${dayjs()
+        .add(timeFormValues.rangeTime.hour(), 'hours')
+        .add(timeFormValues.rangeTime.minute(), 'minutes')
+        .format('YYYY-MM-DDTHH:mm:ss.000')}Z`,
       location: '장소',
       auto: false,
       pay: exchangeTimepay,
-      id: parseInt(helpPk || ''),
+      uid: parseInt(helpPk || ''),
     };
+
     console.log(newActivity);
-    // api 성공 후 활동기록 화면으로 이동 예정
-  }, [timeForm, exchangeTimepay, contentForm, helpPk]);
+
+    await usePostInstantMatchingMutation.mutateAsync(newActivity, {
+      onSuccess: (data) => {
+        if (data.data.deal_board_id && data.data.success)
+          messageApi.open({
+            type: 'success',
+            content: '바로 도움 활동이 성공적으로 완료했습니다.',
+            duration: 0.5,
+            onClose: () => {
+              queryClient.invalidateQueries({ queryKey: ['useGetComments'] });
+              queryClient.invalidateQueries({
+                queryKey: ['useGetNotifications'],
+              });
+              navigate(`/post/${data.data.deal_board_id}`);
+            },
+          });
+        else
+          messageApi.open({
+            type: 'error',
+            content: `도움 활동 에러 발생 ${data.data.status}`,
+          });
+      },
+      onError: (err) => {
+        console.log(`ERROR : ${err}`);
+        messageApi.open({
+          type: 'error',
+          content: '도움 활동 에러 발생',
+        });
+      },
+    });
+  }, [
+    navigate,
+    messageApi,
+    queryClient,
+    timeForm,
+    exchangeTimepay,
+    contentForm,
+    helpPk,
+    usePostInstantMatchingMutation,
+  ]);
 
   const steps = useMemo(
     () => [
@@ -107,6 +148,7 @@ const InstantActivityPage = () => {
 
   return (
     <div css={cssInstantActivityPageStyle}>
+      {contextHolder}
       <Steps
         direction="horizontal"
         current={current}
@@ -148,36 +190,26 @@ const InstantActivityPage = () => {
           <Form.Item
             name="startTime"
             label="활동을 시작한 시간"
-            initialValue={dayjs().add(-1, 'hours')}
+            initialValue={dayjs()}
             rules={[{ required: true, message: '필수로 작성해주세요.' }]}
           >
             <DatePicker.TimePicker
+              disabled
               locale={locale}
               format="HH시 mm분"
               placeholder="시간"
               showNow={false}
-              // 확인 버튼 누르지 않아도 값이 지정되도록 커스텀
-              popupClassName={`time-picker-no-footer ${
-                scaleValue > 1 ? 'big-post-dropdown' : 'small-post-dropdown'
-              }`}
-              onSelect={(value) => {
-                timeForm.setFieldValue('startTime', value);
-                handleOnChangeTime(
-                  { startTime: value },
-                  timeForm.getFieldsValue(),
-                );
-              }}
             />
           </Form.Item>
           <Form.Item
-            name="endTime"
-            label="활동이 끝난 시간"
+            name="rangeTime"
+            label="활동을 할 시간"
             initialValue={dayjs()}
             rules={[{ required: true, message: '필수로 작성해주세요.' }]}
           >
             <DatePicker.TimePicker
               locale={locale}
-              format="HH시 mm분"
+              format="HH시간 mm분"
               placeholder="시간"
               showNow={false}
               // 확인 버튼 누르지 않아도 값이 지정되도록 커스텀
@@ -185,12 +217,26 @@ const InstantActivityPage = () => {
                 scaleValue > 1 ? 'big-post-dropdown' : 'small-post-dropdown'
               }`}
               onSelect={(value) => {
-                timeForm.setFieldValue('endTime', value);
+                timeForm.setFieldValue('rangeTime', value);
                 handleOnChangeTime(
-                  { endTime: value },
+                  { rangeTime: value },
                   timeForm.getFieldsValue(),
                 );
               }}
+              disabledTime={(now) => {
+                return {
+                  disabledHours: () => [
+                    6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21,
+                    22, 23,
+                  ],
+                  disabledMinutes: (selectedHour: number) => {
+                    if (selectedHour === 0) return [0];
+                    return [];
+                  },
+                };
+              }}
+              minuteStep={30}
+              allowClear={false}
             />
           </Form.Item>
           <div className="guide">
