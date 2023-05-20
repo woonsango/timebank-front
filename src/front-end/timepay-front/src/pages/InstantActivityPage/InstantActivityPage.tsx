@@ -106,7 +106,7 @@ const InstantActivityPage = () => {
   );
 
   return (
-    <div css={cssInstantActivityPageStyle(scaleValue)}>
+    <div css={cssInstantActivityPageStyle}>
       <Steps
         direction="horizontal"
         current={current}

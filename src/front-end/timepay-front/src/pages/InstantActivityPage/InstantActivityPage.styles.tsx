@@ -1,7 +1,7 @@
 import { css } from '@emotion/react';
 import { COMMON_COLOR } from '../../styles/constants/colors';
 
-export const cssInstantActivityPageStyle = (scaleValue: number) => css`
+export const cssInstantActivityPageStyle = () => css`
   padding: 20px 30px;
 
   .ant-steps {
@@ -32,18 +32,23 @@ export const cssInstantActivityStepItemStyle = (
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
+  word-break: keep-all;
+
   .helper-user-nickname {
-    font-size: 16px;
+    font-size: calc(16px * ${scaleValue});
     font-weight: 700;
-    padding-bottom: 20px;
-    padding-top: 30px;
+    padding-bottom: calc(20px * ${scaleValue});
+    padding-top: calc(30px * ${scaleValue});
+    word-break: keep-all;
   }
   .help-user {
-    font-size: 18px;
+    font-size: calc(18px * ${scaleValue});
+    word-break: keep-all;
   }
   .guide {
-    font-size: 14px;
+    font-size: calc(14px * ${scaleValue});
     color: ${COMMON_COLOR.MAIN2};
+    word-break: keep-all;
   }
 
   .control-box {
@@ -51,18 +56,33 @@ export const cssInstantActivityStepItemStyle = (
     flex-direction: row;
     width: 100%;
     justify-content: flex-end;
-    gap: 10px;
-    margin-top: 30px;
+    gap: calc(10px * ${scaleValue});
+    margin-top: calc(30px * ${scaleValue});
+    .ant-btn {
+      font-size: calc(14px * ${scaleValue});
+      height: max-content;
+    }
   }
   .ant-form {
+    font-size: calc(14px * ${scaleValue});
     .form-info {
-      font-size: 18px;
+      font-size: calc(18px * ${scaleValue});
       font-weight: 700;
-      padding-top: 30px;
-      padding-bottom: 10px;
+      padding-top: calc(30px * ${scaleValue});
+      padding-bottom: calc(10px * ${scaleValue});
+    }
+    label {
+      font-size: calc(14px * ${scaleValue});
+    }
+    input {
+      font-size: calc(14px * ${scaleValue});
+    }
+    textarea {
+      font-size: calc(14px * ${scaleValue});
     }
   }
   ul {
     padding: 0 20px;
+    word-break: keep-all;
   }
 `;
