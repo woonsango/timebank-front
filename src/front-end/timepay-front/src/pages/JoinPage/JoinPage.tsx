@@ -42,8 +42,6 @@ import { getDeviceToken } from '../../utils/device';
 type DongName = keyof typeof dongData;
 
 const JoinPage = () => {
-  console.log('JoinPage.tsx');
-
   const { Text } = Typography;
   const [messageApi, contextHolder] = message.useMessage();
 
@@ -283,6 +281,7 @@ const JoinPage = () => {
       formData.append('name', realName);
       formData.append('nickName', nickName);
       formData.append('phone', phoneNumber);
+      console.log('deviceToken', deviceToken);
       if (deviceToken) formData.append('deviceToken', deviceToken);
 
       /*POST*/
@@ -301,18 +300,11 @@ const JoinPage = () => {
   };
 
   useEffect(() => {
-    window.addEventListener('flutterInAppWebViewPlatformReady', function () {
-      getDeviceToken().then((response) => {
-        setDeviceToken(response);
-        console.log('response', response);
-      });
+    'USE EFFECT IN JOIN PAGE';
+    getDeviceToken().then((response) => {
+      setDeviceToken(response);
+      console.log('JOINPAGE response', response);
     });
-    return () => {
-      window.removeEventListener(
-        'flutterInAppWebViewPlatformReady',
-        function () {},
-      );
-    };
   }, []);
 
   return (
@@ -335,7 +327,7 @@ const JoinPage = () => {
             />
             <div className="EditprofileImageWrap">
               <label htmlFor="image_guide">
-                프로필 사진 설정하기
+                프로필
                 <input
                   type="file"
                   id="image_guide"
@@ -358,7 +350,7 @@ const JoinPage = () => {
 
         <Form.Item name="닉네임 중복 검사">
           <Button type="primary" css={cssJoinNick} onClick={overlapNickname}>
-            닉네임 중복 검사
+            개발 테스트 중
           </Button>
         </Form.Item>
 
