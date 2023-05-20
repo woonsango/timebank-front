@@ -34,9 +34,9 @@ public class InstantMatchingController {
     @ApiOperation(value = "즉석 매칭 게시판 작성 API")
     public ResponseEntity<?> instantMatchingAPI(@RequestBody InstantMatchingBoardDTO instantMatchingBoardDTO,
                                            Principal helper) throws Exception{
-       InstantMatchingResponseDTO instantMatchingResponseDTO =
-               instantMatchingService.instantMatching(instantMatchingBoardDTO, helper.getName());
 
-        return ResponseEntity.ok(instantMatchingResponseDTO);
+
+
+        return ResponseEntity.ok(instantMatchingService.instantMatching(instantMatchingBoardDTO, helper.getName()));
     }
 }
