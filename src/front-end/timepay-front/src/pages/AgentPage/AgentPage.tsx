@@ -1,6 +1,6 @@
 import { useSetRecoilState } from 'recoil';
 import { headerTitleState } from '../../states/uiState';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { apiRequest } from '../../api/request';
 import { API_URL } from '../../api/urls';
 import useFontSize from '../../hooks/useFontSize';
@@ -9,6 +9,8 @@ import { Button, Modal, Space, Typography } from 'antd';
 import { COMMON_COLOR } from '../../styles/constants/colors';
 import SizeContext from 'antd/es/config-provider/SizeContext';
 import AgentModal from '../../components/AgentModal';
+import { ExclamationCircleFilled } from '@ant-design/icons';
+import { cssModalFooter } from '../../components/AgentModal/AgentModal.style';
 
 const AgentPage = () => {
   const setHeaderTitle = useSetRecoilState(headerTitleState);
@@ -20,6 +22,7 @@ const AgentPage = () => {
 
   const { scaleValue } = useFontSize();
   const { Text } = Typography;
+  const { confirm } = Modal;
 
   const handleOnCancelModal = useCallback(() => {
     setIsOpenRegisterModal(false);
@@ -27,6 +30,25 @@ const AgentPage = () => {
 
   const isOpenModal = () => {
     setIsOpenRegisterModal(true);
+  };
+
+  const showConfirm = () => {
+    confirm({
+      title: '대리인 삭제',
+      icon: <ExclamationCircleFilled />,
+      content: '대리인 삭제시 대리 작성 도움을 받을 수 없습니다',
+      okText: '삭제',
+      okType: 'primary',
+      okButtonProps: { style: { backgroundColor: COMMON_COLOR.MAIN2 } },
+      onOk() {
+        console.log('OK');
+      },
+      cancelText: '취소',
+
+      onCancel() {
+        console.log('Cancel');
+      },
+    });
   };
 
   useEffect(() => {
@@ -85,6 +107,7 @@ const AgentPage = () => {
                 type="primary"
                 style={{ background: COMMON_COLOR.MAIN2, width: 140 }}
                 danger
+                onClick={showConfirm}
               >
                 대리인 삭제
               </Button>

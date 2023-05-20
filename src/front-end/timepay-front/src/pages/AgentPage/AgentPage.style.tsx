@@ -92,4 +92,7 @@ export const cssBtnSpace = (scaleValue: number) => css`
     font-size: calc(15px * ${scaleValue});
     font-weight: bold;
   }
+  .ant-btn-primary {
+    background-color: ${COMMON_COLOR.MAIN2};
+  }
 `;
