@@ -165,7 +165,7 @@ const MyPage = () => {
                 duration: 0.5,
                 onClose() {
                   setTokenToCookie('', 0);
-                  navigate(PATH.AGENCY_SIGN_IN);
+                  navigate(PATH.LOGIN);
                 },
               });
             },
