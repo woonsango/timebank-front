@@ -26,5 +26,5 @@ public class InstantMatchingBoardDTO {
     private int pay;
     private boolean isHidden;
     private boolean isAuto;
-    private String email;
+    private Long uid;
 }

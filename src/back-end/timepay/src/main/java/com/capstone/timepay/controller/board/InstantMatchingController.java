@@ -23,12 +23,12 @@ public class InstantMatchingController {
     private final InstantMatchingService instantMatchingService;
 
 
-    @GetMapping("")
-    @ApiOperation(value = "즉석 매칭 호출 API")
-    public ResponseEntity<?> getEmail(Principal principal){
-        InstantMatchingRequestDTO instantMatchingRequestDTO = new InstantMatchingRequestDTO(principal.getName());
-        return ResponseEntity.ok(instantMatchingRequestDTO);
-    }
+//    @GetMapping("")
+//    @ApiOperation(value = "즉석 매칭 호출 API")
+//    public ResponseEntity<?> getEmail(Principal principal){
+//        InstantMatchingRequestDTO instantMatchingRequestDTO = new InstantMatchingRequestDTO(principal.getName());
+//        return ResponseEntity.ok(instantMatchingRequestDTO);
+//    }
 
     @PostMapping("")
     @ApiOperation(value = "즉석 매칭 게시판 작성 API")

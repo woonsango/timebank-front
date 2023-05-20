@@ -34,7 +34,7 @@ public class InstantMatchingService {
     private final CommentRepository commentRepository;
     private final DealBoardCommentService dealBoardCommentService;
     public InstantMatchingResponseDTO instantMatching(InstantMatchingBoardDTO instantMatchingBoardDTO, String helper) throws IOException {
-        User helpUser = userRepository.findByEmail(instantMatchingBoardDTO.getEmail()).orElseThrow(() -> {
+        User helpUser = userRepository.findById(instantMatchingBoardDTO.getUid()).orElseThrow(() -> {
             return new IllegalArgumentException("해당 유저를 찾을 수 없습니다.");
         });
         InstantMatchingResponseDTO instantMatchingResponseDTO =
