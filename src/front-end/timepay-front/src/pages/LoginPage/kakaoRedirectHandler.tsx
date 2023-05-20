@@ -7,14 +7,17 @@ import { useNavigate } from 'react-router-dom';
 import { PATH } from '../../utils/paths';
 import { setTokenToCookie } from '../../utils/token';
 import { saveUid } from './saveUid';
-import { useSetRecoilState } from 'recoil';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { agencyState, userState } from '../../states/user';
+import { pathToAfterLogin } from '../../states/uiState';
 
 const KakaoRedirectHandler = () => {
   console.log('kakaoRedirectHandler.tsx');
 
   const setUserState = useSetRecoilState(userState);
   const setAgencyState = useSetRecoilState(agencyState);
+
+  const pathToAfterLoginValue = useRecoilValue(pathToAfterLogin);
 
   const navigate = useNavigate();
   const goTo = useCallback(
@@ -49,7 +52,8 @@ const KakaoRedirectHandler = () => {
           console.log('토큰 저장:', response.data.jwt);
           setUserState(response.data);
           setAgencyState(null);
-          goTo(PATH.HOME);
+          if (pathToAfterLoginValue) goTo(pathToAfterLoginValue);
+          else goTo(PATH.HOME);
         }
 
         //signUp == false일 경우,
@@ -65,7 +69,13 @@ const KakaoRedirectHandler = () => {
       .catch((error) => {
         console.error('Error sending GET request:', error);
       });
-  }, [authorizationCode, goTo, setUserState, setAgencyState]);
+  }, [
+    pathToAfterLoginValue,
+    authorizationCode,
+    goTo,
+    setUserState,
+    setAgencyState,
+  ]);
 
   return <div></div>;
 };

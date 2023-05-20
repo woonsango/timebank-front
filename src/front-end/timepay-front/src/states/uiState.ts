@@ -14,3 +14,8 @@ export const searchDrawerOpenState = atom<boolean>({
   key: 'search-drawer-open',
   default: false,
 });
+
+export const pathToAfterLogin = atom<string | undefined>({
+  key: 'path-after-login',
+  default: undefined,
+});
