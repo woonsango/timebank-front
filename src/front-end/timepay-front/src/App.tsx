@@ -92,6 +92,7 @@ function App() {
               path={`${PATH.INSTANT_ACTIVITY}/:helpPk`}
               element={<PageRoutes.InstantActivityPage />}
             />
+            <Route path={PATH.AGENT} element={<PageRoutes.AgentPage />} />
           </Route>
         </Routes>
       </ConfigProvider>

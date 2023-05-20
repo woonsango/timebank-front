@@ -19,7 +19,6 @@ export const PATH = {
   MY_ACTIVITY_RECORD: '/my-activity-record',
   MY: '/my',
   MY_EDIT: '/myEdit',
-  REPORT: '/report', //신고기록
   INQUIRE: '/inquire', //문의기록
   BOOKMARK: '/bookmark', //즐겨찾기
   CATEGORY_SELECT: '/category-select',
@@ -29,6 +28,7 @@ export const PATH = {
   MY_VOLUNTEER: '/my-volunteer',
   PAYMENT_CERTIFICATION: '/payment-certification',
   INSTANT_ACTIVITY: '/instant-activity',
+  AGENT: '/agent',
 };
 
 export const deployHostName = 'http://13.125.249.51';
