@@ -1,7 +1,7 @@
 import { AxiosError, AxiosResponse } from 'axios';
 import { useMutation, useQuery } from 'react-query';
-import { IAgency } from '../interfaces/IAgency';
 import {
+  IAgencyOrUser,
   IGetUserBoardRequest,
   IGetUserBoardResponse,
   IGetUserCommentRequest,
@@ -25,7 +25,7 @@ export const useDelete = () => {
 };
 
 export const useGetUserInfo = () => {
-  return useQuery<AxiosResponse<{ body: IAgency }>, AxiosError>({
+  return useQuery<AxiosResponse<{ body: IAgencyOrUser }>, AxiosError>({
     queryKey: ['useGetUserInfo'],
     queryFn: () => apiRequest.get(API_URL.USER_INFO_GET),
     refetchOnWindowFocus: false,
