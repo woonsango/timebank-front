@@ -3,17 +3,15 @@ package com.capstone.timepay.domain.agent;
 import com.capstone.timepay.domain.BaseTimeEntity;
 import com.capstone.timepay.domain.user.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Data
+@Getter
+@Setter
 @Entity
 public class Agent extends BaseTimeEntity {
     @Id
@@ -21,13 +19,13 @@ public class Agent extends BaseTimeEntity {
     private Long agentNum;
 
     @JsonIgnore
-    @ManyToOne()
-    @JoinColumn(name="user_id")
-    private User user;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="created_by_id")
+    private User createdUser;
 
     @JsonIgnore
-    @ManyToOne()
-    @JoinColumn(name="agent_user_id")
-    private User agent_user;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="assigned_to_id")
+    private User assignedUser;
 
 }

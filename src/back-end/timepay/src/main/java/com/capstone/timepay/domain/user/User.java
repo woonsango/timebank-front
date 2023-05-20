@@ -106,12 +106,12 @@ public class User extends BaseTimeEntity {
     private List<FreeRegister> freeRegisters = new ArrayList<>();
 
     @JsonIgnore
-    @OneToMany(mappedBy = "user", orphanRemoval = true, cascade = CascadeType.ALL)
-    private List<Agent> agent_help = new ArrayList<>();
+    @OneToMany(mappedBy = "createdUser", orphanRemoval = true, cascade = CascadeType.ALL)
+    private List<Agent> createdAgents = new ArrayList<>();
 
     @JsonIgnore
-    @OneToMany(mappedBy = "agent_user", orphanRemoval = true, cascade = CascadeType.ALL)
-    private List<Agent> agent_users = new ArrayList<>();
+    @OneToMany(mappedBy = "assignedUser", orphanRemoval = true, cascade = CascadeType.ALL)
+    private List<Agent> assignedAgents = new ArrayList<>();
 
     @OneToOne
     @JoinColumn(name = "profile_id")
