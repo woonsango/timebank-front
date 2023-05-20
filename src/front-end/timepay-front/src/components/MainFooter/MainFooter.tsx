@@ -12,7 +12,7 @@ import { ReactComponent as ModifyFontSizeSmall } from '../../assets/images/icons
 import { ReactComponent as WriteBoard } from '../../assets/images/icons/write-board.svg';
 import { ReactComponent as ActivityRecord } from '../../assets/images/icons/activity-record.svg';
 import { ReactComponent as Home } from '../../assets/images/icons/home.svg';
-import { Link, NavLink, useNavigate } from 'react-router-dom';
+import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom';
 import { PATH } from '../../utils/paths';
 import { useCallback, useMemo, useState } from 'react';
 import { useSetRecoilState } from 'recoil';
@@ -26,6 +26,7 @@ const MainFooter = () => {
   const { isBig } = useFontSize();
   const setFontSize = useSetRecoilState(fontSizeState);
   const navigate = useNavigate();
+  const location = useLocation();
 
   const [isOpenQR, setIsOpenQR] = useState(false);
 
@@ -33,6 +34,10 @@ const MainFooter = () => {
     if (data?.data.body.manager_name) return true;
     return false;
   }, [data]);
+
+  const isViewWriteBtn = useMemo(() => {
+    return location.pathname === PATH.SEARCH || location.pathname === PATH.HOME;
+  }, [location]);
 
   const handleOnClickModifyFontSize = useCallback(() => {
     if (isBig) setFontSize('small');
@@ -89,19 +94,21 @@ const MainFooter = () => {
   return (
     <>
       <div className="float" css={cssFloating}>
-        <Dropdown
-          menu={{ items }}
-          placement="topRight"
-          arrow
-          trigger={['click']}
-          overlayClassName={`${
-            isBig ? 'big-post-dropdown' : 'small-post-dropdown'
-          }`}
-        >
-          <Button css={cssPlusPostBtnStyle} shape="circle" size="large">
-            <WriteBoard width={30} height={30} />
-          </Button>
-        </Dropdown>
+        {isViewWriteBtn && (
+          <Dropdown
+            menu={{ items }}
+            placement="topRight"
+            arrow
+            trigger={['click']}
+            overlayClassName={`${
+              isBig ? 'big-post-dropdown' : 'small-post-dropdown'
+            }`}
+          >
+            <Button css={cssPlusPostBtnStyle} shape="circle" size="large">
+              <WriteBoard width={30} height={30} />
+            </Button>
+          </Dropdown>
+        )}
       </div>
       <Layout.Footer css={cssMainFooterStyle}>
         <Button onClick={handleOnClickModifyFontSize}>
