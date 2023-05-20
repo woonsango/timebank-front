@@ -13,4 +13,5 @@ import lombok.NoArgsConstructor;
 public class AgentRegisterResponse {
     private Long uid;
     private Boolean success;
+    private String content;
 }
