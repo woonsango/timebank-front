@@ -33,10 +33,7 @@ import com.capstone.timepay.firebase.FirebaseService;
 import com.capstone.timepay.service.user.dto.OrgUserInfoDTO;
 import com.google.firebase.auth.FirebaseAuthException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.*;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -183,7 +180,8 @@ public class UserInfoService {
     @Transactional(readOnly = true)
     public ResponseEntity<?> getUserInfo(Long id, int pageIndex, int pageSize){
         User userData = userRepository.findById(id).orElseThrow(()->new IllegalArgumentException("존재하지 않는 유저입니다."));
-        Pageable pageable = PageRequest.of(pageIndex, pageSize);
+        Sort sort = Sort.by("createdAt").descending();
+        Pageable pageable = PageRequest.of(pageIndex, pageSize, sort);
 
         if(userData.getOrganization() == null) {
             UserProfile userProfileData = userData.getUserProfile();
@@ -230,7 +228,8 @@ public class UserInfoService {
     @Transactional(readOnly = true)
     public ResponseEntity<?> getUserInfoBoard(Long id, int pageIndex, int pageSize){
         User userData = userRepository.findById(id).orElseThrow(()->new IllegalArgumentException("존재하지 않는 유저입니다."));
-        Pageable pageable = PageRequest.of(pageIndex, pageSize);
+        Sort sort = Sort.by("createdAt").descending();
+        Pageable pageable = PageRequest.of(pageIndex, pageSize, sort);
 
         if(userData.getOrganization() == null) {
             UserProfile userProfileData = userData.getUserProfile();
@@ -281,7 +280,8 @@ public class UserInfoService {
 
     @Transactional(readOnly = true)
     public ResponseEntity<?> getUserInfoComment(Long id, int pageIndex, int pageSize){
-        Pageable pageable = PageRequest.of(pageIndex, pageSize);
+        Sort sort = Sort.by("createdAt").descending();
+        Pageable pageable = PageRequest.of(pageIndex, pageSize, sort);
         User userData = userRepository.findById(id).orElseThrow(()->new IllegalArgumentException("존재하지 않는 유저입니다."));
 
         Page<CommentResponse> dealBoardComments = new CustomPageImpl<>(
@@ -292,7 +292,8 @@ public class UserInfoService {
 
     @Transactional(readOnly = true)
     public ResponseEntity<?> getMyInfo(Authentication auth, int pageIndex, int pageSize){
-        Pageable pageable = PageRequest.of(pageIndex, pageSize);
+        Sort sort = Sort.by("createdAt").descending();
+        Pageable pageable = PageRequest.of(pageIndex, pageSize, sort);
 
         /* 일반 유저일 경우 */
         if(auth.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_USER"))){
@@ -348,7 +349,8 @@ public class UserInfoService {
 
     @Transactional(readOnly = true)
     public ResponseEntity<?> getMyInfoBoard(Authentication auth, int pageIndex, int pageSize, Specification<DealBoard> spec){
-        Pageable pageable = PageRequest.of(pageIndex, pageSize);
+        Sort sort = Sort.by("createdAt").descending();
+        Pageable pageable = PageRequest.of(pageIndex, pageSize, sort);
 
         if(auth.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_USER"))) {
             String userEmail = auth.getName();
@@ -401,7 +403,8 @@ public class UserInfoService {
 
     @Transactional(readOnly = true)
     public ResponseEntity<?> getMyInfoComment(Authentication auth, int pageIndex, int pageSize, Specification<DealBoardComment> spec){
-        Pageable pageable = PageRequest.of(pageIndex, pageSize);
+        Sort sort = Sort.by("createdAt").descending();
+        Pageable pageable = PageRequest.of(pageIndex, pageSize, sort);
 
         if(auth.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_USER"))) {
             String userEmail = auth.getName();
