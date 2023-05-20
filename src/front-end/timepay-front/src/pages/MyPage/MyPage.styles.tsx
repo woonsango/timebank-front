@@ -84,7 +84,7 @@ export const cssMyPageProfileBlock = (scaleValue: number) => css`
     display: flex;
   }
   .MyImageWrap {
-    width: 25%;
+    width: 100px;
   }
   .MyProfileImage {
     width: 100px;
@@ -92,17 +92,21 @@ export const cssMyPageProfileBlock = (scaleValue: number) => css`
     border-radius: 70%;
   }
   .MyNameWrap {
-    width: 70%;
-    margin-left: 20%;
+    width: 100%;
+    padding-left: 20px;
   }
   .MyName {
     font-size: calc(24px * ${scaleValue});
     font-weight: 600;
     color: gray;
     margin-top: 10px;
-
     text-overflow: ellipsis;
     overflow: hidden;
+    height: calc(30px * ${scaleValue});
+    word-wrap: brek-word;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
   }
   .MyPersonalNum {
     font-size: calc(12px * ${scaleValue});
