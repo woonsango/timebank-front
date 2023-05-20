@@ -1,12 +1,12 @@
 import 'dart:async';
-import 'dart:io'; // Add this import.
+import 'dart:developer';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
-import 'package:webview_flutter/webview_flutter.dart';
 import 'package:firebase_core/firebase_core.dart';
 // import 'firebase_options.dart';
 // import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   print("백그라운드 메시지 처리.. ${message.notification!.body!}");
@@ -53,22 +53,29 @@ class WebViewApp extends StatefulWidget {
 }
 
 class _WebViewAppState extends State<WebViewApp> {
-  WebViewController? _webViewController;
+  InAppWebViewController? _webViewController;
 
-  final Completer<WebViewController> _completerController =
-      Completer<WebViewController>();
+  final Completer<InAppWebViewController> _completerController =
+      Completer<InAppWebViewController>();
   var messageString = "";
+  var deviceToken = "";
+  Uri webUrl = Uri.parse('http://http://13.125.249.51/');
+
+  final GlobalKey webViewKey = GlobalKey();
 
   void getMyDeviceToken() async {
     final token = await FirebaseMessaging.instance.getToken();
-    print("내 디바이스 토큰: $token");
+    setState(() {
+      deviceToken = token!;
+    });
+    print("내 디바이스 토큰: $deviceToken");
   }
 
   @override
   void initState() {
-    if (Platform.isAndroid) {
-      WebView.platform = SurfaceAndroidWebView();
-    }
+    // if (Platform.isAndroid) {
+    //   WebView.platform = SurfaceAndroidWebView();
+    // }
     getMyDeviceToken();
     FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
       RemoteNotification? notification = message.notification;
@@ -98,19 +105,46 @@ class _WebViewAppState extends State<WebViewApp> {
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
-      onWillPop: () => _goBack(context),
-      child: Scaffold(
-        body: WebView(
-          onWebViewCreated: (WebViewController webViewController) {
-            _completerController.future
-                .then((value) => _webViewController = value);
-            _completerController.complete(webViewController);
-          },
-          initialUrl: 'http://13.125.249.51',
-          javascriptMode: JavascriptMode.unrestricted,
-        ),
-      ),
-    );
+        onWillPop: () => _goBack(context),
+        child: Scaffold(
+          body: InAppWebView(
+            key: webViewKey,
+            onWebViewCreated: (InAppWebViewController webViewController) {
+              _completerController.future
+                  .then((value) => _webViewController = value);
+              _completerController.complete(webViewController);
+              webViewController.addJavaScriptHandler(
+                  //  디바이스 토큰을 웹뷰에 전달
+                  handlerName: 'getDeviceToken',
+                  callback: (args) {
+                    return deviceToken;
+                  });
+            },
+            initialUrlRequest: URLRequest(url: webUrl),
+            initialOptions: InAppWebViewGroupOptions(
+              crossPlatform: InAppWebViewOptions(
+                javaScriptCanOpenWindowsAutomatically: true, // 자바스크립트 새 창 실행 허용
+                javaScriptEnabled: true, // 자바스크립트 실행 허용
+                useOnDownloadStart: true,
+                useOnLoadResource: true,
+                allowFileAccessFromFileURLs: true,
+                verticalScrollBarEnabled: true,
+              ),
+              android: AndroidInAppWebViewOptions(
+                  allowContentAccess: true,
+                  builtInZoomControls: true,
+                  thirdPartyCookiesEnabled: true,
+                  allowFileAccess: true,
+                  supportMultipleWindows: true // 새 창 실행 허용
+                  ),
+            ),
+            onConsoleMessage: (InAppWebViewController controller,
+                ConsoleMessage consoleMessage) {
+              // 웹에서 찍은 콘솔 볼 수 있음
+              log("WEB CONSOLE: ${consoleMessage.message}");
+            },
+          ),
+        ));
   }
 
   Future<bool> _goBack(BuildContext context) async {

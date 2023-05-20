@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import {
   Button,
   Form,
@@ -36,6 +36,7 @@ import {
 } from './Join.styles';
 import { apiRequest } from '../../api/request';
 import { API_URL } from '../../api/urls';
+import { getDeviceToken } from '../../utils/device';
 
 /*행정동 타입 선언*/
 type DongName = keyof typeof dongData;
@@ -75,6 +76,8 @@ const JoinPage = () => {
   const [dongText, setDongText] = useState<string>('');
 
   const [overlap, setOverlap] = useState<boolean>(false);
+
+  const [deviceToken, setDeviceToken] = useState<string>();
 
   const navigate = useNavigate();
 
@@ -280,8 +283,7 @@ const JoinPage = () => {
       formData.append('name', realName);
       formData.append('nickName', nickName);
       formData.append('phone', phoneNumber);
-
-      //formData.append('deviceToken', 'testToken2');
+      if (deviceToken) formData.append('deviceToken', deviceToken);
 
       /*POST*/
       apiRequest
@@ -297,6 +299,21 @@ const JoinPage = () => {
       goTo(PATH.CATEGORY_SELECT);
     }
   };
+
+  useEffect(() => {
+    window.addEventListener('flutterInAppWebViewPlatformReady', function () {
+      getDeviceToken().then((response) => {
+        setDeviceToken(response);
+        console.log('response', response);
+      });
+    });
+    return () => {
+      window.removeEventListener(
+        'flutterInAppWebViewPlatformReady',
+        function () {},
+      );
+    };
+  }, []);
 
   return (
     <Space css={topWrapperCSS} align="baseline">
