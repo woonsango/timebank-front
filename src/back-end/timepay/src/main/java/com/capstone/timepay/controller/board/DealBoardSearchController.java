@@ -1,5 +1,6 @@
 package com.capstone.timepay.controller.board;
 
+import com.capstone.timepay.controller.admin.response.board.DealBoardResponse;
 import com.capstone.timepay.domain.dealBoard.DealBoard;
 import com.capstone.timepay.domain.dealBoard.DealBoardSearch;
 import com.capstone.timepay.service.board.service.DealBoardService;
@@ -26,7 +27,7 @@ public class DealBoardSearchController {
     private final DealBoardService dealBoardService;
 
     @GetMapping
-    public ResponseEntity<Page<DealBoard>> searchDealBoards(
+    public ResponseEntity<Page<DealBoardResponse>> searchDealBoards(
             @RequestParam(value = "title", required = false) String title,
             @RequestParam(value = "content", required = false) String content,
             @RequestParam(value = "type", required = false) String type,
@@ -49,7 +50,7 @@ public class DealBoardSearchController {
                 .and(DealBoardSearch.withVolunteer(volunteer));
 
         Pageable pageable = PageRequest.of(curPage, perPage, getSort(sortType));
-        Page<DealBoard> dealBoards = dealBoardService.search(spec, pageable);
+        Page<DealBoardResponse> dealBoards = dealBoardService.search(spec, pageable);
 
         return ResponseEntity.ok(dealBoards);
     }

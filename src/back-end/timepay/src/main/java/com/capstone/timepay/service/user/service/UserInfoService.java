@@ -514,6 +514,8 @@ public class UserInfoService {
                                 .writerNickname(dealBoardComment.getUser().getNickname()) //dealBoardComment.getUser().getNickname()
                                 .isHidden(dealBoardComment.isHidden())
                                 .updatedTime(dealBoardComment.getUpdatedAt())
+                                .startTime(dealBoardComment.getDealBoard().getStartTime())
+                                .endTime(dealBoardComment.getDealBoard().getEndTime())
                                 .build())
                 .collect(Collectors.toList());
     }

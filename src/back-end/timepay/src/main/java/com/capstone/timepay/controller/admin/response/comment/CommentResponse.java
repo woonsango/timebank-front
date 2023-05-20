@@ -1,6 +1,7 @@
 package com.capstone.timepay.controller.admin.response.comment;
 
 import lombok.*;
+import org.springframework.cglib.core.Local;
 
 import java.time.LocalDateTime;
 
@@ -25,5 +26,6 @@ public class CommentResponse {
     private LocalDateTime updatedTime;
     private String content;
     private String boardTitle;
-
+    private LocalDateTime startTime;
+    private LocalDateTime endTime;
 }

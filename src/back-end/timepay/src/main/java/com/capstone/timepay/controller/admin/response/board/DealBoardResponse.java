@@ -35,6 +35,8 @@ public class DealBoardResponse {
     private Long userId;
     private String userName;
     private String userNickname;
+    private String userType;
+    private String imageURL;
 
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
@@ -62,10 +64,23 @@ public class DealBoardResponse {
             this.userId = dealBoard.getDealRegisters().get(0).getUser().getUserId();
             this.userName = dealBoard.getDealRegisters().get(0).getUser().getName();
             this.userNickname = dealBoard.getDealRegisters().get(0).getUser().getNickname();
+
+            if (dealBoard.getDealRegisters().get(0).getUser().getOrganization() == null) {
+                this.userType = "일반 유저";
+            } else {
+                this.userType = "기관 유저";
+            }
         } else {
             this.userId = null;
             this.userName = null;
             this.userNickname = null;
+            this.userType = null;
+        }
+
+        if (!dealBoard.getDealAttatchments().isEmpty()) {
+            this.imageURL = dealBoard.getDealAttatchments().get(0).getImageUrl();
+        } else {
+            this.imageURL = null;
         }
 
         this.createdAt = dealBoard.getCreatedAt();
