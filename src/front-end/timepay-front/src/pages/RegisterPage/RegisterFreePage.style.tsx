@@ -208,6 +208,16 @@ export const cssPostBtnStyle = css`
   font-size: 24px;
   font-weight: 600;
 `;
+export const cssPostBtnStyle2 = css`
+  width: 100%;
+  height: 70px;
+  background: ${COMMON_COLOR.LIGHT_GRAY};
+  color: ${COMMON_COLOR.WHITE};
+  border: none;
+  letter-spacing: 3px;
+  font-size: 24px;
+  font-weight: 600;
+`;
 
 export const cssPostCategoryStyle = css`
   margin-top: 20px;

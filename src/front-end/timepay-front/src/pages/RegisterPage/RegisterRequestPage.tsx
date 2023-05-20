@@ -28,6 +28,7 @@ import {
   cssLineStyle,
   cssPostContentInputStyle,
   cssPostBtnStyle,
+  cssPostBtnStyle2,
   cssPostFooterStyle,
   cssPostCategoryStyle,
   cssPostDateStyle,
@@ -117,20 +118,6 @@ const RegisterRequestPage = () => {
   const handleDatesChange = (value: DateRange) => {
     setDates(value);
   };
-  // 시간에 따른 타임페이 환산
-  const [starttime, setStarttime] = useRecoilState<string>(startTime);
-  const [endtime, setEndtime] = useRecoilState<string>(endTime);
-
-  const minusHours: any =
-    0 <= Number(endtime.slice(0, 2)) - Number(starttime.slice(0, 2))
-      ? Number(endtime.slice(0, 2)) - Number(starttime.slice(0, 2))
-      : 0;
-  const minusMinutes: any =
-    0 !== Number(endtime.slice(3, 5)) - Number(starttime.slice(3, 5))
-      ? Number(endtime.slice(3, 5)) + Number(starttime.slice(3, 5))
-      : 0;
-  const exchangeTime: number = minusHours * 60 + minusMinutes;
-  // 보유 타임페이보다 지급 타임페이가 큰 경우의 로직 나중에.. 구현
 
   // 뒤로가기
   const navigate = useNavigate();
@@ -175,6 +162,32 @@ const RegisterRequestPage = () => {
     setPreviewUrls(newPreviewUrls);
   };
 
+  const [selectedDate, setSelectedDate] = useState(null); // Date picker에서 선택한 날짜 객체
+  const [selectedTime, setSelectedTime] = useState(null); // Time picker에서 선택한 시간 객체
+
+  // date-picker
+  let today = new Date();
+  let year = today.getFullYear();
+  let month = String(today.getMonth() + 1).padStart(2, '0');
+  let date = String(today.getDate()).padStart(2, '0');
+  const todayDate = year + '-' + month + '-' + date;
+  console.log(todayDate);
+
+  const onChange = (value: any) => {
+    console.log(value.format('YYYY-MM-DD'));
+  };
+
+  // time-picker
+  const [starttime, setStarttime] = useState('');
+  const format = 'HH:mm';
+
+  const onChange2 = (value: any) => {
+    setStarttime(value.format('HH:mm:ss.SSSSSS'));
+  };
+
+  console.log('..', starttime);
+
+  // 게시글 등록
   const handleOnSubmit = useCallback(
     async (values: any) => {
       let formData = new FormData();
@@ -182,10 +195,14 @@ const RegisterRequestPage = () => {
         formData.append('image', values.images[0].originFileObj);
       }
 
+      const formattedDate = dayjs(selectedDate).format('YYYY-MM-DD');
+      const formattedTime = moment(selectedTime).format('HH:mm:ss.SSSSSS');
+
       const newPost = {
         ...values,
         d_board_id: parseInt(values.d_board_id),
         images: null,
+        start_time: `${formattedDate}T${formattedTime}`, // start_time 값을 form-data에 추가
       };
 
       formData.append(
@@ -224,25 +241,6 @@ const RegisterRequestPage = () => {
   const uploadButton = useMemo(() => {
     return <img width="100%" height="100%" src={dummyProfileImg} alt="+" />;
   }, []);
-
-  // date-picker
-  let today = new Date();
-  let year = today.getFullYear();
-  let month = String(today.getMonth() + 1).padStart(2, '0');
-  let date = String(today.getDate()).padStart(2, '0');
-  const todayDate = year + '-' + month + '-' + date;
-  console.log(todayDate);
-
-  const onChange = (value: any) => {
-    console.log(value.format('YYYY-MM-DD'));
-  };
-
-  // time-picker
-  const format = 'HH:mm';
-
-  const onChange2 = (value: any) => {
-    console.log(value.format('HH:mm:ss'));
-  };
 
   return (
     <div css={cssPostPageStyle}>
@@ -320,7 +318,7 @@ const RegisterRequestPage = () => {
           </Form.Item>
           <div>
             <p>내 타임페이 : {pay}</p>
-            <p>지급해야할 타임페이 : {exchangeTime}</p>
+            <p>지급해야할 타임페이 : </p>
           </div>
           <div css={cssLineStyle} />
           <Form.Item label="장소" name="location" css={cssPostCategoryStyle}>
@@ -366,19 +364,9 @@ const RegisterRequestPage = () => {
 
           <div css={cssPostFooterStyle}>
             {isDisabled ? (
-              <Button
-                htmlType="submit"
-                css={cssPostBtnStyle}
-                disabled={isDisabled}
-              >
-                작성완료
-              </Button>
+              <Button css={cssPostBtnStyle2}>작성완료</Button>
             ) : (
-              <Button
-                htmlType="submit"
-                css={cssPostBtnStyle}
-                disabled={isDisabled}
-              >
+              <Button htmlType="submit" css={cssPostBtnStyle}>
                 작성완료
               </Button>
             )}
