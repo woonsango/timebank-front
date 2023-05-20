@@ -157,7 +157,9 @@ const InstantActivityPage = () => {
               placeholder="시간"
               showNow={false}
               // 확인 버튼 누르지 않아도 값이 지정되도록 커스텀
-              popupClassName="time-picker-no-footer"
+              popupClassName={`time-picker-no-footer ${
+                scaleValue > 1 ? 'big-post-dropdown' : 'small-post-dropdown'
+              }`}
               onSelect={(value) => {
                 timeForm.setFieldValue('startTime', value);
                 handleOnChangeTime(
@@ -179,7 +181,9 @@ const InstantActivityPage = () => {
               placeholder="시간"
               showNow={false}
               // 확인 버튼 누르지 않아도 값이 지정되도록 커스텀
-              popupClassName="time-picker-no-footer"
+              popupClassName={`time-picker-no-footer ${
+                scaleValue > 1 ? 'big-post-dropdown' : 'small-post-dropdown'
+              }`}
               onSelect={(value) => {
                 timeForm.setFieldValue('endTime', value);
                 handleOnChangeTime(

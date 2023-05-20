@@ -18,7 +18,15 @@ body {
   font-size: 21px;
 }
 
+.big-post-dropdown .ant-picker-content {
+  font-size: 21px;
+}
+
 .small-post-dropdown a {
+  font-size: 14px;
+}
+
+.small-post-dropdown .ant-picker-content {
   font-size: 14px;
 }
 
