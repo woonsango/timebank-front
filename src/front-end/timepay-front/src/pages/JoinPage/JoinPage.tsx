@@ -295,7 +295,7 @@ const JoinPage = () => {
           console.log('POST 실패');
         });
 
-      goTo(PATH.CATEGORY_SELECT);
+      // goTo(PATH.CATEGORY_SELECT);
     }
   };
 
