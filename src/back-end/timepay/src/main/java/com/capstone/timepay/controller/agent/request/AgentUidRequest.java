@@ -9,6 +9,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-public class AgentRegisterRequest {
+public class AgentUidRequest {
     private Long uid;
 }

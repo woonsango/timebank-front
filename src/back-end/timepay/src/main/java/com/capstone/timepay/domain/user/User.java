@@ -107,11 +107,11 @@ public class User extends BaseTimeEntity {
 
     @JsonIgnore
     @OneToMany(mappedBy = "createdUser", orphanRemoval = true, cascade = CascadeType.ALL)
-    private List<Agent> createdAgents = new ArrayList<>();
+    private List<Agent> createdAgents = new ArrayList<>(); // 대리인
 
     @JsonIgnore
     @OneToMany(mappedBy = "assignedUser", orphanRemoval = true, cascade = CascadeType.ALL)
-    private List<Agent> assignedAgents = new ArrayList<>();
+    private List<Agent> assignedAgents = new ArrayList<>(); // 신청인
 
     @OneToOne
     @JoinColumn(name = "profile_id")

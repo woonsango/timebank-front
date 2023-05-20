@@ -21,11 +21,13 @@ public class Agent extends BaseTimeEntity {
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="created_by_id")
-    private User createdUser;
+    private User createdUser; // 대리인
 
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="assigned_to_id")
-    private User assignedUser;
+    private User assignedUser; // 신청인
+
+    private boolean isAccept;
 
 }
