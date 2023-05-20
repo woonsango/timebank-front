@@ -7,8 +7,19 @@ export const cssInstantActivityPageStyle = css`
   .ant-steps {
     display: flex;
     flex-direction: row;
+    .ant-steps-item-icon {
+      margin-right: 10px !important;
+    }
     .ant-steps-item-tail {
       display: none !important;
+    }
+    .ant-steps-item-title {
+      display: inline-block;
+    }
+    @media (max-width: 345px) {
+      .ant-steps-item-title {
+        display: none;
+      }
     }
   }
 `;
