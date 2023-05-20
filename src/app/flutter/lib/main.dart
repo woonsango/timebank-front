@@ -59,7 +59,7 @@ class _WebViewAppState extends State<WebViewApp> {
       Completer<InAppWebViewController>();
   var messageString = "";
   var deviceToken = "";
-  Uri webUrl = Uri.parse('http://http://13.125.249.51/');
+  Uri webUrl = Uri.parse('http://13.125.249.51/');
 
   final GlobalKey webViewKey = GlobalKey();
 
