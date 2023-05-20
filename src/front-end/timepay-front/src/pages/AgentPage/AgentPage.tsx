@@ -1,16 +1,18 @@
 import { useSetRecoilState } from 'recoil';
 import { headerTitleState } from '../../states/uiState';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { apiRequest } from '../../api/request';
 import { API_URL } from '../../api/urls';
 import useFontSize from '../../hooks/useFontSize';
 import { cssBtnSpace, cssMyInfoStyle } from './AgentPage.style';
-import { Button, Space, Typography } from 'antd';
+import { Button, Modal, Space, Typography } from 'antd';
 import { COMMON_COLOR } from '../../styles/constants/colors';
 import SizeContext from 'antd/es/config-provider/SizeContext';
+import AgentModal from '../../components/AgentModal';
 
 const AgentPage = () => {
   const setHeaderTitle = useSetRecoilState(headerTitleState);
+  const [isOpenRegisterModal, setIsOpenRegisterModal] = useState(false);
 
   const [image, setImage]: any = useState();
   const [nickName, setNickName]: any = useState();
@@ -18,6 +20,14 @@ const AgentPage = () => {
 
   const { scaleValue } = useFontSize();
   const { Text } = Typography;
+
+  const handleOnCancelModal = useCallback(() => {
+    setIsOpenRegisterModal(false);
+  }, []);
+
+  const isOpenModal = () => {
+    setIsOpenRegisterModal(true);
+  };
 
   useEffect(() => {
     apiRequest
@@ -66,6 +76,7 @@ const AgentPage = () => {
                 className="agentRegister"
                 type="primary"
                 style={{ background: COMMON_COLOR.MAIN1, width: 140 }}
+                onClick={isOpenModal}
               >
                 대리인 등록
               </Button>
@@ -81,6 +92,7 @@ const AgentPage = () => {
           </div>
         </div>
       </div>
+      <AgentModal isOpen={isOpenRegisterModal} onCancel={handleOnCancelModal} />
     </>
   );
 };
