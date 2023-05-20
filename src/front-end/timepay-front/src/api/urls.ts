@@ -25,6 +25,7 @@ export const API_URL = {
   API_USERS__MYPAGE__COMMENT: '/api/users/mypage/comment',
   LOGOUT: '/api/users/logout',
   DELETE: '/api/users/delete',
+  INSTANT_MATCHING: '/api/instant-matching',
 };
 
 // 토큰 필요 없는 애들
