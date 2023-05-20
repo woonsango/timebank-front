@@ -1,15 +1,15 @@
 package com.capstone.timepay.service.agent;
 
-import com.capstone.timepay.controller.agent.response.AgentInfoResponse;
-import com.capstone.timepay.controller.agent.response.AgentUserInfoResponse;
-import com.capstone.timepay.controller.agent.response.AgentUserRegisterResponse;
-import com.capstone.timepay.controller.agent.response.Applicant;
+import com.capstone.timepay.controller.agent.response.*;
 import com.capstone.timepay.domain.agent.Agent;
 import com.capstone.timepay.domain.agent.AgentRepository;
 import com.capstone.timepay.domain.user.User;
 import com.capstone.timepay.domain.user.UserRepository;
+import com.capstone.timepay.service.user.service.UserDetailService;
+import com.capstone.timepay.utility.JwtUtils;
 import com.google.firebase.database.utilities.Pair;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -23,6 +23,9 @@ import java.util.stream.Collectors;
 public class AgentService {
     private final UserRepository userRepository;
     private final AgentRepository agentRepository;
+
+    private final UserDetailService userDetailService;
+    private final JwtUtils jwtUtils;
 
     public AgentUserRegisterResponse agentRegister(Long userId, User agent){
         User user = userRepository.findById(userId).orElseThrow(()
@@ -74,8 +77,26 @@ public class AgentService {
         return agentInfoResponse;
     }
 
-    public Boolean agentDelete(User user){
-        agentRepository.delete(agentRepository.findByAssignedUser(user));
-        return true;
+    public AgentTransResponse agentTrans(User user){
+        AgentTransResponse agentTransResponse = new AgentTransResponse(null, false);
+
+        final UserDetails userDetails = userDetailService.loadUserByUsername(user.getEmail());
+        final String token = jwtUtils.createToken(userDetails.getUsername(), user.getRoles());
+
+        agentTransResponse.setToken(token); agentTransResponse.setStatus(true);
+
+        return agentTransResponse;
+    }
+
+    public AgentStatusResponse agentDelete(User agent, User user){
+        AgentStatusResponse agentStatusResponse = new AgentStatusResponse(false, "알 수 없는 이유로 함수 실행 과정에서 에러 발생");
+
+        if(agentRepository.findByCreatedUserAndAssignedUser(agent, user) != null) {
+            agentRepository.delete(agentRepository.findByCreatedUserAndAssignedUser(agent, user));
+            agentStatusResponse = new AgentStatusResponse(true, "성공적으로 삭제되었습니다.");
+        } else{
+            agentStatusResponse = new AgentStatusResponse(false, "대리인 정보에 신청된 유저를 찾지 못했습니다.");
+        }
+        return agentStatusResponse;
     }
 }

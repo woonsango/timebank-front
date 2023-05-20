@@ -112,6 +112,7 @@ public class ApiController {
     // -----------------------------------------------------------------------------------
 
     @GetMapping("/test/test/{id}")
+    @ApiOperation(value = "좀 더 편한 테스트를 위해 {id}에 해당하는 JWT 토큰을 리턴해주는 테스트 코드, 배포전에 삭제 필요")
     public String test(@PathVariable Long id){
         User user = userRepository.findById(id).orElse(null);
         final UserDetails userDetails = userDetailService.loadUserByUsername(user.getEmail());

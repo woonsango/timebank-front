@@ -1,5 +1,6 @@
 package com.capstone.timepay.service.agent;
 
+import com.capstone.timepay.controller.agent.response.AgentStatusResponse;
 import com.capstone.timepay.controller.agent.response.AgentUserInfoResponse;
 import com.capstone.timepay.controller.agent.response.AgentUserRegisterResponse;
 import com.capstone.timepay.domain.agent.Agent;
@@ -56,8 +57,14 @@ public class AgentUserService {
         return agentUserInfoResponse;
     }
 
-    public Boolean agentUserDelete(User user){
-        agentRepository.delete(agentRepository.findByAssignedUser(user));
-        return true;
+    public AgentStatusResponse agentUserDelete(User user){
+        AgentStatusResponse agentStatusResponse = new AgentStatusResponse(false, "알 수 없는 이유로 함수 실행 과정에서 에러 발생");
+        if(agentRepository.findByAssignedUser(user) != null) {
+            agentRepository.delete(agentRepository.findByAssignedUser(user));
+            agentStatusResponse = new AgentStatusResponse(true, "성공적으로 삭제되었습니다.");
+        } else{
+            agentStatusResponse = new AgentStatusResponse(false, "등록된 대리인이 없습니다.");
+        }
+        return agentStatusResponse;
     }
 }
