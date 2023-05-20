@@ -27,29 +27,6 @@ public class AgentService {
     private final UserDetailService userDetailService;
     private final JwtUtils jwtUtils;
 
-    public AgentUserRegisterResponse agentRegister(Long userId, User agent){
-        User user = userRepository.findById(userId).orElseThrow(()
-                -> new IllegalArgumentException("존재하지 않는 신청인 유저입니다."));
-
-        AgentUserRegisterResponse agentUserRegisterResponse = new AgentUserRegisterResponse(
-                userId, false, "알 수 없는 이유로 agentRegister 함수 실행 도중 실패했습니다.");
-        if (agentRepository.findByCreatedUserAndAssignedUser(agent, user) == null) {
-            agentRepository.save(Agent.builder()
-                    .createdUser(agent)
-                    .assignedUser(user)
-                    .build()
-            );
-            agentUserRegisterResponse.setStatus(true);
-            agentUserRegisterResponse.setContent("등록에 성공했습니다.");
-
-        }
-        else{
-            agentUserRegisterResponse.setStatus(false);
-            agentUserRegisterResponse.setContent("이미 등록된 대리인과 신청인입니다.");
-        }
-        return agentUserRegisterResponse;
-    }
-
     public AgentInfoResponse agentInfo(User user){
         Agent agentInfo = agentRepository.findFirstByCreatedUser(user);
         AgentInfoResponse agentInfoResponse = new AgentInfoResponse(false, null,
@@ -64,17 +41,47 @@ public class AgentService {
             List<Applicant> applicants = new ArrayList<>();
 
             for (Agent agent : assignedUsers) {
-                Applicant applicant = new Applicant();
-                applicant.setAppliUid(agent.getAssignedUser().getUserId());
-                applicant.setAppliName(agent.getAssignedUser().getName());
-                applicants.add(applicant);
+                if (agent.isAccept()) {
+                    Applicant applicant = new Applicant();
+                    applicant.setAppliUid(agent.getAssignedUser().getUserId());
+                    applicant.setAppliName(agent.getAssignedUser().getName());
+                    applicants.add(applicant);
+                }
             }
 
             agentInfoResponse = new AgentInfoResponse(true, applicants,
-                    user.getUserId(),user.getName());
+                    user.getUserId(), user.getName());
         }
 
         return agentInfoResponse;
+    }
+
+    /* 테스트 필요 */
+    public AgentAcceptInfoResponse agentAcceptList(User user){
+        Agent agentInfo = agentRepository.findFirstByCreatedUser(user);
+        AgentAcceptInfoResponse agentAcceptInfoResponse = new AgentAcceptInfoResponse(false, null,
+                null,null);
+        
+        /* isAccept가 false 리스트 */
+        List<Agent> assignedUsers = agentInfo.getCreatedUser().getCreatedAgents();
+        List<Agent> waitingAgents = assignedUsers.stream()
+                .filter(agent -> !agent.isAccept())
+                .collect(Collectors.toList());
+
+        List<Applicant> applicants = new ArrayList<>();
+
+        for (Agent agent : waitingAgents) {
+           {
+               Applicant applicant = new Applicant();
+               applicant.setAppliUid(agent.getAssignedUser().getUserId());
+               applicant.setAppliName(agent.getAssignedUser().getName());
+               applicants.add(applicant);
+            }
+        }
+        agentAcceptInfoResponse = new AgentAcceptInfoResponse(true, applicants,
+                user.getUserId(), user.getName());
+
+        return agentAcceptInfoResponse;
     }
 
     public AgentTransResponse agentTrans(User user){
