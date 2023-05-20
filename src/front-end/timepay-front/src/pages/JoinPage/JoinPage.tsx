@@ -24,7 +24,6 @@ import './Join_imageSet.css';
 
 import { save } from '../LoginPage/saveUid';
 
-import axios from 'axios';
 import {
   cssJoinSubmitBtn,
   cssJoinText,
@@ -290,12 +289,11 @@ const JoinPage = () => {
         .then((res) => {
           console.log('POST 성공');
           console.log(res);
+          goTo(PATH.CATEGORY_SELECT);
         })
         .catch((err) => {
           console.log('POST 실패');
         });
-
-      // goTo(PATH.CATEGORY_SELECT);
     }
   };
 
@@ -327,7 +325,7 @@ const JoinPage = () => {
             />
             <div className="EditprofileImageWrap">
               <label htmlFor="image_guide">
-                프로필
+                프로필 사진 설정하기
                 <input
                   type="file"
                   id="image_guide"
@@ -350,7 +348,7 @@ const JoinPage = () => {
 
         <Form.Item name="닉네임 중복 검사">
           <Button type="primary" css={cssJoinNick} onClick={overlapNickname}>
-            개발 테스트 중
+            닉네임 중복 검사
           </Button>
         </Form.Item>
 
