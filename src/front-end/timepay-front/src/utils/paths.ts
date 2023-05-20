@@ -28,4 +28,7 @@ export const PATH = {
   AGENCY_EDIT: '/agency/edit',
   MY_VOLUNTEER: '/my-volunteer',
   PAYMENT_CERTIFICATION: '/payment-certification',
+  INSTANT_ACTIVITY: '/instant-activity',
 };
+
+export const deployHostName = 'http://13.125.249.51';

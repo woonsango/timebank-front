@@ -88,6 +88,10 @@ function App() {
               element={<CategorySelectPage />}
             />
             <Route path={PATH.AGENCY_EDIT} element={<AgencyEditPage />} />
+            <Route
+              path={`${PATH.INSTANT_ACTIVITY}/:helpPk`}
+              element={<PageRoutes.InstantActivityPage />}
+            />
           </Route>
         </Routes>
       </ConfigProvider>

@@ -4,7 +4,7 @@ import {
   cssMainFooterStyle,
   cssPlusPostBtnStyle,
 } from './MainFooter.styles';
-import { MenuProps } from 'antd';
+import { MenuProps, Modal } from 'antd';
 import { Button, Dropdown, Layout } from 'antd';
 import { BellOutlined, UserOutlined } from '@ant-design/icons';
 import { ReactComponent as ModifyFontSizeBig } from '../../assets/images/icons/modify-font-size-big.svg';
@@ -14,18 +14,49 @@ import { ReactComponent as ActivityRecord } from '../../assets/images/icons/acti
 import { ReactComponent as Home } from '../../assets/images/icons/home.svg';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { PATH } from '../../utils/paths';
-import { useCallback, useMemo } from 'react';
-import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { useCallback, useMemo, useState } from 'react';
+import { useSetRecoilState } from 'recoil';
 import { fontSizeState } from '../../states/uiState';
 import useFontSize from '../../hooks/useFontSize';
-import { agencyState } from '../../states/user';
+import { useGetUserInfo } from '../../api/hooks/user';
+import InstantActivityQRModal from '../InstantActivityQRModal';
 
 const MainFooter = () => {
+  const { data } = useGetUserInfo();
   const { isBig } = useFontSize();
   const setFontSize = useSetRecoilState(fontSizeState);
-
-  const agencyValue = useRecoilValue(agencyState);
   const navigate = useNavigate();
+
+  const [isOpenQR, setIsOpenQR] = useState(false);
+
+  const isAgency = useMemo(() => {
+    if (data?.data.body.manager_name) return true;
+    return false;
+  }, [data]);
+
+  const handleOnClickModifyFontSize = useCallback(() => {
+    if (isBig) setFontSize('small');
+    else setFontSize('big');
+  }, [isBig, setFontSize]);
+
+  const handleOnLinkNotification = useCallback(() => {
+    navigate(PATH.NOTIFICATION);
+  }, [navigate]);
+
+  const handleOnCloseQRModal = useCallback(() => {
+    setIsOpenQR(false);
+  }, []);
+
+  const handleOnShowQRModal = useCallback(() => {
+    Modal.confirm({
+      content: '도움을 받은 분만 눌러주세요!',
+      okText: '도움을 받았습니다',
+      cancelText: '취소',
+      onOk: () => {
+        if (data?.data.body.id) setIsOpenQR(true);
+      },
+    });
+  }, [data]);
 
   const items: MenuProps['items'] = useMemo(() => {
     const items = [
@@ -38,29 +69,29 @@ const MainFooter = () => {
         label: <Link to={PATH.Register_HS}>같이하기</Link>,
       },
     ];
-    if (agencyValue)
+    if (isAgency)
       items.push({
         key: PATH.Register_EVENT,
         label: <Link to={PATH.Register_EVENT}>이벤트</Link>,
       });
+    else
+      items.push({
+        key: '바로도움요청',
+        label: (
+          <Button type="link" onClick={handleOnShowQRModal}>
+            바로도움요청
+          </Button>
+        ),
+      });
     return items;
-  }, [agencyValue]);
-
-  const handleOnClickModifyFontSize = useCallback(() => {
-    if (isBig) setFontSize('small');
-    else setFontSize('big');
-  }, [isBig, setFontSize]);
-
-  const handleOnLinkNotification = useCallback(() => {
-    navigate(PATH.NOTIFICATION);
-  }, [navigate]);
+  }, [isAgency, handleOnShowQRModal]);
 
   return (
     <>
       <div className="float" css={cssFloating}>
         <Dropdown
           menu={{ items }}
-          placement="top"
+          placement="topRight"
           arrow
           trigger={['click']}
           overlayClassName={`${
@@ -108,6 +139,11 @@ const MainFooter = () => {
           </Button>
         </NavLink>
       </Layout.Footer>
+      <InstantActivityQRModal
+        isOpen={isOpenQR}
+        onCancel={handleOnCloseQRModal}
+        helpPk={data?.data.body.id}
+      />
     </>
   );
 };

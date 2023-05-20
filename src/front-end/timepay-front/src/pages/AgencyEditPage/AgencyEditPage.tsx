@@ -141,38 +141,39 @@ const AgencyEditPage = () => {
     if (data) {
       form.setFieldValue(
         'profileImage',
-        !data.data.body.imageUrl || data.data.body.imageUrl === 'none'
+        !data.data.body.image_url || data.data.body.image_url === 'none'
           ? undefined
           : [
               {
                 uid: 0,
                 status: 'done',
                 name: '프로필 이미지',
-                url: data.data.body.imageUrl,
+                url: data.data.body.image_url,
               },
             ],
       );
-      setImgFileList([
-        {
-          uid: '-1',
-          status: 'done',
-          name: '프로필 이미지',
-          url: data.data.body.imageUrl,
-        },
-      ]);
-      form.setFieldValue('managerName', data.data.body.managerName);
-      form.setFieldValue('managerPhone', data.data.body.managerPhone);
+      if (data.data.body.image_url && data.data.body.image_url !== 'none')
+        setImgFileList([
+          {
+            uid: '-1',
+            status: 'done',
+            name: '프로필 이미지',
+            url: data.data.body.image_url,
+          },
+        ]);
+      form.setFieldValue('managerName', data.data.body.manager_name);
+      form.setFieldValue('managerPhone', data.data.body.manager_phone);
       form.setFieldValue(
         'volunteerFile',
-        !data.data.body.certificationUrl ||
-          data.data.body.certificationUrl === 'none'
+        !data.data.body.certification_url ||
+          data.data.body.certification_url === 'none'
           ? undefined
           : [
               {
                 uid: 0,
                 status: 'done',
-                name: data.data.body.certificationUrl.split('_')[1],
-                url: data.data.body.certificationUrl,
+                name: data.data.body.certification_url.split('_')[1],
+                url: data.data.body.certification_url,
               },
             ],
       );
@@ -207,7 +208,7 @@ const AgencyEditPage = () => {
             { required: true, message: '' },
             { validator: onlyKoreanOrEnglishRule },
           ]}
-          initialValue={data?.data.body.managerName}
+          initialValue={data?.data.body.manager_name}
         >
           <Input placeholder="담당자 이름을 입력해주세요." />
         </Form.Item>

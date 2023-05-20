@@ -210,7 +210,7 @@ const MyPage = () => {
         setIntroduction(res.data.body.introduction);
         setPersonalNum(res.data.body.id);
         setTimePay(res.data.body.time_pay);
-        if (res.data.body.businessCode) {
+        if (res.data.body.manager_name) {
           setAgencyInfo(res.data.body);
         }
       })
@@ -239,13 +239,13 @@ const MyPage = () => {
             <div className="info-header">
               <img
                 src={
-                  !agencyInfo.imageUrl || agencyInfo.imageUrl === 'none'
+                  !agencyInfo.image_url || agencyInfo.image_url === 'none'
                     ? 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png'
-                    : agencyInfo.imageUrl
+                    : agencyInfo.image_url
                 }
                 alt="내 프로필"
               />
-              <div>{agencyInfo.organizationName}</div>
+              <div>{agencyInfo.organization_name}</div>
             </div>
             <div className="info-detail">
               <div>
@@ -254,11 +254,11 @@ const MyPage = () => {
               </div>
               <div>
                 <span className="label">사업자등록번호</span>
-                <span className="value">{agencyInfo.businessCode}</span>
+                <span className="value">{agencyInfo.business_code}</span>
               </div>
               <div>
                 <span className="label">종사자 수</span>
-                <span className="value">{agencyInfo.employeeNum} 명</span>
+                <span className="value">{agencyInfo.employee_num} 명</span>
               </div>
               <div>
                 <span className="label">현재 타임페이</span>
@@ -267,8 +267,8 @@ const MyPage = () => {
               <div>
                 <span className="label">봉사활동 자격 서류 인증</span>
                 <span className="value">
-                  {agencyInfo.certificationUrl &&
-                  agencyInfo.certificationUrl !== 'none' ? (
+                  {agencyInfo.certification_url &&
+                  agencyInfo.certification_url !== 'none' ? (
                     <CheckCircleFilled className="yes" />
                   ) : (
                     <CloseCircleFilled className="no" />
@@ -278,18 +278,17 @@ const MyPage = () => {
               <div></div>
               <div>
                 <span className="label">담당자 이름</span>
-                <span className="value">{agencyInfo.managerName}</span>
+                <span className="value">{agencyInfo.manager_name}</span>
               </div>
               <div>
                 <span className="label">담당자 전화번호</span>
-                <span className="value">{agencyInfo.managerPhone}</span>
+                <span className="value">{agencyInfo.manager_phone}</span>
               </div>
             </div>
           </div>
         ) : (
           <div css={cssMyPage}>
             <div css={cssMyPageProfileBlock(scaleValue)}>
-              {' '}
               <div className="MyTopBox">
                 <div className="MyImageWrap">
                   <img src={image} className="MyProfileImage" alt="내 프로필" />

@@ -1,3 +1,4 @@
+import { IAgency } from './IAgency';
 import { ICommentActivity } from './IComment';
 import { PageableData } from './ICommon';
 import { IBoard } from './IPost';
@@ -15,6 +16,14 @@ export interface IUser {
   createdAt: string; // 계정생성일
   accountEmail: string;
   isAdmin: boolean; // 관리자 여부
+}
+
+export interface IAgencyOrUser extends IAgency {
+  nick_name?: string;
+  image_url: string;
+  introduction?: string;
+  location?: string;
+  time_pay?: number;
 }
 
 export interface IGetUserBoardRequest {
