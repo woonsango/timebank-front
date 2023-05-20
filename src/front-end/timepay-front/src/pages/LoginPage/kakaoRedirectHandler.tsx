@@ -52,6 +52,7 @@ const KakaoRedirectHandler = () => {
           console.log('토큰 저장:', response.data.jwt);
           setUserState(response.data);
           setAgencyState(null);
+          console.log(pathToAfterLoginValue);
           if (pathToAfterLoginValue) goTo(pathToAfterLoginValue);
           else goTo(PATH.HOME);
         }
