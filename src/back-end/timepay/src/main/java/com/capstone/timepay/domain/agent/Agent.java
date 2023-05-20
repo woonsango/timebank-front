@@ -28,4 +28,6 @@ public class Agent extends BaseTimeEntity {
     @JoinColumn(name="assigned_to_id")
     private User assignedUser; // 신청인
 
+    private boolean isAccept;
+
 }
