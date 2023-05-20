@@ -17,12 +17,9 @@ public class AgentUserService {
     private final UserRepository userRepository;
     private final AgentRepository agentRepository;
 
-    public AgentUserRegisterResponse agentUserRegister(Long userId, User agent){
-        User user = userRepository.findById(userId).orElseThrow(()
-        -> new IllegalArgumentException("존재하지 않는 신청인 유저입니다."));
-
+    public AgentUserRegisterResponse agentUserRegister(User agent, User user){
         AgentUserRegisterResponse agentUserRegisterResponse = new AgentUserRegisterResponse(
-                userId, false, "알 수 없는 이유로 agentRegister 함수 실행 도중 실패했습니다.");
+                agent.getUserId(), false, "알 수 없는 이유로 agentRegister 함수 실행 도중 실패했습니다.");
         if (agentRepository.findByCreatedUserAndAssignedUser(agent, user) == null) {
             agentRepository.save(Agent.builder()
                     .createdUser(agent)

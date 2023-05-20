@@ -51,19 +51,19 @@ public class AgentController {
     }
 
     /* 아래 2개 개발 필요 (미완성) */
-    @GetMapping("/register")
+    @GetMapping("/waiting")
     @ApiOperation(value = "대리인 신청 목록 조회")
     public ResponseEntity<?> agentRegisterList(Principal principal) {
         User agent = userRepository.findByEmail(principal.getName()).orElseThrow(()
                 -> new IllegalArgumentException("존재하지 않는 대리인 유저입니다."));
-        return ResponseEntity.ok(agentService.agentInfo(agent));
+        return ResponseEntity.ok(agentService.agentAcceptList(agent));
     }
 
-    @PostMapping("/register")
-    @ApiOperation(value = "대리인 신청 확인/거부")
-    public ResponseEntity<?> agentRegister(@RequestBody AgentUidRequest agentUidRequest, Principal principal) {
-        User agent = userRepository.findByEmail(principal.getName()).orElseThrow(()
-                -> new IllegalArgumentException("존재하지 않는 대리인 유저입니다."));
-        return ResponseEntity.ok(agentService.agentRegister(agentUidRequest.getUid(), agent));
-    }
+//    @PostMapping("/register")
+//    @ApiOperation(value = "대리인 신청 확인/거부")
+//    public ResponseEntity<?> agentRegister(@RequestBody AgentUidRequest agentUidRequest, Principal principal) {
+//        User agent = userRepository.findByEmail(principal.getName()).orElseThrow(()
+//                -> new IllegalArgumentException("존재하지 않는 대리인 유저입니다."));
+//        return ResponseEntity.ok(agentService.agentRegister(agentUidRequest.getUid(), agent));
+//    }
 }

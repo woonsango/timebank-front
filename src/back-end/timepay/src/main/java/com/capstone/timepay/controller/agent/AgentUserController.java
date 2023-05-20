@@ -25,7 +25,10 @@ public class AgentUserController {
     public ResponseEntity<?> agentRegister(@RequestBody AgentUidRequest agentUidRequest, Principal principal) {
         User user = userRepository.findByEmail(principal.getName()).orElseThrow(()
                 -> new IllegalArgumentException("존재하지 않는 신청인 유저입니다."));
-        return ResponseEntity.ok(agentUserService.agentUserRegister(agentUidRequest.getUid(), user));
+
+        User agent = userRepository.findById(agentUidRequest.getUid()).orElseThrow(()
+                -> new IllegalArgumentException("존재하지 않는 신청인 유저입니다."));
+        return ResponseEntity.ok(agentUserService.agentUserRegister(agent, user));
     }
 
     @GetMapping()
