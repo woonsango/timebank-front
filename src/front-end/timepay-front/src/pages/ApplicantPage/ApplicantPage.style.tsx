@@ -44,7 +44,9 @@ export const cssMyInfoStyle = (scaleValue: number) => css`
     position: relative;
     .text {
       position: absolute;
+      height: 50px;
       padding-left: 20px;
+      padding-top: 8px;
       font-size: calc(20px * ${scaleValue});
       font-weight: bold;
       vertical-align: middle;
@@ -75,7 +77,7 @@ export const cssMyInfoStyle = (scaleValue: number) => css`
   .ant-table {
     border: solid 1px ${COMMON_COLOR.FONT1} !important;
     border-radius: 5px;
-    padding-top: 35px;
+    padding-top: 50px;
   }
 `;
 
