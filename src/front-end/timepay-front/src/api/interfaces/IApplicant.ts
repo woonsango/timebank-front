@@ -9,3 +9,8 @@ export interface IGetApplicantResponse {
   myUid: number;
   myName: string;
 }
+
+export interface IPostApplicantRequest {
+  uid: number;
+  apply: boolean;
+}

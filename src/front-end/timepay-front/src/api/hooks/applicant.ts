@@ -1,8 +1,11 @@
 import { AxiosError, AxiosResponse } from 'axios';
-import { useQuery } from 'react-query';
+import { useMutation, useQuery } from 'react-query';
 import { apiRequest } from '../request';
 import { API_URL } from '../urls';
-import { IGetApplicantResponse } from '../interfaces/IApplicant';
+import {
+  IGetApplicantResponse,
+  IPostApplicantRequest,
+} from '../interfaces/IApplicant';
 
 export const useGetApplicant = () => {
   return useQuery<AxiosResponse<IGetApplicantResponse>, AxiosError>({
@@ -25,5 +28,16 @@ export const useGetApplicantWaiting = () => {
     onError: (err: any) => {
       console.log('[ERROR] useGetApplicant:', err);
     },
+  });
+};
+
+export const usePostApplicantApply = () => {
+  return useMutation<AxiosResponse<any>, AxiosError, any>({
+    mutationKey: 'usePostApplicantApply',
+    mutationFn: (data: IPostApplicantRequest) =>
+      apiRequest.post(API_URL.APPLICANT__APPLY, {
+        uid: data.uid,
+        apply: data.apply,
+      }),
   });
 };

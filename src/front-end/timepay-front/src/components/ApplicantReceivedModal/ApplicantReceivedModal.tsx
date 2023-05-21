@@ -8,10 +8,14 @@ import {
   cssRegisterModal,
 } from './ApplicantReceivedModalstyle';
 import useFontSize from '../../hooks/useFontSize';
-import { IApplicant } from '../../api/interfaces/IApplicant';
+import {
+  IApplicant,
+  IPostApplicantRequest,
+} from '../../api/interfaces/IApplicant';
 import {
   useGetApplicant,
   useGetApplicantWaiting,
+  usePostApplicantApply,
 } from '../../api/hooks/applicant';
 
 export interface AgentModalProps {
@@ -37,6 +41,7 @@ const ApplicantReceivedModal = ({
 
   const { data } = useGetApplicantWaiting();
   const [selectedApplicantUID, setSelectedApplicantUID] = useState<any>();
+  const postAgentRegister = usePostApplicantApply();
 
   const dataSource = data?.data.applicant || [];
 
@@ -44,27 +49,51 @@ const ApplicantReceivedModal = ({
     console.log('test');
   }, []);
 
-  const onAcceptClick = useCallback(() => {
-    if (selectedApplicantUID) {
-      console.log('selectedApplicantUID :', selectedApplicantUID);
-    } else {
-      messageApi.open({
-        type: 'warning',
-        content: '받은 신청을 선택해주세요',
-      });
-    }
-  }, [messageApi, selectedApplicantUID]);
+  // const onAcceptClick = useCallback(() => {
+  //   if (selectedApplicantUID) {
+  //     console.log('selectedApplicantUID :', selectedApplicantUID);
+  //   } else {
+  //     messageApi.open({
+  //       type: 'warning',
+  //       content: '받은 신청을 선택해주세요',
+  //     });
+  //   }
+  // }, [messageApi, selectedApplicantUID]);
 
-  const onRejectClick = useCallback(() => {
-    if (selectedApplicantUID) {
-      console.log('selectedApplicantUID :', selectedApplicantUID);
-    } else {
-      messageApi.open({
-        type: 'warning',
-        content: '받은 신청을 선택해주세요',
-      });
-    }
-  }, [messageApi, selectedApplicantUID]);
+  const onClickBtn = useCallback(
+    async (type: boolean) => {
+      if (selectedApplicantUID) {
+        console.log('selectedApplicantUID :', selectedApplicantUID);
+        const reject: IPostApplicantRequest = {
+          uid: selectedApplicantUID[0],
+          apply: type,
+        };
+
+        await postAgentRegister.mutateAsync(reject, {
+          onSuccess: () => {
+            messageApi.open({
+              type: type ? 'success' : 'error',
+              content: type
+                ? '대리인 신청을 수락했습니다'
+                : '대리인 신청을 거절했습니다',
+            });
+            queryClient.invalidateQueries({
+              queryKey: ['useGetApplicantWaiting'],
+            });
+          },
+          onError: (err) => {
+            console.log(err.response?.status);
+          },
+        });
+      } else {
+        messageApi.open({
+          type: 'warning',
+          content: '받은 신청을 선택해주세요',
+        });
+      }
+    },
+    [messageApi, postAgentRegister, queryClient, selectedApplicantUID],
+  );
 
   const rowSelection = {
     columnWidth: '20px',
@@ -100,14 +129,14 @@ const ApplicantReceivedModal = ({
           <Space align="center" size={10}>
             <Button
               className="agentRegister"
-              onClick={onAcceptClick}
+              onClick={() => onClickBtn(true)}
               type="primary"
             >
               수락
             </Button>
             <Button
               className="agentReject"
-              onClick={onRejectClick}
+              onClick={() => onClickBtn(false)}
               type="primary"
             >
               거절
@@ -119,7 +148,7 @@ const ApplicantReceivedModal = ({
         </div>
       </>
     );
-  }, [onAcceptClick, onCancel, scaleValue]);
+  }, [onCancel, onClickBtn, scaleValue]);
 
   return (
     <Modal
