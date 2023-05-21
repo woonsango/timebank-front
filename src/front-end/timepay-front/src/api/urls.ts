@@ -32,6 +32,7 @@ export const API_URL = {
   DONATE_TIMEPAY: '/api/donate/timepay',
   AGENT: '/api/users/applicants', //신청인이 대리인을 조회
   AGENT__REGISTER: '/api/users/applicants/register', //신청인이 대리인을 등록
+  AGENT__DELETE: '/api/users/applicants', //신청인이 대리인을 삭제
   DONATE_BOARDS: '/api/donate',
 };
 

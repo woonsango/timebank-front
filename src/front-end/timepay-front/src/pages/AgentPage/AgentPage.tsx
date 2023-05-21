@@ -9,7 +9,8 @@ import { Button, Modal, Space, Typography } from 'antd';
 import { COMMON_COLOR } from '../../styles/constants/colors';
 import AgentModal from '../../components/AgentModal';
 import { ExclamationCircleFilled } from '@ant-design/icons';
-import { useGetAgent } from '../../api/hooks/agent';
+import { useDeleteAgent, useGetAgent } from '../../api/hooks/agent';
+import { useQueryClient } from 'react-query';
 
 const AgentPage = () => {
   const setHeaderTitle = useSetRecoilState(headerTitleState);
@@ -22,6 +23,9 @@ const AgentPage = () => {
   const { confirm } = Modal;
 
   const { data } = useGetAgent();
+  const deleteAgentMutation = useDeleteAgent();
+  const queryClient = useQueryClient();
+
   console.log(data?.data);
   const agentName = data?.data.agentName;
   const agent = agentName
@@ -50,8 +54,18 @@ const AgentPage = () => {
       okText: '삭제',
       okType: 'primary',
       okButtonProps: { style: { backgroundColor: COMMON_COLOR.MAIN2 } },
-      onOk() {
+      async onOk() {
         console.log('OK');
+        await deleteAgentMutation.mutateAsync(undefined, {
+          onSuccess: (result) => {
+            queryClient.invalidateQueries({
+              queryKey: ['useGetAgent'],
+            });
+          },
+          onError: (err) => {
+            console.log(err.response?.status);
+          },
+        });
       },
       cancelText: '취소',
 

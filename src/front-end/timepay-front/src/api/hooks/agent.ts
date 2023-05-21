@@ -23,3 +23,10 @@ export const usePostAgentRegister = () => {
       apiRequest.post(API_URL.AGENT__REGISTER, { uid: data.uid }),
   });
 };
+
+export const useDeleteAgent = () => {
+  return useMutation<AxiosResponse<any>, AxiosError, any>({
+    mutationKey: 'useDeleteAgent',
+    mutationFn: () => apiRequest.delete(API_URL.AGENT__DELETE),
+  });
+};
