@@ -51,7 +51,11 @@ import { ApplicantButton } from '../../components/post/ApplicantButton';
 
 import axios from 'axios';
 import { useDeleteBoard, useGetBoard } from '../../api/hooks/board';
-import { useCreateComment, useGetComments } from '../../api/hooks/comment';
+import {
+  useCreateComment,
+  useGetComments,
+  useDeleteComment,
+} from '../../api/hooks/comment';
 import { useMutation } from 'react-query';
 import { useQueryClient } from 'react-query';
 
@@ -104,6 +108,7 @@ const PostPage = () => {
   const { data, isLoading } = useGetBoard(parseInt(real_id));
   const createCommentMutation = useCreateComment(parseInt(real_id));
   const comments = useGetComments(parseInt(real_id));
+  const useDeleteCommentMutation = useDeleteComment();
 
   useEffect(() => {
     apiRequest
@@ -171,6 +176,16 @@ const PostPage = () => {
       },
     });
   }, [useDeleteBoardMutation, queryClient, messageApi]);
+
+  const handleDeleteComment = async (postPk: number, id: number) => {
+    console.log(postPk);
+    try {
+      await useDeleteCommentMutation.mutateAsync({ postPk, id });
+      messageApi.success('댓글이 성공적으로 삭제되었습니다.');
+    } catch (error) {
+      messageApi.error('댓글 삭제 중 오류가 발생했습니다.');
+    }
+  };
 
   const layout = {
     labelCol: { span: 6 },
@@ -385,7 +400,12 @@ const PostPage = () => {
         <div css={cssPostDetailSixth}>
           {applicants.length > 0 ? (
             applicants.map((data) => (
-              <Item c={data} id={data.id} key={data.id} />
+              <Item
+                c={data}
+                id={data.id}
+                key={data.id}
+                onClick={() => handleDeleteComment(parseInt(real_id), data.id)}
+              />
             ))
           ) : (
             <p>

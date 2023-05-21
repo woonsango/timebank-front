@@ -30,3 +30,17 @@ export const useCreateComment = (postPk: number) => {
       }),
   });
 };
+
+export const useDeleteComment = () => {
+  return useMutation<
+    AxiosResponse<IComment>,
+    AxiosError,
+    { postPk: number; id: number }
+  >({
+    mutationKey: 'useDeleteComment',
+    mutationFn: ({ postPk, id }: { postPk: number; id: number }) =>
+      apiRequest.delete(
+        `${API_URL.DEAL_BOARDS_COMMENT_DELETE}/${postPk}/${id}`,
+      ),
+  });
+};
