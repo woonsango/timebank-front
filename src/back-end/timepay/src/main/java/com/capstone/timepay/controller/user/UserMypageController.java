@@ -1,10 +1,9 @@
 package com.capstone.timepay.controller.user;
 
-import com.capstone.timepay.controller.admin.response.comment.CommentResponse;
 import com.capstone.timepay.controller.user.request.BookmarkDTO;
+import com.capstone.timepay.controller.user.request.DeviceTokenDTO;
 import com.capstone.timepay.controller.user.request.UpdateRequestDTO;
 import com.capstone.timepay.controller.user.response.CertificationListResponse;
-import com.capstone.timepay.controller.user.response.GetResponseDTO;
 import com.capstone.timepay.domain.board.BoardStatus;
 import com.capstone.timepay.domain.dealBoard.DealBoard;
 import com.capstone.timepay.domain.dealBoard.DealBoardSearch;
@@ -15,7 +14,6 @@ import com.capstone.timepay.service.user.service.UserInfoService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -146,4 +144,11 @@ public class UserMypageController {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         return ResponseEntity.ok(userInfoService.updateUserInfo(auth, updateRequestData, image));
     }
+
+    @PatchMapping("/update/token")
+    @ApiOperation(value = "유저 토큰 수정", notes = "유저의 디바이스 토큰을 수정합니다.")
+    public ResponseEntity<?> patchUserToken(Principal principal, @RequestBody DeviceTokenDTO deviceToken) {
+        return ResponseEntity.ok(userInfoService.updateUserDeviceToken(principal.getName(), deviceToken));
+    }
+
 }
