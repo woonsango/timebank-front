@@ -50,3 +50,7 @@ body {
 .select-big .ant-select-item {
   font-size: calc(14px * 1.5);
 }
+
+.applicantContent {
+  height: 80vh;
+}
