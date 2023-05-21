@@ -1,8 +1,8 @@
 import { IPostState, IPostType } from '../api/interfaces/IPost';
 import dayjs from 'dayjs';
 
-export const getStatus: (boardStatus?: string) => IPostState = (
-  boardStatus?: string,
+export const getStatus: (boardStatus?: string | null) => IPostState = (
+  boardStatus?: string | null,
 ) => {
   if (boardStatus)
     switch (boardStatus) {

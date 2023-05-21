@@ -9,7 +9,7 @@ export interface PostStatusTagColorProps {
   pointColor: string;
   backgroundColor?: string;
 }
-const PostStatusTag = ({ status }: { status?: string }) => {
+const PostStatusTag = ({ status }: { status?: string | null }) => {
   const { scaleValue } = useFontSize();
   const statusColor: PostStatusTagColorProps = useMemo(() => {
     switch (getStatus(status)) {
