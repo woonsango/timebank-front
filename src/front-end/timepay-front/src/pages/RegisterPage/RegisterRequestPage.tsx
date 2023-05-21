@@ -35,6 +35,8 @@ import dummyProfileImg from '../../assets/images/icons/dummy-profile-img.png';
 import dayjs from 'dayjs';
 import 'dayjs/locale/ko';
 import locale from 'antd/es/date-picker/locale/ko_KR';
+import { useGetCategory } from '../../api/hooks/category';
+import { COMMON_COLOR } from '../../styles/constants/colors';
 
 const { TextArea } = Input;
 const MAX_IMAGES = 5;
@@ -46,6 +48,9 @@ const RegisterRequestPage = () => {
     setHeaderTitle('도움요청');
   }, [setHeaderTitle]);
 
+  const [title, setTitle] = useState<string>('');
+  const [location, setLocation] = useState<string>('');
+  const [content, setContent] = useState<string>('');
   const [form] = Form.useForm();
   const [imgFileList, setImgFileList] = useState<UploadFile[]>([]);
   const [previewImage, setPreviewImage] = useState('');
@@ -55,27 +60,11 @@ const RegisterRequestPage = () => {
   const [messageApi, contextHolder] = message.useMessage();
 
   const pay = 100;
-  const [title, setTitle] = useState<string>('');
-  const [location, setLocation] = useState<string>('');
-  const [content, setContent] = useState<string>('');
-  const [selectedCategory, setSelectedCategory] = useState<string>('');
-  const categories = [
-    '산책',
-    '봉사',
-    '교육',
-    '친목',
-    '생활',
-    '건강',
-    '도와주세요',
-  ];
 
-  const handleCategoryClick = (category: string) => {
-    setSelectedCategory((prevCategory) =>
-      prevCategory === category ? '' : category,
-    );
-    console.log(category);
-    console.log(typeof category);
-  };
+  const { data, isLoading } = useGetCategory({
+    type: '도움요청',
+    useYn: 'Y',
+  });
 
   const normFile = (e: any) => {
     if (Array.isArray(e)) {
@@ -130,24 +119,6 @@ const RegisterRequestPage = () => {
 
   ////////
 
-  // 날짜
-  const [dates, setDates] = useState<DateRange>([null, null]);
-  const handleDatesChange = (value: DateRange) => {
-    setDates(value);
-  };
-  // 시간에 따른 타임페이 환산
-  const [starttime, setStarttime] = useRecoilState<string>(startTime);
-  const [endtime, setEndtime] = useRecoilState<string>(endTime);
-
-  const minusHours: any =
-    0 <= Number(endtime.slice(0, 2)) - Number(starttime.slice(0, 2))
-      ? Number(endtime.slice(0, 2)) - Number(starttime.slice(0, 2))
-      : 0;
-  const minusMinutes: any =
-    0 !== Number(endtime.slice(3, 5)) - Number(starttime.slice(3, 5))
-      ? Number(endtime.slice(3, 5)) + Number(starttime.slice(3, 5))
-      : 0;
-  const exchangeTime: number = minusHours * 60 + minusMinutes;
   // 보유 타임페이보다 지급 타임페이가 큰 경우의 로직 나중에.. 구현
 
   // 뒤로가기
@@ -262,12 +233,20 @@ const RegisterRequestPage = () => {
 
         <Form.Item label="카테고리" name="category" css={cssPostCategoryStyle}>
           <Radio.Group>
-            <Radio.Button value="심부름">심부름</Radio.Button>
-            <Radio.Button value="교육">교육</Radio.Button>
-            <Radio.Button value="돌봄">돌봄</Radio.Button>
-            <Radio.Button value="청소,가사">청소,가사</Radio.Button>
-            <Radio.Button value="수리,설치">수리,설치</Radio.Button>
-            <Radio.Button value="이동">이동</Radio.Button>
+            {data?.data.map((category) => (
+              <Radio.Button
+                key={category.categoryId}
+                value={category.categoryId}
+                style={{
+                  borderRadius: '0',
+                  border: `1px solid ${COMMON_COLOR.FONT4}`,
+                  margin: '5px',
+                  fontWeight: '500',
+                }}
+              >
+                {category.categoryName}
+              </Radio.Button>
+            ))}
           </Radio.Group>
         </Form.Item>
 
