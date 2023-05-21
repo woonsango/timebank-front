@@ -29,6 +29,7 @@ export const PATH = {
   PAYMENT_CERTIFICATION: '/payment-certification',
   INSTANT_ACTIVITY: '/instant-activity',
   AGENT: '/agent',
+  APPLICANT: '/applicant',
 };
 
 export const deployHostName = 'http://13.125.249.51';

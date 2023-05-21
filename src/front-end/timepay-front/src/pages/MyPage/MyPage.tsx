@@ -350,7 +350,7 @@ const MyPage = () => {
             <div className="MyPageMoveBox">
               <button
                 className="MyPageText"
-                onClick={() => handlePageMove(PATH.AGENT)}
+                onClick={() => handlePageMove(PATH.APPLICANT)}
               >
                 신청인 관리
               </button>

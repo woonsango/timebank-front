@@ -93,6 +93,10 @@ function App() {
               element={<PageRoutes.InstantActivityPage />}
             />
             <Route path={PATH.AGENT} element={<PageRoutes.AgentPage />} />
+            <Route
+              path={PATH.APPLICANT}
+              element={<PageRoutes.ApplicantPage />}
+            />
           </Route>
         </Routes>
       </ConfigProvider>
