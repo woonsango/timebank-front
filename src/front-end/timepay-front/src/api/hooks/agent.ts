@@ -1,8 +1,8 @@
 import { AxiosError, AxiosResponse } from 'axios';
-import { useQuery } from 'react-query';
+import { useMutation, useQuery } from 'react-query';
 import { apiRequest } from '../request';
 import { API_URL } from '../urls';
-import { IGetAgentResponse } from '../interfaces/IAgent';
+import { IGetAgentResponse, IPostAgentRequest } from '../interfaces/IAgent';
 
 export const useGetAgent = () => {
   return useQuery<AxiosResponse<IGetAgentResponse>, AxiosError>({
@@ -13,5 +13,13 @@ export const useGetAgent = () => {
     onError: (err: any) => {
       console.log('[ERROR] useGetAgent:', err);
     },
+  });
+};
+
+export const usePostAgentRegister = () => {
+  return useMutation<AxiosResponse<any>, AxiosError, any>({
+    mutationKey: 'usePostAgentRegister',
+    mutationFn: (data: IPostAgentRequest) =>
+      apiRequest.post(API_URL.AGENT__REGISTER, { uid: data.uid }),
   });
 };

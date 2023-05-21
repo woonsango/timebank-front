@@ -30,6 +30,7 @@ export const API_URL = {
   DONATION_BOARD_ID: '/api/donate',
   DONATE_TIMEPAY: '/api/donate/timepay',
   AGENT: '/api/users/applicants', //신청인이 대리인을 조회
+  AGENT__REGISTER: '/api/users/applicants/register', //신청인이 대리인을 등록
 };
 
 // 토큰 필요 없는 애들

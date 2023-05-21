@@ -4,3 +4,7 @@ export interface IGetAgentResponse {
   myUid: number;
   myName: string;
 }
+
+export interface IPostAgentRequest {
+  uid: number;
+}

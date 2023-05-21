@@ -7,10 +7,8 @@ import useFontSize from '../../hooks/useFontSize';
 import { cssBtnSpace, cssMyInfoStyle } from './AgentPage.style';
 import { Button, Modal, Space, Typography } from 'antd';
 import { COMMON_COLOR } from '../../styles/constants/colors';
-import SizeContext from 'antd/es/config-provider/SizeContext';
 import AgentModal from '../../components/AgentModal';
 import { ExclamationCircleFilled } from '@ant-design/icons';
-import { cssModalFooter } from '../../components/AgentModal/AgentModal.style';
 import { useGetAgent } from '../../api/hooks/agent';
 
 const AgentPage = () => {
@@ -18,8 +16,6 @@ const AgentPage = () => {
   const [isOpenRegisterModal, setIsOpenRegisterModal] = useState(false);
 
   const [image, setImage]: any = useState();
-  const [nickName, setNickName]: any = useState();
-  const [personalNum, setPersonalNum]: any = useState();
 
   const { scaleValue } = useFontSize();
   const { Text } = Typography;
@@ -115,7 +111,11 @@ const AgentPage = () => {
           </div>
         </div>
       </div>
-      <AgentModal isOpen={isOpenRegisterModal} onCancel={handleOnCancelModal} />
+      <AgentModal
+        myUID={data?.data.myUid as number}
+        isOpen={isOpenRegisterModal}
+        onCancel={handleOnCancelModal}
+      />
     </>
   );
 };

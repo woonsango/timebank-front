@@ -5,27 +5,41 @@ import dayjs from 'dayjs';
 import { useQueryClient } from 'react-query';
 import { cssModalFooter, cssRegisterModal } from './AgentModal.style';
 import useFontSize from '../../hooks/useFontSize';
+import { IPostAgentRequest } from '../../api/interfaces/IAgent';
+import { usePostAgentRegister } from '../../api/hooks/agent';
 
 export interface AgentModalProps {
+  myUID: number;
   isOpen: boolean;
   onCancel: () => void;
 }
-const AgentModal = ({ isOpen, onCancel }: AgentModalProps) => {
+const AgentModal = ({ myUID, isOpen, onCancel }: AgentModalProps) => {
   const queryClient = useQueryClient();
   const { scaleValue } = useFontSize();
 
   const [messageApi, contextHolder] = message.useMessage();
   const [form] = Form.useForm();
+  const postAgentRegister = usePostAgentRegister();
 
-  const myUID = '#54b6bd';
-
-  const onFinish = useCallback(() => {
-    console.log('test');
-  }, []);
-
-  const onRegisterClick = useCallback(() => {
-    console.log('test');
-  }, []);
+  const onRegisterClick = useCallback(async () => {
+    const formValues = form.getFieldsValue();
+    console.log(formValues);
+    await postAgentRegister.mutateAsync(formValues, {
+      onSuccess: () => {
+        messageApi.open({
+          type: 'success',
+          content: '대리인 신청을 보냈습니다.',
+        });
+        queryClient.invalidateQueries({
+          queryKey: ['useGetAgent'],
+        });
+        form.resetFields();
+      },
+      onError: (err) => {
+        console.log(err.response?.status);
+      },
+    });
+  }, [form, messageApi, postAgentRegister, queryClient]);
 
   const footer = useMemo(() => {
     return (
@@ -61,8 +75,9 @@ const AgentModal = ({ isOpen, onCancel }: AgentModalProps) => {
       <p />
       나의 UID : <span className="myUIDnumber">{myUID}</span>
       <p />
-      <Form form={form} layout="horizontal" onFinish={onFinish}>
-        <Form.Item name="agentUID">
+      {contextHolder}
+      <Form form={form} layout="horizontal">
+        <Form.Item name="uid">
           <Input
             style={{ width: 210 }}
             placeholder="대리인의 UID를 입력해주세요"
