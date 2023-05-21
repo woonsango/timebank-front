@@ -10,8 +10,6 @@ import {
 import { Form, Input, Modal, Button } from 'antd';
 
 const Item = ({ c }: any) => {
-  console.log('~', c.content);
-
   const write_user = false; // true = 수정 / false = 신고
 
   // 수정 기능

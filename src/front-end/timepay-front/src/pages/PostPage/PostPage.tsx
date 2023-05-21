@@ -51,17 +51,19 @@ import { ApplicantButton } from '../../components/post/ApplicantButton';
 
 import axios from 'axios';
 import { useDeleteBoard, useGetBoard } from '../../api/hooks/board';
+import { useCreateComment, useGetComments } from '../../api/hooks/comment';
+import { useMutation } from 'react-query';
+import { useQueryClient } from 'react-query';
+
 import { PATH } from '../../utils/paths';
 import { COMMON_COLOR } from '../../styles/constants/colors';
 
 import { AxiosError, AxiosResponse } from 'axios';
 import { IReportBoard } from '../../api/interfaces/IPost';
-import { useMutation } from 'react-query';
-import { useQueryClient } from 'react-query';
+
 import { useSetRecoilState } from 'recoil';
 import { headerTitleState } from '../../states/uiState';
 import dayjs from 'dayjs';
-import { startTime } from '../../states/register';
 
 interface BoardProps {
   post?: IBoard;
@@ -82,7 +84,7 @@ interface Applicant {
 
 const Footer = Layout;
 
-const PostPage = ({ post }: BoardProps) => {
+const PostPage = () => {
   const queryClient = useQueryClient();
   const [applicants, setApplicants] = useState<Applicant[]>([]);
 
@@ -100,6 +102,8 @@ const PostPage = ({ post }: BoardProps) => {
   const url = window.location.pathname;
   const real_id = url.substring(6);
   const { data, isLoading } = useGetBoard(parseInt(real_id));
+  const createCommentMutation = useCreateComment(parseInt(real_id));
+  const comments = useGetComments(parseInt(real_id));
 
   useEffect(() => {
     apiRequest
@@ -111,22 +115,17 @@ const PostPage = ({ post }: BoardProps) => {
         console.error('Error sending GET request:', error);
       });
   }, []);
-
   useEffect(() => {
     apiRequest
       .get(`/api/deal-boards/comments/${real_id}`)
       .then((res) => {
         setApplicants(res.data);
+        let comments = applicants.length;
       })
       .catch((error) => {
         console.error('Error sending GET request:', error);
       });
-  }, []);
-
-  console.log(applicants);
-  applicants.map((data) => {
-    console.log(data.content);
-  });
+  }, [comments]);
 
   const useCreateReports = () => {
     return useMutation<AxiosResponse<boolean>, AxiosError, IReportBoard>({
@@ -173,8 +172,6 @@ const PostPage = ({ post }: BoardProps) => {
     });
   }, [useDeleteBoardMutation, queryClient, messageApi]);
 
-  const [form] = Form.useForm();
-  const { TextArea } = Input;
   const layout = {
     labelCol: { span: 6 },
     wrapperCol: { span: 16 },
@@ -228,8 +225,6 @@ const PostPage = ({ post }: BoardProps) => {
     setAuthor(isAuthor);
   }, [isAuthor]);
 
-  console.log(nickName);
-
   const [isListModalOpen, setIsListModalOpen] = useState(false);
 
   const onApplicantClick = (applicant: any) => {
@@ -267,22 +262,6 @@ const PostPage = ({ post }: BoardProps) => {
 
   // 댓글 입력
   const [inputText, setInputText] = useState('');
-  // 댓글
-  const [tasks, setTasks] = useState<TList[]>([
-    {
-      id: 1,
-      text: '이거는 어떻게 해야하나요?',
-    },
-    {
-      id: 2,
-      text: '저 지원하고 싶네요~ 열심히 할수 있어요!',
-    },
-    {
-      id: 3,
-      text: '정확히 어디서 하는 건지 알려줘요',
-    },
-  ]);
-  const nextId = useRef(4);
 
   const handleClickBack = useCallback(() => {
     navigate(-1);
@@ -297,30 +276,29 @@ const PostPage = ({ post }: BoardProps) => {
     setInputText(e.target.value);
   };
 
+  const adopted = false;
+  const applied = false;
+  const hidden = false;
+  const content = inputText;
+
   // 입력값 버튼 핸들러
-  const handleSubmitComment = (e: React.FormEvent<HTMLButtonElement>) => {
-    const newList: TList = {
-      id: nextId.current,
-      text: inputText,
-    };
-    setTasks(tasks.concat(newList));
-    setInputText('');
-    nextId.current += 1;
-
-    axios
-      .post(`/api/deal-boards/comments/write/${real_id}`, { inputText })
-      .then((response) => {
-        // 요청이 성공적으로 처리되었을 때 실행될 코드 작성
-
-        console.log('댓글 등록 성공');
-        // 등록 후에는 홈 화면으로 이동
-        navigate(-1);
-      })
-      .catch((error) => {
-        // 요청이 실패했을 때 실행될 코드 작성
-        console.error('댓글 등록 실패', error);
-      });
-  };
+  const handleSubmitComment = useCallback(async () => {
+    createCommentMutation.mutateAsync(
+      { adopted, applied, content, hidden },
+      {
+        onSuccess: (data) => {
+          queryClient.invalidateQueries('');
+          setInputText('');
+        },
+        onError(error) {
+          console.log('error');
+        },
+        onSettled: (data) => {
+          console.log('dddddd');
+        },
+      },
+    );
+  }, [messageApi, createCommentMutation, queryClient, comments]);
 
   const startTime = dayjs(data?.data.startTime, 'YYYY-MM-DDTHH:mm:ss').format(
     'MM월 DD일 HH시 mm분',
