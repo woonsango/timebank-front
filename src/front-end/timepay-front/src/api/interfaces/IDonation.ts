@@ -24,3 +24,8 @@ export interface IDonationBoard {
   donateTimePay: number;
   category: string;
 }
+
+export interface IPostDonateTimepayRequest {
+  boardId: number;
+  donateTimePay: number;
+}

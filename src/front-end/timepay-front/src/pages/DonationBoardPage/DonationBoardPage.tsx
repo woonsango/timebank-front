@@ -1,8 +1,12 @@
-import { Button, InputNumber, Modal, Progress, Spin } from 'antd';
+import { Button, InputNumber, message, Modal, Progress, Spin } from 'antd';
 import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useQueryClient } from 'react-query';
 import { useParams } from 'react-router-dom';
 import { useSetRecoilState } from 'recoil';
-import { useGetDonationBoardWithId } from '../../api/hooks/donation';
+import {
+  useGetDonationBoardWithId,
+  usePostDonateTimepay,
+} from '../../api/hooks/donation';
 import PostTypeTag from '../../components/PostTypeTag';
 import { headerTitleState } from '../../states/uiState';
 import { cssDonationBoardPageStyle } from './DonationBoardPage.style';
@@ -10,11 +14,15 @@ import { cssDonationBoardPageStyle } from './DonationBoardPage.style';
 const DonationBoardPage = () => {
   const { boardId } = useParams();
 
+  const queryClient = useQueryClient();
   const { data, isLoading } = useGetDonationBoardWithId(
     parseInt(boardId || '-1'),
   );
+  const usePostDonateTimepayMutation = usePostDonateTimepay();
 
   const setHeaderTitle = useSetRecoilState(headerTitleState);
+
+  const [messageApi, contextHolder] = message.useMessage();
 
   useEffect(() => {
     setHeaderTitle('기부하기');
@@ -31,14 +39,54 @@ const DonationBoardPage = () => {
     setIsOpen(true);
   }, []);
 
+  const handleOnDonate = useCallback(() => {
+    if (boardId && donateAmount)
+      Modal.confirm({
+        content: '이 금액으로 기부를 진행할까요?',
+        okText: '확인',
+        cancelText: '취소',
+        onOk: async () => {
+          usePostDonateTimepayMutation.mutateAsync(
+            {
+              boardId: parseInt(boardId),
+              donateTimePay: donateAmount,
+            },
+            {
+              onSuccess: () => {
+                messageApi.open({
+                  type: 'success',
+                  content: '기부가 완료되었습니다.',
+                  duration: 1,
+                  onClose: () => {
+                    // TODO: 기부하기 게시글 목록 쿼리도 같이 invalidate
+                    queryClient.invalidateQueries('useGetDonationBoardWithId');
+                    handleOnCancelOpen();
+                  },
+                });
+              },
+            },
+          );
+        },
+      });
+  }, [
+    messageApi,
+    queryClient,
+    handleOnCancelOpen,
+    boardId,
+    donateAmount,
+    usePostDonateTimepayMutation,
+  ]);
+
   const footer = useMemo(() => {
     return (
       <>
         <Button onClick={handleOnCancelOpen}>취소</Button>
-        <Button type="primary">확인</Button>
+        <Button type="primary" onClick={handleOnDonate}>
+          확인
+        </Button>
       </>
     );
-  }, [handleOnCancelOpen]);
+  }, [handleOnCancelOpen, handleOnDonate]);
 
   return (
     <div css={cssDonationBoardPageStyle}>
@@ -46,6 +94,7 @@ const DonationBoardPage = () => {
         <Spin />
       ) : (
         <>
+          {contextHolder}
           <div className="donation-board-container">
             <div className="board-header">
               <PostTypeTag type={data?.data?.type} />

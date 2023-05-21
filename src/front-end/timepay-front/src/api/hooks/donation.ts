@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { PATH } from '../../utils/paths';
 import {
   IDonationBoard,
+  IPostDonateTimepayRequest,
   IPostDonationBoardWriteRequest,
   IPostDonationBoardWriteResponse,
 } from '../interfaces/IDonation';
@@ -33,5 +34,19 @@ export const useGetDonationBoardWithId = (boardId?: number) => {
       console.log('[ERROR] useGetDonationBoardWithId', err);
       navigate(PATH.HOME);
     },
+  });
+};
+
+export const usePostDonateTimepay = () => {
+  return useMutation<
+    AxiosResponse<IPostDonationBoardWriteResponse>,
+    AxiosError,
+    IPostDonateTimepayRequest
+  >({
+    mutationKey: 'usePostDonateTimepay',
+    mutationFn: (data: IPostDonateTimepayRequest) =>
+      apiRequest.post(`${API_URL.DONATE_TIMEPAY}/${data.boardId}`, {
+        donateTimePay: data.donateTimePay,
+      }),
   });
 };
