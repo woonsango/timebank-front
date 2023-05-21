@@ -4,7 +4,6 @@ import '../../styles/fonts/pretendard/pretendard.css';
 
 export const cssQnaDeleteStyle = css`
   text-align: right;
-  margin-top: 60px;
   margin-right: 25px;
 `;
 export const cssEditBtnStyle = css`
@@ -190,7 +189,6 @@ export const cssReportContainer = css`
   display: flex;
   justify-content: flex-end;
   margin-right: 25px;
-  margin-top: 60px;
 `;
 export const cssReportBtnStyle = css`
   letter-spacing: 1.5px;

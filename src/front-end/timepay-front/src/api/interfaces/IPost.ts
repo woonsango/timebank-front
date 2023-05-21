@@ -40,10 +40,10 @@ export interface IPostDealBoard {
   content: string;
   location: string;
   state?: string;
-  starttime?: string;
-  endtime?: string;
+  startTime?: string;
+  endTime?: string;
   hidden?: boolean;
-  pay?: 100;
+  pay?: number;
   imageUrl?: string;
 }
 
