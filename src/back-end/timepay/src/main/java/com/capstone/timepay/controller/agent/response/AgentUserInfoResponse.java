@@ -15,5 +15,6 @@ public class AgentUserInfoResponse {
     private String agentName;
     private Long myUid;
     private String myName;
+    private boolean isAccept;
 
 }
