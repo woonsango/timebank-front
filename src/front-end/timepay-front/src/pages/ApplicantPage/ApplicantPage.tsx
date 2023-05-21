@@ -11,6 +11,7 @@ import { ExclamationCircleFilled } from '@ant-design/icons';
 import ApplicantModal from '../../components/ApplicantModal';
 import { IApplicant } from '../../api/interfaces/IApplicant';
 import ApplicantReceivedModal from '../../components/ApplicantReceivedModal';
+import { useGetApplicant } from '../../api/hooks/applicant';
 
 const ApplicantPage = () => {
   const setHeaderTitle = useSetRecoilState(headerTitleState);
@@ -20,10 +21,10 @@ const ApplicantPage = () => {
   const [image, setImage]: any = useState();
   const [nickName, setNickName]: any = useState();
   const [personalNum, setPersonalNum]: any = useState();
+  const { data } = useGetApplicant();
 
   const { scaleValue } = useFontSize();
   const { Text } = Typography;
-  const { confirm } = Modal;
 
   const handleOnCancelModal = useCallback(() => {
     setIsOpenRegisterModal(false);
@@ -61,31 +62,33 @@ const ApplicantPage = () => {
     console.log(appliNumber);
   }, []);
 
-  const agent = '미지정'; //api 받아오면 조건문 추가
-  //신청자 보여주는것도 테이블
-  //신청자 삭제는 radio 테이블
-  //받은 신청 목록 보여주는것도 테이블 쓰면 될듯 (column Header off 해서)
-
-  const dataSource: IApplicant[] = [];
-  for (let i = 0; i < 100; i++) {
-    dataSource.push({
-      appliName: '길동홍',
-      appliUid: i,
-    });
-  }
+  // const dataSource: IApplicant[] = [];
+  // for (let i = 0; i < 100; i++) {
+  //   dataSource.push({
+  //     appliName: '길동홍',
+  //     appliUid: i,
+  //   });
+  // }
+  console.log(data?.data.applicant);
+  const dataSource = data?.data.applicant
+    ? data?.data.applicant.map((data) => ({
+        ...data,
+        displayUid: `#${data.appliUid}`,
+      }))
+    : [];
 
   const columns = [
-    {
-      title: 'appliUid',
-      dataIndex: 'appliUid',
-      key: 'appliUid',
-      width: 10,
-    },
     {
       title: 'appliName',
       dataIndex: 'appliName',
       key: 'appliName',
-      width: 10,
+      width: 7,
+    },
+    {
+      title: 'displayUid',
+      dataIndex: 'displayUid',
+      key: 'displayUid',
+      width: 7,
     },
     {
       title: '계정전환',
@@ -127,6 +130,7 @@ const ApplicantPage = () => {
             showHeader={false}
             pagination={false}
             scroll={{ y: 240 }}
+            locale={{ emptyText: '등록된 신청자가 없습니다.' }}
           />
 
           <div className="space-align-container" css={cssBtnSpace(scaleValue)}>
