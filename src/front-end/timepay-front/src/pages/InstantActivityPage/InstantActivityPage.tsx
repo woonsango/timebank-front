@@ -16,6 +16,8 @@ import useFontSize from '../../hooks/useFontSize';
 import { usePostInstantMatching } from '../../api/hooks/instantMatching';
 import { IPostInstantMatchingRequest } from '../../api/interfaces/IInstantMatching';
 import { useQueryClient } from 'react-query';
+import { apiRequest } from '../../api/request';
+import { API_URL } from '../../api/urls';
 
 const InstantActivityPage = () => {
   const queryClient = useQueryClient();
@@ -34,6 +36,24 @@ const InstantActivityPage = () => {
   const [exchangeTimepay, setExchangeTimepay] = useState(60);
 
   const [messageApi, contextHolder] = message.useMessage();
+  const [personalNum, setPersonalNum]: any = useState();
+
+  useEffect(() => {
+    apiRequest.get(API_URL.USER_INFO_GET).then((res) => {
+      setPersonalNum(res.data.body.id);
+      if (personalNum == helpPk) {
+        messageApi
+          .open({
+            type: 'error',
+            content: '자신의 코드가 아닌 다른 사람의 qr코드를 스캔해주세요',
+            duration: 1,
+          })
+          .then(function () {
+            navigate(-1);
+          });
+      }
+    });
+  }, [helpPk, messageApi, navigate, personalNum]);
 
   const next = useCallback(() => {
     setCurrent(current + 1);
@@ -70,56 +90,63 @@ const InstantActivityPage = () => {
     const timeFormValues = timeForm.getFieldsValue();
     const contentFormValues = contentForm.getFieldsValue();
 
-    const newActivity: IPostInstantMatchingRequest = {
-      title: timeFormValues.activityDate.format(
-        'YYYY년 MM월 DD일 바로 도움 활동',
-      ),
-      category: '바로도움',
-      content: contentFormValues.content,
-      startTime: `${timeFormValues.activityDate.format(
-        'YYYY-MM-DDT',
-      )}${timeFormValues.startTime.format('HH:mm:ss.000')}Z`,
-      endTime: `${dayjs()
-        .add(timeFormValues.rangeTime.hour(), 'hours')
-        .add(timeFormValues.rangeTime.minute(), 'minutes')
-        .format('YYYY-MM-DDTHH:mm:ss.000')}Z`,
-      location: '장소',
-      auto: false,
-      pay: exchangeTimepay,
-      uid: parseInt(helpPk || ''),
-    };
+    if (contentFormValues.content) {
+      const newActivity: IPostInstantMatchingRequest = {
+        title: timeFormValues.activityDate.format(
+          'YYYY년 MM월 DD일 바로 도움 활동',
+        ),
+        category: '바로도움',
+        content: contentFormValues.content,
+        startTime: `${timeFormValues.activityDate.format(
+          'YYYY-MM-DDT',
+        )}${timeFormValues.startTime.format('HH:mm:ss.000')}Z`,
+        endTime: `${dayjs()
+          .add(timeFormValues.rangeTime.hour(), 'hours')
+          .add(timeFormValues.rangeTime.minute(), 'minutes')
+          .format('YYYY-MM-DDTHH:mm:ss.000')}Z`,
+        location: '장소',
+        auto: false,
+        pay: exchangeTimepay,
+        uid: parseInt(helpPk || ''),
+      };
 
-    console.log(newActivity);
+      console.log(newActivity);
 
-    await usePostInstantMatchingMutation.mutateAsync(newActivity, {
-      onSuccess: (data) => {
-        if (data.data.deal_board_id && data.data.success)
-          messageApi.open({
-            type: 'success',
-            content: '바로 도움 활동이 성공적으로 완료했습니다.',
-            duration: 0.5,
-            onClose: () => {
-              queryClient.invalidateQueries({ queryKey: ['useGetComments'] });
-              queryClient.invalidateQueries({
-                queryKey: ['useGetNotifications'],
-              });
-              navigate(`/post/${data.data.deal_board_id}`);
-            },
-          });
-        else
+      await usePostInstantMatchingMutation.mutateAsync(newActivity, {
+        onSuccess: (data) => {
+          if (data.data.deal_board_id && data.data.success)
+            messageApi.open({
+              type: 'success',
+              content: '바로 도움 활동이 성공적으로 완료했습니다.',
+              duration: 0.5,
+              onClose: () => {
+                queryClient.invalidateQueries({ queryKey: ['useGetComments'] });
+                queryClient.invalidateQueries({
+                  queryKey: ['useGetNotifications'],
+                });
+                navigate(`/post/${data.data.deal_board_id}`);
+              },
+            });
+          else
+            messageApi.open({
+              type: 'error',
+              content: `도움 활동 에러 발생 ${data.data.status}`,
+            });
+        },
+        onError: (err) => {
+          console.log(`ERROR : ${err}`);
           messageApi.open({
             type: 'error',
-            content: `도움 활동 에러 발생 ${data.data.status}`,
+            content: '도움 활동 에러 발생',
           });
-      },
-      onError: (err) => {
-        console.log(`ERROR : ${err}`);
-        messageApi.open({
-          type: 'error',
-          content: '도움 활동 에러 발생',
-        });
-      },
-    });
+        },
+      });
+    } else {
+      messageApi.open({
+        type: 'error',
+        content: '활동 내용을 입력해주세요',
+      });
+    }
   }, [
     navigate,
     messageApi,
@@ -162,7 +189,7 @@ const InstantActivityPage = () => {
           </p>
           <p className="help-user">
             <span>
-              도움을 <b>받은</b> 분의 id는 <b>{helpPk}</b> 번이 맞나요?
+              도움을 <b>받을</b> 분의 id는 <b>{helpPk}</b> 번이 맞나요?
             </span>
             <br />
             <span className="guide">
@@ -183,7 +210,7 @@ const InstantActivityPage = () => {
           layout="horizontal"
           onValuesChange={handleOnChangeTime}
         >
-          <div className="form-info">활동을 언제 했는지 선택해주세요.</div>
+          <div className="form-info">활동을 얼마동안 할지 선택해주세요.</div>
           <Form.Item name="activityDate" label="활동일" initialValue={dayjs()}>
             <DatePicker format="YYYY년 MM월 DD일" disabled />
           </Form.Item>
@@ -257,7 +284,7 @@ const InstantActivityPage = () => {
       <div css={cssInstantActivityStepItemStyle(current === 2, scaleValue)}>
         <Form form={contentForm}>
           <div className="form-info">
-            어떤 활동을 했는지 간략하게 적어주세요.
+            어떤 활동을 할건지 간략하게 적어주세요.
           </div>
 
           <Form.Item
