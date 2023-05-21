@@ -1,28 +1,62 @@
-import { Button, Form, Input, InputNumber, Select } from 'antd';
+import { Button, Form, Input, InputNumber, message, Modal, Select } from 'antd';
 import { useCallback, useEffect } from 'react';
+// import { useNavigate } from 'react-router-dom';
 import { useSetRecoilState } from 'recoil';
 import { useGetCategory } from '../../api/hooks/category';
+import { usePostDonationBoardWrite } from '../../api/hooks/donation';
 import { headerTitleState } from '../../states/uiState';
+// import { PATH } from '../../utils/paths';
 import { cssDonationBoardWritePage } from './DonationBoardWritePage.styles';
 
 const DonationBoardWritePage = () => {
+  //   const navigate = useNavigate();
   const { data } = useGetCategory({
     type: '도움요청',
     useYn: 'Y',
   });
+  const usePostDonationBoardWriteMutation = usePostDonationBoardWrite();
 
   const setHeaderTitle = useSetRecoilState(headerTitleState);
 
   useEffect(() => {
     setHeaderTitle('기부하기 게시글 작성');
   });
+  const [messageApi, contextHolder] = message.useMessage();
 
-  const handleOnSubmitDonationBoard = useCallback((values: any) => {
-    console.log(values);
-  }, []);
+  const handleOnSubmitDonationBoard = useCallback(
+    (values: any) => {
+      console.log(values);
+      Modal.confirm({
+        content: '해당 내용으로 게시글을 등록하시겠습니까?',
+        okText: '확인',
+        cancelText: '취소',
+        onOk: async () => {
+          await usePostDonationBoardWriteMutation.mutateAsync(
+            {
+              ...values,
+              targetTimePay: parseInt(values.targetTimePay),
+            },
+            {
+              onSuccess: (data) => {
+                messageApi.success({
+                  content: '등록이 완료되었습니다.',
+                  duration: 0.5,
+                  onClose: () => {
+                    // 추후 등록된 게시글 화면으로 이동
+                  },
+                });
+              },
+            },
+          );
+        },
+      });
+    },
+    [usePostDonationBoardWriteMutation, messageApi],
+  );
 
   return (
     <div css={cssDonationBoardWritePage}>
+      {contextHolder}
       <Form onFinish={handleOnSubmitDonationBoard}>
         <Form.Item
           label="목표 타임페이"
@@ -41,7 +75,7 @@ const DonationBoardWritePage = () => {
               ? data?.data[0]
               : undefined
           }
-          extra="카테고리를 설정하면 해당 카테고리에서 이 게시글이 검색됩니다."
+          extra={<>기관이나 기부 목적에 맞게 카테고리를 지정해주세요.</>}
         >
           <Select>
             {data?.data.map((category) => (
