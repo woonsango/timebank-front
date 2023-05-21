@@ -14,9 +14,27 @@ export const cssPostPageStyle = css`
   .ant-form-item-row {
     flex-direction: column;
   }
+  .ant-form-item-label {
+    font-size: 20px;
+    label {
+      font-size: 18px;
+      font-weight: 500;
+    }
+  }
   .time {
     display: flex;
     flex-direction: row;
+    gap: 20px;
+  }
+  .guide {
+    width: 310px;
+    padding: 10px;
+    margin-left: 20px;
+    margin-top: 10px;
+    margin-bottom: 30px;
+    font-weight: 500;
+    background: ${COMMON_COLOR.BRIGHT_GRAY};
+    border-radius: 10px;
   }
 `;
 
@@ -31,24 +49,22 @@ export const cssPostDateStyle = css`
 `;
 
 export const cssPostTitleStyle = css`
-  font-size: 22px;
+  font-size: 18px;
   margin-left: 20px;
-  border: none;
+  margin-right: 20px;
   :focus {
     outline: none;
   }
 `;
 export const cssPostTitleInputStyle = css`
-  font-size: 22px;
-  border: none;
-  padding-right: 20px;
+  font-size: 18px;
+  padding: 5px 10px;
   :focus {
     outline: none;
   }
 `;
 export const cssPostContentStyle = css`
   font-size: 18px;
-  border: none;
   margin-left: 20px;
   padding-bottom: 10px;
   padding-right: 20px;
@@ -58,9 +74,7 @@ export const cssPostContentStyle = css`
 `;
 export const cssPostContentInputStyle = css`
   font-size: 18px;
-  border: none;
-  padding-bottom: 10px;
-  padding-right: 20px;
+  padding: 5px 10px;
   :focus {
     outline: none;
   }

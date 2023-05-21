@@ -50,6 +50,7 @@ const RegisterRequestPage = () => {
   const [title, setTitle] = useState<string>('');
   const [location, setLocation] = useState<string>('');
   const [content, setContent] = useState<string>('');
+  const [exchangeTimepay, setExchangeTimepay] = useState(0);
   const [form] = Form.useForm();
   const [imgFileList, setImgFileList] = useState<UploadFile[]>([]);
   const [previewImage, setPreviewImage] = useState('');
@@ -163,6 +164,17 @@ const RegisterRequestPage = () => {
     setPreviewUrls(newPreviewUrls);
   };
 
+  const handleOnChangeTime = useCallback((changedValues: any, values: any) => {
+    if (values.startTime && values.endTime) {
+      const startTime = values.startTime.clone();
+      const endTime = values.endTime.clone();
+      const duration = endTime.diff(startTime, 'minutes');
+      setExchangeTimepay(duration);
+    } else {
+      setExchangeTimepay(30);
+    }
+  }, []);
+
   const handleOnSubmit = useCallback(
     async (values: any) => {
       let formData = new FormData();
@@ -174,6 +186,13 @@ const RegisterRequestPage = () => {
         ...values,
         d_board_id: parseInt(values.d_board_id),
         images: null,
+        startTime: `${values.activityDate.format(
+          'YYYY-MM-DD',
+        )}T${values.startTime.format('HH:mm:ss')}.000Z`,
+        endTime: `${values.activityDate.format(
+          'YYYY-MM-DD',
+        )}T${values.endTime.format('HH:mm:ss')}.000Z`,
+        pay: exchangeTimepay,
       };
 
       console.log(newPost);
@@ -218,13 +237,11 @@ const RegisterRequestPage = () => {
   const [current, setCurrent] = useState(0);
 
   const handleCategoryChange = (value: any) => {
-    setCurrent(1); // Change to the next step when category is selected
-    // handle the category change logic if needed
+    setCurrent(1);
   };
 
   const handleTimeLocationChange = () => {
-    setCurrent(2); // Change to the next step when time and location are entered
-    // handle the time and location change logic if needed
+    setCurrent(2); // startTime과 endTime 값을 가져옵니다.
   };
 
   return (
@@ -235,9 +252,9 @@ const RegisterRequestPage = () => {
         current={current}
         style={{
           position: 'fixed',
-          zIndex: 1,
+          zIndex: 100,
           background: `${COMMON_COLOR.WHITE}`,
-          paddingLeft: 10,
+          paddingLeft: 20,
           paddingTop: 10,
           boxShadow: '0px 2px 5px rgba(0, 0, 0, 0.2)',
         }}
@@ -263,7 +280,7 @@ const RegisterRequestPage = () => {
             {data?.data.map((category) => (
               <Radio.Button
                 key={category.categoryId}
-                value={category.categoryId}
+                value={category.categoryName}
                 style={{
                   borderRadius: '0',
                   margin: '5px',
@@ -292,7 +309,7 @@ const RegisterRequestPage = () => {
             name="startTime"
             label="활동을 시작할 시간"
             css={cssPostDateStyle}
-            initialValue={dayjs()}
+            initialValue={dayjs().minute(0)}
           >
             <DatePicker.TimePicker
               locale={locale}
@@ -300,13 +317,18 @@ const RegisterRequestPage = () => {
               placeholder="시간"
               showNow={false}
               minuteStep={30}
+              popupClassName="time-picker-no-footer"
+              onSelect={(value) => {
+                form.setFieldValue('startTime', value);
+                handleOnChangeTime({ startTime: value }, form.getFieldsValue());
+              }}
             />
           </Form.Item>
           <Form.Item
             name="endTime"
             label="활동이 끝날 시간"
             css={cssPostDateStyle}
-            initialValue={dayjs()}
+            initialValue={dayjs().minute(0)}
           >
             <DatePicker.TimePicker
               locale={locale}
@@ -315,17 +337,41 @@ const RegisterRequestPage = () => {
               showNow={false}
               minuteStep={30}
               allowClear={false}
+              popupClassName="time-picker-no-footer"
+              onSelect={(value) => {
+                form.setFieldValue('endTime', value);
+                handleOnChangeTime({ endTime: value }, form.getFieldsValue());
+              }}
+              disabledTime={(now) => {
+                return {
+                  disabledHours: () => {
+                    const { startTime } = form.getFieldsValue(['startTime']);
+                    if (startTime) {
+                      const selectedHour = startTime.hour();
+                      return Array.from({ length: selectedHour }, (_, i) => i);
+                    }
+                    return [];
+                  },
+                };
+              }}
             />
           </Form.Item>
+        </div>
+        <div className="guide">
+          <div>
+            교환할 타임페이 양 :{' '}
+            <b>{exchangeTimepay ? exchangeTimepay + ' TP' : ''}</b>{' '}
+          </div>
+          <div>도움을 받은 분의 타임페이가 충분한지 확인해주세요.</div>
         </div>
 
         <Form.Item label="장소" name="location" css={cssPostDateStyle}>
           <Input
             size="large"
-            placeholder="희망하는 장소를 입력하세요 :)"
+            placeholder="여기에 장소를 입력하세요"
             style={{
               paddingLeft: '15px',
-              width: '280px',
+              width: '230px',
             }}
             prefix={<FlagFilled style={{ marginRight: '5px' }} />}
             onChange={(event) => {
@@ -339,7 +385,7 @@ const RegisterRequestPage = () => {
         <Form.Item label="제목" name="title" css={cssPostTitleStyle}>
           <Input
             css={cssPostTitleInputStyle}
-            placeholder="제목을 입력하세요"
+            placeholder="여기에 제목을 입력하세요"
             maxLength={25}
             value={title}
             onChange={handleTitleChange}
@@ -348,11 +394,10 @@ const RegisterRequestPage = () => {
 
         <Form.Item label="내용" name="content" css={cssPostContentStyle}>
           <TextArea
-            rows={10}
-            bordered={false}
+            rows={5}
             style={{ resize: 'none' }}
             css={cssPostContentInputStyle}
-            placeholder="내용을 입력하세요"
+            placeholder="여기에 내용을 입력하세요"
             value={content}
             onChange={handleContentChange}
           />
@@ -362,6 +407,7 @@ const RegisterRequestPage = () => {
           name="images"
           getValueFromEvent={normFile}
           valuePropName="fileList"
+          css={cssPostDateStyle}
         >
           <Upload
             onChange={handleImgChange}
