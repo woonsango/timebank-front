@@ -1,7 +1,7 @@
 //리다이렉트될 화면
 //kakaoRedirectHandler.tsx
 
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { PATH } from '../../utils/paths';
@@ -10,6 +10,8 @@ import { saveUid } from './saveUid';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { agencyState, userState } from '../../states/user';
 import { pathToAfterLogin } from '../../states/uiState';
+import { getDeviceToken } from '../../utils/device';
+import { usePatchDeviceToken } from '../../api/hooks/device';
 
 const KakaoRedirectHandler = () => {
   console.log('kakaoRedirectHandler.tsx');
@@ -18,6 +20,8 @@ const KakaoRedirectHandler = () => {
   const setAgencyState = useSetRecoilState(agencyState);
 
   const pathToAfterLoginValue = useRecoilValue(pathToAfterLogin);
+  const [deviceToken, setDeviceToken] = useState<string>();
+  const patchDeviceToken = usePatchDeviceToken();
 
   const navigate = useNavigate();
   const goTo = useCallback(
@@ -32,6 +36,12 @@ const KakaoRedirectHandler = () => {
   );
 
   useEffect(() => {
+    'USE EFFECT IN LOGIN';
+    getDeviceToken().then((response) => {
+      setDeviceToken(response);
+      console.log('LOGIN response', response);
+    });
+
     console.log('인가 코드(Authorization Code): ', authorizationCode);
 
     const requestUrl = `http://13.125.119.30/oauth/redirect/kakao?code=${authorizationCode}`;
@@ -53,6 +63,21 @@ const KakaoRedirectHandler = () => {
           setUserState(response.data);
           setAgencyState(null);
           console.log(pathToAfterLoginValue);
+
+          patchDeviceToken.mutateAsync(
+            {
+              deviceToken,
+            },
+            {
+              onSuccess: async (data) => {
+                console.log('디바이스 토큰 업데이트 성공');
+              },
+              onError: (err) => {
+                console.log('디바이스 토큰 업데이트 실패');
+              },
+            },
+          );
+
           if (pathToAfterLoginValue) goTo(pathToAfterLoginValue);
           else goTo(PATH.HOME);
         }
