@@ -1,6 +1,8 @@
 package com.capstone.timepay.service.board.service;
 
 import com.capstone.timepay.domain.board.BoardRepository;
+import com.capstone.timepay.domain.dealRegister.DealRegister;
+import com.capstone.timepay.domain.dealRegister.DealRegisterRepository;
 import com.capstone.timepay.domain.donateBoard.DonateBoard;
 import com.capstone.timepay.domain.donateBoard.DonateBoardRepository;
 import com.capstone.timepay.domain.user.User;
@@ -8,10 +10,7 @@ import com.capstone.timepay.domain.user.UserRepository;
 import com.capstone.timepay.service.board.dto.DonateBoardDTO;
 import com.capstone.timepay.service.board.dto.DonateDTO;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -26,13 +25,16 @@ import java.util.stream.Collectors;
 public class DonateBoardService
 {
     private final DonateBoardRepository donateBoardRepository;
-    private final DealRegisterService dealRegisterService;
+    private final DealRegisterRepository dealRegisterRepository;
     private final BoardRepository boardRepository;
     private final UserRepository userRepository;
 
     @Transactional
-    public DonateBoardDTO donateWrite(DonateBoardDTO donateBoardDTO)
+    public DonateBoardDTO donateWrite(DonateBoardDTO donateBoardDTO, Principal principal)
     {
+        User user = userRepository.findByEmail(principal.getName()).orElseThrow(() -> {
+            return new IllegalArgumentException("해당 유저는 존재하지 않습니다");
+        });
         DonateBoard donateBoard = DonateBoard.builder()
                 .title(donateBoardDTO.getTitle())
                 .content(donateBoardDTO.getContent())
@@ -41,32 +43,52 @@ public class DonateBoardService
                 .donateTimePay(0)
                 .category(donateBoardDTO.getCategory())
                 .build();
-        donateBoardRepository.save(donateBoard);
 
-        return DonateBoardDTO.toDonateDTO(donateBoard);
+        DealRegister dealRegister = DealRegister.builder()
+                .d_registerId(donateBoard.getId())
+                .dealBoard(null)
+                .donateBoard(donateBoard)
+                .user(user)
+                .build();
+        dealRegisterRepository.save(dealRegister);
+
+        donateBoardRepository.save(donateBoard);
+        return DonateBoardDTO.toDonateDTO(donateBoard, user);
     }
 
     // 모든 기부하기 게시판 확인
     @Transactional(readOnly = true)
-    public Page<DonateBoardDTO> getDonateBoards(int pagingIndex, int pagingSize)
+    public Page<DonateBoardDTO> getDonateBoards(int pagingIndex, int pagingSize, Principal principal)
     {
-        Pageable pageable = PageRequest.of(pagingIndex, pagingSize);
+        User user = userRepository.findByEmail(principal.getName()).orElseThrow(() -> {
+            return new IllegalArgumentException("해당 유저는 존재하지 않습니다");
+        });
+
+        Pageable pageable = PageRequest.of(pagingIndex, pagingSize, Sort.by("createdAt").descending());
         Page<DonateBoard> donateBoards = donateBoardRepository.findAll(pageable);
         List<DonateBoardDTO> donateBoardDTOS = donateBoards.stream()
-                .map(DonateBoardDTO::toDonateDTO)
+                .map(donateBoard -> DonateBoardDTO.toDonateDTO(donateBoard, user))
                 .collect(Collectors.toList());
         return new PageImpl<>(donateBoardDTOS, donateBoards.getPageable(), donateBoards.getTotalElements());
     }
 
-    public DonateBoardDTO getDonateBoard(Long boardId)
+    public DonateBoardDTO getDonateBoard(Long boardId, Principal principal)
     {
+        User user = userRepository.findByEmail(principal.getName()).orElseThrow(() -> {
+            return new IllegalArgumentException("해당 유저는 존재하지 않습니다");
+        });
+
         DonateBoard donateBoard = donateBoardRepository.findById(boardId).orElseThrow(() -> {
             return new IllegalArgumentException("해당 게시판이 존재하지 않습니다");
         });
-        return DonateBoardDTO.toDonateDTO(donateBoard);
+        return DonateBoardDTO.toDonateDTO(donateBoard, user);
     }
 
-    public DonateBoardDTO updateDonate(Long boardId, DonateBoardDTO donateBoardDTO) {
+    public DonateBoardDTO updateDonate(Long boardId, DonateBoardDTO donateBoardDTO, Principal principal) {
+        User user = userRepository.findByEmail(principal.getName()).orElseThrow(() -> {
+            return new IllegalArgumentException("해당 유저는 존재하지 않습니다");
+        });
+
         DonateBoard donateBoard = donateBoardRepository.findById(boardId).orElseThrow(() -> {
             return new IllegalArgumentException("해당 게시판이 존재하지 않습니다");
         });
@@ -76,7 +98,7 @@ public class DonateBoardService
         donateBoard.setCategory(donateBoardDTO.getCategory());
         donateBoard.setTargetTimePay(donateBoardDTO.getTargetTimePay());
         donateBoardRepository.save(donateBoard);
-        return DonateBoardDTO.toDonateDTO(donateBoard);
+        return DonateBoardDTO.toDonateDTO(donateBoard, user);
     }
 
     public void deleteDonate(Long boardId)
