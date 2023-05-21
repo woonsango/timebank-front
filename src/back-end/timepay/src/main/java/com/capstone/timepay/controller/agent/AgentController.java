@@ -1,5 +1,6 @@
 package com.capstone.timepay.controller.agent;
 
+import com.capstone.timepay.controller.agent.request.AgentApplyRequest;
 import com.capstone.timepay.controller.agent.request.AgentUidRequest;
 import com.capstone.timepay.domain.user.User;
 import com.capstone.timepay.domain.user.UserRepository;
@@ -59,11 +60,13 @@ public class AgentController {
         return ResponseEntity.ok(agentService.agentAcceptList(agent));
     }
 
-//    @PostMapping("/register")
-//    @ApiOperation(value = "대리인 신청 확인/거부")
-//    public ResponseEntity<?> agentRegister(@RequestBody AgentUidRequest agentUidRequest, Principal principal) {
-//        User agent = userRepository.findByEmail(principal.getName()).orElseThrow(()
-//                -> new IllegalArgumentException("존재하지 않는 대리인 유저입니다."));
-//        return ResponseEntity.ok(agentService.agentRegister(agentUidRequest.getUid(), agent));
-//    }
+    @PostMapping("/waiting/apply")
+    @ApiOperation(value = "대리인 신청 확인/거부")
+    public ResponseEntity<?> agentApply(@RequestBody AgentApplyRequest agentApplyRequest, Principal principal) {
+        User agent = userRepository.findByEmail(principal.getName()).orElseThrow(()
+                -> new IllegalArgumentException("존재하지 않는 대리인 유저입니다."));
+
+
+        return ResponseEntity.ok(agentService.agentApply(agentApplyRequest, agent));
+    }
 }
