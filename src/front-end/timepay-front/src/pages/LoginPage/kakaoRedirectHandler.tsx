@@ -20,7 +20,6 @@ const KakaoRedirectHandler = () => {
   const setAgencyState = useSetRecoilState(agencyState);
 
   const pathToAfterLoginValue = useRecoilValue(pathToAfterLogin);
-  const [deviceToken, setDeviceToken] = useState<string>();
   const patchDeviceToken = usePatchDeviceToken();
 
   const navigate = useNavigate();
@@ -37,9 +36,8 @@ const KakaoRedirectHandler = () => {
 
   useEffect(() => {
     'USE EFFECT IN LOGIN';
-    getDeviceToken().then((response) => {
-      setDeviceToken(response);
-      console.log('LOGIN response', response);
+    getDeviceToken().then((deviceToken) => {
+      console.log('LOGIN response', deviceToken);
 
       console.log('인가 코드(Authorization Code): ', authorizationCode);
 
@@ -64,7 +62,7 @@ const KakaoRedirectHandler = () => {
             console.log(pathToAfterLoginValue);
             console.log('deviceToken');
             if (deviceToken) {
-              console.log(deviceToken);
+              console.log('deviceToken', deviceToken);
               patchDeviceToken.mutateAsync(
                 {
                   deviceToken,
@@ -104,7 +102,6 @@ const KakaoRedirectHandler = () => {
     goTo,
     setUserState,
     setAgencyState,
-    deviceToken,
     patchDeviceToken,
   ]);
 
