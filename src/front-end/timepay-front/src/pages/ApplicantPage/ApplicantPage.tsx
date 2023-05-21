@@ -10,10 +10,12 @@ import { COMMON_COLOR } from '../../styles/constants/colors';
 import { ExclamationCircleFilled } from '@ant-design/icons';
 import ApplicantModal from '../../components/ApplicantModal';
 import { IApplicant } from '../../api/interfaces/IApplicant';
+import ApplicantReceivedModal from '../../components/ApplicantReceivedModal';
 
 const ApplicantPage = () => {
   const setHeaderTitle = useSetRecoilState(headerTitleState);
   const [isOpenRegisterModal, setIsOpenRegisterModal] = useState(false);
+  const [isOpenReceivedModal, setIsOpenReceivedModal] = useState(false);
 
   const [image, setImage]: any = useState();
   const [nickName, setNickName]: any = useState();
@@ -25,29 +27,14 @@ const ApplicantPage = () => {
 
   const handleOnCancelModal = useCallback(() => {
     setIsOpenRegisterModal(false);
+    setIsOpenReceivedModal(false);
   }, []);
 
-  const isOpenModal = () => {
+  const openRegisterModal = () => {
     setIsOpenRegisterModal(true);
   };
-
-  const showConfirm = () => {
-    confirm({
-      title: '대리인 삭제',
-      icon: <ExclamationCircleFilled />,
-      content: '대리인 삭제시 대리 작성 도움을 받을 수 없습니다',
-      okText: '삭제',
-      okType: 'primary',
-      okButtonProps: { style: { backgroundColor: COMMON_COLOR.MAIN2 } },
-      onOk() {
-        console.log('OK');
-      },
-      cancelText: '취소',
-
-      onCancel() {
-        console.log('Cancel');
-      },
-    });
+  const openReceivedModal = () => {
+    setIsOpenReceivedModal(true);
   };
 
   useEffect(() => {
@@ -149,7 +136,7 @@ const ApplicantPage = () => {
                   className="agentRegister"
                   type="primary"
                   style={{ background: COMMON_COLOR.MAIN1, width: 140 }}
-                  onClick={isOpenModal}
+                  onClick={openRegisterModal}
                 >
                   신청자 선택 삭제
                 </Button>
@@ -158,7 +145,7 @@ const ApplicantPage = () => {
                   type="primary"
                   style={{ background: COMMON_COLOR.MAIN2, width: 140 }}
                   danger
-                  onClick={showConfirm}
+                  onClick={openReceivedModal}
                 >
                   받은 신청 목록
                 </Button>
@@ -169,6 +156,11 @@ const ApplicantPage = () => {
       </div>
       <ApplicantModal
         isOpen={isOpenRegisterModal}
+        onCancel={handleOnCancelModal}
+        applicants={dataSource}
+      />
+      <ApplicantReceivedModal
+        isOpen={isOpenReceivedModal}
         onCancel={handleOnCancelModal}
         applicants={dataSource}
       />
