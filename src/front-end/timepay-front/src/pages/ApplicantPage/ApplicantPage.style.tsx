@@ -79,6 +79,9 @@ export const cssMyInfoStyle = (scaleValue: number) => css`
     border-radius: 5px;
     padding-top: 50px;
   }
+  .switchBtn {
+    text-decoration: underline;
+  }
 `;
 
 export const cssBtnSpace = (scaleValue: number) => css`

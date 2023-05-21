@@ -7,10 +7,9 @@ import useFontSize from '../../hooks/useFontSize';
 import { cssBtnSpace, cssMyInfoStyle } from './ApplicantPage.style';
 import { Button, Modal, Space, Table, Typography } from 'antd';
 import { COMMON_COLOR } from '../../styles/constants/colors';
-import SizeContext from 'antd/es/config-provider/SizeContext';
-import AgentModal from '../../components/AgentModal';
 import { ExclamationCircleFilled } from '@ant-design/icons';
-import { cssModalFooter } from '../../components/AgentModal/AgentModal.style';
+import ApplicantModal from '../../components/ApplicantModal';
+import { IApplicant } from '../../api/interfaces/IApplicant';
 
 const ApplicantPage = () => {
   const setHeaderTitle = useSetRecoilState(headerTitleState);
@@ -71,60 +70,51 @@ const ApplicantPage = () => {
     setHeaderTitle('신청인 관리');
   }, [setHeaderTitle]);
 
+  const onClickSwitch = useCallback((appliNumber: number) => {
+    console.log(appliNumber);
+  }, []);
+
   const agent = '미지정'; //api 받아오면 조건문 추가
   //신청자 보여주는것도 테이블
   //신청자 삭제는 radio 테이블
   //받은 신청 목록 보여주는것도 테이블 쓰면 될듯 (column Header off 해서)
 
-  const dataSource = [
-    {
-      key: '1',
-      name: 'Mike',
-      age: 32,
-      address: '10 Downing Street',
-    },
-    {
-      key: '2',
-      name: 'John',
-      age: 42,
-      address: '10 Downing Street',
-    },
-    {
-      key: '2',
-      name: 'John',
-      age: 42,
-      address: '10 Downing Street',
-    },
-    {
-      key: '2',
-      name: 'John',
-      age: 42,
-      address: '10 Downing Street',
-    },
-    {
-      key: '2',
-      name: 'John',
-      age: 42,
-      address: '10 Downing Street',
-    },
-    {
-      key: '2',
-      name: 'John',
-      age: 42,
-      address: '10 Downing Street',
-    },
-  ];
+  const dataSource: IApplicant[] = [];
+  for (let i = 0; i < 100; i++) {
+    dataSource.push({
+      appliName: '길동홍',
+      appliUid: i,
+    });
+  }
 
   const columns = [
     {
-      title: 'Name',
-      dataIndex: 'name',
-      key: 'name',
+      title: 'appliUid',
+      dataIndex: 'appliUid',
+      key: 'appliUid',
+      width: 10,
     },
     {
-      title: 'access',
-      dataIndex: 'access',
-      key: 'access',
+      title: 'appliName',
+      dataIndex: 'appliName',
+      key: 'appliName',
+      width: 10,
+    },
+    {
+      title: '계정전환',
+      dataIndex: 'switch',
+      width: 10,
+      render: (_: any, record: IApplicant) => (
+        <Button
+          type="primary"
+          ghost
+          className="switchBtn"
+          style={{ color: COMMON_COLOR.MAIN1 }}
+          onClick={() => onClickSwitch(record.appliUid)}
+        >
+          계정전환
+        </Button>
+      ),
     },
   ];
 
@@ -177,7 +167,10 @@ const ApplicantPage = () => {
           </div>
         </div>
       </div>
-      <AgentModal isOpen={isOpenRegisterModal} onCancel={handleOnCancelModal} />
+      <ApplicantModal
+        isOpen={isOpenRegisterModal}
+        onCancel={handleOnCancelModal}
+      />
     </div>
   );
 };
