@@ -44,14 +44,6 @@ public class DonateBoardService
                 .category(donateBoardDTO.getCategory())
                 .build();
 
-        DealRegister dealRegister = DealRegister.builder()
-                .d_registerId(donateBoard.getId())
-                .dealBoard(null)
-                .donateBoard(donateBoard)
-                .user(user)
-                .build();
-        dealRegisterRepository.save(dealRegister);
-
         donateBoardRepository.save(donateBoard);
         return DonateBoardDTO.toDonateDTO(donateBoard, user);
     }

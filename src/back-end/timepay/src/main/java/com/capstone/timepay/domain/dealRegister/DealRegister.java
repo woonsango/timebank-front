@@ -33,9 +33,4 @@ public class DealRegister extends BaseTimeEntity {
     @ManyToOne(cascade = CascadeType.REMOVE)
     @JoinColumn(name="deal_board_id")
     private DealBoard dealBoard;
-
-    @JsonIgnore
-    @ManyToOne(cascade = CascadeType.REMOVE)
-    @JoinColumn(name="donate_board_id")
-    private DonateBoard donateBoard;
 }
