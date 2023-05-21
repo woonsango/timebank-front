@@ -1,5 +1,6 @@
 package com.capstone.timepay.domain.donateBoard;
 
+import com.capstone.timepay.domain.BaseTimeEntity;
 import lombok.*;
 
 import javax.persistence.*;
@@ -11,7 +12,7 @@ import javax.validation.constraints.NotNull;
 @Getter
 @Setter
 @Entity
-public class DonateBoard {
+public class DonateBoard extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

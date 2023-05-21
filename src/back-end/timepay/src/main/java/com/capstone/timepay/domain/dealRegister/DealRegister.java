@@ -2,6 +2,7 @@ package com.capstone.timepay.domain.dealRegister;
 
 import com.capstone.timepay.domain.BaseTimeEntity;
 import com.capstone.timepay.domain.dealBoard.DealBoard;
+import com.capstone.timepay.domain.donateBoard.DonateBoard;
 import com.capstone.timepay.domain.user.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
@@ -32,4 +33,9 @@ public class DealRegister extends BaseTimeEntity {
     @ManyToOne(cascade = CascadeType.REMOVE)
     @JoinColumn(name="deal_board_id")
     private DealBoard dealBoard;
+
+    @JsonIgnore
+    @ManyToOne(cascade = CascadeType.REMOVE)
+    @JoinColumn(name="donate_board_id")
+    private DonateBoard donateBoard;
 }
