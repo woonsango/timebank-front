@@ -35,7 +35,8 @@ const InstantActivityPage = () => {
 
   const [messageApi, contextHolder] = message.useMessage();
 
-  if (data?.data.body.id === helpPk) {
+  // eslint-disable-next-line eqeqeq
+  if (data?.data.body.id == (helpPk as string)) {
     messageApi
       .open({
         type: 'error',
