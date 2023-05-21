@@ -16,8 +16,6 @@ import useFontSize from '../../hooks/useFontSize';
 import { usePostInstantMatching } from '../../api/hooks/instantMatching';
 import { IPostInstantMatchingRequest } from '../../api/interfaces/IInstantMatching';
 import { useQueryClient } from 'react-query';
-import { apiRequest } from '../../api/request';
-import { API_URL } from '../../api/urls';
 
 const InstantActivityPage = () => {
   const queryClient = useQueryClient();
@@ -37,7 +35,7 @@ const InstantActivityPage = () => {
 
   const [messageApi, contextHolder] = message.useMessage();
 
-  if (data?.data.body.id == helpPk) {
+  if (data?.data.body.id === helpPk) {
     messageApi
       .open({
         type: 'error',
@@ -45,7 +43,7 @@ const InstantActivityPage = () => {
         duration: 1,
       })
       .then(function () {
-        navigate(-1);
+        navigate('/home');
       });
   }
 
@@ -294,8 +292,6 @@ const InstantActivityPage = () => {
             <ul>
               <li>장소</li>
               <li>어떤 도움에 대한 내용인지</li>
-              <li>도움 활동 중 특이사항이 있었는지</li>
-              <li>도움 활동 후 소감</li>
             </ul>
           </div>
         </Form>
