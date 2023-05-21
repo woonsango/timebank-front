@@ -23,6 +23,8 @@ import VolunteerCertificationPaymentPage from './VolunteerCertificationPaymentPa
 import RegisterEventPage from './RegisterPage/RegisterEventPage';
 import AgencyEditPage from './AgencyEditPage';
 import InstantActivityPage from './InstantActivityPage';
+import AgentPage from './AgentPage';
+import ApplicantPage from './ApplicantPage';
 
 const PageRoutes = {
   LoginPage,
@@ -50,6 +52,8 @@ const PageRoutes = {
   MyVolunteerPage,
   VolunteerCertificationPaymentPage,
   InstantActivityPage,
+  AgentPage,
+  ApplicantPage,
 };
 
 export default PageRoutes;
