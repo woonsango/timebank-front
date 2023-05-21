@@ -345,17 +345,19 @@ const PostPage = () => {
           </>
         )}
 
+        <div css={cssPostDetailThird}>
+          <div className="category">
+            <div css={cssPostDetailCategory1}>카테고리</div>
+            <div css={cssPostDetailCategory2}>{data?.data.category}</div>
+          </div>
+          <div css={cssPostDetailPay}>{data?.data.pay} TP</div>
+        </div>
+
         <div css={cssPostDetailSecond}>
           <div css={cssPostDetailTitle}>{data?.data.title}</div>
           <div css={cssPostDetailStatus}>
-            <PostStatusTag status={data?.data.boardStatus} />
+            <PostStatusTag status={data?.data.state} />
           </div>
-        </div>
-
-        <div css={cssPostDetailThird}>
-          <div css={cssPostDetailCategory1}>카테고리</div>
-          <div css={cssPostDetailCategory2}>{data?.data.category}</div>
-          <div css={cssPostDetailPay}>{data?.data.pay} TP</div>
         </div>
 
         <div css={cssPostDetailFourth}>
@@ -370,6 +372,7 @@ const PostPage = () => {
         </div>
 
         <div css={cssPostDetailFifth}>
+          <div className="content">내용</div>
           <div css={cssPostDetailContent2}>{data?.data.content}</div>
           <div css={cssPostDetailAttachment}>{data?.data.imageUrl}</div>
         </div>

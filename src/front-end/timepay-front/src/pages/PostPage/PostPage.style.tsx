@@ -72,7 +72,7 @@ export const cssPostDetailProfile = css`
 `;
 export const cssPostDetailUser = css`
   margin-top: -35px;
-  margin-left: 90px;
+  margin-left: 80px;
   font-weight: 500;
 `;
 export const cssPostDetailCreatedAt = css`
@@ -85,8 +85,11 @@ export const cssPostDetailCreatedAt = css`
 export const cssPostDetailSecond = css`
   margin-left: 25px;
   margin-right: 25px;
+  margin-top: -10px;
   display: flex;
+  flex-direction: row;
   justify-content: space-between;
+  align-items: center;
 `;
 export const cssPostDetailTitle = css`
   margin-top: 40px;
@@ -99,16 +102,22 @@ export const cssPostDetailStatus = css`
 
 // 3rd block
 export const cssPostDetailThird = css`
-  display: grid;
+  display: flex;
   flex-direction: row;
-  grid-template-columns: 85px 5fr 68px;
+  justify-content: space-between;
   align-items: center;
-  margin-top: 25px;
+  margin-top: 5px;
   margin-left: 25px;
   margin-right: 25px;
+  .category {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  }
 `;
 export const cssPostDetailCategory1 = css`
   margin-top: 20px;
+  margin-right: 10px;
   font-size: 18px;
   font-weight: 500;
 `;
@@ -152,14 +161,14 @@ export const cssPostDetailFifth = css`
   margin-top: 25px;
   margin-left: 25px;
   margin-right: 25px;
-`;
-export const cssPostDetailContent1 = css`
-  margin-top: 20px;
-  font-size: 18px;
-  font-weight: 500;
+  .content {
+    font-size: 15px;
+    margin-left: 5px;
+    margin-top: 10px;
+  }
 `;
 export const cssPostDetailContent2 = css`
-  margin-top: 20px;
+  margin-top: 10px;
   padding: 10px 7px;
   border: 1.3px solid ${COMMON_COLOR.FONT1};
   border-radius: 10px;
