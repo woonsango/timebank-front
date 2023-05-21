@@ -1,8 +1,6 @@
 import { useCallback, useState, useRef, useEffect, useMemo } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
-import { List, Modal, Form, Input, message } from 'antd';
-import { ReactComponent as BackArrow } from '../../assets/images/icons/header-back-arrow.svg';
-import { cssMainHeaderStyle } from '../../components/MainHeader/MainHeader.styles';
+import { useNavigate } from 'react-router-dom';
+import { Modal, Form, Input, message } from 'antd';
 import {
   cssPostDetailPage,
   cssPostDetailFirst,
@@ -59,6 +57,11 @@ import { COMMON_COLOR } from '../../styles/constants/colors';
 import { AxiosError, AxiosResponse } from 'axios';
 import { IReportBoard } from '../../api/interfaces/IPost';
 import { useMutation } from 'react-query';
+import { useQueryClient } from 'react-query';
+import { useSetRecoilState } from 'recoil';
+import { headerTitleState } from '../../states/uiState';
+import dayjs from 'dayjs';
+import { startTime } from '../../states/register';
 
 interface BoardProps {
   post?: IBoard;
@@ -80,9 +83,14 @@ interface Applicant {
 const Footer = Layout;
 
 const PostPage = ({ post }: BoardProps) => {
+  const queryClient = useQueryClient();
   const [applicants, setApplicants] = useState<Applicant[]>([]);
 
   const navigate = useNavigate();
+  const setHeaderTitle = useSetRecoilState(headerTitleState);
+  useEffect(() => {
+    setHeaderTitle('도움요청');
+  }, [setHeaderTitle]);
 
   const [like, setLike] = useState(false);
   const [nickName, setNickName] = useState('');
@@ -151,15 +159,19 @@ const PostPage = ({ post }: BoardProps) => {
             content: '게시글 삭제 완료',
             duration: 0.5,
             onClose() {
-              navigate(PATH.SEARCH);
+              queryClient.invalidateQueries({
+                queryKey: ['useInfiniteGetSearchBoard'],
+              });
             },
           });
         } catch (error) {
           console.log(error);
+        } finally {
+          navigate('/search');
         }
       },
     });
-  }, [useDeleteBoardMutation, messageApi]);
+  }, [useDeleteBoardMutation, queryClient, messageApi]);
 
   const [form] = Form.useForm();
   const { TextArea } = Input;
@@ -310,12 +322,15 @@ const PostPage = ({ post }: BoardProps) => {
       });
   };
 
+  const startTime = dayjs(data?.data.startTime, 'YYYY-MM-DDTHH:mm:ss').format(
+    'MM월 DD일 HH시 mm분',
+  );
+  const endTime = dayjs(data?.data.endTime, 'YYYY-MM-DDTHH:mm:ss').format(
+    'HH시 mm분',
+  );
+
   return (
     <Layout css={cssPostDetail}>
-      <div css={cssMainHeaderStyle}>
-        <BackArrow onClick={handleClickBack} />
-        <span>도움요청</span>
-      </div>
       <div css={cssPostDetailPage}>
         {author && (
           <>
@@ -357,7 +372,7 @@ const PostPage = ({ post }: BoardProps) => {
           </div>
           <div css={cssPostDetailTime}>
             <ClockCircleOutlined style={{ marginRight: 10 }} />
-            {data?.data.startTime} ~ {data?.data.endTime}
+            {startTime} ~ {endTime}
           </div>
         </div>
 

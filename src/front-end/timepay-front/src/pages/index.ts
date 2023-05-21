@@ -24,6 +24,8 @@ import AgencyEditPage from './AgencyEditPage';
 import InstantActivityPage from './InstantActivityPage';
 import DonationBoardWritePage from './DonationBoardWritePage';
 import DonationBoardPage from './DonationBoardPage';
+import AgentPage from './AgentPage';
+import ApplicantPage from './ApplicantPage';
 
 const PageRoutes = {
   LoginPage,
@@ -52,6 +54,8 @@ const PageRoutes = {
   InstantActivityPage,
   DonationBoardWritePage,
   DonationBoardPage,
+  AgentPage,
+  ApplicantPage,
 };
 
 export default PageRoutes;

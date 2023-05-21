@@ -96,6 +96,11 @@ function App() {
             <Route
               path={`${PATH.DONATION_BOARD}/:boardId`}
               element={<PageRoutes.DonationBoardPage />}
+             />
+            <Route path={PATH.AGENT} element={<PageRoutes.AgentPage />} />
+            <Route
+              path={PATH.APPLICANT}
+              element={<PageRoutes.ApplicantPage />}
             />
           </Route>
         </Routes>
