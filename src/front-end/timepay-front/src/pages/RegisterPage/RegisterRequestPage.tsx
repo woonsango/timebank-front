@@ -36,7 +36,6 @@ import 'dayjs/locale/ko';
 import locale from 'antd/es/date-picker/locale/ko_KR';
 import { useGetCategory } from '../../api/hooks/category';
 import { COMMON_COLOR } from '../../styles/constants/colors';
-import { startTime } from '../../states/register';
 
 const { TextArea } = Input;
 const MAX_IMAGES = 5;
@@ -238,13 +237,11 @@ const RegisterRequestPage = () => {
   const [current, setCurrent] = useState(0);
 
   const handleCategoryChange = (value: any) => {
-    setCurrent(1); // Change to the next step when category is selected
-    // handle the category change logic if needed
+    setCurrent(1);
   };
 
   const handleTimeLocationChange = () => {
-    setCurrent(2); // Change to the next step when time and location are entered
-    // handle the time and location change logic if needed
+    setCurrent(2); // startTime과 endTime 값을 가져옵니다.
   };
 
   return (
@@ -257,7 +254,7 @@ const RegisterRequestPage = () => {
           position: 'fixed',
           zIndex: 100,
           background: `${COMMON_COLOR.WHITE}`,
-          paddingLeft: 10,
+          paddingLeft: 20,
           paddingTop: 10,
           boxShadow: '0px 2px 5px rgba(0, 0, 0, 0.2)',
         }}
@@ -320,6 +317,11 @@ const RegisterRequestPage = () => {
               placeholder="시간"
               showNow={false}
               minuteStep={30}
+              popupClassName="time-picker-no-footer"
+              onSelect={(value) => {
+                form.setFieldValue('startTime', value);
+                handleOnChangeTime({ startTime: value }, form.getFieldsValue());
+              }}
             />
           </Form.Item>
           <Form.Item
@@ -335,9 +337,22 @@ const RegisterRequestPage = () => {
               showNow={false}
               minuteStep={30}
               allowClear={false}
+              popupClassName="time-picker-no-footer"
               onSelect={(value) => {
                 form.setFieldValue('endTime', value);
                 handleOnChangeTime({ endTime: value }, form.getFieldsValue());
+              }}
+              disabledTime={(now) => {
+                return {
+                  disabledHours: () => {
+                    const { startTime } = form.getFieldsValue(['startTime']);
+                    if (startTime) {
+                      const selectedHour = startTime.hour();
+                      return Array.from({ length: selectedHour }, (_, i) => i);
+                    }
+                    return [];
+                  },
+                };
               }}
             />
           </Form.Item>
@@ -353,10 +368,10 @@ const RegisterRequestPage = () => {
         <Form.Item label="장소" name="location" css={cssPostDateStyle}>
           <Input
             size="large"
-            placeholder="희망하는 장소를 입력하세요 :)"
+            placeholder="여기에 장소를 입력하세요"
             style={{
               paddingLeft: '15px',
-              width: '280px',
+              width: '230px',
             }}
             prefix={<FlagFilled style={{ marginRight: '5px' }} />}
             onChange={(event) => {
@@ -370,7 +385,7 @@ const RegisterRequestPage = () => {
         <Form.Item label="제목" name="title" css={cssPostTitleStyle}>
           <Input
             css={cssPostTitleInputStyle}
-            placeholder="제목을 입력하세요"
+            placeholder="여기에 제목을 입력하세요"
             maxLength={25}
             value={title}
             onChange={handleTitleChange}
@@ -379,11 +394,10 @@ const RegisterRequestPage = () => {
 
         <Form.Item label="내용" name="content" css={cssPostContentStyle}>
           <TextArea
-            rows={10}
-            bordered={false}
+            rows={5}
             style={{ resize: 'none' }}
             css={cssPostContentInputStyle}
-            placeholder="내용을 입력하세요"
+            placeholder="여기에 내용을 입력하세요"
             value={content}
             onChange={handleContentChange}
           />
@@ -393,6 +407,7 @@ const RegisterRequestPage = () => {
           name="images"
           getValueFromEvent={normFile}
           valuePropName="fileList"
+          css={cssPostDateStyle}
         >
           <Upload
             onChange={handleImgChange}
