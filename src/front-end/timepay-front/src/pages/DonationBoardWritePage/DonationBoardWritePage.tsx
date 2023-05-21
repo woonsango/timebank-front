@@ -1,19 +1,16 @@
-import { Button, Form, Input, InputNumber, message, Modal, Select } from 'antd';
+import { Button, Form, Input, InputNumber, message, Modal } from 'antd';
 import { useCallback, useEffect } from 'react';
+import { useQueryClient } from 'react-query';
 import { useNavigate } from 'react-router-dom';
 import { useSetRecoilState } from 'recoil';
-import { useGetCategory } from '../../api/hooks/category';
 import { usePostDonationBoardWrite } from '../../api/hooks/donation';
 import { headerTitleState } from '../../states/uiState';
 import { PATH } from '../../utils/paths';
 import { cssDonationBoardWritePage } from './DonationBoardWritePage.styles';
 
 const DonationBoardWritePage = () => {
+  const queryClient = useQueryClient();
   const navigate = useNavigate();
-  const { data } = useGetCategory({
-    type: '도움요청',
-    useYn: 'Y',
-  });
   const usePostDonationBoardWriteMutation = usePostDonationBoardWrite();
 
   const setHeaderTitle = useSetRecoilState(headerTitleState);
@@ -34,10 +31,13 @@ const DonationBoardWritePage = () => {
           await usePostDonationBoardWriteMutation.mutateAsync(
             {
               ...values,
+              category: '기부하기',
               targetTimePay: parseInt(values.targetTimePay),
             },
             {
               onSuccess: (data) => {
+                queryClient.invalidateQueries('useGetDonationBoards');
+                queryClient.invalidateQueries('useGetDonationBoardWithId');
                 messageApi.success({
                   content: '등록이 완료되었습니다.',
                   duration: 1,
@@ -52,7 +52,7 @@ const DonationBoardWritePage = () => {
         },
       });
     },
-    [usePostDonationBoardWriteMutation, messageApi, navigate],
+    [queryClient, usePostDonationBoardWriteMutation, messageApi, navigate],
   );
 
   return (
@@ -66,28 +66,6 @@ const DonationBoardWritePage = () => {
           extra="개인 회원들에게 노출됩니다."
         >
           <InputNumber addonAfter="TP" />
-        </Form.Item>
-        <Form.Item
-          label="카테고리"
-          name="category"
-          rules={[{ required: true, message: '필수로 입력해주세요.' }]}
-          initialValue={
-            data && data.data && data.data.length > 0
-              ? data?.data[0]
-              : undefined
-          }
-          extra={<>기관이나 기부 목적에 맞게 카테고리를 지정해주세요.</>}
-        >
-          <Select>
-            {data?.data.map((category) => (
-              <Select.Option
-                key={category.categoryId}
-                value={category.categoryName}
-              >
-                {category.categoryName}
-              </Select.Option>
-            ))}
-          </Select>
         </Form.Item>
         <Form.Item
           label="제목"

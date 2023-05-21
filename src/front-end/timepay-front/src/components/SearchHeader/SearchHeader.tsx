@@ -64,6 +64,7 @@ const SearchHeader = () => {
   const handleOnChangeOptionSearchForm = useCallback(
     (changedValues: { [key: string]: any }, values: any) => {
       // 옵션 검색 시 값이 바뀔 때마다 바로 api 호출
+
       if (!values.startDate) {
         optionSearchForm.setFieldValue('startTime', undefined);
       }
@@ -89,6 +90,8 @@ const SearchHeader = () => {
                 : '00:00:00.000000'
             }`
           : undefined,
+        // 유형이 바뀌면 page index를 0으로 돌림
+        pagingIndex: changedValues.type ? 0 : boardSearchValue.pagingIndex,
       });
     },
     [optionSearchForm, setBoardSearch, boardSearchValue],

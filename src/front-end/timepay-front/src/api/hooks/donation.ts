@@ -1,13 +1,15 @@
 import { AxiosError, AxiosResponse } from 'axios';
-import { useMutation, useQuery } from 'react-query';
+import { useInfiniteQuery, useMutation, useQuery } from 'react-query';
 import { useNavigate } from 'react-router-dom';
 import { PATH } from '../../utils/paths';
 import {
   IDonationBoard,
+  IGetDonationBoardsResponse,
   IPostDonateTimepayRequest,
   IPostDonationBoardWriteRequest,
   IPostDonationBoardWriteResponse,
 } from '../interfaces/IDonation';
+import { IGetSearchBoardRequest } from '../interfaces/IPost';
 import { apiRequest } from '../request';
 import { API_URL } from '../urls';
 
@@ -20,6 +22,38 @@ export const usePostDonationBoardWrite = () => {
     mutationKey: 'usePostDonationBoardWrite',
     mutationFn: (data: IPostDonationBoardWriteRequest) =>
       apiRequest.post(API_URL.DONATION_WRITE, data),
+  });
+};
+
+export const useInfiniteGetDonationBoards = (
+  params: IGetSearchBoardRequest,
+) => {
+  const navigate = useNavigate();
+  return useInfiniteQuery<
+    AxiosResponse<IGetDonationBoardsResponse>,
+    AxiosError
+  >({
+    queryKey: ['useGetDonationBoards', params.pagingIndex, params.pagingSize],
+    queryFn: ({ pageParam = 0 }) =>
+      apiRequest.get(API_URL.DONATE_BOARDS, {
+        params: { pagingSize: 10, pagingIndex: pageParam },
+      }),
+    refetchOnWindowFocus: false,
+    retry: false, // api 호출 실패해도 계속 호출하지 않음
+    onError: (err: any) => {
+      console.log('[ERROR] useGetDonationBoardWithId', err);
+      navigate(PATH.HOME);
+    },
+    getNextPageParam: (lastPage, allPages) => {
+      if (lastPage.data.totalPages - 1 === lastPage.data.pageable.pageNumber)
+        return undefined;
+      return lastPage.data.pageable.pageNumber + 1;
+    },
+    getPreviousPageParam: (firstPage, allPages) => {
+      if (firstPage.data.pageable.pageNumber === 0) return undefined;
+      return firstPage.data.pageable.pageNumber - 1;
+    },
+    enabled: params.type === 'event',
   });
 };
 
