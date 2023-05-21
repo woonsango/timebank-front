@@ -283,7 +283,7 @@ const RegisterRequestPage = () => {
             {data?.data.map((category) => (
               <Radio.Button
                 key={category.categoryId}
-                value={category.categoryId}
+                value={category.categoryName}
                 style={{
                   borderRadius: '0',
                   margin: '5px',
