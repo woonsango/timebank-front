@@ -51,6 +51,7 @@ const RegisterRequestPage = () => {
   const [title, setTitle] = useState<string>('');
   const [location, setLocation] = useState<string>('');
   const [content, setContent] = useState<string>('');
+  const [exchangeTimepay, setExchangeTimepay] = useState(0);
   const [form] = Form.useForm();
   const [imgFileList, setImgFileList] = useState<UploadFile[]>([]);
   const [previewImage, setPreviewImage] = useState('');
@@ -164,6 +165,17 @@ const RegisterRequestPage = () => {
     setPreviewUrls(newPreviewUrls);
   };
 
+  const handleOnChangeTime = useCallback((changedValues: any, values: any) => {
+    if (values.startTime && values.endTime) {
+      const startTime = values.startTime.clone();
+      const endTime = values.endTime.clone();
+      const duration = endTime.diff(startTime, 'minutes');
+      setExchangeTimepay(duration);
+    } else {
+      setExchangeTimepay(30);
+    }
+  }, []);
+
   const handleOnSubmit = useCallback(
     async (values: any) => {
       let formData = new FormData();
@@ -181,6 +193,7 @@ const RegisterRequestPage = () => {
         endTime: `${values.activityDate.format(
           'YYYY-MM-DD',
         )}T${values.endTime.format('HH:mm:ss')}.000Z`,
+        pay: exchangeTimepay,
       };
 
       console.log(newPost);
@@ -322,8 +335,19 @@ const RegisterRequestPage = () => {
               showNow={false}
               minuteStep={30}
               allowClear={false}
+              onSelect={(value) => {
+                form.setFieldValue('endTime', value);
+                handleOnChangeTime({ endTime: value }, form.getFieldsValue());
+              }}
             />
           </Form.Item>
+        </div>
+        <div className="guide">
+          <div>
+            교환할 타임페이 양 :{' '}
+            <b>{exchangeTimepay ? exchangeTimepay + ' TP' : ''}</b>{' '}
+          </div>
+          <div>도움을 받은 분의 타임페이가 충분한지 확인해주세요.</div>
         </div>
 
         <Form.Item label="장소" name="location" css={cssPostDateStyle}>
