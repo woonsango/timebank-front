@@ -59,9 +59,14 @@ public class AgentService {
 
     /* 테스트 필요 */
     public AgentAcceptInfoResponse agentAcceptList(User user){
-        Agent agentInfo = agentRepository.findFirstByCreatedUser(user);
         AgentAcceptInfoResponse agentAcceptInfoResponse = new AgentAcceptInfoResponse(false, null,
                 null,null);
+
+        if(agentRepository.findFirstByCreatedUser(user) == null){
+            return agentAcceptInfoResponse;
+        }
+
+        Agent agentInfo = agentRepository.findFirstByCreatedUser(user);
         
         /* isAccept가 false 리스트 */
         List<Agent> assignedUsers = agentInfo.getCreatedUser().getCreatedAgents();
