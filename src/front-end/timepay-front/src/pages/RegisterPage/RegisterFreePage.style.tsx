@@ -11,152 +11,56 @@ export const cssPostPageStyle = css`
   padding: 0;
   margin: 0;
 
-  .upload {
-    margin: 0px 20px 80px 20px;
-  }
-
-  .image-container {
-    margin: 20px;
-  }
-  .imageFont {
-    margin-bottom: 20px;
-    font-size: 18px;
-    font-weight: 500;
-  }
-  .images-container {
-    display: flex;
-    height: 200px;
-    margin: 20px 0px 20px 0px;
-    padding: 10px;
-    border: 1px solid ${COMMON_COLOR.FONT1};
-    border-radius: 10px;
-    overflow: scroll;
-    overflow: auto;
-    white-space: nowrap;
-  }
-
-  .cssImageWrapper1 {
-    display: flex;
-    flex-direction: row;
-    margin: 0;
-    padding: 0;
-  }
-  .uploadBtn {
-    width: 100px;
-    height: 70px;
-    background: ${COMMON_COLOR.FONT1};
-    border: 1.5px solid ${COMMON_COLOR.FONT4};
-    border-radius: 10px;
-    font-size: 16px;
-    font-weight: 500;
-    text-align: center;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    &:hover {
-      background: ${COMMON_COLOR.FONT4};
-    }
-  }
-  #upload {
-    display: none;
-  }
-
-  .cssImageWrapper2 {
-    margin: 0;
-    padding-right: 10px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-  .cssImages {
-    margin-top: 10px;
-  }
-  .changeBtn {
-    margin-bottom: 10px;
-    width: 85px;
-    height: 30px;
-    border: 1px solid ${COMMON_COLOR.FONT4};
-    border-radius: 5px;
-    font-size: 15px;
-    font-weight: 500;
-    text-align: center;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    &:hover {
-      background: ${COMMON_COLOR.FONT1};
-    }
-  }
-  #change {
-    display: none;
-  }
-
-  .cssImagePlaceholder2 {
-    display: flex;
-    flex-direction: row;
-  }
-
-  .deleteBtn {
-    width: 85px;
-    height: 30px;
-    font-size: 15px;
-    font-weight: 500;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-
-  .cssSelectedImage {
-    width: 100px;
-    height: 100px;
-  }
-  .cssImages {
-    display: flex;
+  .ant-form-item-row {
     flex-direction: column;
   }
-
-  .category-container {
-    margin: 0px 20px;
-  }
-  .category {
-    margin: 5px 10px;
-    padding: 7px 10px;
-    font-size: 18px;
-    color: ${COMMON_COLOR.BLACK};
-    background-color: ${COMMON_COLOR.GRAY};
-    border: 1px solid ${COMMON_COLOR.LIGHT_GRAY};
-    border-radius: 10px;
-    cursor: pointer;
-  }
-
-  .category.selected {
-    background-color: ${COMMON_COLOR.MAIN3};
-    border: 1px solid ${COMMON_COLOR.MAIN3};
+  .time {
+    display: flex;
+    flex-direction: row;
   }
 `;
 
-export const cssPostTitleInputStyle = css`
-  font-size: 25px;
-  width: 100%;
+export const cssPostCategoryStyle = css`
+  margin-top: 180px;
+  margin-left: 20px;
+`;
+
+export const cssPostDateStyle = css`
+  margin-top: 10px;
+  margin-left: 20px;
+`;
+
+export const cssPostTitleStyle = css`
+  font-size: 22px;
+  margin-left: 20px;
   border: none;
-  padding-top: 25px;
-  padding-left: 20px;
+  :focus {
+    outline: none;
+  }
+`;
+export const cssPostTitleInputStyle = css`
+  font-size: 22px;
+  border: none;
+  padding-right: 20px;
+  :focus {
+    outline: none;
+  }
+`;
+export const cssPostContentStyle = css`
+  font-size: 18px;
+  border: none;
+  margin-left: 20px;
+  padding-bottom: 10px;
   padding-right: 20px;
   :focus {
     outline: none;
   }
 `;
 export const cssPostContentInputStyle = css`
-  width: 100%;
-  font-size: 22px;
+  font-size: 18px;
   border: none;
-  padding-top: 10px;
   padding-bottom: 10px;
-  padding-left: 20px;
   padding-right: 20px;
-  margin-top: 10px;
   :focus {
     outline: none;
   }
@@ -166,6 +70,7 @@ export const cssLineStyle = css`
   width: 100%;
   border-top: 1px solid ${COMMON_COLOR.FONT1};
   margin-top: 15px;
+  margin-bottom: 15px;
 `;
 
 export const cssPostFooterStyle = css`
@@ -194,21 +99,4 @@ export const cssPostBtnStyle2 = css`
   letter-spacing: 3px;
   font-size: 24px;
   font-weight: 600;
-`;
-
-export const cssPostCategoryStyle = css`
-  margin-top: 180px;
-  margin-left: 20px;
-`;
-
-export const cssPostDateStyle = css`
-  margin-top: 20px;
-  margin-left: 20px;
-  .time {
-    width: 100px;
-    margin-left: 20px;
-  }
-  .time1 {
-    width: 100px;
-  }
 `;

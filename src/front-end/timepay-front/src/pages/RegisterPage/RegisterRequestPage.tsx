@@ -12,24 +12,22 @@ import {
 import { RcFile, UploadChangeParam, UploadProps } from 'antd/es/upload';
 import { useCallback, useState, useMemo, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { PATH } from '../../utils/paths';
-import { ReactComponent as BackArrow } from '../../assets/images/icons/header-back-arrow.svg';
-import { cssMainHeaderStyle } from '../../components/MainHeader/MainHeader.styles';
 import {
   cssPostPageStyle,
+  cssPostTitleStyle,
   cssPostTitleInputStyle,
   cssLineStyle,
+  cssPostContentStyle,
   cssPostContentInputStyle,
   cssPostBtnStyle,
   cssPostFooterStyle,
   cssPostCategoryStyle,
+  cssPostDateStyle,
 } from './RegisterFreePage.style';
-import { cssRegisterRequestPageStyle } from './RegisterRequest.styles';
 import { FlagFilled } from '@ant-design/icons';
-import { useRecoilState, useSetRecoilState } from 'recoil';
+import { useSetRecoilState } from 'recoil';
 import { headerTitleState } from '../../states/uiState';
 import { useQueryClient } from 'react-query';
-import { DateRange, startTime, endTime } from '../../states/register';
 import { useCreateDealBoards } from '../../api/hooks/register';
 import dummyProfileImg from '../../assets/images/icons/dummy-profile-img.png';
 import dayjs from 'dayjs';
@@ -238,7 +236,9 @@ const RegisterRequestPage = () => {
           position: 'fixed',
           zIndex: 1,
           background: `${COMMON_COLOR.WHITE}`,
-          padding: 10,
+          paddingLeft: 10,
+          paddingTop: 10,
+          boxShadow: '0px 2px 5px rgba(0, 0, 0, 0.2)',
         }}
         items={[
           {
@@ -252,74 +252,90 @@ const RegisterRequestPage = () => {
           },
         ]}
       />
-
-      <Form.Item label="카테고리" name="category" css={cssPostCategoryStyle}>
-        <Radio.Group onChange={handleCategoryChange}>
-          {data?.data.map((category) => (
-            <Radio.Button
-              key={category.categoryId}
-              value={category.categoryId}
-              style={{
-                borderRadius: '0',
-                margin: '5px',
-                fontWeight: '500',
-              }}
-            >
-              {category.categoryName}
-            </Radio.Button>
-          ))}
-        </Radio.Group>
-      </Form.Item>
-
-      <div css={cssLineStyle} />
-      <Form.Item
-        name="activityDate"
-        label="활동일"
-        initialValue={dayjs()}
-        css={cssPostCategoryStyle}
-      >
-        <DatePicker format="YYYY년 MM월 DD일" />
-      </Form.Item>
-
-      <Form.Item name="startTime" label="활동을 시작할 시간">
-        <DatePicker.TimePicker
-          locale={locale}
-          format="HH시 mm분"
-          placeholder="시간"
-          showNow={false}
-          minuteStep={30}
-        />
-      </Form.Item>
-      <Form.Item name="endTime" label="활동을 할 시간">
-        <DatePicker.TimePicker
-          locale={locale}
-          format="HH시 mm분"
-          placeholder="시간"
-          showNow={false}
-          minuteStep={30}
-          allowClear={false}
-        />
-      </Form.Item>
-      <div css={cssLineStyle} />
-      <Form.Item label="장소" name="location" css={cssPostCategoryStyle}>
-        <Input
-          size="large"
-          placeholder="희망하는 장소를 입력하세요 :)"
-          style={{
-            paddingLeft: '15px',
-            width: '280px',
-          }}
-          prefix={<FlagFilled style={{ marginRight: '5px' }} />}
-          onChange={(event) => {
-            handleLocationChange(event);
-            handleTimeLocationChange();
-          }}
-        />
-      </Form.Item>
-      <div css={cssLineStyle} />
-
       <Form onFinish={handleOnSubmit} form={form} layout="vertical">
-        <Form.Item name="title">
+        <Form.Item
+          label="카테고리 선택"
+          name="category"
+          css={cssPostCategoryStyle}
+        >
+          <Radio.Group onChange={handleCategoryChange}>
+            {data?.data.map((category) => (
+              <Radio.Button
+                key={category.categoryId}
+                value={category.categoryId}
+                style={{
+                  borderRadius: '0',
+                  margin: '5px',
+                  fontWeight: '500',
+                }}
+              >
+                {category.categoryName}
+              </Radio.Button>
+            ))}
+          </Radio.Group>
+        </Form.Item>
+
+        <div css={cssLineStyle} />
+
+        <Form.Item
+          name="activityDate"
+          label="활동일"
+          initialValue={dayjs()}
+          css={cssPostDateStyle}
+        >
+          <DatePicker format="YYYY년 MM월 DD일" />
+        </Form.Item>
+
+        <div className="time">
+          <Form.Item
+            name="startTime"
+            label="활동을 시작할 시간"
+            css={cssPostDateStyle}
+            initialValue={dayjs()}
+          >
+            <DatePicker.TimePicker
+              locale={locale}
+              format="HH시 mm분"
+              placeholder="시간"
+              showNow={false}
+              minuteStep={30}
+            />
+          </Form.Item>
+          <Form.Item
+            name="endTime"
+            label="활동이 끝날 시간"
+            css={cssPostDateStyle}
+            initialValue={dayjs()}
+          >
+            <DatePicker.TimePicker
+              locale={locale}
+              format="HH시 mm분"
+              placeholder="시간"
+              showNow={false}
+              minuteStep={30}
+              allowClear={false}
+            />
+          </Form.Item>
+        </div>
+
+        <Form.Item label="장소" name="location" css={cssPostDateStyle}>
+          <Input
+            size="large"
+            placeholder="희망하는 장소를 입력하세요 :)"
+            style={{
+              paddingLeft: '15px',
+              width: '280px',
+            }}
+            prefix={<FlagFilled style={{ marginRight: '5px' }} />}
+            onChange={(event) => {
+              handleLocationChange(event);
+              handleTimeLocationChange();
+            }}
+          />
+        </Form.Item>
+        <div css={cssLineStyle} />
+
+        <Form.Item label="제목" name="title" css={cssPostTitleStyle}>
           <Input
             css={cssPostTitleInputStyle}
             placeholder="제목을 입력하세요"
@@ -328,8 +344,8 @@ const RegisterRequestPage = () => {
             onChange={handleTitleChange}
           />
         </Form.Item>
-        <div css={cssLineStyle} />
-        <Form.Item name="content">
+
+        <Form.Item label="내용" name="content" css={cssPostContentStyle}>
           <TextArea
             rows={10}
             bordered={false}
