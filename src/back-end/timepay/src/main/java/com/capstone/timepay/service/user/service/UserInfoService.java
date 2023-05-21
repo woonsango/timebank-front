@@ -212,6 +212,7 @@ public class UserInfoService {
             Organization org = userData.getOrganization();
 
             OrgUserInfoDTO orgData = new OrgUserInfoDTO(
+                    userData.getUserId(),
                     org.getOrganizationName(),
                     userData.getName(),
                     userData.getPhone(),
@@ -262,6 +263,7 @@ public class UserInfoService {
                     pageable, userData.getDealRegisters().size());
 
             OrgUserInfoDTO orgData = new OrgUserInfoDTO(
+                    userData.getUserId(),
                     org.getOrganizationName(),
                     userData.getName(),
                     userData.getPhone(),
@@ -332,6 +334,7 @@ public class UserInfoService {
                     () -> new IllegalArgumentException("존재하지 않는 기관 매니저입니다."));
 
             OrgUserInfoDTO orgData = new OrgUserInfoDTO(
+                    user.getUserId(),
                     org.getOrganizationName(),
                     user.getName(),
                     user.getPhone(),
@@ -386,6 +389,7 @@ public class UserInfoService {
                     .and(DealBoardSearch.withDealRegisters(user.getDealRegisters())), pageable);
 
             OrgUserInfoDTO orgData = new OrgUserInfoDTO(
+                    user.getUserId(),
                     org.getOrganizationName(),
                     user.getName(),
                     user.getPhone(),

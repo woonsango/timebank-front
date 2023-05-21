@@ -41,15 +41,15 @@ public class AgentUserService {
     public AgentUserInfoResponse agentUserInfo(User user){
         Agent agentInfo = agentRepository.findByAssignedUser(user);
         AgentUserInfoResponse agentUserInfoResponse = new AgentUserInfoResponse(false, null,
-                null,null);
+                null,null, false);
 
         if(agentInfo == null || agentInfo.getCreatedUser() == null){
             agentUserInfoResponse = new AgentUserInfoResponse(false, null,
-                    user.getUserId(),user.getName());
+                    user.getUserId(),user.getName(), false);
         }
         else{
             agentUserInfoResponse = new AgentUserInfoResponse(true, agentInfo.getCreatedUser().getName(),
-                    user.getUserId(),user.getName());
+                    user.getUserId(),user.getName(), agentInfo.isAccept());
         }
 
         return agentUserInfoResponse;

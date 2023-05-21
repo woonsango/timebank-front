@@ -15,6 +15,7 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 @JsonNaming(value = PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class OrgUserInfoDTO {
+    private Long uid;
     private String organizationName;
     private String managerName;
     private String managerPhone;
@@ -28,8 +29,9 @@ public class OrgUserInfoDTO {
     private Page<DealBoard> dealBoards;
     private Page<CommentResponse> dealBoardComments;
 
-    public OrgUserInfoDTO(String organizationName, String managerName, String managerPhone, String businessCode,
+    public OrgUserInfoDTO(Long uid, String organizationName, String managerName, String managerPhone, String businessCode,
                           int employeeNum, int timepay, String id, String imageUrl, String certificationUrl){
+        this.uid = uid;
         this.organizationName = organizationName;
         this.managerName = managerName;
         this.managerPhone = managerPhone;
@@ -41,9 +43,10 @@ public class OrgUserInfoDTO {
         this.certificationUrl = certificationUrl;
     }
 
-    public OrgUserInfoDTO(String organizationName, String managerName, String managerPhone, String businessCode,
+    public OrgUserInfoDTO(Long uid, String organizationName, String managerName, String managerPhone, String businessCode,
                           int employeeNum, int timepay, String id, String imageUrl, String certificationUrl,
                           Page<DealBoard> dealBoards){
+        this.uid = uid;
         this.organizationName = organizationName;
         this.managerName = managerName;
         this.managerPhone = managerPhone;
