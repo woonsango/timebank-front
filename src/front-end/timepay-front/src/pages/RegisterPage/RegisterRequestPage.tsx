@@ -36,6 +36,7 @@ import 'dayjs/locale/ko';
 import locale from 'antd/es/date-picker/locale/ko_KR';
 import { useGetCategory } from '../../api/hooks/category';
 import { COMMON_COLOR } from '../../styles/constants/colors';
+import { startTime } from '../../states/register';
 
 const { TextArea } = Input;
 const MAX_IMAGES = 5;
@@ -174,6 +175,12 @@ const RegisterRequestPage = () => {
         ...values,
         d_board_id: parseInt(values.d_board_id),
         images: null,
+        startTime: `${values.activityDate.format(
+          'YYYY-MM-DD',
+        )}T${values.startTime.format('HH:mm:ss')}.000Z`,
+        endTime: `${values.activityDate.format(
+          'YYYY-MM-DD',
+        )}T${values.endTime.format('HH:mm:ss')}.000Z`,
       };
 
       console.log(newPost);
