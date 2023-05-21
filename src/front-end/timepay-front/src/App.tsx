@@ -27,6 +27,10 @@ function App() {
             path={PATH.AGENCY_SIGN_IN}
             element={<PageRoutes.AgencySignInPage />}
           />
+          <Route
+            path={PATH.AGENCY_SIGN_UP}
+            element={<PageRoutes.AgencySignUpPage />}
+          />
           <Route element={<BaseLayout />}>
             <Route path={PATH.HOME} element={<PageRoutes.HomePage />} />
             <Route path={PATH.SEARCH} element={<PageRoutes.SearchPage />} />
@@ -38,10 +42,6 @@ function App() {
             <Route
               path={PATH.Register_HS}
               element={<PageRoutes.RegisterServePage />}
-            />
-            <Route
-              path={PATH.Register_EVENT}
-              element={<PageRoutes.RegisterEventPage />}
             />
             <Route
               path={PATH.Register_F}
@@ -71,10 +71,7 @@ function App() {
             />
             <Route path={PATH.MY} element={<PageRoutes.MyPage />} />
             <Route path={PATH.MY_EDIT} element={<PageRoutes.MyEditPage />} />
-            <Route
-              path={PATH.AGENCY_SIGN_UP}
-              element={<PageRoutes.AgencySignUpPage />}
-            />
+
             <Route
               path={PATH.MY_VOLUNTEER}
               element={<PageRoutes.MyVolunteerPage />}
@@ -92,6 +89,14 @@ function App() {
               path={`${PATH.INSTANT_ACTIVITY}/:helpPk`}
               element={<PageRoutes.InstantActivityPage />}
             />
+            <Route
+              path={PATH.DONATION_BOARD_WRITE}
+              element={<PageRoutes.DonationBoardWritePage />}
+            />
+            <Route
+              path={`${PATH.DONATION_BOARD}/:boardId`}
+              element={<PageRoutes.DonationBoardPage />}
+             />
             <Route path={PATH.AGENT} element={<PageRoutes.AgentPage />} />
             <Route
               path={PATH.APPLICANT}

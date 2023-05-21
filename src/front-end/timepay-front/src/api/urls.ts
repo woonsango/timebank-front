@@ -27,6 +27,10 @@ export const API_URL = {
   DELETE: '/api/users/delete',
   INSTANT_MATCHING: '/api/instant-matching',
   DEVICE_UPDATE: '/api/users/mypage/update/token',
+  DONATION_WRITE: '/api/organizations/donate/write',
+  DONATION_BOARD_ID: '/api/donate',
+  DONATE_TIMEPAY: '/api/donate/timepay',
+  DONATE_BOARDS: '/api/donate',
 };
 
 // 토큰 필요 없는 애들

@@ -54,8 +54,8 @@ const MainFooter = () => {
 
   const handleOnShowQRModal = useCallback(() => {
     Modal.confirm({
-      content: '도움을 받은 분만 눌러주세요!',
-      okText: '도움을 받았습니다',
+      content: '도움이 필요한 분만 눌러주세요!',
+      okText: '도움이 필요합니다',
       cancelText: '취소',
       onOk: () => {
         if (data?.data.body.id) setIsOpenQR(true);
@@ -76,8 +76,8 @@ const MainFooter = () => {
     ];
     if (isAgency)
       items.push({
-        key: PATH.Register_EVENT,
-        label: <Link to={PATH.Register_EVENT}>이벤트</Link>,
+        key: PATH.DONATION_BOARD_WRITE,
+        label: <Link to={PATH.DONATION_BOARD_WRITE}>기부하기</Link>,
       });
     else
       items.push({

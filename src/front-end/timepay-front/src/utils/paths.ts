@@ -9,7 +9,6 @@ export const PATH = {
   Register_HR: '/register/help-request',
   Register_HS: '/register/help-serve',
   Register_F: '/register/free',
-  Register_EVENT: '/register/event',
   NOTIFICATION: '/notification',
   Qna_List: '/inquire',
   Qna_Register: '/inquire/register',
@@ -28,6 +27,8 @@ export const PATH = {
   MY_VOLUNTEER: '/my-volunteer',
   PAYMENT_CERTIFICATION: '/payment-certification',
   INSTANT_ACTIVITY: '/instant-activity',
+  DONATION_BOARD_WRITE: '/donation-board-write',
+  DONATION_BOARD: '/donation',
   AGENT: '/agent',
   APPLICANT: '/applicant',
 };

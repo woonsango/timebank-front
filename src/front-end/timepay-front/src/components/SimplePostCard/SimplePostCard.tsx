@@ -1,4 +1,4 @@
-import { Card, Spin } from 'antd';
+import { Card, Progress, Spin } from 'antd';
 import { useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { IBoard } from '../../api/interfaces/IPost';
@@ -18,23 +18,35 @@ import { UserOutlined } from '@ant-design/icons';
 import PostTypeTag from '../PostTypeTag';
 import { cssPostTypeTagStyle } from '../PostTypeTag/PostTypeTag.styles';
 import { COMMON_COLOR } from '../../styles/constants/colors';
-import { getDateDiffToday } from '../../utils/board';
+import { getDateDiffToday, getType } from '../../utils/board';
 import useFontSize from '../../hooks/useFontSize';
 import dayjs from 'dayjs';
+import { IDonationBoard } from '../../api/interfaces/IDonation';
+import { PATH } from '../../utils/paths';
 
 interface SimplePostCardProps {
-  post?: IBoard;
+  post?: IBoard | IDonationBoard;
 }
 
 const SimplePostCard = ({ post }: SimplePostCardProps) => {
   const navigate = useNavigate();
   const { scaleValue } = useFontSize();
 
-  const handlePageChange = () => {
-    navigate(`/post/${post?.d_boardId}`, {});
-  };
+  const isDonate = useMemo(() => {
+    return getType(post?.type) === '기부하기';
+  }, [post?.type]);
+
+  const handlePageChange = useCallback(() => {
+    if (isDonate) navigate(`${PATH.DONATION_BOARD}/${post?.id}`);
+    else navigate(`/post/${post?.d_boardId}`, {});
+  }, [isDonate, navigate, post]);
+
   const footerComponent = useCallback(
-    (nickname?: string, createdAt?: string, userType?: string) => {
+    (
+      nickname?: string | null,
+      createdAt?: string | null,
+      userType?: string | null,
+    ) => {
       return (
         <div css={cssSimplePostCardFooterStyle(scaleValue)}>
           <div className="nickname">
@@ -56,56 +68,82 @@ const SimplePostCard = ({ post }: SimplePostCardProps) => {
             <div className="type">
               <PostTypeTag type={post?.type} />
             </div>
-            <div
-              className="amount"
-              css={cssPostTypeTagStyle(
-                {
-                  backgroundColor: COMMON_COLOR.MAIN1,
-                },
-                scaleValue,
-              )}
-            >
-              {post?.pay || '-'} TP
-            </div>
+            {isDonate ? (
+              <Progress
+                style={{ width: 150 }}
+                percent={
+                  post?.donateTimePay && post?.targetTimePay
+                    ? (post?.donateTimePay / post?.targetTimePay) * 100
+                    : 0
+                }
+                size="small"
+              />
+            ) : (
+              <div
+                className="amount"
+                css={cssPostTypeTagStyle(
+                  {
+                    backgroundColor: COMMON_COLOR.MAIN1,
+                  },
+                  scaleValue,
+                )}
+              >
+                {post?.pay || '-'} TP
+              </div>
+            )}
           </div>
           <div className="title">
-            <PostStatusTag status={post?.boardStatus} />
+            {!isDonate && <PostStatusTag status={post?.boardStatus} />}
             <div className="title-div">{post?.title || '-'}</div>
             <div className="attachment">{post?.imageUrl && <Attachment />}</div>
           </div>
         </div>
         <div css={cssSimplePostCardBodyStyle(scaleValue)}>
-          <div className="post-card-location">
-            <RegionPin />
-            {post?.location || '-'}
-          </div>
-          <div className="post-card-time">
-            <Clock />
-            {post ? (
-              <span>
-                {post.startTime
-                  ? dayjs(post.startTime, 'YYYY-MM-DDTHH:mm:ss').format(
-                      'MM월 DD일 HH시 mm분',
-                    )
-                  : '-'}{' '}
-                ~{' '}
-                {post.endTime
-                  ? dayjs(post.endTime, 'YYYY-MM-DDTHH:mm:ss').format(
-                      'HH시 mm분',
-                    )
-                  : '-'}
-              </span>
-            ) : (
-              <span>-</span>
-            )}
-          </div>
+          {isDonate ? (
+            <>
+              <div className="post-card-location">
+                목표 : {post?.targetTimePay} TP
+              </div>
+              <div className="post-card-time">
+                현재 : {post?.donateTimePay} TP
+              </div>
+            </>
+          ) : (
+            <>
+              <div className="post-card-location">
+                <RegionPin />
+                {post?.location || '-'}
+              </div>
+              <div className="post-card-time">
+                <Clock />
+                {post ? (
+                  <span>
+                    {post.startTime
+                      ? dayjs(post.startTime, 'YYYY-MM-DDTHH:mm:ss').format(
+                          'MM월 DD일 HH시 mm분',
+                        )
+                      : '-'}{' '}
+                    ~{' '}
+                    {post.endTime
+                      ? dayjs(post.endTime, 'YYYY-MM-DDTHH:mm:ss').format(
+                          'HH시 mm분',
+                        )
+                      : '-'}
+                  </span>
+                ) : (
+                  <span>-</span>
+                )}
+              </div>
+            </>
+          )}
+
           <div className="post-card-content">
             {post?.content || '로딩 중...'}
           </div>
         </div>
       </div>
     );
-  }, [post, scaleValue]);
+  }, [post, scaleValue, isDonate]);
 
   return (
     <Card
@@ -121,7 +159,11 @@ const SimplePostCard = ({ post }: SimplePostCardProps) => {
         )}
         {postCardContent}
       </Spin>
-      {footerComponent(post?.userNickname, post?.createdAt, post?.userType)}
+      {footerComponent(
+        post?.userNickname || post?.organizationName!,
+        post?.createdAt,
+        post?.userType,
+      )}
     </Card>
   );
 };

@@ -17,6 +17,7 @@ import {
 import { usePostAgencyRegister } from '../../api/hooks/agency';
 import { useNavigate } from 'react-router-dom';
 import { PATH } from '../../utils/paths';
+import MainHeader from '../../components/MainHeader';
 
 const AgencySignUpPage = () => {
   const navigate = useNavigate();
@@ -190,139 +191,151 @@ const AgencySignUpPage = () => {
   });
 
   return (
-    <div css={cssAgencySignUpPageStyle}>
-      {contextHolder}
-      <Form onFinish={handleOnSubmit} form={form}>
-        <Form.Item
-          name="profileImage"
-          getValueFromEvent={normFile}
-          valuePropName="fileList"
-        >
-          <Upload
-            onChange={handleImgChange}
-            onPreview={handlePreview}
-            listType="picture-circle"
-            multiple={false}
-            beforeUpload={() => false}
-            accept="image/png, image/jpg, image/jpeg"
+    <>
+      <MainHeader />
+      <div css={cssAgencySignUpPageStyle}>
+        {contextHolder}
+        <Form onFinish={handleOnSubmit} form={form}>
+          <Form.Item
+            name="profileImage"
+            getValueFromEvent={normFile}
+            valuePropName="fileList"
           >
-            {imgFileList.length === 1 ? null : uploadButton}
-          </Upload>
-        </Form.Item>
-        <Form.Item
-          label="아이디"
-          name="id"
-          rules={[
-            { required: true, message: '아이디를 입력해주세요' },
-            { type: 'email', message: '아이디를 이메일 형식으로 입력해주세요' },
-          ]}
+            <Upload
+              onChange={handleImgChange}
+              onPreview={handlePreview}
+              listType="picture-circle"
+              multiple={false}
+              beforeUpload={() => false}
+              accept="image/png, image/jpg, image/jpeg"
+            >
+              {imgFileList.length === 1 ? null : uploadButton}
+            </Upload>
+          </Form.Item>
+          <Form.Item
+            label="아이디"
+            name="id"
+            rules={[
+              { required: true, message: '아이디를 입력해주세요' },
+              {
+                type: 'email',
+                message: '아이디를 이메일 형식으로 입력해주세요',
+              },
+            ]}
+          >
+            <Input placeholder="아이디는 담당자 이메일로 입력해주세요." />
+          </Form.Item>
+          <Form.Item
+            label="비밀번호"
+            name="pw"
+            rules={[
+              { required: true, message: '' },
+              { validator: passwordRegexRule },
+            ]}
+            extra="숫자, 영문, 특수기호(!@#$%^&*,./?)를 모두 포함하는 10~20자리"
+          >
+            <Input type="password" placeholder="비밀번호를 입력해주세요." />
+          </Form.Item>
+          <Form.Item
+            label="비밀번호 확인"
+            name="checkPw"
+            rules={[
+              { required: true, message: '' },
+              { validator: checkPassword },
+            ]}
+          >
+            <Input
+              type="password"
+              placeholder="비밀번호를 다시 입력해주세요."
+            />
+          </Form.Item>
+          <Form.Item
+            label="기관명"
+            name="organizationName"
+            rules={[
+              { required: true, message: '' },
+              { validator: onlyKoreanOrEnglishRule },
+            ]}
+          >
+            <Input placeholder="기관명을 입력해주세요." />
+          </Form.Item>
+          <Form.Item
+            label="사업자 등록 번호"
+            name="businessCode"
+            rules={[{ validator: companyRegistrationNumberRule }]}
+          >
+            <Input
+              type="number"
+              placeholder="사업자 등록 번호를 입력해주세요."
+            />
+          </Form.Item>
+          <Form.Item
+            label="담당자 이름"
+            name="managerName"
+            rules={[
+              { required: true, message: '' },
+              { validator: onlyKoreanOrEnglishRule },
+            ]}
+          >
+            <Input placeholder="담당자 이름을 입력해주세요." />
+          </Form.Item>
+          <Form.Item
+            label="담당자 전화번호"
+            name="managerPhone"
+            rules={[
+              { required: true, message: '' },
+              { validator: phoneNumberRule },
+            ]}
+            extra="'-' 빼고 입력 : 예시) 010XXXXXXXX"
+          >
+            <Input placeholder="담당자 전화번호를 입력해주세요." />
+          </Form.Item>
+          <Form.Item
+            label="종사자 수 입력"
+            name="employeeNum"
+            rules={[
+              { required: true, message: '' },
+              { validator: onlyNumberRegex },
+            ]}
+          >
+            <Input type="number" placeholder="종사자 수" />
+          </Form.Item>
+          <Form.Item
+            name="volunteerFile"
+            label="봉사활동 자격 서류"
+            rules={[{ required: false }]}
+            getValueFromEvent={normFile}
+            extra={
+              <>
+                가입 완료 후에도 마이 페이지에서 제출 가능합니다.
+                <br /> 서류 제출시 확인에 3~4 일 정도 소요될 수 있습니다. <br />
+                제출한 회원만 봉사 활동 모집글을 올릴 수 있습니다.
+              </>
+            }
+            valuePropName="fileList"
+          >
+            <Upload beforeUpload={() => false} maxCount={3} multiple>
+              <Button icon={<UploadOutlined />}>업로드</Button>
+            </Upload>
+          </Form.Item>
+          <Button htmlType="submit" className="submit-btn" type="primary">
+            회원가입 완료
+          </Button>
+        </Form>
+        <Modal
+          open={previewOpen}
+          title="프로필 미리보기"
+          footer={null}
+          onCancel={handleCancelPreview}
         >
-          <Input placeholder="아이디는 담당자 이메일로 입력해주세요." />
-        </Form.Item>
-        <Form.Item
-          label="비밀번호"
-          name="pw"
-          rules={[
-            { required: true, message: '' },
-            { validator: passwordRegexRule },
-          ]}
-          extra="숫자, 영문, 특수기호(!@#$%^&*,./?)를 모두 포함하는 10~20자리"
-        >
-          <Input type="password" placeholder="비밀번호를 입력해주세요." />
-        </Form.Item>
-        <Form.Item
-          label="비밀번호 확인"
-          name="checkPw"
-          rules={[
-            { required: true, message: '' },
-            { validator: checkPassword },
-          ]}
-        >
-          <Input type="password" placeholder="비밀번호를 다시 입력해주세요." />
-        </Form.Item>
-        <Form.Item
-          label="기관명"
-          name="organizationName"
-          rules={[
-            { required: true, message: '' },
-            { validator: onlyKoreanOrEnglishRule },
-          ]}
-        >
-          <Input placeholder="기관명을 입력해주세요." />
-        </Form.Item>
-        <Form.Item
-          label="사업자 등록 번호"
-          name="businessCode"
-          rules={[{ validator: companyRegistrationNumberRule }]}
-        >
-          <Input type="number" placeholder="사업자 등록 번호를 입력해주세요." />
-        </Form.Item>
-        <Form.Item
-          label="담당자 이름"
-          name="managerName"
-          rules={[
-            { required: true, message: '' },
-            { validator: onlyKoreanOrEnglishRule },
-          ]}
-        >
-          <Input placeholder="담당자 이름을 입력해주세요." />
-        </Form.Item>
-        <Form.Item
-          label="담당자 전화번호"
-          name="managerPhone"
-          rules={[
-            { required: true, message: '' },
-            { validator: phoneNumberRule },
-          ]}
-          extra="'-' 빼고 입력 : 예시) 010XXXXXXXX"
-        >
-          <Input placeholder="담당자 전화번호를 입력해주세요." />
-        </Form.Item>
-        <Form.Item
-          label="종사자 수 입력"
-          name="employeeNum"
-          rules={[
-            { required: true, message: '' },
-            { validator: onlyNumberRegex },
-          ]}
-        >
-          <Input type="number" placeholder="종사자 수" />
-        </Form.Item>
-        <Form.Item
-          name="volunteerFile"
-          label="봉사활동 자격 서류"
-          rules={[{ required: false }]}
-          getValueFromEvent={normFile}
-          extra={
-            <>
-              가입 완료 후에도 마이 페이지에서 제출 가능합니다.
-              <br /> 서류 제출시 확인에 3~4 일 정도 소요될 수 있습니다. <br />
-              제출한 회원만 봉사 활동 모집글을 올릴 수 있습니다.
-            </>
-          }
-          valuePropName="fileList"
-        >
-          <Upload beforeUpload={() => false} maxCount={3} multiple>
-            <Button icon={<UploadOutlined />}>업로드</Button>
-          </Upload>
-        </Form.Item>
-        <Button htmlType="submit" className="submit-btn" type="primary">
-          회원가입 완료
-        </Button>
-      </Form>
-      <Modal
-        open={previewOpen}
-        title="프로필 미리보기"
-        footer={null}
-        onCancel={handleCancelPreview}
-      >
-        <img
-          alt="프로필 이미지"
-          style={{ width: '100%', height: 'auto' }}
-          src={previewImage}
-        />
-      </Modal>
-    </div>
+          <img
+            alt="프로필 이미지"
+            style={{ width: '100%', height: 'auto' }}
+            src={previewImage}
+          />
+        </Modal>
+      </div>
+    </>
   );
 };
 

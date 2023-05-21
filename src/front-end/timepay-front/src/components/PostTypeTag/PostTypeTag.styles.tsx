@@ -16,4 +16,5 @@ export const cssPostTypeTagStyle = (
   font-size: calc(13px * ${scaleValue});
   line-height: calc(20px * ${scaleValue});
   text-align: center;
+  height: max-content;
 `;
