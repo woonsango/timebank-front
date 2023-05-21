@@ -26,6 +26,9 @@ export const API_URL = {
   LOGOUT: '/api/users/logout',
   DELETE: '/api/users/delete',
   INSTANT_MATCHING: '/api/instant-matching',
+  DONATION_WRITE: '/api/organizations/donate/write',
+  DONATION_BOARD_ID: '/api/donate',
+  DONATE_TIMEPAY: '/api/donate/timepay',
 };
 
 // 토큰 필요 없는 애들
