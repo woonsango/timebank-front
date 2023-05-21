@@ -6,6 +6,7 @@ export const cssPostPageStyle = css`
   background: ${COMMON_COLOR.WHITE};
   width: 100%;
   display: flex;
+  flex-direction: column;
   overflow-x: hidden;
   padding: 0;
   margin: 0;
@@ -196,7 +197,7 @@ export const cssPostBtnStyle2 = css`
 `;
 
 export const cssPostCategoryStyle = css`
-  margin-top: 20px;
+  margin-top: 180px;
   margin-left: 20px;
 `;
 

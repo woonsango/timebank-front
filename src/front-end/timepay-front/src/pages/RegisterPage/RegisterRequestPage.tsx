@@ -1,5 +1,5 @@
 import {
-  Layout,
+  Steps,
   Input,
   Button,
   Form,
@@ -216,9 +216,108 @@ const RegisterRequestPage = () => {
     return <img width="100%" height="100%" src={dummyProfileImg} alt="+" />;
   }, []);
 
+  const [current, setCurrent] = useState(0);
+
+  const handleCategoryChange = (value: any) => {
+    setCurrent(1); // Change to the next step when category is selected
+    // handle the category change logic if needed
+  };
+
+  const handleTimeLocationChange = () => {
+    setCurrent(2); // Change to the next step when time and location are entered
+    // handle the time and location change logic if needed
+  };
+
   return (
     <div css={cssPostPageStyle}>
       {contextHolder}
+      <Steps
+        direction="vertical"
+        current={current}
+        style={{
+          position: 'fixed',
+          zIndex: 1,
+          background: `${COMMON_COLOR.WHITE}`,
+          padding: 10,
+        }}
+        items={[
+          {
+            title: '카테고리 선택',
+          },
+          {
+            title: '시간/장소 입력',
+          },
+          {
+            title: '게시글 내용 입력',
+          },
+        ]}
+      />
+
+      <Form.Item label="카테고리" name="category" css={cssPostCategoryStyle}>
+        <Radio.Group onChange={handleCategoryChange}>
+          {data?.data.map((category) => (
+            <Radio.Button
+              key={category.categoryId}
+              value={category.categoryId}
+              style={{
+                borderRadius: '0',
+                margin: '5px',
+                fontWeight: '500',
+              }}
+            >
+              {category.categoryName}
+            </Radio.Button>
+          ))}
+        </Radio.Group>
+      </Form.Item>
+
+      <div css={cssLineStyle} />
+      <Form.Item
+        name="activityDate"
+        label="활동일"
+        initialValue={dayjs()}
+        css={cssPostCategoryStyle}
+      >
+        <DatePicker format="YYYY년 MM월 DD일" />
+      </Form.Item>
+
+      <Form.Item name="startTime" label="활동을 시작할 시간">
+        <DatePicker.TimePicker
+          locale={locale}
+          format="HH시 mm분"
+          placeholder="시간"
+          showNow={false}
+          minuteStep={30}
+        />
+      </Form.Item>
+      <Form.Item name="endTime" label="활동을 할 시간">
+        <DatePicker.TimePicker
+          locale={locale}
+          format="HH시 mm분"
+          placeholder="시간"
+          showNow={false}
+          minuteStep={30}
+          allowClear={false}
+        />
+      </Form.Item>
+      <div css={cssLineStyle} />
+      <Form.Item label="장소" name="location" css={cssPostCategoryStyle}>
+        <Input
+          size="large"
+          placeholder="희망하는 장소를 입력하세요 :)"
+          style={{
+            paddingLeft: '15px',
+            width: '280px',
+          }}
+          prefix={<FlagFilled style={{ marginRight: '5px' }} />}
+          onChange={(event) => {
+            handleLocationChange(event);
+            handleTimeLocationChange();
+          }}
+        />
+      </Form.Item>
+      <div css={cssLineStyle} />
+
       <Form onFinish={handleOnSubmit} form={form} layout="vertical">
         <Form.Item name="title">
           <Input
@@ -227,69 +326,6 @@ const RegisterRequestPage = () => {
             maxLength={25}
             value={title}
             onChange={handleTitleChange}
-          />
-        </Form.Item>
-        <div css={cssLineStyle} />
-
-        <Form.Item label="카테고리" name="category" css={cssPostCategoryStyle}>
-          <Radio.Group>
-            {data?.data.map((category) => (
-              <Radio.Button
-                key={category.categoryId}
-                value={category.categoryId}
-                style={{
-                  borderRadius: '0',
-                  border: `1px solid ${COMMON_COLOR.FONT4}`,
-                  margin: '5px',
-                  fontWeight: '500',
-                }}
-              >
-                {category.categoryName}
-              </Radio.Button>
-            ))}
-          </Radio.Group>
-        </Form.Item>
-
-        <div css={cssLineStyle} />
-        <Form.Item
-          name="activityDate"
-          label="활동일"
-          initialValue={dayjs()}
-          css={cssPostCategoryStyle}
-        >
-          <DatePicker format="YYYY년 MM월 DD일" />
-        </Form.Item>
-
-        <Form.Item name="startTime" label="활동을 시작할 시간">
-          <DatePicker.TimePicker
-            locale={locale}
-            format="HH시 mm분"
-            placeholder="시간"
-            showNow={false}
-            minuteStep={30}
-          />
-        </Form.Item>
-        <Form.Item name="endTime" label="활동을 할 시간">
-          <DatePicker.TimePicker
-            locale={locale}
-            format="HH시 mm분"
-            placeholder="시간"
-            showNow={false}
-            minuteStep={30}
-            allowClear={false}
-          />
-        </Form.Item>
-        <div css={cssLineStyle} />
-        <Form.Item label="장소" name="location" css={cssPostCategoryStyle}>
-          <Input
-            size="large"
-            placeholder="희망하는 장소를 입력하세요 :)"
-            style={{
-              paddingLeft: '15px',
-              width: '280px',
-            }}
-            prefix={<FlagFilled style={{ marginRight: '5px' }} />}
-            onChange={handleLocationChange}
           />
         </Form.Item>
         <div css={cssLineStyle} />
