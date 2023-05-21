@@ -1,15 +1,15 @@
 import { Button, Form, Input, InputNumber, message, Modal, Select } from 'antd';
 import { useCallback, useEffect } from 'react';
-// import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useSetRecoilState } from 'recoil';
 import { useGetCategory } from '../../api/hooks/category';
 import { usePostDonationBoardWrite } from '../../api/hooks/donation';
 import { headerTitleState } from '../../states/uiState';
-// import { PATH } from '../../utils/paths';
+import { PATH } from '../../utils/paths';
 import { cssDonationBoardWritePage } from './DonationBoardWritePage.styles';
 
 const DonationBoardWritePage = () => {
-  //   const navigate = useNavigate();
+  const navigate = useNavigate();
   const { data } = useGetCategory({
     type: '도움요청',
     useYn: 'Y',
@@ -40,9 +40,10 @@ const DonationBoardWritePage = () => {
               onSuccess: (data) => {
                 messageApi.success({
                   content: '등록이 완료되었습니다.',
-                  duration: 0.5,
+                  duration: 1,
                   onClose: () => {
-                    // 추후 등록된 게시글 화면으로 이동
+                    if (data && data.data && data.data.id)
+                      navigate(`${PATH.DONATION_BOARD}/${data.data.id}`);
                   },
                 });
               },
@@ -51,7 +52,7 @@ const DonationBoardWritePage = () => {
         },
       });
     },
-    [usePostDonationBoardWriteMutation, messageApi],
+    [usePostDonationBoardWriteMutation, messageApi, navigate],
   );
 
   return (

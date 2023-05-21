@@ -31,9 +31,8 @@ export const getType: (type?: string) => IPostType = (type?: string) => {
         return '도움요청';
       case 'helper':
         return '같이하기';
-      case 'event':
+      case '기부하기':
         return '기부하기';
-
       default:
         return '도움요청';
     }

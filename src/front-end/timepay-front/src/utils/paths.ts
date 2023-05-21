@@ -29,6 +29,7 @@ export const PATH = {
   PAYMENT_CERTIFICATION: '/payment-certification',
   INSTANT_ACTIVITY: '/instant-activity',
   DONATION_BOARD_WRITE: '/donation-board-write',
+  DONATION_BOARD: '/donation',
 };
 
 export const deployHostName = 'http://13.125.249.51';

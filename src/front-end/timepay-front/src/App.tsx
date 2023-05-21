@@ -93,6 +93,10 @@ function App() {
               path={PATH.DONATION_BOARD_WRITE}
               element={<PageRoutes.DonationBoardWritePage />}
             />
+            <Route
+              path={`${PATH.DONATION_BOARD}/:boardId`}
+              element={<PageRoutes.DonationBoardPage />}
+            />
           </Route>
         </Routes>
       </ConfigProvider>
