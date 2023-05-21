@@ -8,7 +8,8 @@ export const cssMyStyle = (scaleValue: number) => css`
     margin-right: 30px;
   }
   .Edit {
-    width: calc(90px * ${scaleValue});
+    width: max-content;
+    padding: 0 10px;
     height: calc(30px * ${scaleValue});
     border-radius: calc(15px * ${scaleValue});
     border: none;
@@ -18,17 +19,18 @@ export const cssMyStyle = (scaleValue: number) => css`
 `;
 
 export const cssMyInfoStyle = (scaleValue: number) => css`
-  margin-bottom: 25px;
+  margin-bottom: calc(25px * ${scaleValue});
   width: 100%;
+  padding: 0 30px;
   .info-header {
     display: flex;
     flex-direction: row;
     align-items: center;
-    gap: 15px;
+    gap: calc(15px * ${scaleValue});
     font-style: normal;
     font-weight: 400;
     font-size: calc(20px * ${scaleValue});
-    line-height: 15px;
+    line-height: calc(15px * ${scaleValue});
     color: #858585;
     img {
       width: 70px;
@@ -40,7 +42,7 @@ export const cssMyInfoStyle = (scaleValue: number) => css`
   .info-detail {
     display: flex;
     flex-direction: column;
-    gap: 7px;
+    gap: calc(7px * ${scaleValue});
 
     div {
       display: flex;
@@ -51,14 +53,14 @@ export const cssMyInfoStyle = (scaleValue: number) => css`
         font-style: normal;
         font-weight: 700;
         font-size: calc(16px * ${scaleValue});
-        line-height: 15px;
+        line-height: calc(15px * ${scaleValue});
         color: #f1af23;
       }
       .value {
         font-style: normal;
         font-weight: 400;
         font-size: calc(16px * ${scaleValue});
-        line-height: 15px;
+        line-height: calc(15px * ${scaleValue});
         color: #787878;
         .yes {
           color: green;
@@ -76,12 +78,13 @@ export const cssMyPage = css`
   height: 100%;
   padding: 10px 30px;
 `;
+
 export const cssMyPageProfileBlock = (scaleValue: number) => css`
   .MyTopBox {
     display: flex;
   }
   .MyImageWrap {
-    width: 25%;
+    width: 100px;
   }
   .MyProfileImage {
     width: 100px;
@@ -89,17 +92,21 @@ export const cssMyPageProfileBlock = (scaleValue: number) => css`
     border-radius: 70%;
   }
   .MyNameWrap {
-    width: 70%;
-    margin-left: 20%;
+    width: 100%;
+    padding-left: 20px;
   }
   .MyName {
     font-size: calc(24px * ${scaleValue});
     font-weight: 600;
     color: gray;
     margin-top: 10px;
-
     text-overflow: ellipsis;
     overflow: hidden;
+    height: calc(30px * ${scaleValue});
+    word-wrap: brek-word;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
   }
   .MyPersonalNum {
     font-size: calc(12px * ${scaleValue});

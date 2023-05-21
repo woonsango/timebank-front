@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import {
   Button,
   Form,
@@ -24,7 +24,6 @@ import './Join_imageSet.css';
 
 import { save } from '../LoginPage/saveUid';
 
-import axios from 'axios';
 import {
   cssJoinSubmitBtn,
   cssJoinText,
@@ -36,13 +35,12 @@ import {
 } from './Join.styles';
 import { apiRequest } from '../../api/request';
 import { API_URL } from '../../api/urls';
+import { getDeviceToken } from '../../utils/device';
 
 /*행정동 타입 선언*/
 type DongName = keyof typeof dongData;
 
 const JoinPage = () => {
-  console.log('JoinPage.tsx');
-
   const { Text } = Typography;
   const [messageApi, contextHolder] = message.useMessage();
 
@@ -75,6 +73,8 @@ const JoinPage = () => {
   const [dongText, setDongText] = useState<string>('');
 
   const [overlap, setOverlap] = useState<boolean>(false);
+
+  const [deviceToken, setDeviceToken] = useState<string>();
 
   const navigate = useNavigate();
 
@@ -280,8 +280,8 @@ const JoinPage = () => {
       formData.append('name', realName);
       formData.append('nickName', nickName);
       formData.append('phone', phoneNumber);
-
-      //formData.append('deviceToken', 'testToken2');
+      console.log('deviceToken', deviceToken);
+      if (deviceToken) formData.append('deviceToken', deviceToken);
 
       /*POST*/
       apiRequest
@@ -289,14 +289,21 @@ const JoinPage = () => {
         .then((res) => {
           console.log('POST 성공');
           console.log(res);
+          goTo(PATH.CATEGORY_SELECT);
         })
         .catch((err) => {
           console.log('POST 실패');
         });
-
-      goTo(PATH.CATEGORY_SELECT);
     }
   };
+
+  useEffect(() => {
+    'USE EFFECT IN JOIN PAGE';
+    getDeviceToken().then((response) => {
+      setDeviceToken(response);
+      console.log('JOINPAGE response', response);
+    });
+  }, []);
 
   return (
     <Space css={topWrapperCSS} align="baseline">
