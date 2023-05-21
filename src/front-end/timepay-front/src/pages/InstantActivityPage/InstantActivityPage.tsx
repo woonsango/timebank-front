@@ -36,12 +36,10 @@ const InstantActivityPage = () => {
   const [exchangeTimepay, setExchangeTimepay] = useState(60);
 
   const [messageApi, contextHolder] = message.useMessage();
-  const [personalNum, setPersonalNum]: any = useState();
 
   useEffect(() => {
     apiRequest.get(API_URL.USER_INFO_GET).then((res) => {
-      setPersonalNum(res.data.body.id);
-      if (personalNum == helpPk) {
+      if (data?.data.body.id == helpPk) {
         messageApi
           .open({
             type: 'error',
@@ -53,7 +51,7 @@ const InstantActivityPage = () => {
           });
       }
     });
-  }, [helpPk, messageApi, navigate, personalNum]);
+  }, [data?.data.body.id, helpPk, messageApi, navigate]);
 
   const next = useCallback(() => {
     setCurrent(current + 1);
