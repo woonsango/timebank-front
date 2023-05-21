@@ -15,3 +15,15 @@ export const useGetApplicant = () => {
     },
   });
 };
+
+export const useGetApplicantWaiting = () => {
+  return useQuery<AxiosResponse<IGetApplicantResponse>, AxiosError>({
+    queryKey: ['useGetApplicantWaiting'],
+    queryFn: () => apiRequest.get(API_URL.APPLICANT__WAITING, {}),
+    refetchOnWindowFocus: false,
+    retry: false,
+    onError: (err: any) => {
+      console.log('[ERROR] useGetApplicant:', err);
+    },
+  });
+};

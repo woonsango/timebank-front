@@ -35,6 +35,7 @@ export const API_URL = {
   AGENT__DELETE: '/api/users/applicants', //신청인이 대리인을 삭제
   DONATE_BOARDS: '/api/donate',
   APPLICANT: '/api/users/agents', //대리인이 신청인을 조회
+  APPLICANT__WAITING: '/api/users/agents/waiting', //대리인이 받은 신청 목록을 조회
 };
 
 // 토큰 필요 없는 애들
