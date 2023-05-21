@@ -4,6 +4,7 @@ import '../../styles/fonts/pretendard/pretendard.css';
 
 export const cssComments = css`
   height: 100px;
+  margin-bottom: 25px;
   z-index: 1;
 `;
 export const cssCommentItem = css`
@@ -39,16 +40,18 @@ export const cssEditDelete = css`
   font-size: 16px;
   .edit {
     margin-right: 10px;
+    height: 25px;
     border: none;
     padding: 0;
     font-size: 16px;
   }
   .sidebar {
-    margin-bottom: 7px;
+    margin-bottom: 3px;
   }
   .delete {
     margin-left: 8px;
     margin-right: 5px;
+    height: 25px;
     border: none;
     padding: 0;
     font-size: 16px;
