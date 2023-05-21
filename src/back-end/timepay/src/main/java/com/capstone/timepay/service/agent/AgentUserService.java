@@ -24,6 +24,7 @@ public class AgentUserService {
             agentRepository.save(Agent.builder()
                     .createdUser(agent)
                     .assignedUser(user)
+                    .isAccept(false)
                     .build()
             );
             agentUserRegisterResponse.setStatus(true);

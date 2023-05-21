@@ -1,5 +1,6 @@
 package com.capstone.timepay.service.agent;
 
+import com.capstone.timepay.controller.agent.request.AgentApplyRequest;
 import com.capstone.timepay.controller.agent.response.*;
 import com.capstone.timepay.domain.agent.Agent;
 import com.capstone.timepay.domain.agent.AgentRepository;
@@ -83,6 +84,21 @@ public class AgentService {
 
         return agentAcceptInfoResponse;
     }
+
+    public AgentStatusResponse agentApply(AgentApplyRequest agentApplyRequest, User agent){
+        AgentStatusResponse agentStatusResponse = new AgentStatusResponse(false, "알 수 없는 이유로 함수 실행 과정에서 에러 발생");
+
+        User user = userRepository.findById(agentApplyRequest.getUid()).orElseThrow(()
+                -> new IllegalArgumentException("존재하지 않는 대리인 유저입니다."));
+//        if(agentApplyRequest.isApply()) { // true
+//            //
+//        } else{
+//            //
+//        }
+
+        return agentStatusResponse;
+    }
+
 
     public AgentTransResponse agentTrans(User user){
         AgentTransResponse agentTransResponse = new AgentTransResponse(null, false);
