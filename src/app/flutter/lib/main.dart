@@ -99,7 +99,23 @@ class _WebViewAppState extends State<WebViewApp> {
         });
       }
     });
+
+    FirebaseMessaging.onMessageOpenedApp.listen(_handleMessage);
+
     super.initState();
+  }
+
+  void _handleMessage(RemoteMessage? message) {
+    // 앱이 켜져 있지 않은 상태에서 푸시 클릭 시 알림함 화면으로 바로 이동
+    if (_webViewController == null) {
+      setState(() {
+        webUrl = Uri.parse("http://13.125.249.51/notification");
+      });
+    } else {
+      _webViewController!.loadUrl(
+          urlRequest:
+              URLRequest(url: Uri.parse("http://13.125.249.51/notification")));
+    }
   }
 
   @override
@@ -119,6 +135,8 @@ class _WebViewAppState extends State<WebViewApp> {
                   callback: (args) {
                     return deviceToken;
                   });
+              // 앱이 꺼졌다가 켜졌을 경우에 화면 이동 시킴
+              webViewController.loadUrl(urlRequest: URLRequest(url: webUrl));
             },
             initialUrlRequest: URLRequest(url: webUrl),
             initialOptions: InAppWebViewGroupOptions(
@@ -148,13 +166,19 @@ class _WebViewAppState extends State<WebViewApp> {
   }
 
   Future<bool> _goBack(BuildContext context) async {
+    // 앱을 닫은 경우 로그인 화면으로 이동
     if (_webViewController == null) {
+      setState(() {
+        webUrl = Uri.parse("http://13.125.249.51/");
+      });
       return true;
     }
     if (await _webViewController!.canGoBack()) {
       _webViewController!.goBack();
       return Future.value(false);
     } else {
+      _webViewController!.loadUrl(
+          urlRequest: URLRequest(url: Uri.parse("http://13.125.249.51/")));
       return Future.value(true);
     }
   }
