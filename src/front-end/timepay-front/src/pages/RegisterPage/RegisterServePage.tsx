@@ -1,53 +1,74 @@
-import { Layout, Input, Button } from 'antd';
-import { useCallback, useState } from 'react';
+import {
+  Steps,
+  Input,
+  Button,
+  Form,
+  message,
+  Upload,
+  UploadFile,
+  Radio,
+  DatePicker,
+} from 'antd';
+import { RcFile, UploadChangeParam, UploadProps } from 'antd/es/upload';
+import { useCallback, useState, useMemo, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { PATH } from '../../utils/paths';
-import { ReactComponent as BackArrow } from '../../assets/images/icons/header-back-arrow.svg';
-import { cssMainHeaderStyle } from '../../components/MainHeader/MainHeader.styles';
 import {
   cssPostPageStyle,
+  cssPostTitleStyle,
   cssPostTitleInputStyle,
   cssLineStyle,
+  cssPostContentStyle,
   cssPostContentInputStyle,
   cssPostBtnStyle,
   cssPostFooterStyle,
+  cssPostCategoryStyle,
+  cssPostDateStyle,
 } from './RegisterFreePage.style';
 import { FlagFilled } from '@ant-design/icons';
-import { KoDatePicker } from '../../components/register/KoDatePicker';
-import TimeSelct from '../../components/register/TimeSelect';
-import axios from 'axios';
-import { useRecoilState } from 'recoil';
-import { DateRange, startTime, endTime } from '../../states/register';
+import { useSetRecoilState } from 'recoil';
+import { headerTitleState } from '../../states/uiState';
+import { useQueryClient } from 'react-query';
+import { useCreateDealBoards } from '../../api/hooks/register';
+import dummyProfileImg from '../../assets/images/icons/dummy-profile-img.png';
+import dayjs from 'dayjs';
+import 'dayjs/locale/ko';
+import locale from 'antd/es/date-picker/locale/ko_KR';
+import { useGetCategory } from '../../api/hooks/category';
+import { COMMON_COLOR } from '../../styles/constants/colors';
 
-const { Header, Content, Footer } = Layout;
 const { TextArea } = Input;
-
 const MAX_IMAGES = 5;
 
-const RegisterServePage = () => {
-  const timepay = 1000;
-  const state = '게시완료';
-  const hidden: boolean = false;
-  const [title, setTitle] = useState<string>('');
-  const [place, setPlace] = useState<string>('');
-  const [content, setContent] = useState<string>('');
-  const [selectedCategory, setSelectedCategory] = useState<string>('');
-  const categories = [
-    '산책',
-    '봉사',
-    '교육',
-    '친목',
-    '생활',
-    '건강',
-    '도와주세요',
-  ];
+const RegisterRequestPage = () => {
+  const queryClient = useQueryClient();
+  const setHeaderTitle = useSetRecoilState(headerTitleState);
+  useEffect(() => {
+    setHeaderTitle('도움요청');
+  }, [setHeaderTitle]);
 
-  const handleCategoryClick = (category: string) => {
-    setSelectedCategory((prevCategory) =>
-      prevCategory === category ? '' : category,
-    );
-    console.log(category);
-    console.log(typeof category);
+  const [title, setTitle] = useState<string>('');
+  const [location, setLocation] = useState<string>('');
+  const [content, setContent] = useState<string>('');
+  const [form] = Form.useForm();
+  const [imgFileList, setImgFileList] = useState<UploadFile[]>([]);
+  const [previewImage, setPreviewImage] = useState('');
+  const [previewOpen, setPreviewOpen] = useState(false);
+
+  const createDealBoardsMutation = useCreateDealBoards();
+  const [messageApi, contextHolder] = message.useMessage();
+
+  const pay = 100;
+
+  const { data, isLoading } = useGetCategory({
+    type: '도움요청',
+    useYn: 'Y',
+  });
+
+  const normFile = (e: any) => {
+    if (Array.isArray(e)) {
+      return e;
+    }
+    return e?.fileList;
   };
 
   // 사진
@@ -71,24 +92,31 @@ const RegisterServePage = () => {
     setPreviewUrls((prevState) => prevState.filter((_, i) => i !== index));
   };
 
-  // 날짜
-  const [dates, setDates] = useState<DateRange>([null, null]);
-  const handleDatesChange = (value: DateRange) => {
-    setDates(value);
-  };
-  // 시간에 따른 타임페이 환산
-  const [starttime, setStarttime] = useRecoilState(startTime);
-  const [endtime, setEndtime] = useRecoilState(endTime);
+  //////////
 
-  const minusHours: any =
-    0 <= Number(endtime.slice(0, 2)) - Number(starttime.slice(0, 2))
-      ? Number(endtime.slice(0, 2)) - Number(starttime.slice(0, 2))
-      : 0;
-  const minusMinutes: any =
-    0 !== Number(endtime.slice(3, 5)) - Number(starttime.slice(3, 5))
-      ? Number(endtime.slice(3, 5)) + Number(starttime.slice(3, 5))
-      : 0;
-  const exchangeTime: number = minusHours * 60 + minusMinutes;
+  const getBase64 = (file: RcFile): Promise<string> =>
+    new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result as string);
+      reader.onerror = (error) => reject(error);
+    });
+  const handleImgChange: UploadProps['onChange'] = (
+    info: UploadChangeParam<UploadFile>,
+  ) => {
+    setImgFileList(info.fileList);
+  };
+  const handlePreview = async (file: UploadFile) => {
+    if (!file.url && !file.preview) {
+      file.preview = await getBase64(file.originFileObj as RcFile);
+    }
+    setPreviewImage(file.url || (file.preview as string));
+    setPreviewOpen(true);
+  };
+  const handleCancelPreview = useCallback(() => setPreviewOpen(false), []);
+
+  ////////
+
   // 보유 타임페이보다 지급 타임페이가 큰 경우의 로직 나중에.. 구현
 
   // 뒤로가기
@@ -98,13 +126,13 @@ const RegisterServePage = () => {
   }, [navigate]);
 
   // 버튼 활성화 관련
-  const isDisabled =
-    !title || !content || !place || !dates[0] || !dates[1] || !selectedCategory;
+  const isDisabled = !title || !content || !location;
+
   const handleTitleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setTitle(event.target.value);
   };
-  const handlePlaceChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setPlace(event.target.value);
+  const handleLocationChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setLocation(event.target.value);
   };
   const handleContentChange = (
     event: React.ChangeEvent<HTMLTextAreaElement>,
@@ -134,83 +162,191 @@ const RegisterServePage = () => {
     setPreviewUrls(newPreviewUrls);
   };
 
-  const handleSubmit = () => {
-    const formData = new FormData();
-    formData.append('title', title);
-    formData.append('content', content);
-    formData.append('location', place);
-    formData.append('state', state);
-    formData.append('startTime', starttime);
-    formData.append('endTime', endtime);
+  const handleOnSubmit = useCallback(
+    async (values: any) => {
+      let formData = new FormData();
+      if (values.images && values.images.length > 0) {
+        formData.append('image', values.images[0].originFileObj);
+      }
 
-    // images.forEach((image) => formData.append('images', image));
-    axios
-      .post('/api/deal-boards/write/helper', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
+      const newPost = {
+        ...values,
+        d_board_id: parseInt(values.d_board_id),
+        images: null,
+      };
+
+      console.log(newPost);
+
+      formData.append(
+        'dealBoardDTO',
+        new Blob([JSON.stringify(newPost)], { type: 'application/json' }),
+      );
+
+      await createDealBoardsMutation.mutateAsync(formData, {
+        onSuccess: (result) => {
+          messageApi.open({
+            type: 'success',
+            content: '게시글이 등록되었습니다.',
+            duration: 1,
+            onClose: () => {
+              navigate(-1);
+            },
+          });
         },
-      })
-      .then((response) => {
-        console.log('게시글이 등록🤩');
-        navigate(PATH.HOME);
-      })
-      .catch((error) => {
-        console.error('게시글 등록 실패🥹', error);
-        console.log(title);
-        console.log(content);
-        console.log(place);
-        console.log(state);
-        console.log(starttime);
+        onError: (err) => {
+          console.log(err);
+          messageApi.open({
+            type: 'error',
+            content: (
+              <>
+                오류 발생: <br />
+                {err}
+              </>
+            ),
+          });
+        },
       });
+    },
+    [messageApi, navigate, createDealBoardsMutation],
+  );
+
+  const uploadButton = useMemo(() => {
+    return <img width="100%" height="100%" src={dummyProfileImg} alt="+" />;
+  }, []);
+
+  const [current, setCurrent] = useState(0);
+
+  const handleCategoryChange = (value: any) => {
+    setCurrent(1); // Change to the next step when category is selected
+    // handle the category change logic if needed
+  };
+
+  const handleTimeLocationChange = () => {
+    setCurrent(2); // Change to the next step when time and location are entered
+    // handle the time and location change logic if needed
   };
 
   return (
-    <Layout css={cssPostPageStyle}>
-      <div className="wrapper">
-        <Header css={cssMainHeaderStyle}>
-          <BackArrow onClick={handleClickBack} />
-          <span>도움주기</span>
-        </Header>
-        <Content style={{ paddingTop: 60 }}>
-          <input
+    <div css={cssPostPageStyle}>
+      {contextHolder}
+      <Steps
+        direction="vertical"
+        current={current}
+        style={{
+          position: 'fixed',
+          zIndex: 1,
+          background: `${COMMON_COLOR.WHITE}`,
+          paddingLeft: 10,
+          paddingTop: 10,
+          boxShadow: '0px 2px 5px rgba(0, 0, 0, 0.2)',
+        }}
+        items={[
+          {
+            title: '카테고리 선택',
+          },
+          {
+            title: '시간/장소 입력',
+          },
+          {
+            title: '게시글 내용 입력',
+          },
+        ]}
+      />
+
+      <Form.Item
+        label="카테고리 선택"
+        name="category"
+        css={cssPostCategoryStyle}
+      >
+        <Radio.Group onChange={handleCategoryChange}>
+          {data?.data.map((category) => (
+            <Radio.Button
+              key={category.categoryId}
+              value={category.categoryId}
+              style={{
+                borderRadius: '0',
+                margin: '5px',
+                fontWeight: '500',
+              }}
+            >
+              {category.categoryName}
+            </Radio.Button>
+          ))}
+        </Radio.Group>
+      </Form.Item>
+
+      <div css={cssLineStyle} />
+
+      <Form.Item
+        name="activityDate"
+        label="활동일"
+        initialValue={dayjs()}
+        css={cssPostDateStyle}
+      >
+        <DatePicker format="YYYY년 MM월 DD일" />
+      </Form.Item>
+
+      <div className="time">
+        <Form.Item
+          name="startTime"
+          label="활동을 시작할 시간"
+          css={cssPostDateStyle}
+          initialValue={dayjs()}
+        >
+          <DatePicker.TimePicker
+            locale={locale}
+            format="HH시 mm분"
+            placeholder="시간"
+            showNow={false}
+            minuteStep={30}
+          />
+        </Form.Item>
+        <Form.Item
+          name="endTime"
+          label="활동이 끝날 시간"
+          css={cssPostDateStyle}
+          initialValue={dayjs()}
+        >
+          <DatePicker.TimePicker
+            locale={locale}
+            format="HH시 mm분"
+            placeholder="시간"
+            showNow={false}
+            minuteStep={30}
+            allowClear={false}
+          />
+        </Form.Item>
+      </div>
+
+      <Form.Item label="장소" name="location" css={cssPostDateStyle}>
+        <Input
+          size="large"
+          placeholder="희망하는 장소를 입력하세요 :)"
+          style={{
+            paddingLeft: '15px',
+            width: '280px',
+          }}
+          prefix={<FlagFilled style={{ marginRight: '5px' }} />}
+          onChange={(event) => {
+            handleLocationChange(event);
+            handleTimeLocationChange();
+          }}
+        />
+      </Form.Item>
+      <div css={cssLineStyle} />
+
+      <Form onFinish={handleOnSubmit} form={form} layout="vertical">
+        <Form.Item label="제목" name="title" css={cssPostTitleStyle}>
+          <Input
             css={cssPostTitleInputStyle}
             placeholder="제목을 입력하세요"
             maxLength={25}
             value={title}
             onChange={handleTitleChange}
           />
-          <div css={cssLineStyle} />
-          <h6>카테고리 설정</h6>
-          <div className="category-container">
-            {categories.map((category) => (
-              <button
-                key={category}
-                className={`category ${
-                  selectedCategory === category ? 'selected' : ''
-                }`}
-                onClick={() => handleCategoryClick(category)}
-              >
-                {category}
-              </button>
-            ))}
-          </div>
-          <div css={cssLineStyle} />
-          <h6>날짜</h6>
-          <KoDatePicker value={dates} onChange={handleDatesChange} />
-          <h6>시간</h6>
-          <TimeSelct />
-          <p>내 타임페이 : {timepay}</p>
-          <p>받아야 할 타임페이 : {exchangeTime}</p>
-          <div css={cssLineStyle} />
-          <h6>장소</h6>
-          <Input
-            size="large"
-            placeholder="희망하는 장소를 입력하세요 :)"
-            style={{ marginLeft: '20px', paddingLeft: '15px', width: '280px' }}
-            prefix={<FlagFilled style={{ marginRight: '5px' }} />}
-            onChange={handlePlaceChange}
-          />
-          <div css={cssLineStyle} />
+        </Form.Item>
+
+        <Form.Item label="내용" name="content" css={cssPostContentStyle}>
           <TextArea
             rows={10}
             bordered={false}
@@ -220,83 +356,46 @@ const RegisterServePage = () => {
             value={content}
             onChange={handleContentChange}
           />
-          <div css={cssLineStyle} />
-          <div className="image-container">
-            <div className="imageFont">사진 ({images.length} / 5)</div>
-
-            {previewUrls.length < MAX_IMAGES && (
-              <div className="cssImageWrapper1">
-                <div className="cssImagePlaceholder">
-                  <label htmlFor="upload">
-                    <div className="uploadBtn">
-                      📷 <br />
-                      사진 추가
-                    </div>
-                  </label>
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={handleFileChange}
-                    id="upload"
-                  />
-                </div>
-              </div>
-            )}
-
-            <div className="images-container">
-              {previewUrls.map((url, index) => (
-                <div className="cssImageWrapper2" key={index}>
-                  <img src={url} className="cssSelectedImage" alt="uploaded" />
-                  <div className="cssImages">
-                    <div className="cssImagePlaceholder2">
-                      <label htmlFor="change">
-                        <div className="changeBtn">사진 변경</div>
-                      </label>
-                      <input
-                        className="fileButton"
-                        type="file"
-                        accept="image/*"
-                        onChange={(e) => handleImageChange(e, index)}
-                        id="change"
-                      />
-                    </div>
-                    <Button
-                      danger
-                      className="deleteBtn"
-                      onClick={() => handleDeleteImage(index)}
-                    >
-                      삭제
-                    </Button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </Content>
-      </div>
-      <Footer css={cssPostFooterStyle}>
-        {isDisabled ? (
-          <Button
-            css={cssPostBtnStyle}
-            onClick={handleSubmit}
-            disabled={isDisabled}
+        </Form.Item>
+        <div css={cssLineStyle} />
+        <Form.Item
+          name="images"
+          getValueFromEvent={normFile}
+          valuePropName="fileList"
+        >
+          <Upload
+            onChange={handleImgChange}
+            onPreview={handlePreview}
+            multiple={false}
+            beforeUpload={() => false}
+            accept="image/png, image/jpg, image/jpeg"
           >
-            작성완료
-          </Button>
-        ) : (
-          <Link to={PATH.HOME}>
+            {imgFileList.length === 1 ? null : uploadButton}
+          </Upload>
+        </Form.Item>
+
+        <div css={cssPostFooterStyle}>
+          {isDisabled ? (
             <Button
+              htmlType="submit"
               css={cssPostBtnStyle}
-              onClick={handleSubmit}
               disabled={isDisabled}
             >
               작성완료
             </Button>
-          </Link>
-        )}
-      </Footer>
-    </Layout>
+          ) : (
+            <Button
+              htmlType="submit"
+              css={cssPostBtnStyle}
+              disabled={isDisabled}
+            >
+              작성완료
+            </Button>
+          )}
+        </div>
+      </Form>
+    </div>
   );
 };
 
-export default RegisterServePage;
+export default RegisterRequestPage;
