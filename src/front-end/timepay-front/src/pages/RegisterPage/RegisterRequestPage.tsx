@@ -1,5 +1,5 @@
 import {
-  Layout,
+  Steps,
   Input,
   Button,
   Form,
@@ -10,35 +10,47 @@ import {
   DatePicker,
 } from 'antd';
 import { RcFile, UploadChangeParam, UploadProps } from 'antd/es/upload';
-import { useCallback, useState, useMemo } from 'react';
+import { useCallback, useState, useMemo, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { PATH } from '../../utils/paths';
-import { ReactComponent as BackArrow } from '../../assets/images/icons/header-back-arrow.svg';
-import { cssMainHeaderStyle } from '../../components/MainHeader/MainHeader.styles';
 import {
   cssPostPageStyle,
+  cssPostTitleStyle,
   cssPostTitleInputStyle,
   cssLineStyle,
+  cssPostContentStyle,
   cssPostContentInputStyle,
   cssPostBtnStyle,
+  cssPostBtnStyle2,
   cssPostFooterStyle,
   cssPostCategoryStyle,
+  cssPostDateStyle,
 } from './RegisterFreePage.style';
 import { FlagFilled } from '@ant-design/icons';
-import { KoDatePicker } from '../../components/register/KoDatePicker';
-import TimeSelct from '../../components/register/TimeSelect';
-import { useRecoilState } from 'recoil';
-import { DateRange, startTime, endTime } from '../../states/register';
+import { useSetRecoilState } from 'recoil';
+import { headerTitleState } from '../../states/uiState';
+import { useQueryClient } from 'react-query';
 import { useCreateDealBoards } from '../../api/hooks/register';
 import dummyProfileImg from '../../assets/images/icons/dummy-profile-img.png';
+import dayjs from 'dayjs';
+import 'dayjs/locale/ko';
+import locale from 'antd/es/date-picker/locale/ko_KR';
+import { useGetCategory } from '../../api/hooks/category';
+import { COMMON_COLOR } from '../../styles/constants/colors';
 
-const { Header, Content, Footer } = Layout;
 const { TextArea } = Input;
-const { RangePicker } = DatePicker;
-
 const MAX_IMAGES = 5;
 
 const RegisterRequestPage = () => {
+  const queryClient = useQueryClient();
+  const setHeaderTitle = useSetRecoilState(headerTitleState);
+  useEffect(() => {
+    setHeaderTitle('도움요청');
+  }, [setHeaderTitle]);
+
+  const [title, setTitle] = useState<string>('');
+  const [location, setLocation] = useState<string>('');
+  const [content, setContent] = useState<string>('');
+  const [exchangeTimepay, setExchangeTimepay] = useState(0);
   const [form] = Form.useForm();
   const [imgFileList, setImgFileList] = useState<UploadFile[]>([]);
   const [previewImage, setPreviewImage] = useState('');
@@ -48,27 +60,11 @@ const RegisterRequestPage = () => {
   const [messageApi, contextHolder] = message.useMessage();
 
   const pay = 100;
-  const [title, setTitle] = useState<string>('');
-  const [location, setLocation] = useState<string>('');
-  const [content, setContent] = useState<string>('');
-  const [selectedCategory, setSelectedCategory] = useState<string>('');
-  const categories = [
-    '산책',
-    '봉사',
-    '교육',
-    '친목',
-    '생활',
-    '건강',
-    '도와주세요',
-  ];
 
-  const handleCategoryClick = (category: string) => {
-    setSelectedCategory((prevCategory) =>
-      prevCategory === category ? '' : category,
-    );
-    console.log(category);
-    console.log(typeof category);
-  };
+  const { data, isLoading } = useGetCategory({
+    type: '도움요청',
+    useYn: 'Y',
+  });
 
   const normFile = (e: any) => {
     if (Array.isArray(e)) {
@@ -123,24 +119,6 @@ const RegisterRequestPage = () => {
 
   ////////
 
-  // 날짜
-  const [dates, setDates] = useState<DateRange>([null, null]);
-  const handleDatesChange = (value: DateRange) => {
-    setDates(value);
-  };
-  // 시간에 따른 타임페이 환산
-  const [starttime, setStarttime] = useRecoilState<string>(startTime);
-  const [endtime, setEndtime] = useRecoilState<string>(endTime);
-
-  const minusHours: any =
-    0 <= Number(endtime.slice(0, 2)) - Number(starttime.slice(0, 2))
-      ? Number(endtime.slice(0, 2)) - Number(starttime.slice(0, 2))
-      : 0;
-  const minusMinutes: any =
-    0 !== Number(endtime.slice(3, 5)) - Number(starttime.slice(3, 5))
-      ? Number(endtime.slice(3, 5)) + Number(starttime.slice(3, 5))
-      : 0;
-  const exchangeTime: number = minusHours * 60 + minusMinutes;
   // 보유 타임페이보다 지급 타임페이가 큰 경우의 로직 나중에.. 구현
 
   // 뒤로가기
@@ -186,6 +164,17 @@ const RegisterRequestPage = () => {
     setPreviewUrls(newPreviewUrls);
   };
 
+  const handleOnChangeTime = useCallback((changedValues: any, values: any) => {
+    if (values.startTime && values.endTime) {
+      const startTime = values.startTime.clone();
+      const endTime = values.endTime.clone();
+      const duration = endTime.diff(startTime, 'minutes');
+      setExchangeTimepay(duration);
+    } else {
+      setExchangeTimepay(30);
+    }
+  }, []);
+
   const handleOnSubmit = useCallback(
     async (values: any) => {
       let formData = new FormData();
@@ -197,7 +186,16 @@ const RegisterRequestPage = () => {
         ...values,
         d_board_id: parseInt(values.d_board_id),
         images: null,
+        startTime: `${values.activityDate.format(
+          'YYYY-MM-DD',
+        )}T${values.startTime.format('HH:mm:ss')}.000Z`,
+        endTime: `${values.activityDate.format(
+          'YYYY-MM-DD',
+        )}T${values.endTime.format('HH:mm:ss')}.000Z`,
+        pay: exchangeTimepay,
       };
+
+      console.log(newPost);
 
       formData.append(
         'dealBoardDTO',
@@ -236,125 +234,202 @@ const RegisterRequestPage = () => {
     return <img width="100%" height="100%" src={dummyProfileImg} alt="+" />;
   }, []);
 
+  const [current, setCurrent] = useState(0);
+
+  const handleCategoryChange = (value: any) => {
+    setCurrent(1);
+  };
+
+  const handleTimeLocationChange = () => {
+    setCurrent(2); // startTime과 endTime 값을 가져옵니다.
+  };
+
   return (
     <div css={cssPostPageStyle}>
-      <div className="wrapper">
-        <Header css={cssMainHeaderStyle}>
-          <BackArrow onClick={handleClickBack} />
-          <span>도움받기</span>
-        </Header>
-        {contextHolder}
-        <Form
-          onFinish={handleOnSubmit}
-          style={{ paddingTop: 60 }}
-          form={form}
-          layout="vertical"
+      {contextHolder}
+      <Steps
+        direction="vertical"
+        current={current}
+        style={{
+          position: 'fixed',
+          zIndex: 100,
+          background: `${COMMON_COLOR.WHITE}`,
+          paddingLeft: 20,
+          paddingTop: 10,
+          boxShadow: '0px 2px 5px rgba(0, 0, 0, 0.2)',
+        }}
+        items={[
+          {
+            title: '카테고리 선택',
+          },
+          {
+            title: '시간/장소 입력',
+          },
+          {
+            title: '게시글 내용 입력',
+          },
+        ]}
+      />
+      <Form onFinish={handleOnSubmit} form={form} layout="vertical">
+        <Form.Item
+          label="카테고리 선택"
+          name="category"
+          css={cssPostCategoryStyle}
         >
-          <Form.Item name="title">
-            <Input
-              css={cssPostTitleInputStyle}
-              placeholder="제목을 입력하세요"
-              maxLength={25}
-              value={title}
-              onChange={handleTitleChange}
-            />
-          </Form.Item>
-          <div css={cssLineStyle} />
+          <Radio.Group onChange={handleCategoryChange}>
+            {data?.data.map((category) => (
+              <Radio.Button
+                key={category.categoryId}
+                value={category.categoryName}
+                style={{
+                  borderRadius: '0',
+                  margin: '5px',
+                  fontWeight: '500',
+                }}
+              >
+                {category.categoryName}
+              </Radio.Button>
+            ))}
+          </Radio.Group>
+        </Form.Item>
 
+        <div css={cssLineStyle} />
+
+        <Form.Item
+          name="activityDate"
+          label="활동일"
+          initialValue={dayjs()}
+          css={cssPostDateStyle}
+        >
+          <DatePicker format="YYYY년 MM월 DD일" />
+        </Form.Item>
+
+        <div className="time">
           <Form.Item
-            label="카테고리"
-            name="category"
-            css={cssPostCategoryStyle}
+            name="startTime"
+            label="활동을 시작할 시간"
+            css={cssPostDateStyle}
+            initialValue={dayjs().minute(0)}
           >
-            <Radio.Group>
-              <Radio.Button value="심부름">심부름</Radio.Button>
-              <Radio.Button value="교육">교육</Radio.Button>
-              <Radio.Button value="돌봄">돌봄</Radio.Button>
-              <Radio.Button value="청소,가사">청소,가사</Radio.Button>
-              <Radio.Button value="수리,설치">수리,설치</Radio.Button>
-              <Radio.Button value="이동">이동</Radio.Button>
-            </Radio.Group>
-          </Form.Item>
-
-          <div css={cssLineStyle} />
-          <Form.Item
-            name="range-picker"
-            label="날짜"
-            css={cssPostCategoryStyle}
-          >
-            <RangePicker />
-          </Form.Item>
-
-          <Form.Item name="time">
-            <TimeSelct />
-          </Form.Item>
-          <div>
-            <p>내 타임페이 : {pay}</p>
-            <p>지급해야할 타임페이 : {exchangeTime}</p>
-          </div>
-          <div css={cssLineStyle} />
-          <Form.Item label="장소" name="location" css={cssPostCategoryStyle}>
-            <Input
-              size="large"
-              placeholder="희망하는 장소를 입력하세요 :)"
-              style={{
-                paddingLeft: '15px',
-                width: '280px',
+            <DatePicker.TimePicker
+              locale={locale}
+              format="HH시 mm분"
+              placeholder="시간"
+              showNow={false}
+              minuteStep={30}
+              popupClassName="time-picker-no-footer"
+              onSelect={(value) => {
+                form.setFieldValue('startTime', value);
+                handleOnChangeTime({ startTime: value }, form.getFieldsValue());
               }}
-              prefix={<FlagFilled style={{ marginRight: '5px' }} />}
-              onChange={handleLocationChange}
             />
           </Form.Item>
-          <div css={cssLineStyle} />
-          <Form.Item name="content">
-            <TextArea
-              rows={10}
-              bordered={false}
-              style={{ resize: 'none' }}
-              css={cssPostContentInputStyle}
-              placeholder="내용을 입력하세요"
-              value={content}
-              onChange={handleContentChange}
-            />
-          </Form.Item>
-          <div css={cssLineStyle} />
           <Form.Item
-            name="images"
-            getValueFromEvent={normFile}
-            valuePropName="fileList"
+            name="endTime"
+            label="활동이 끝날 시간"
+            css={cssPostDateStyle}
+            initialValue={dayjs().minute(0)}
           >
-            <Upload
-              onChange={handleImgChange}
-              onPreview={handlePreview}
-              multiple={false}
-              beforeUpload={() => false}
-              accept="image/png, image/jpg, image/jpeg"
-            >
-              {imgFileList.length === 1 ? null : uploadButton}
-            </Upload>
+            <DatePicker.TimePicker
+              locale={locale}
+              format="HH시 mm분"
+              placeholder="시간"
+              showNow={false}
+              minuteStep={30}
+              allowClear={false}
+              popupClassName="time-picker-no-footer"
+              onSelect={(value) => {
+                form.setFieldValue('endTime', value);
+                handleOnChangeTime({ endTime: value }, form.getFieldsValue());
+              }}
+              disabledTime={(now) => {
+                return {
+                  disabledHours: () => {
+                    const { startTime } = form.getFieldsValue(['startTime']);
+                    if (startTime) {
+                      const selectedHour = startTime.hour();
+                      return Array.from({ length: selectedHour }, (_, i) => i);
+                    }
+                    return [];
+                  },
+                };
+              }}
+            />
           </Form.Item>
-
-          <div css={cssPostFooterStyle}>
-            {isDisabled ? (
-              <Button
-                htmlType="submit"
-                css={cssPostBtnStyle}
-                disabled={isDisabled}
-              >
-                작성완료
-              </Button>
-            ) : (
-              <Button
-                htmlType="submit"
-                css={cssPostBtnStyle}
-                disabled={isDisabled}
-              >
-                작성완료
-              </Button>
-            )}
+        </div>
+        <div className="guide">
+          <div>
+            교환할 타임페이 양 :{' '}
+            <b>{exchangeTimepay ? exchangeTimepay + ' TP' : ''}</b>{' '}
           </div>
-        </Form>
-      </div>
+          <div>도움을 받은 분의 타임페이가 충분한지 확인해주세요.</div>
+        </div>
+
+        <Form.Item label="장소" name="location" css={cssPostDateStyle}>
+          <Input
+            size="large"
+            placeholder="여기에 장소를 입력하세요"
+            style={{
+              paddingLeft: '15px',
+              width: '230px',
+            }}
+            prefix={<FlagFilled style={{ marginRight: '5px' }} />}
+            onChange={(event) => {
+              handleLocationChange(event);
+              handleTimeLocationChange();
+            }}
+          />
+        </Form.Item>
+        <div css={cssLineStyle} />
+
+        <Form.Item label="제목" name="title" css={cssPostTitleStyle}>
+          <Input
+            css={cssPostTitleInputStyle}
+            placeholder="여기에 제목을 입력하세요"
+            maxLength={25}
+            value={title}
+            onChange={handleTitleChange}
+          />
+        </Form.Item>
+
+        <Form.Item label="내용" name="content" css={cssPostContentStyle}>
+          <TextArea
+            rows={5}
+            style={{ resize: 'none' }}
+            css={cssPostContentInputStyle}
+            placeholder="여기에 내용을 입력하세요"
+            value={content}
+            onChange={handleContentChange}
+          />
+        </Form.Item>
+        <div css={cssLineStyle} />
+        <Form.Item
+          name="images"
+          getValueFromEvent={normFile}
+          valuePropName="fileList"
+          css={cssPostDateStyle}
+        >
+          <Upload
+            onChange={handleImgChange}
+            onPreview={handlePreview}
+            multiple={false}
+            beforeUpload={() => false}
+            accept="image/png, image/jpg, image/jpeg"
+          >
+            {imgFileList.length === 1 ? null : uploadButton}
+          </Upload>
+        </Form.Item>
+
+        <div css={cssPostFooterStyle}>
+          {isDisabled ? (
+            <Button css={cssPostBtnStyle2}>작성완료</Button>
+          ) : (
+            <Button htmlType="submit" css={cssPostBtnStyle}>
+              작성완료
+            </Button>
+          )}
+        </div>
+      </Form>
     </div>
   );
 };

@@ -32,6 +32,8 @@ export const useInfiniteGetSearchBoard = (params: IGetSearchBoardRequest) => {
       if (firstPage.data.pageable.pageNumber === 0) return undefined;
       return firstPage.data.pageable.pageNumber - 1;
     },
+    // 도움요청, 같이하기일 때만 허용
+    enabled: !(params.type && params.type === 'event'),
   });
 };
 

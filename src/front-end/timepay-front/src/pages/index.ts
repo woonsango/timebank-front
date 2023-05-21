@@ -20,9 +20,10 @@ import AgencySignInPage from './AgencySignInPage';
 import AgencySignUpPage from './AgencySignUpPage';
 import MyVolunteerPage from './MyVolunteerPage';
 import VolunteerCertificationPaymentPage from './VolunteerCertificationPaymentPage';
-import RegisterEventPage from './RegisterPage/RegisterEventPage';
 import AgencyEditPage from './AgencyEditPage';
 import InstantActivityPage from './InstantActivityPage';
+import DonationBoardWritePage from './DonationBoardWritePage';
+import DonationBoardPage from './DonationBoardPage';
 import AgentPage from './AgentPage';
 import ApplicantPage from './ApplicantPage';
 
@@ -38,7 +39,6 @@ const PageRoutes = {
   RegisterFreePage,
   RegisterRequestPage,
   RegisterServePage,
-  RegisterEventPage,
   PushNotificationPage,
   QnaListPage,
   QnaRegisterPage,
@@ -52,6 +52,8 @@ const PageRoutes = {
   MyVolunteerPage,
   VolunteerCertificationPaymentPage,
   InstantActivityPage,
+  DonationBoardWritePage,
+  DonationBoardPage,
   AgentPage,
   ApplicantPage,
 };

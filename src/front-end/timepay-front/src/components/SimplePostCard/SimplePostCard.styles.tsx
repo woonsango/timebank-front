@@ -16,6 +16,7 @@ export const cssSimplePostCardHeadStyle = (scaleValue: number) => css`
     }
   }
   .title {
+    height: 22px;
     display: flex;
     flex-direction: row;
     align-items: center;
