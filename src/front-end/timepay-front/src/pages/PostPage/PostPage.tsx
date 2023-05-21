@@ -60,6 +60,8 @@ import { useMutation } from 'react-query';
 import { useQueryClient } from 'react-query';
 import { useSetRecoilState } from 'recoil';
 import { headerTitleState } from '../../states/uiState';
+import dayjs from 'dayjs';
+import { startTime } from '../../states/register';
 
 interface BoardProps {
   post?: IBoard;
@@ -320,6 +322,13 @@ const PostPage = ({ post }: BoardProps) => {
       });
   };
 
+  const startTime = dayjs(data?.data.startTime, 'YYYY-MM-DDTHH:mm:ss').format(
+    'MM월 DD일 HH시 mm분',
+  );
+  const endTime = dayjs(data?.data.endTime, 'YYYY-MM-DDTHH:mm:ss').format(
+    'HH시 mm분',
+  );
+
   return (
     <Layout css={cssPostDetail}>
       <div css={cssPostDetailPage}>
@@ -363,7 +372,7 @@ const PostPage = ({ post }: BoardProps) => {
           </div>
           <div css={cssPostDetailTime}>
             <ClockCircleOutlined style={{ marginRight: 10 }} />
-            {data?.data.startTime} ~ {data?.data.endTime}
+            {startTime} ~ {endTime}
           </div>
         </div>
 
