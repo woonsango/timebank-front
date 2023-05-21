@@ -29,6 +29,7 @@ export const API_URL = {
   DONATION_WRITE: '/api/organizations/donate/write',
   DONATION_BOARD_ID: '/api/donate',
   DONATE_TIMEPAY: '/api/donate/timepay',
+  AGENT: '/api/users/applicants', //신청인이 대리인을 조회
 };
 
 // 토큰 필요 없는 애들

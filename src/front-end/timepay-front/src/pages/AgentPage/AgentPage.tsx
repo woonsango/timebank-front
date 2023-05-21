@@ -11,6 +11,7 @@ import SizeContext from 'antd/es/config-provider/SizeContext';
 import AgentModal from '../../components/AgentModal';
 import { ExclamationCircleFilled } from '@ant-design/icons';
 import { cssModalFooter } from '../../components/AgentModal/AgentModal.style';
+import { useGetAgent } from '../../api/hooks/agent';
 
 const AgentPage = () => {
   const setHeaderTitle = useSetRecoilState(headerTitleState);
@@ -23,6 +24,9 @@ const AgentPage = () => {
   const { scaleValue } = useFontSize();
   const { Text } = Typography;
   const { confirm } = Modal;
+
+  const { data } = useGetAgent();
+  const agent = data?.data.agentName ? data?.data.agentName : '미지정';
 
   const handleOnCancelModal = useCallback(() => {
     setIsOpenRegisterModal(false);
@@ -59,8 +63,6 @@ const AgentPage = () => {
           res.data.body.image_url ||
             'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png',
         );
-        setNickName(res.data.body.nick_name);
-        setPersonalNum(res.data.body.id);
       })
       .catch((error) => {
         console.error('Error sending GET request:', error);
@@ -70,8 +72,6 @@ const AgentPage = () => {
   useEffect(() => {
     setHeaderTitle('대리인 관리');
   }, [setHeaderTitle]);
-
-  const agent = '미지정'; //api 받아오면 조건문 추가
 
   return (
     <>
@@ -83,8 +83,8 @@ const AgentPage = () => {
           <div className="space"></div>
 
           <div className="MyNameWrap">
-            <div className="MyName">{nickName}</div>
-            <div className="MyPersonalNum"> {'#' + personalNum}</div>
+            <div className="MyName">{data?.data.myName}</div>
+            <div className="MyPersonalNum"> {'#' + data?.data.myUid}</div>
           </div>
         </div>
         <div className="agentBox">
