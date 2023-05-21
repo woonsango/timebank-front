@@ -18,6 +18,16 @@ export const cssPostPageStyle = css`
     display: flex;
     flex-direction: row;
   }
+  .guide {
+    width: 310px;
+    padding: 10px;
+    margin-left: 20px;
+    margin-top: 10px;
+    margin-bottom: 30px;
+    font-weight: 500;
+    background: ${COMMON_COLOR.BRIGHT_GRAY};
+    border-radius: 10px;
+  }
 `;
 
 export const cssPostCategoryStyle = css`

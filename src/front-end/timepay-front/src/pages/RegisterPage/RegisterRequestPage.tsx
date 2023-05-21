@@ -255,7 +255,7 @@ const RegisterRequestPage = () => {
         current={current}
         style={{
           position: 'fixed',
-          zIndex: 1,
+          zIndex: 100,
           background: `${COMMON_COLOR.WHITE}`,
           paddingLeft: 10,
           paddingTop: 10,
