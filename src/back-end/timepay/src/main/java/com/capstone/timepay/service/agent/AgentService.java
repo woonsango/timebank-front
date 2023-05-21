@@ -86,15 +86,36 @@ public class AgentService {
     }
 
     public AgentStatusResponse agentApply(AgentApplyRequest agentApplyRequest, User agent){
-        AgentStatusResponse agentStatusResponse = new AgentStatusResponse(false, "알 수 없는 이유로 함수 실행 과정에서 에러 발생");
+        AgentStatusResponse agentStatusResponse = new AgentStatusResponse(false,
+                "알 수 없는 이유로 함수 실행 과정에서 에러 발생");
 
         User user = userRepository.findById(agentApplyRequest.getUid()).orElseThrow(()
                 -> new IllegalArgumentException("존재하지 않는 대리인 유저입니다."));
-//        if(agentApplyRequest.isApply()) { // true
-//            //
-//        } else{
-//            //
-//        }
+
+        if(agentRepository.findByCreatedUserAndAssignedUser(agent, user) != null) {
+            Agent agentInfo = agentRepository.findByCreatedUserAndAssignedUser(agent, user);
+
+            if(!agentInfo.isAccept()) {
+                if (agentApplyRequest.isApply()) { // true
+                    agentInfo.setAccept(true);
+                    agentStatusResponse = new AgentStatusResponse(true,
+                            "성공적으로 수락하였습니다.");
+                }
+                else {
+                    agentInfo.setAccept(false);
+                    agentStatusResponse = new AgentStatusResponse(true,
+                            "성공적으로 거절하였습니다.");
+                }
+            }
+            else{
+                agentStatusResponse = new AgentStatusResponse(false,
+                        "이미 수락한 신청인입니다.");
+            }
+        }
+        else{
+            agentStatusResponse = new AgentStatusResponse(false,
+                    "신청되어 있지 않는 유저입니다.");
+        }
 
         return agentStatusResponse;
     }
