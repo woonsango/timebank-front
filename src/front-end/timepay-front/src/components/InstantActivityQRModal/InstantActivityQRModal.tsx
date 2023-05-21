@@ -35,7 +35,7 @@ const InstantActivityQRModal = ({
     >
       <QRCode value={`${deployHostName}${PATH.INSTANT_ACTIVITY}/${helpPk}`} />
       도우미 분의 카메라로 이 QR을 찍어주세요! <br />
-      QR을 찍은 후 도우미 분의 휴대폰으로 함께 어떤 활동을 했는지 작성해주세요~!
+      QR을 찍은 후 도우미 분의 휴대폰으로 함께 어떤 활동을 할건지 작성해주세요~!
     </Modal>
   );
 };
