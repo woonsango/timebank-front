@@ -1,5 +1,6 @@
 import { Button, Form, Input, InputNumber, message, Modal } from 'antd';
 import { useCallback, useEffect } from 'react';
+import { useQueryClient } from 'react-query';
 import { useNavigate } from 'react-router-dom';
 import { useSetRecoilState } from 'recoil';
 import { usePostDonationBoardWrite } from '../../api/hooks/donation';
@@ -8,6 +9,7 @@ import { PATH } from '../../utils/paths';
 import { cssDonationBoardWritePage } from './DonationBoardWritePage.styles';
 
 const DonationBoardWritePage = () => {
+  const queryClient = useQueryClient();
   const navigate = useNavigate();
   const usePostDonationBoardWriteMutation = usePostDonationBoardWrite();
 
@@ -34,6 +36,8 @@ const DonationBoardWritePage = () => {
             },
             {
               onSuccess: (data) => {
+                queryClient.invalidateQueries('useGetDonationBoards');
+                queryClient.invalidateQueries('useGetDonationBoardWithId');
                 messageApi.success({
                   content: '등록이 완료되었습니다.',
                   duration: 1,
@@ -48,7 +52,7 @@ const DonationBoardWritePage = () => {
         },
       });
     },
-    [usePostDonationBoardWriteMutation, messageApi, navigate],
+    [queryClient, usePostDonationBoardWriteMutation, messageApi, navigate],
   );
 
   return (
