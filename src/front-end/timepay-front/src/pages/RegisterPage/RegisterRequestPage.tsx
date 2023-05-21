@@ -206,6 +206,8 @@ const RegisterRequestPage = () => {
         images: null,
       };
 
+      console.log(newPost);
+
       formData.append(
         'dealBoardDTO',
         new Blob([JSON.stringify(newPost)], { type: 'application/json' }),
@@ -279,53 +281,25 @@ const RegisterRequestPage = () => {
           <DatePicker format="YYYY년 MM월 DD일" />
         </Form.Item>
 
-        <Form.Item
-          name="starTime"
-          label="활동을 시작할 시간"
-          initialValue={dayjs()}
-        >
+        <Form.Item name="startTime" label="활동을 시작할 시간">
           <DatePicker.TimePicker
             locale={locale}
             format="HH시 mm분"
             placeholder="시간"
             showNow={false}
+            minuteStep={30}
           />
         </Form.Item>
-        <Form.Item
-          name="endTime"
-          label="활동을 할 시간"
-          initialValue={dayjs()}
-          rules={[{ required: true, message: '필수로 작성해주세요.' }]}
-        >
+        <Form.Item name="endTime" label="활동을 할 시간">
           <DatePicker.TimePicker
             locale={locale}
-            format="HH시간 mm분"
+            format="HH시 mm분"
             placeholder="시간"
             showNow={false}
-            popupClassName="time-picker-no-footer"
-            // onSelect={(value) => {
-            //   timeForm.setFieldValue('rangeTime', value);
-            //   handleOnChangeTime(
-            //     { rangeTime: value },
-            //     timeForm.getFieldsValue(),
-            //   );
-            // }}
-            disabledTime={(now) => {
-              return {
-                disabledMinutes: (selectedHour: number) => {
-                  if (selectedHour === 0) return [0];
-                  return [];
-                },
-              };
-            }}
             minuteStep={30}
             allowClear={false}
           />
         </Form.Item>
-        <div>
-          <p>내 타임페이 : {pay}</p>
-          <p>지급해야할 타임페이 : {exchangeTime}</p>
-        </div>
         <div css={cssLineStyle} />
         <Form.Item label="장소" name="location" css={cssPostCategoryStyle}>
           <Input

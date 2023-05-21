@@ -3,37 +3,15 @@ import { COMMON_COLOR } from '../../styles/constants/colors';
 import '../../styles/fonts/pretendard/pretendard.css';
 
 export const cssPostPageStyle = css`
-  font-family: unset !important;
   background: ${COMMON_COLOR.WHITE};
   width: 100%;
-  height: 100vh;
   display: flex;
   overflow-x: hidden;
+  padding: 0;
+  margin: 0;
 
-  .wrapper {
-    height: auto;
-    min-height: 100%;
-    letter-spacing: 1px;
-  }
   .upload {
     margin: 0px 20px 80px 20px;
-  }
-  h5 {
-    font-size: 19px;
-    font-weight: 600;
-    margin-left: 20px;
-    margin-bottom: 15px;
-  }
-  h6 {
-    font-size: 18px;
-    font-weight: 500;
-    margin-top: 15px;
-    margin-left: 20px;
-    margin-bottom: 10px;
-  }
-  p {
-    font-size: 16px;
-    margin-left: 20px;
   }
 
   .image-container {
@@ -162,11 +140,9 @@ export const cssPostTitleInputStyle = css`
   font-size: 25px;
   width: 100%;
   border: none;
-  padding-top: 10px;
-  padding-bottom: 10px;
+  padding-top: 25px;
   padding-left: 20px;
   padding-right: 20px;
-  margin-top: 20px;
   :focus {
     outline: none;
   }
