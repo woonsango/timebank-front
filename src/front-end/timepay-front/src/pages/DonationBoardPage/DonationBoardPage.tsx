@@ -58,7 +58,7 @@ const DonationBoardPage = () => {
                   content: '기부가 완료되었습니다.',
                   duration: 1,
                   onClose: () => {
-                    // TODO: 기부하기 게시글 목록 쿼리도 같이 invalidate
+                    queryClient.invalidateQueries('useGetDonationBoards');
                     queryClient.invalidateQueries('useGetDonationBoardWithId');
                     handleOnCancelOpen();
                   },
