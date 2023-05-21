@@ -20,6 +20,7 @@ import {
   cssPostContentStyle,
   cssPostContentInputStyle,
   cssPostBtnStyle,
+  cssPostBtnStyle2,
   cssPostFooterStyle,
   cssPostCategoryStyle,
   cssPostDateStyle,
@@ -375,19 +376,9 @@ const RegisterRequestPage = () => {
 
         <div css={cssPostFooterStyle}>
           {isDisabled ? (
-            <Button
-              htmlType="submit"
-              css={cssPostBtnStyle}
-              disabled={isDisabled}
-            >
-              작성완료
-            </Button>
+            <Button css={cssPostBtnStyle2}>작성완료</Button>
           ) : (
-            <Button
-              htmlType="submit"
-              css={cssPostBtnStyle}
-              disabled={isDisabled}
-            >
+            <Button htmlType="submit" css={cssPostBtnStyle}>
               작성완료
             </Button>
           )}

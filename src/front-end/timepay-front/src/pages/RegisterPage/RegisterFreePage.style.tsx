@@ -99,4 +99,5 @@ export const cssPostBtnStyle2 = css`
   letter-spacing: 3px;
   font-size: 24px;
   font-weight: 600;
+  opacity: 100;
 `;
