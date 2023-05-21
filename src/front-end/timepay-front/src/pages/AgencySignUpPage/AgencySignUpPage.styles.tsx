@@ -3,6 +3,7 @@ import { COMMON_COLOR } from '../../styles/constants/colors';
 
 export const cssAgencySignUpPageStyle = css`
   padding: 10px 40px;
+  padding-top: 90px;
   .ant-form-item-extra {
     color: ${COMMON_COLOR.MAIN2} !important;
   }
