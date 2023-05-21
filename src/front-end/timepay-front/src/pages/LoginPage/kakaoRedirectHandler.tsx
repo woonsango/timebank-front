@@ -1,7 +1,7 @@
 //리다이렉트될 화면
 //kakaoRedirectHandler.tsx
 
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { PATH } from '../../utils/paths';
@@ -10,6 +10,8 @@ import { saveUid } from './saveUid';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { agencyState, userState } from '../../states/user';
 import { pathToAfterLogin } from '../../states/uiState';
+import { getDeviceToken } from '../../utils/device';
+import { usePatchDeviceToken } from '../../api/hooks/device';
 
 const KakaoRedirectHandler = () => {
   console.log('kakaoRedirectHandler.tsx');
@@ -18,6 +20,8 @@ const KakaoRedirectHandler = () => {
   const setAgencyState = useSetRecoilState(agencyState);
 
   const pathToAfterLoginValue = useRecoilValue(pathToAfterLogin);
+  const [deviceToken, setDeviceToken] = useState<string>();
+  const patchDeviceToken = usePatchDeviceToken();
 
   const navigate = useNavigate();
   const goTo = useCallback(
@@ -32,50 +36,76 @@ const KakaoRedirectHandler = () => {
   );
 
   useEffect(() => {
-    console.log('인가 코드(Authorization Code): ', authorizationCode);
+    'USE EFFECT IN LOGIN';
+    getDeviceToken().then((response) => {
+      setDeviceToken(response);
+      console.log('LOGIN response', response);
 
-    const requestUrl = `http://13.125.119.30/oauth/redirect/kakao?code=${authorizationCode}`;
-    //const requestUrl = `http://10.30.112.173:8080/oauth/redirect/kakao?code=${authorizationCode}`;
-    console.log('인가코드 전송 url: ', requestUrl);
-    console.log('entire: ', new URL(window.location.href));
+      console.log('인가 코드(Authorization Code): ', authorizationCode);
 
-    // Send GET request with authorizationCode
-    axios
-      .get(requestUrl)
-      .then((response) => {
-        console.log(response);
+      const requestUrl = `http://13.125.119.30/oauth/redirect/kakao?code=${authorizationCode}`;
+      //const requestUrl = `http://10.30.112.173:8080/oauth/redirect/kakao?code=${authorizationCode}`;
+      console.log('인가코드 전송 url: ', requestUrl);
+      console.log('entire: ', new URL(window.location.href));
 
-        //signUp에 따른 처리
-        if (response.data.signUp === true) {
-          /*jwt 토큰 저장*/
-          setTokenToCookie(response.data.jwt, 10);
-          console.log('토큰 저장:', response.data.jwt);
-          setUserState(response.data);
-          setAgencyState(null);
-          console.log(pathToAfterLoginValue);
-          if (pathToAfterLoginValue) goTo(pathToAfterLoginValue);
-          else goTo(PATH.HOME);
-        }
+      // Send GET request with authorizationCode
+      axios
+        .get(requestUrl)
+        .then((response) => {
+          console.log(response);
 
-        //signUp == false일 경우,
-        else if (response.data.signUp === false) {
-          /*uid 가져오기*/
-          const real_uid = response.data.uid;
-          saveUid(real_uid);
-          console.log('UID 저장: ', real_uid);
+          //signUp에 따른 처리
+          if (response.data.signUp === true) {
+            /*jwt 토큰 저장*/
+            setTokenToCookie(response.data.jwt, 10);
+            console.log('토큰 저장:', response.data.jwt);
+            setUserState(response.data);
+            setAgencyState(null);
+            console.log(pathToAfterLoginValue);
+            console.log('deviceToken');
+            if (deviceToken) {
+              console.log(deviceToken);
+              patchDeviceToken.mutateAsync(
+                {
+                  deviceToken,
+                },
+                {
+                  onSuccess: async (data) => {
+                    console.log('디바이스 토큰 업데이트 성공');
+                  },
+                  onError: (err) => {
+                    console.log('디바이스 토큰 업데이트 실패');
+                  },
+                },
+              );
+            }
 
-          goTo(PATH.JOIN);
-        }
-      })
-      .catch((error) => {
-        console.error('Error sending GET request:', error);
-      });
+            if (pathToAfterLoginValue) goTo(pathToAfterLoginValue);
+            else goTo(PATH.HOME);
+          }
+
+          //signUp == false일 경우,
+          else if (response.data.signUp === false) {
+            /*uid 가져오기*/
+            const real_uid = response.data.uid;
+            saveUid(real_uid);
+            console.log('UID 저장: ', real_uid);
+
+            goTo(PATH.JOIN);
+          }
+        })
+        .catch((error) => {
+          console.error('Error sending GET request:', error);
+        });
+    });
   }, [
     pathToAfterLoginValue,
     authorizationCode,
     goTo,
     setUserState,
     setAgencyState,
+    deviceToken,
+    patchDeviceToken,
   ]);
 
   return <div></div>;

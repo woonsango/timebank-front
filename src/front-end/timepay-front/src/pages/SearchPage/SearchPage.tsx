@@ -12,6 +12,7 @@ import {
 } from './SearchPage.styles';
 import { searchDrawerOpenState } from '../../states/uiState';
 import useFontSize from '../../hooks/useFontSize';
+import { useInfiniteGetDonationBoards } from '../../api/hooks/donation';
 
 const SearchPage = () => {
   const boardSearchValue = useRecoilValue(boardSearchState);
@@ -20,29 +21,57 @@ const SearchPage = () => {
   const { data, fetchNextPage, hasNextPage, isLoading } =
     useInfiniteGetSearchBoard(boardSearchValue);
 
+  const {
+    data: donationData,
+    fetchNextPage: fetchNextDonationPage,
+    hasNextPage: hasNextDonationPage,
+    isLoading: isLoadingDonation,
+  } = useInfiniteGetDonationBoards(boardSearchValue);
+
   const { scaleValue } = useFontSize();
 
   const [ref, inView] = useInView({ threshold: 0.3 });
 
   useEffect(() => {
-    if (inView && hasNextPage) {
+    if (boardSearchValue.type === 'event' && inView && hasNextDonationPage) {
+      fetchNextDonationPage();
+    } else if (inView && hasNextPage) {
       fetchNextPage();
     }
-  }, [inView, fetchNextPage, hasNextPage]);
+  }, [
+    inView,
+    fetchNextPage,
+    hasNextPage,
+    boardSearchValue.type,
+    hasNextDonationPage,
+    fetchNextDonationPage,
+  ]);
 
   const boardsList = useMemo(() => {
-    if (data && data.pages && data.pages.length > 0) {
+    if (
+      boardSearchValue.type === 'event' &&
+      donationData &&
+      donationData.pages &&
+      donationData.pages.length > 0
+    )
+      return donationData.pages.map((page) => page.data.content).flat(1);
+    else if (data && data.pages && data.pages.length > 0) {
       return data.pages.map((page) => page.data.content).flat(1);
     }
-  }, [data]);
-  return isLoading ? (
+  }, [boardSearchValue.type, donationData, data]);
+
+  return isLoading ||
+    (boardSearchValue.type === 'event' && isLoadingDonation) ? (
     <Spin size="large" css={cssSpinStyle} />
   ) : (
     <div css={cssSearchPageStyle(isDrawerOpen)}>
       <div className="dimmed" />
       {boardsList && boardsList.length > 0 ? (
         boardsList.map((board, index) => (
-          <SimplePostCard key={board ? board.d_boardId : index} post={board} />
+          <SimplePostCard
+            key={board ? board.d_boardId || board.id : index}
+            post={board}
+          />
         ))
       ) : (
         <div css={cssNothingStyle(scaleValue)}>

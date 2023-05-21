@@ -61,6 +61,10 @@ body {
   font-size: 13px;
 }
 
+.ant-progress {
+  margin: 0;
+}
+
 .applicantContent {
   height: 80vh;
 }
