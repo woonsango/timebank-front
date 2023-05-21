@@ -76,8 +76,8 @@ const MainFooter = () => {
     ];
     if (isAgency)
       items.push({
-        key: PATH.Register_EVENT,
-        label: <Link to={PATH.Register_EVENT}>이벤트</Link>,
+        key: PATH.DONATION_BOARD_WRITE,
+        label: <Link to={PATH.DONATION_BOARD_WRITE}>기부하기</Link>,
       });
     else
       items.push({
