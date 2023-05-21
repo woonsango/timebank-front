@@ -1,7 +1,6 @@
-import { Button, Form, Input, message, Modal, Space, Table } from 'antd';
-import type { ColumnType } from 'antd/es/table';
-import { useCallback, useEffect, useMemo, useState } from 'react';
-import dayjs from 'dayjs';
+import { Button, message, Modal, Space, Table } from 'antd';
+
+import { useCallback, useMemo, useState } from 'react';
 import { useQueryClient } from 'react-query';
 import {
   cssModalFooter,
@@ -13,28 +12,16 @@ import {
   IPostApplicantRequest,
 } from '../../api/interfaces/IApplicant';
 import {
-  useGetApplicant,
   useGetApplicantWaiting,
   usePostApplicantApply,
 } from '../../api/hooks/applicant';
 
 export interface AgentModalProps {
-  applicants?: IApplicant[];
   isOpen: boolean;
   onCancel: () => void;
 }
 
-interface DataType {
-  key: React.Key;
-  appliUid: number;
-  appliName: string;
-}
-
-const ApplicantReceivedModal = ({
-  applicants,
-  isOpen,
-  onCancel,
-}: AgentModalProps) => {
+const ApplicantReceivedModal = ({ isOpen, onCancel }: AgentModalProps) => {
   const queryClient = useQueryClient();
   const { scaleValue } = useFontSize();
   const [messageApi, contextHolder] = message.useMessage();
@@ -44,21 +31,6 @@ const ApplicantReceivedModal = ({
   const postAgentRegister = usePostApplicantApply();
 
   const dataSource = data?.data.applicant || [];
-
-  const onFinish = useCallback(() => {
-    console.log('test');
-  }, []);
-
-  // const onAcceptClick = useCallback(() => {
-  //   if (selectedApplicantUID) {
-  //     console.log('selectedApplicantUID :', selectedApplicantUID);
-  //   } else {
-  //     messageApi.open({
-  //       type: 'warning',
-  //       content: '받은 신청을 선택해주세요',
-  //     });
-  //   }
-  // }, [messageApi, selectedApplicantUID]);
 
   const onClickBtn = useCallback(
     async (type: boolean) => {

@@ -166,7 +166,6 @@ const ApplicantPage = () => {
       <ApplicantReceivedModal
         isOpen={isOpenReceivedModal}
         onCancel={handleOnCancelModal}
-        applicants={dataSource}
       />
     </div>
   );
