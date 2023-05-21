@@ -37,21 +37,17 @@ const InstantActivityPage = () => {
 
   const [messageApi, contextHolder] = message.useMessage();
 
-  useEffect(() => {
-    apiRequest.get(API_URL.USER_INFO_GET).then((res) => {
-      if (data?.data.body.id == helpPk) {
-        messageApi
-          .open({
-            type: 'error',
-            content: '자신의 코드가 아닌 다른 사람의 qr코드를 스캔해주세요',
-            duration: 1,
-          })
-          .then(function () {
-            navigate(-1);
-          });
-      }
-    });
-  }, [data?.data.body.id, helpPk, messageApi, navigate]);
+  if (data?.data.body.id == helpPk) {
+    messageApi
+      .open({
+        type: 'error',
+        content: '자신의 코드가 아닌 다른 사람의 qr코드를 스캔해주세요',
+        duration: 1,
+      })
+      .then(function () {
+        navigate(-1);
+      });
+  }
 
   const next = useCallback(() => {
     setCurrent(current + 1);
