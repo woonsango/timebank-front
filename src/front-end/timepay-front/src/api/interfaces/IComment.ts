@@ -19,7 +19,7 @@ export interface IPostComment {
   applied: boolean;
   content: string;
   hidden: boolean;
-  id: number;
+  id?: number;
 }
 
 export interface ICommentActivity extends IComment {

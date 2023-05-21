@@ -8,17 +8,39 @@ import { API_URL } from '../urls';
 export const useGetComment = () => {
   return useQuery<AxiosResponse<IComment>, AxiosError>({
     queryKey: ['useGetComment'],
-    queryFn: () => apiRequest.get(API_URL.DEAL_BOARDS_COMMENT),
+    queryFn: () => apiRequest.get(API_URL.DEAL_BOARDS_COMMENT_APPLIED),
     refetchOnWindowFocus: false,
   });
 };
 
-export const useCreateComment = () => {
+export const useGetComments = (postPk: number) => {
+  return useQuery<AxiosResponse<IComment>, AxiosError>({
+    queryKey: ['useGetComments'],
+    queryFn: () => apiRequest.get(`${API_URL.DEAL_BOARDS_COMMENT}/${postPk}`),
+    refetchOnWindowFocus: false,
+  });
+};
+
+export const useCreateComment = (postPk: number) => {
   return useMutation<AxiosResponse<boolean>, AxiosError, IPostComment>({
     mutationKey: 'usePostComment',
     mutationFn: (data) =>
-      apiRequest.post(API_URL.DEAL_BOARDS_COMMENT_WRITE, {
+      apiRequest.post(`${API_URL.DEAL_BOARDS_COMMENT_WRITE}/${postPk}`, {
         ...data,
       }),
+  });
+};
+
+export const useDeleteComment = () => {
+  return useMutation<
+    AxiosResponse<IComment>,
+    AxiosError,
+    { postPk: number; id: number }
+  >({
+    mutationKey: 'useDeleteComment',
+    mutationFn: ({ postPk, id }: { postPk: number; id: number }) =>
+      apiRequest.delete(
+        `${API_URL.DEAL_BOARDS_COMMENT_DELETE}/${postPk}/${id}`,
+      ),
   });
 };

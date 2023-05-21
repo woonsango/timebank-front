@@ -7,25 +7,15 @@ import {
   cssCommentText,
   cssCommentProfile,
 } from './Item.style';
-import { Form, Input, Modal, Button } from 'antd';
+import { Form, Input, Modal, Button, message } from 'antd';
+import { useDeleteComment } from '../../api/hooks/comment';
 
 const Item = ({ c }: any) => {
-  console.log('~', c.content);
-
   const write_user = false; // true = 수정 / false = 신고
 
   // 수정 기능
   const { TextArea } = Input;
   const [isOpenModal2, setIsOpenModal2] = useState(false);
-
-  // 삭제 기능
-  const [deleted, setDeleted] = useState(false);
-  const handleDelete = () => {
-    setDeleted(true);
-  };
-  if (deleted) {
-    return null;
-  }
 
   // 수정 기능
   const showReportModal = () => {
@@ -36,6 +26,20 @@ const Item = ({ c }: any) => {
   };
   const onCancel = () => {
     setIsOpenModal2(false);
+  };
+
+  const url = window.location.pathname;
+  const real_id = url.substring(6);
+  const [messageApi, contextHolder] = message.useMessage();
+  const useDeleteCommentMutation = useDeleteComment();
+
+  const handleDeleteComment = async (postPk: number, id: number) => {
+    try {
+      await useDeleteCommentMutation.mutateAsync({ postPk, id });
+      messageApi.success('댓글이 성공적으로 삭제되었습니다.');
+    } catch (error) {
+      messageApi.error('댓글 삭제 중 오류가 발생했습니다.');
+    }
   };
 
   return (
@@ -83,7 +87,10 @@ const Item = ({ c }: any) => {
           </Form>
         </Modal>
         <div className="sidebar">|</div>
-        <Button className="delete" onClick={handleDelete}>
+        <Button
+          className="delete"
+          onClick={() => handleDeleteComment(parseInt(real_id), c.id)}
+        >
           삭제
         </Button>
       </div>

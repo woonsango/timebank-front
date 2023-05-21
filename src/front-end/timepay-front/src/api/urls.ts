@@ -3,8 +3,10 @@ export const API_URL = {
   DEAL_BOARDS_DELETE: '/api/deal-boards/delete',
   DEAL_BOARDS__SEARCH: 'deal-boards/search',
   DEAL_REPORT: '/deal-boards/:id/report',
-  DEAL_BOARDS_COMMENT: 'api/deal-boards/comments/:id/applied',
-  DEAL_BOARDS_COMMENT_WRITE: '/api/deal-boards/comments/write/:id',
+  DEAL_BOARDS_COMMENT: '/api/deal-boards/comments',
+  DEAL_BOARDS_COMMENT_APPLIED: 'api/deal-boards/comments/:id/applied',
+  DEAL_BOARDS_COMMENT_WRITE: '/api/deal-boards/comments/write',
+  DEAL_BOARDS_COMMENT_DELETE: '/api/deal-boards/comments/delete',
   FREE_BOARDS: '/api/free-boards',
   FREE_BOARDS_WRITE: '/api/free-boards/write',
   DEAL_BOARDS_WRITE: '/api/deal-boards/write/help', // 도움받기
