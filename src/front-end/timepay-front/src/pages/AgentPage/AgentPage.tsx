@@ -22,7 +22,17 @@ const AgentPage = () => {
   const { confirm } = Modal;
 
   const { data } = useGetAgent();
-  const agent = data?.data.agentName ? data?.data.agentName : '미지정';
+  console.log(data?.data);
+  const agentName = data?.data.agentName;
+  const agent = agentName
+    ? data?.data.accept
+      ? `${agentName}님`
+      : `(승인 대기중)${agentName}님`
+    : '미지정';
+  let isRegister: boolean = false;
+  if (agentName) {
+    isRegister = true;
+  }
 
   const handleOnCancelModal = useCallback(() => {
     setIsOpenRegisterModal(false);
@@ -95,6 +105,7 @@ const AgentPage = () => {
                 type="primary"
                 style={{ background: COMMON_COLOR.MAIN1, width: 140 }}
                 onClick={isOpenModal}
+                disabled={isRegister}
               >
                 대리인 등록
               </Button>

@@ -34,12 +34,13 @@ const AgentModal = ({ myUID, isOpen, onCancel }: AgentModalProps) => {
           queryKey: ['useGetAgent'],
         });
         form.resetFields();
+        onCancel();
       },
       onError: (err) => {
         console.log(err.response?.status);
       },
     });
-  }, [form, messageApi, postAgentRegister, queryClient]);
+  }, [form, messageApi, onCancel, postAgentRegister, queryClient]);
 
   const footer = useMemo(() => {
     return (

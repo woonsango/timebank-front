@@ -3,6 +3,7 @@ export interface IGetAgentResponse {
   agentName: string;
   myUid: number;
   myName: string;
+  accept: boolean;
 }
 
 export interface IPostAgentRequest {
