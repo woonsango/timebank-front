@@ -312,7 +312,7 @@ const RegisterRequestPage = () => {
             name="startTime"
             label="활동을 시작할 시간"
             css={cssPostDateStyle}
-            initialValue={dayjs()}
+            initialValue={dayjs().minute(0)}
           >
             <DatePicker.TimePicker
               locale={locale}
@@ -326,7 +326,7 @@ const RegisterRequestPage = () => {
             name="endTime"
             label="활동이 끝날 시간"
             css={cssPostDateStyle}
-            initialValue={dayjs()}
+            initialValue={dayjs().minute(0)}
           >
             <DatePicker.TimePicker
               locale={locale}
