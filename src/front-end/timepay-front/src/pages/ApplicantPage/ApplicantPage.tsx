@@ -170,6 +170,7 @@ const ApplicantPage = () => {
       <ApplicantModal
         isOpen={isOpenRegisterModal}
         onCancel={handleOnCancelModal}
+        applicants={dataSource}
       />
     </div>
   );
