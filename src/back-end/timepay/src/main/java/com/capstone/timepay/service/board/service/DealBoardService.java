@@ -14,6 +14,8 @@ import com.capstone.timepay.domain.dealBoardReport.DealBoardReport;
 import com.capstone.timepay.domain.dealBoardReport.DealBoardReportRepository;
 import com.capstone.timepay.domain.dealRegister.DealRegister;
 import com.capstone.timepay.domain.dealRegister.DealRegisterRepository;
+import com.capstone.timepay.domain.organization.Organization;
+import com.capstone.timepay.domain.organization.OrganizationRepository;
 import com.capstone.timepay.domain.report.ReportRepository;
 import com.capstone.timepay.domain.user.User;
 import com.capstone.timepay.domain.user.UserRepository;
@@ -32,6 +34,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -50,6 +53,7 @@ public class DealBoardService
     private final OrganizationManageService organizationManageService;
     private final CommentRepository commentRepository;
     private final ReportRepository reportRepository;
+    private final OrganizationRepository organizationRepository;
     public DealBoard getId(Long id)
     {
         return dealBoardRepository.findById(id).orElse(null);
@@ -111,12 +115,20 @@ public class DealBoardService
 
     // 게시물 작성
     @Transactional
-    public DealBoardDTO write(DealBoardDTO dealBoardDTO, String email, String type,
+    public DealBoardDTO write(DealBoardDTO dealBoardDTO, Principal principal, String type,
                               List<MultipartFile> images) throws IOException, FirebaseAuthException
     {
-        User user = userRepository.findByEmail(email).orElseThrow(() -> {
-            return new IllegalArgumentException("해당 유저를 찾을 수 없습니다.");
-        });
+        User user = userRepository.findByEmail(principal.getName()).orElse(null);
+
+        if (user == null)
+        {
+            Organization organization = organizationRepository.findByAccount(principal.getName()).orElse(null);
+            if (organization == null)
+                throw new IllegalArgumentException("유저가 존재하지 않습니다");
+            user = userRepository.findByOrganization(organization).orElseThrow(() -> {
+               return new IllegalArgumentException("그냥 유저가 존재하지 않습니다");
+            });
+        }
 
         if (images != null) {
             List<DealAttatchment> dealAttatchments = new ArrayList<>();
@@ -144,6 +156,7 @@ public class DealBoardService
                 .isHidden(dealBoardDTO.isHidden())
                 .isAuto(dealBoardDTO.isAuto())
                 .volunteerPeople(dealBoardDTO.getVolunteerPeople())
+                .isVolunteer(dealBoardDTO.isVolunteer())
                 .build();
 
         Board board = Board.builder().
@@ -192,6 +205,7 @@ public class DealBoardService
                 .startTime(dealBoardDTO.getStartTime())
                 .endTime(dealBoardDTO.getEndTime())
                 .isHidden(dealBoardDTO.isHidden())
+                .isVolunteer(dealBoardDTO.isVolunteer())
                 .build();
 
         Board board = Board.builder().
@@ -292,7 +306,8 @@ public class DealBoardService
         });
 
         dealBoard.setBoardStatus(BoardStatus.ACTIVITY_COMPLETE);
-        organizationManageService.activityComplete(boardId); // 준원님 요청
+        if (dealBoard.isVolunteer())
+            organizationManageService.activityComplete(boardId); // 준원님 요청
         dealBoardRepository.save(dealBoard);
         return DealBoardDTO.toDealBoardDTO(dealBoard);
     }

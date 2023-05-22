@@ -37,6 +37,7 @@ public class DealBoardDTO
     private Long userId;
     private String userName;
     private String userNickname;
+    private boolean isVolunteer;
 
     public static DealBoardDTO toDealBoardDTO(DealBoard dealBoard)
     {
@@ -60,7 +61,8 @@ public class DealBoardDTO
                     dealBoard.getUpdatedAt(),
                     dealBoard.getDealRegisters().get(0).getUser().getUserId(),
                     dealBoard.getDealRegisters().get(0).getUser().getName(),
-                    dealBoard.getDealRegisters().get(0).getUser().getNickname()
+                    dealBoard.getDealRegisters().get(0).getUser().getNickname(),
+                    dealBoard.isVolunteer()
             );
         } else {
             return new DealBoardDTO(
@@ -82,7 +84,8 @@ public class DealBoardDTO
                     dealBoard.getUpdatedAt(),
                     null,
                     null,
-                    null
+                    null,
+                    dealBoard.isVolunteer()
             );
         }
     }
@@ -108,7 +111,8 @@ public class DealBoardDTO
                 dealBoard.getUpdatedAt(),
                 user.getUserId(),
                 user.getName(),
-                user.getNickname()
+                user.getNickname(),
+                dealBoard.isVolunteer()
         );
     }
 

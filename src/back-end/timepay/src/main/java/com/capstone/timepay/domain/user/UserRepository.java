@@ -31,4 +31,11 @@ public interface UserRepository extends JpaRepository<User,Long> {
     List<User> findAllByNicknameContains(String value);
 
     List<User> findAllByNameContains(String value);
+
+    Page<User> findAllByOrganizationIsNotNull(Pageable pageable);
+    List<User> findAllByOrganizationIsNotNull();
+
+    List<User> findAllByOrganizationAndNameContains(Organization element, String value);
+
+    List<User> findAllByNameContainsAndOrganizationIsNotNull(String value);
 }

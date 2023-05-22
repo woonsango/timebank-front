@@ -101,7 +101,7 @@ public class DealBoardController
                                        @RequestPart(required = false) List<MultipartFile> images,
                                        Principal principal) throws Exception
     {
-        return new ResponseEntity(dealBoardService.write(dealBoardDTO, principal.getName(), "help", images), HttpStatus.OK);
+        return new ResponseEntity(dealBoardService.write(dealBoardDTO, principal, "help", images), HttpStatus.OK);
     }
 
     @ApiOperation(value = "거래게시판 게시글 수정")
