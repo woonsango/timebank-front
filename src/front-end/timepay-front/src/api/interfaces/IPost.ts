@@ -75,8 +75,8 @@ export interface IReportBoard {
 }
 
 export type IPostState =
-  | '매칭중'
-  | '매칭완료'
+  | '모집중'
+  | '모집완료'
   | '활동중'
   | '활동완료'
   | '활동지연'

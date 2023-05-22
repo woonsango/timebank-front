@@ -24,7 +24,8 @@ import {
   cssPostDetailAttachment,
   cssReportContainer,
   cssReportBtnStyle,
-  cssPostFooter,
+  cssAuthorFooter,
+  cssNonAuthorFooter,
   cssPostDetail,
   cssLine2,
   cssPostBtn,
@@ -47,7 +48,7 @@ import { apiRequest } from '../../api/request';
 import { API_URL } from '../../api/urls';
 import Item from '../../components/post/Item';
 import InputText from '../../components/post/InputText';
-import { ApplicantButton } from '../../components/post/ApplicantButton';
+import ApplicantButton from '../../components/post/ApplicantButton';
 
 import axios from 'axios';
 import { useDeleteBoard, useGetBoard } from '../../api/hooks/board';
@@ -56,8 +57,7 @@ import {
   useGetComments,
   useDeleteComment,
 } from '../../api/hooks/comment';
-import { useMutation } from 'react-query';
-import { useQueryClient } from 'react-query';
+import { useMutation, useQueryClient } from 'react-query';
 
 import { PATH } from '../../utils/paths';
 import { COMMON_COLOR } from '../../styles/constants/colors';
@@ -109,6 +109,12 @@ const PostPage = () => {
   const createCommentMutation = useCreateComment(parseInt(real_id));
   const comments = useGetComments(parseInt(real_id));
   const useDeleteCommentMutation = useDeleteComment();
+
+  const [postState, setPostState] = useState();
+  useEffect(() => {
+    setPostState(data?.data.state);
+    console.log(postState);
+  }, [data?.data.state, postState]);
 
   useEffect(() => {
     apiRequest
@@ -396,10 +402,13 @@ const PostPage = () => {
           </div>
         </div>
         <div css={cssLine4} />
-        <ApplicantButton
-          applicantList={applicantList}
-          onItemClick={onApplicantClick}
-        />
+        <h1>댓글</h1>
+        {author && (
+          <ApplicantButton
+            applicantList={applicantList}
+            onItemClick={onApplicantClick}
+          />
+        )}
         <div css={cssPostDetailSixth}>
           {applicants.length > 0 ? (
             applicants.map((data) => (
@@ -417,10 +426,22 @@ const PostPage = () => {
           )}
         </div>
       </div>
-      <Footer css={cssPostFooter}>
+      <Footer css={author ? cssAuthorFooter : cssNonAuthorFooter}>
         <div css={cssLine2} />
-        <PostButton />
-        <div css={cssLine5} />
+        {author && (
+          <>
+            <PostButton />
+            <div css={cssLine5} />
+          </>
+        )}
+
+        {!author && postState === 'ACTIVITY_COMPLETE' && (
+          <>
+            <PostButton />
+            <div css={cssLine5} />
+          </>
+        )}
+
         <div css={cssPostFooter2}>
           <InputText onChange={handleInputTextChange} inputText={inputText} />
           <button css={cssPostBtn} onClick={handleSubmitComment}>

@@ -7,9 +7,9 @@ export const getStatus: (boardStatus?: string | null) => IPostState = (
   if (boardStatus)
     switch (boardStatus) {
       case 'MATCHING_IN_PROGRESS':
-        return '매칭중';
+        return '모집중';
       case 'MATCHING_COMPLETE':
-        return '매칭완료';
+        return '모집완료';
       case 'ACTIVITY_IN_PROGRESS':
         return '활동중';
       case 'ACTIVITY_COMPLETE':
@@ -19,9 +19,9 @@ export const getStatus: (boardStatus?: string | null) => IPostState = (
       case 'ACTIVITY_CANCEL':
         return '활동취소';
       default:
-        return '매칭중';
+        return '모집중';
     }
-  else return '매칭중';
+  else return '모집중';
 };
 
 export const getType: (type?: string) => IPostType = (type?: string) => {

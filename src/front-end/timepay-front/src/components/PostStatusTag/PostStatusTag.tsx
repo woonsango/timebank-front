@@ -1,5 +1,5 @@
 import { Tag } from 'antd';
-import { useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import useFontSize from '../../hooks/useFontSize';
 import { COMMON_COLOR } from '../../styles/constants/colors';
 import { getStatus } from '../../utils/board';
@@ -9,15 +9,20 @@ export interface PostStatusTagColorProps {
   pointColor: string;
   backgroundColor?: string;
 }
-const PostStatusTag = ({ status }: { status?: string | null }) => {
+
+const PostStatusTag = ({ status }: { status?: string | null | undefined }) => {
   const { scaleValue } = useFontSize();
+  const [currentStatus, setCurrentStatus] = useState<string | null | undefined>(
+    null,
+  );
+
   const statusColor: PostStatusTagColorProps = useMemo(() => {
-    switch (getStatus(status)) {
-      case '매칭중':
+    switch (getStatus(currentStatus)) {
+      case '모집중':
         return {
           pointColor: COMMON_COLOR.MAIN1,
         };
-      case '매칭완료':
+      case '모집완료':
         return {
           pointColor: COMMON_COLOR.FONT2,
         };
@@ -39,10 +44,15 @@ const PostStatusTag = ({ status }: { status?: string | null }) => {
           pointColor: COMMON_COLOR.FONT2,
         };
     }
+  }, [currentStatus]);
+
+  useEffect(() => {
+    setCurrentStatus(status);
   }, [status]);
+
   return (
     <Tag css={cssPostStatusTagStyle(statusColor, scaleValue)}>
-      {getStatus(status) || '로딩 중'}
+      {getStatus(currentStatus) || '로딩 중'}
     </Tag>
   );
 };

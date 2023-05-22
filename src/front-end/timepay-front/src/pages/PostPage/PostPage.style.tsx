@@ -50,6 +50,13 @@ export const cssPostDetailPage = css`
   display: flex;
   flex-direction: column;
   margin-top: 20px;
+  h1 {
+    font-size: 22px;
+    font-weight: 500;
+    margin: 0;
+    margin-top: 40px;
+    margin-left: 20px;
+  }
 `;
 
 // 1st block
@@ -209,12 +216,6 @@ export const cssCommentContainer = css`
   margin-top: 10px;
   margin-left: 25px;
   margin-right: 25px;
-  p {
-    font-size: 22px;
-    font-weight: 500;
-    margin: 0;
-    margin-top: 20px;
-  }
 `;
 export const cssCollectButton = css`
   display: flex;
@@ -241,11 +242,21 @@ export const cssApplicant = css`
 `;
 
 // footer
-export const cssPostFooter = css`
+export const cssAuthorFooter = css`
   box-shadow: 0px -5px 2px 3px rgb(255, 255, 255, 0.5);
   position: fixed;
   width: 100%;
   height: 160px;
+  bottom: 0;
+  margin: 0;
+  padding: 0;
+  background-color: ${COMMON_COLOR.WHITE};
+`;
+export const cssNonAuthorFooter = css`
+  box-shadow: 0px -5px 2px 3px rgb(255, 255, 255, 0.5);
+  position: fixed;
+  width: 100%;
+  height: 95px;
   bottom: 0;
   margin: 0;
   padding: 0;
