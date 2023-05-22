@@ -73,7 +73,9 @@ const SimplePostCard = ({ post }: SimplePostCardProps) => {
                 style={{ width: 150 }}
                 percent={
                   post?.donateTimePay && post?.targetTimePay
-                    ? (post?.donateTimePay / post?.targetTimePay) * 100
+                    ? Math.floor(
+                        (post?.donateTimePay / post?.targetTimePay) * 100,
+                      )
                     : 0
                 }
                 size="small"

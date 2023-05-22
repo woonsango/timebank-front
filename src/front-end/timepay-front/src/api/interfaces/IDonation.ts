@@ -26,6 +26,9 @@ export interface IDonationBoard {
   donateTimePay: number;
   category: string;
   organizationName?: string;
+  userId: number; // 유저 테이블에서의 pk -> 타 유저 프로필 등에 사용
+  imageURL?: string;
+  userType: string;
   // 아래는 실제로는 없는데 SimplePostCard에서 Board랑 같이 쓰면 에러나서 추가
   d_boardId: null;
   pay: null;
@@ -37,7 +40,6 @@ export interface IDonationBoard {
   volunteer: null;
   userNickname: null;
   createdAt: null;
-  userType: null;
 }
 
 export interface IPostDonateTimepayRequest {
@@ -47,4 +49,9 @@ export interface IPostDonateTimepayRequest {
 
 export interface IGetDonationBoardsResponse extends PageableData {
   content: IDonationBoard[];
+}
+
+export interface IPutDonationBoardEditRequest {
+  boardId: string;
+  board: IDonationBoard;
 }

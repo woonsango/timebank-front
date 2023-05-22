@@ -33,6 +33,8 @@ export const API_URL = {
   DONATION_BOARD_ID: '/api/donate',
   DONATE_TIMEPAY: '/api/donate/timepay',
   DONATE_BOARDS: '/api/donate',
+  DONATION_BOARD_EDIT: '/api/organizations/donate/update',
+  DONATION_BOARD_DELETE: '/api/organizations/donate/delete',
 };
 
 // 토큰 필요 없는 애들
