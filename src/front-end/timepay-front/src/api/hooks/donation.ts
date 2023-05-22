@@ -8,6 +8,7 @@ import {
   IPostDonateTimepayRequest,
   IPostDonationBoardWriteRequest,
   IPostDonationBoardWriteResponse,
+  IPutDonationBoardEditRequest,
 } from '../interfaces/IDonation';
 import { IGetSearchBoardRequest } from '../interfaces/IPost';
 import { apiRequest } from '../request';
@@ -82,5 +83,17 @@ export const usePostDonateTimepay = () => {
       apiRequest.post(`${API_URL.DONATE_TIMEPAY}/${data.boardId}`, {
         donateTimePay: data.donateTimePay,
       }),
+  });
+};
+
+export const usePutDonationBoardEdit = () => {
+  return useMutation<
+    AxiosResponse<any>,
+    AxiosError,
+    IPutDonationBoardEditRequest
+  >({
+    mutationKey: 'usePutDonationBoardEdit',
+    mutationFn: (data: IPutDonationBoardEditRequest) =>
+      apiRequest.put(`${API_URL.DONATION_EDIT}/${data.boardId}`, data.board),
   });
 };

@@ -6,7 +6,22 @@ export const cssDonationBoardPageStyle = () => css`
   .board-header {
     display: flex;
     flex-direction: row;
-    gap: 10px;
+
+    justify-content: space-between;
+    .default {
+      display: flex;
+      flex-direction: row;
+      gap: 10px;
+    }
+    .mine {
+      display: flex;
+      flex-direction: row;
+      gap: 5px;
+      .ant-btn {
+        font-size: 12px;
+        padding: 4px 10px;
+      }
+    }
   }
   .title-container {
     font-size: 20px;

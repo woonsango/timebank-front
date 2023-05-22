@@ -50,3 +50,8 @@ export interface IPostDonateTimepayRequest {
 export interface IGetDonationBoardsResponse extends PageableData {
   content: IDonationBoard[];
 }
+
+export interface IPutDonationBoardEditRequest {
+  boardId: string;
+  board: IDonationBoard;
+}

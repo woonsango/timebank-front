@@ -1,23 +1,27 @@
 import { Button, InputNumber, message, Modal, Progress, Spin } from 'antd';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useQueryClient } from 'react-query';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useSetRecoilState } from 'recoil';
 import {
   useGetDonationBoardWithId,
   usePostDonateTimepay,
 } from '../../api/hooks/donation';
+import { useGetUserInfo } from '../../api/hooks/user';
 import PostTypeTag from '../../components/PostTypeTag';
 import { headerTitleState } from '../../states/uiState';
+import { PATH } from '../../utils/paths';
 import { cssDonationBoardPageStyle } from './DonationBoardPage.style';
 
 const DonationBoardPage = () => {
   const { boardId } = useParams();
+  const navigate = useNavigate();
 
   const queryClient = useQueryClient();
   const { data, isLoading } = useGetDonationBoardWithId(
     parseInt(boardId || '-1'),
   );
+  const { data: userInfo, isLoading: isLoadingUserInfo } = useGetUserInfo();
   const usePostDonateTimepayMutation = usePostDonateTimepay();
 
   const setHeaderTitle = useSetRecoilState(headerTitleState);
@@ -77,6 +81,14 @@ const DonationBoardPage = () => {
     usePostDonateTimepayMutation,
   ]);
 
+  const isMyBoard = useMemo(() => {
+    return (
+      !isLoading &&
+      !isLoadingUserInfo &&
+      data?.data.userId === userInfo?.data.body.uid
+    );
+  }, [isLoading, isLoadingUserInfo, data, userInfo]);
+
   const footer = useMemo(() => {
     return (
       <>
@@ -97,18 +109,34 @@ const DonationBoardPage = () => {
           {contextHolder}
           <div className="donation-board-container">
             <div className="board-header">
-              <PostTypeTag type={data?.data?.type} />
-              <Progress
-                style={{ width: 150 }}
-                percent={
-                  data?.data.donateTimePay !== undefined &&
-                  data.data.targetTimePay !== undefined
-                    ? (data?.data.donateTimePay / data?.data.targetTimePay) *
-                      100
-                    : 0
-                }
-                size="small"
-              />
+              <div className="default">
+                <PostTypeTag type={data?.data?.type} />
+                <Progress
+                  style={{ width: 150 }}
+                  percent={
+                    data?.data.donateTimePay !== undefined &&
+                    data.data.targetTimePay !== undefined
+                      ? (data?.data.donateTimePay / data?.data.targetTimePay) *
+                        100
+                      : 0
+                  }
+                  size="small"
+                />
+              </div>
+
+              {isMyBoard && (
+                <div className="mine">
+                  <Button
+                    type="primary"
+                    onClick={() => {
+                      navigate(`${PATH.DONATION_BOARD_WRITE}/${boardId}`);
+                    }}
+                  >
+                    수정
+                  </Button>
+                  <Button type="default">삭제</Button>
+                </div>
+              )}
             </div>
             <div className="title-container">{data?.data.title}</div>
             <div className="donation-info-container">
@@ -130,9 +158,11 @@ const DonationBoardPage = () => {
               <div className="name">{data?.data.organizationName || '-'}</div>
             </div>
             <div className="content-container">{data?.data.content}</div>
-            <Button type="primary" onClick={handleOnClickDonate}>
-              기부하기
-            </Button>
+            {!isMyBoard && (
+              <Button type="primary" onClick={handleOnClickDonate}>
+                기부하기
+              </Button>
+            )}
           </div>
           <Modal
             open={isOpen}
