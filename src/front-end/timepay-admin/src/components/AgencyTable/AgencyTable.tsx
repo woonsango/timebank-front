@@ -45,6 +45,28 @@ const AgencyTable = () => {
     [queryClient, messageApi, usePatchAgencyAuthorityMutation],
   );
 
+  const handleOnClickPenalty = useCallback(
+    (record: IAgency) => {
+      Modal.confirm({
+        content: `${record.organizationName} 에 패널티를 부여하시겠습니까?`,
+        okText: '예',
+        cancelText: '취소',
+        onOk: async () => {
+          await usePatchAgencyPenaltyMutation.mutateAsync(record.userId, {
+            onSuccess: (data) => {
+              messageApi.open({
+                type: 'success',
+                content: '패널티가 부여되었습니다.',
+              });
+              queryClient.invalidateQueries('useGetAgencies');
+            },
+          });
+        },
+      });
+    },
+    [queryClient, usePatchAgencyPenaltyMutation, messageApi],
+  );
+
   const dataSource = useMemo(() => {
     if (agencySearchValue) {
       return data?.data.content || [];
@@ -84,7 +106,10 @@ const AgencyTable = () => {
         render: (authority: string, record: IAgency) =>
           authority === 'normal' ? (
             record.certificationUrl && record.certificationUrl !== 'none' ? (
-              <Button onClick={() => handleOnClickAuthority(record)}>
+              <Button
+                type="primary"
+                onClick={() => handleOnClickAuthority(record)}
+              >
                 봉사 기관 인정
               </Button>
             ) : (
@@ -173,7 +198,6 @@ const AgencyTable = () => {
         width: 100,
         align: 'center',
       },
-
       {
         title: '타임페이',
         key: 'timepay',
@@ -182,8 +206,20 @@ const AgencyTable = () => {
         align: 'center',
         sorter: (a: IAgency, b: IAgency) => a.timepay - b.timepay,
       },
+      {
+        title: '패널티 부여',
+        key: 'penalty',
+        dataIndex: 'penalty',
+        width: 140,
+        align: 'center',
+        render: (penalty: any, record: IAgency) => (
+          <Button onClick={() => handleOnClickPenalty(record)}>
+            패널티 부여
+          </Button>
+        ),
+      },
     ];
-  }, [handleOnClickAuthority]);
+  }, [handleOnClickAuthority, handleOnClickPenalty]);
 
   return (
     <>
