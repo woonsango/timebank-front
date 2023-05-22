@@ -1,7 +1,12 @@
-import { Button, Modal, Table } from 'antd';
-import { useMemo } from 'react';
+import { Button, message, Modal, Table } from 'antd';
+import { useCallback, useMemo } from 'react';
+import { useQueryClient } from 'react-query';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
-import { useGetAgencies } from '../../api/hooks/agency';
+import {
+  useGetAgencies,
+  usePatchAgencyAuthority,
+  usePatchAgencyPenalty,
+} from '../../api/hooks/agency';
 import { IAgency, IGetAgencyRequest } from '../../api/interfaces/IAgency';
 import { agencySearchState } from '../../states/agencySearchState';
 import { customPaginationProps } from '../../utils/pagination';
@@ -11,7 +16,34 @@ const AgencyTable = () => {
   const agencySearchValue = useRecoilValue(agencySearchState);
   const setAgencySearch = useSetRecoilState(agencySearchState);
 
+  const queryClient = useQueryClient();
   const { data, isLoading } = useGetAgencies(agencySearchValue);
+  const usePatchAgencyAuthorityMutation = usePatchAgencyAuthority();
+  const usePatchAgencyPenaltyMutation = usePatchAgencyPenalty();
+
+  const [messageApi, contextHolder] = message.useMessage();
+
+  const handleOnClickAuthority = useCallback(
+    (record: IAgency) => {
+      Modal.confirm({
+        content: `${record.organizationName} 을 봉사기관으로 인정하시겠습니까?`,
+        okText: '예',
+        cancelText: '취소',
+        onOk: async () => {
+          await usePatchAgencyAuthorityMutation.mutateAsync(record.userId, {
+            onSuccess: (data) => {
+              messageApi.open({
+                type: 'success',
+                content: '봉사활동 기관으로 인정되었습니다.',
+              });
+              queryClient.invalidateQueries('useGetAgencies');
+            },
+          });
+        },
+      });
+    },
+    [queryClient, messageApi, usePatchAgencyAuthorityMutation],
+  );
 
   const dataSource = useMemo(() => {
     if (agencySearchValue) {
@@ -52,7 +84,9 @@ const AgencyTable = () => {
         render: (authority: string, record: IAgency) =>
           authority === 'normal' ? (
             record.certificationUrl && record.certificationUrl !== 'none' ? (
-              <Button>봉사 기관 인정</Button>
+              <Button onClick={() => handleOnClickAuthority(record)}>
+                봉사 기관 인정
+              </Button>
             ) : (
               'N'
             )
@@ -149,10 +183,11 @@ const AgencyTable = () => {
         sorter: (a: IAgency, b: IAgency) => a.timepay - b.timepay,
       },
     ];
-  }, []);
+  }, [handleOnClickAuthority]);
 
   return (
     <>
+      {contextHolder}
       <div css={cssAgencyTableStyle}>총 {data?.data.totalElements || 0} 개</div>
       <Table
         css={cssAgencyTableStyle}
