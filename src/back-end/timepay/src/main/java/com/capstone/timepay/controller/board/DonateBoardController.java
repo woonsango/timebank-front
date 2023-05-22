@@ -1,6 +1,7 @@
 package com.capstone.timepay.controller.board;
 
 import com.capstone.timepay.domain.organization.Organization;
+import com.capstone.timepay.domain.organization.OrganizationRepository;
 import com.capstone.timepay.domain.user.User;
 import com.capstone.timepay.domain.user.UserRepository;
 import com.capstone.timepay.service.board.dto.DealBoardDTO;
@@ -32,14 +33,12 @@ public class DonateBoardController {
     public ResponseEntity donateWrite(@RequestBody DonateBoardDTO donateBoardDTO,
                                       Principal principal)
     {
-        User user = userRepository.findByEmail(principal.getName()).orElseThrow(() -> {
-            return new IllegalArgumentException("해당 유저는 존재하지 않습니다");
-        });
+
         // 현재 유저가 기관유저가 아닐경우 작성 권한이 없음
-        if (user.getOrganization() == null)
-        {
-            return new ResponseEntity("개인 유저는 게시글을 작성할 수 없습니다.", HttpStatus.OK);
-        }
+//        if (organization.getOrganization() == null)
+//        {
+//            return new ResponseEntity("개인 유저는 게시글을 작성할 수 없습니다.", HttpStatus.OK);
+//        }
         return new ResponseEntity(donateBoardService.donateWrite(donateBoardDTO, principal), HttpStatus.OK);
     }
 
@@ -50,7 +49,7 @@ public class DonateBoardController {
             @RequestParam(value = "pagingSize", defaultValue = "10") int pagingSize,
             Principal principal)
     {
-        Page<DonateBoardDTO> paging = donateBoardService.getDonateBoards(pagingIndex, pagingSize, principal);
+        Page<DonateBoardDTO> paging = donateBoardService.getDonateBoards(pagingIndex, pagingSize);
         if (paging.isEmpty())
         {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -60,10 +59,9 @@ public class DonateBoardController {
 
     @GetMapping("/donate/{boardId}")
     @ApiOperation(value = "작성한 기부 게시판 하나 보기")
-    public DonateBoardDTO getDonate(@PathVariable("boardId") Long boardId,
-                                    Principal principal)
+    public DonateBoardDTO getDonate(@PathVariable("boardId") Long boardId)
     {
-        return donateBoardService.getDonateBoard(boardId, principal);
+        return donateBoardService.getDonateBoard(boardId);
     }
 
     @PutMapping("/organizations/donate/update/{boardId}")

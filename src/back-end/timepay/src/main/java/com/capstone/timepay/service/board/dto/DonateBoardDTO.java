@@ -31,26 +31,8 @@ public class DonateBoardDTO {
     private LocalDateTime createAt;
 
 
-    public static DonateBoardDTO toDonateDTO(DonateBoard donateBoard, User user)
+    public static DonateBoardDTO toDonateDTO(DonateBoard donateBoard)
     {
-        if (user.getOrganization() == null)
-        {
-            return new DonateBoardDTO(
-                    donateBoard.getId(),
-                    donateBoard.getTitle(),
-                    donateBoard.getContent(),
-                    donateBoard.getType(),
-                    donateBoard.getTargetTimePay(),
-                    donateBoard.getDonateTimePay(),
-                    donateBoard.getCategory(),
-                    user.getUserId(),
-                    user.getName(),
-                    user.getNickname(),
-                    user.getUserProfile().getImageUrl(),
-                    "일반 회원",
-                    donateBoard.getCreatedAt()
-            );
-        }
         return new DonateBoardDTO(
                 donateBoard.getId(),
                 donateBoard.getTitle(),
@@ -59,10 +41,10 @@ public class DonateBoardDTO {
                 donateBoard.getTargetTimePay(),
                 donateBoard.getDonateTimePay(),
                 donateBoard.getCategory(),
-                user.getUserId(),
-                user.getName(),
-                user.getNickname(),
-                user.getUserProfile().getImageUrl(),
+                donateBoard.getUserId(),
+                donateBoard.getUserName(),
+                donateBoard.getUserNickname(),
+                donateBoard.getImageURL(),
                 "기관 회원",
                 donateBoard.getCreatedAt()
         );
