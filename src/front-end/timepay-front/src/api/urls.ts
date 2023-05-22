@@ -3,8 +3,10 @@ export const API_URL = {
   DEAL_BOARDS_DELETE: '/api/deal-boards/delete',
   DEAL_BOARDS__SEARCH: 'deal-boards/search',
   DEAL_REPORT: '/deal-boards/:id/report',
-  DEAL_BOARDS_COMMENT: 'api/deal-boards/comments/:id/applied',
-  DEAL_BOARDS_COMMENT_WRITE: '/api/deal-boards/comments/write/:id',
+  DEAL_BOARDS_COMMENT: '/api/deal-boards/comments',
+  DEAL_BOARDS_COMMENT_APPLIED: 'api/deal-boards/comments/:id/applied',
+  DEAL_BOARDS_COMMENT_WRITE: '/api/deal-boards/comments/write',
+  DEAL_BOARDS_COMMENT_DELETE: '/api/deal-boards/comments/delete',
   FREE_BOARDS: '/api/free-boards',
   FREE_BOARDS_WRITE: '/api/free-boards/write',
   DEAL_BOARDS_WRITE: '/api/deal-boards/write/help', // 도움받기
@@ -38,6 +40,8 @@ export const API_URL = {
   APPLICANT__WAITING: '/api/users/agents/waiting', //대리인이 받은 신청 목록을 조회
   APPLICANT__APPLY: '/api/users/agents/waiting/apply', //대리인이 신청을 수락 및 거절
   APPLICANT__TRANS: '/api/users/agents/trans', //대리인의 신청인의 계정으로 전환
+  DONATION_BOARD_EDIT: '/api/organizations/donate/update',
+  DONATION_BOARD_DELETE: '/api/organizations/donate/delete',
 };
 
 // 토큰 필요 없는 애들

@@ -22,7 +22,6 @@ const DonationBoardWritePage = () => {
 
   const handleOnSubmitDonationBoard = useCallback(
     (values: any) => {
-      console.log(values);
       Modal.confirm({
         content: '해당 내용으로 게시글을 등록하시겠습니까?',
         okText: '확인',

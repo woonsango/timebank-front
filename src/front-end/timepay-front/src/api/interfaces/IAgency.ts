@@ -21,4 +21,5 @@ export interface IAgency {
   id?: string;
   manager_name?: string;
   manager_phone?: string;
+  uid: number;
 }

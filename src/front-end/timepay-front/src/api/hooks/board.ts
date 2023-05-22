@@ -10,6 +10,7 @@ import {
 import { apiRequest } from '../request';
 import { API_URL } from '../urls';
 import { useMutation, useQuery } from 'react-query';
+import { api } from '../../services';
 
 export const useInfiniteGetSearchBoard = (params: IGetSearchBoardRequest) => {
   return useInfiniteQuery<AxiosResponse<IGetSearchBoardResponse>, AxiosError>({
@@ -60,5 +61,19 @@ export const useCreateReports = () => {
       apiRequest.post(API_URL.FREE_BOARDS_WRITE, {
         ...data,
       }),
+  });
+};
+
+export const usePutBoardStateStart = (postPk: number) => {
+  return useMutation<AxiosResponse<any>, AxiosError>({
+    mutationKey: 'usePutBoardState',
+    mutationFn: () => apiRequest.put(`${API_URL.DEAL_BOARDS}/${postPk}/start`),
+  });
+};
+
+export const usePutBoardStateFinish = (postPk: number) => {
+  return useMutation<AxiosResponse<any>, AxiosError>({
+    mutationKey: 'usePutBoardState',
+    mutationFn: () => apiRequest.put(`${API_URL.DEAL_BOARDS}/${postPk}/finish`),
   });
 };

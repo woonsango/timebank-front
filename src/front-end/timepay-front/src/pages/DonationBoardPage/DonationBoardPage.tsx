@@ -1,24 +1,30 @@
 import { Button, InputNumber, message, Modal, Progress, Spin } from 'antd';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useQueryClient } from 'react-query';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useSetRecoilState } from 'recoil';
 import {
+  useDeleteDonationBoard,
   useGetDonationBoardWithId,
   usePostDonateTimepay,
 } from '../../api/hooks/donation';
+import { useGetUserInfo } from '../../api/hooks/user';
 import PostTypeTag from '../../components/PostTypeTag';
 import { headerTitleState } from '../../states/uiState';
+import { PATH } from '../../utils/paths';
 import { cssDonationBoardPageStyle } from './DonationBoardPage.style';
 
 const DonationBoardPage = () => {
   const { boardId } = useParams();
+  const navigate = useNavigate();
 
   const queryClient = useQueryClient();
   const { data, isLoading } = useGetDonationBoardWithId(
     parseInt(boardId || '-1'),
   );
+  const { data: userInfo, isLoading: isLoadingUserInfo } = useGetUserInfo();
   const usePostDonateTimepayMutation = usePostDonateTimepay();
+  const useDeleteDonationBoardMutation = useDeleteDonationBoard();
 
   const setHeaderTitle = useSetRecoilState(headerTitleState);
 
@@ -77,6 +83,45 @@ const DonationBoardPage = () => {
     usePostDonateTimepayMutation,
   ]);
 
+  const handleOnDelete = useCallback(() => {
+    if (boardId)
+      Modal.confirm({
+        content: '정말 삭제하시겠습니까?',
+        okText: '확인',
+        cancelText: '취소',
+        onOk: async () => {
+          useDeleteDonationBoardMutation.mutateAsync(parseInt(boardId), {
+            onSuccess: () => {
+              messageApi.open({
+                type: 'success',
+                content: '삭제가 완료되었습니다.',
+                duration: 1,
+                onClose: () => {
+                  queryClient.invalidateQueries('useGetDonationBoards');
+                  queryClient.invalidateQueries('useGetDonationBoardWithId');
+                  navigate(PATH.HOME);
+                },
+              });
+            },
+          });
+        },
+      });
+  }, [
+    boardId,
+    navigate,
+    messageApi,
+    useDeleteDonationBoardMutation,
+    queryClient,
+  ]);
+
+  const isMyBoard = useMemo(() => {
+    return (
+      !isLoading &&
+      !isLoadingUserInfo &&
+      data?.data.userId === userInfo?.data.body.uid
+    );
+  }, [isLoading, isLoadingUserInfo, data, userInfo]);
+
   const footer = useMemo(() => {
     return (
       <>
@@ -97,18 +142,39 @@ const DonationBoardPage = () => {
           {contextHolder}
           <div className="donation-board-container">
             <div className="board-header">
-              <PostTypeTag type={data?.data?.type} />
-              <Progress
-                style={{ width: 150 }}
-                percent={
-                  data?.data.donateTimePay !== undefined &&
-                  data.data.targetTimePay !== undefined
-                    ? (data?.data.donateTimePay / data?.data.targetTimePay) *
-                      100
-                    : 0
-                }
-                size="small"
-              />
+              <div className="default">
+                <PostTypeTag type={data?.data?.type} />
+                <Progress
+                  style={{ width: 150 }}
+                  percent={
+                    data?.data.donateTimePay !== undefined &&
+                    data.data.targetTimePay !== undefined
+                      ? Math.floor(
+                          (data?.data.donateTimePay /
+                            data?.data.targetTimePay) *
+                            100,
+                        )
+                      : 0
+                  }
+                  size="small"
+                />
+              </div>
+
+              {isMyBoard && (
+                <div className="mine">
+                  <Button
+                    type="primary"
+                    onClick={() => {
+                      navigate(`${PATH.DONATION_BOARD_WRITE}/${boardId}`);
+                    }}
+                  >
+                    수정
+                  </Button>
+                  <Button type="default" onClick={handleOnDelete}>
+                    삭제
+                  </Button>
+                </div>
+              )}
             </div>
             <div className="title-container">{data?.data.title}</div>
             <div className="donation-info-container">
@@ -122,14 +188,19 @@ const DonationBoardPage = () => {
             <div className="organization-info-container">
               <img
                 alt="기관"
-                src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
+                src={
+                  data?.data.imageURL ||
+                  'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png'
+                }
               />
-              <div className="name">기관 이름</div>
+              <div className="name">{data?.data.organizationName || '-'}</div>
             </div>
             <div className="content-container">{data?.data.content}</div>
-            <Button type="primary" onClick={handleOnClickDonate}>
-              기부하기
-            </Button>
+            {!isMyBoard && (
+              <Button type="primary" onClick={handleOnClickDonate}>
+                기부하기
+              </Button>
+            )}
           </div>
           <Modal
             open={isOpen}

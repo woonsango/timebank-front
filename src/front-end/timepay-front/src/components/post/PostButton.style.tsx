@@ -25,7 +25,7 @@ export const cssPostButton = css`
     background-color: ${COMMON_COLOR.MAIN1};
   }
   &.completed {
-    width: 45%;
+    width: 95%;
     background-color: #ff4910;
     margin-right: 6px;
   }
