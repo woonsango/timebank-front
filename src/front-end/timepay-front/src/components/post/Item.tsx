@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import {
   cssComments,
   cssCommentItem,
@@ -7,40 +7,58 @@ import {
   cssCommentText,
   cssCommentProfile,
 } from './Item.style';
-import { Form, Input, Modal, Button, message } from 'antd';
+import { Form, Input, Modal, Button } from 'antd';
 import { useDeleteComment } from '../../api/hooks/comment';
+import { useQueryClient } from 'react-query';
 
-const Item = ({ c }: any) => {
+const Item = ({ c, messageApi }: any) => {
+  const queryClient = useQueryClient();
+
   const write_user = false; // true = 수정 / false = 신고
 
   // 수정 기능
   const { TextArea } = Input;
-  const [isOpenModal2, setIsOpenModal2] = useState(false);
+  const [isOpenReportModal, setIsOpenReportModal] = useState(false);
 
   // 수정 기능
   const showReportModal = () => {
-    setIsOpenModal2(true);
+    setIsOpenReportModal(true);
   };
   const onOk = () => {
-    setIsOpenModal2(false);
+    setIsOpenReportModal(false);
   };
   const onCancel = () => {
-    setIsOpenModal2(false);
+    setIsOpenReportModal(false);
   };
 
   const url = window.location.pathname;
   const real_id = url.substring(6);
-  const [messageApi, contextHolder] = message.useMessage();
+
   const useDeleteCommentMutation = useDeleteComment();
 
-  const handleDeleteComment = async (postPk: number, id: number) => {
-    try {
-      await useDeleteCommentMutation.mutateAsync({ postPk, id });
-      messageApi.success('댓글이 성공적으로 삭제되었습니다.');
-    } catch (error) {
-      messageApi.error('댓글 삭제 중 오류가 발생했습니다.');
-    }
-  };
+  const handleDeleteComment = useCallback(
+    async (id: number) => {
+      await useDeleteCommentMutation.mutateAsync(
+        { postPk: parseInt(real_id), id },
+        {
+          onSuccess: (data) => {
+            messageApi.success('댓글이 성공적으로 삭제되었습니다.');
+            queryClient.invalidateQueries({
+              queryKey: ['useGetBoard'],
+            });
+            queryClient.invalidateQueries({
+              queryKey: ['useGetComments'],
+            });
+          },
+          onError: (error) => {
+            console.log('ERROR');
+            messageApi.error('댓글 삭제 중 오류가 발생했습니다.');
+          },
+        },
+      );
+    },
+    [messageApi, real_id, queryClient, useDeleteCommentMutation],
+  );
 
   return (
     <div css={cssComments}>
@@ -52,10 +70,9 @@ const Item = ({ c }: any) => {
             신고
           </Button>
         )}
-
         <Modal
           title="댓글 신고하기"
-          open={isOpenModal2}
+          open={isOpenReportModal}
           onOk={onOk}
           onCancel={onCancel}
           footer={null}
@@ -87,10 +104,7 @@ const Item = ({ c }: any) => {
           </Form>
         </Modal>
         <div className="sidebar">|</div>
-        <Button
-          className="delete"
-          onClick={() => handleDeleteComment(parseInt(real_id), c.id)}
-        >
+        <Button className="delete" onClick={() => handleDeleteComment(c.id)}>
           삭제
         </Button>
       </div>

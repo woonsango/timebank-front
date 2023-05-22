@@ -40,7 +40,7 @@ export const useInfiniteGetSearchBoard = (params: IGetSearchBoardRequest) => {
 
 export const useGetBoard = (postPk: number) => {
   return useQuery<AxiosResponse<IBoard>, AxiosError>({
-    queryKey: ['useGetBoard'],
+    queryKey: ['useGetBoard', postPk],
     queryFn: () => apiRequest.get(`${API_URL.DEAL_BOARDS}/${postPk}`),
     refetchOnWindowFocus: false,
   });
