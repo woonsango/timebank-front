@@ -39,6 +39,12 @@ export const cssAnotherUserProfileDrawerStyle = css`
         font-weight: 400;
         font-size: 32px;
         color: ${COMMON_COLOR.FONT3};
+        .agency {
+          margin-left: 5px;
+          font-size: 15px;
+          color: ${COMMON_COLOR.MAIN2};
+          font-weight: 700;
+        }
       }
       .userPk {
         font-style: normal;
@@ -71,4 +77,22 @@ export const cssAnotherUserProfileDrawerStyle = css`
       }
     }
   }
+`;
+
+export const cssNothingStyle = (scaleValue: number) => css`
+  display: flex;
+  flex-direction: column;
+  .emoji {
+    font-size: calc(25px * ${scaleValue});
+  }
+  font-size: calc(14px * ${scaleValue});
+  text-align: center !important;
+  padding: 200px 0;
+  width: 100%;
+`;
+
+export const cssSpinStyle = css`
+  text-align: center !important;
+  padding-top: 280px !important;
+  width: 100%;
 `;
