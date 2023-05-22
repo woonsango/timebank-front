@@ -38,7 +38,10 @@ import locale from 'antd/es/date-picker/locale/ko_KR';
 import { useGetCategory } from '../../api/hooks/category';
 import { COMMON_COLOR } from '../../styles/constants/colors';
 import { useGetUserInfo } from '../../api/hooks/user';
-import { cssPostInputNumberStyle } from './RegisterRequest.styles';
+import {
+  cssPostAutoStyle,
+  cssPostInputNumberStyle,
+} from './RegisterRequest.styles';
 
 const { TextArea } = Input;
 const MAX_IMAGES = 5;
@@ -509,7 +512,15 @@ const RegisterRequestPage = () => {
             {imgFileList.length === 1 ? null : uploadButton}
           </Upload>
         </Form.Item>
-
+        <Form.Item
+          label=""
+          name="auto"
+          css={cssPostAutoStyle}
+          valuePropName="checked"
+          extra="설정 시 선착순으로 매칭됩니다."
+        >
+          <Checkbox>자동매칭 여부</Checkbox>
+        </Form.Item>
         <div css={cssPostFooterStyle}>
           {isDisabled ? (
             <Button css={cssPostBtnStyle2}>작성완료</Button>

@@ -69,3 +69,7 @@ export const cssPostInputNumberStyle = css`
     width: 140px !important;
   }
 `;
+
+export const cssPostAutoStyle = css`
+  margin: 0 20px;
+`;
