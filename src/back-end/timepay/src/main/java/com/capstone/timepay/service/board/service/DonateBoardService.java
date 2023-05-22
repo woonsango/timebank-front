@@ -51,22 +51,11 @@ public class DonateBoardService
                 .donateTimePay(0)
                 .category(donateBoardDTO.getCategory())
                 .userId(user.getUserId())
-                .userName(user.getName())
+                .organizationName(user.getOrganization().getOrganizationName())
                 .userNickname(user.getNickname())
                 .userType("기관 회원")
+                .imageURL(user.getOrganization().getImageUrl())
                 .build();
-
-        UserProfile userProfile = user.getUserProfile();
-        if (userProfile != null) {
-            String imageUrl = userProfile.getImageUrl();
-            if (imageUrl != null) {
-                donateBoard.setImageURL(imageUrl);
-            } else {
-                donateBoard.setImageURL("없음");
-            }
-        } else {
-            donateBoard.setImageURL(null);
-        }
 
         donateBoardRepository.save(donateBoard);
         return DonateBoardDTO.toDonateDTO(donateBoard);

@@ -28,7 +28,7 @@ public class DonateBoard extends BaseTimeEntity {
 
     // 유저 정보
     private Long userId;
-    private String userName;
+    private String organizationName;
     private String userNickname;
     private String imageURL;
     private String userType;
