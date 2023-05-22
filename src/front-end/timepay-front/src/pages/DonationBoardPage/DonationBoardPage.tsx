@@ -9,6 +9,7 @@ import {
   usePostDonateTimepay,
 } from '../../api/hooks/donation';
 import { useGetUserInfo } from '../../api/hooks/user';
+import AnotherUserProfileDrawer from '../../components/AnotherUserProfileDrawer';
 import PostTypeTag from '../../components/PostTypeTag';
 import { headerTitleState } from '../../states/uiState';
 import { PATH } from '../../utils/paths';
@@ -35,6 +36,14 @@ const DonationBoardPage = () => {
   });
 
   const [isOpen, setIsOpen] = useState(false);
+  const [profileProps, setProfileProps] = useState<{
+    open: boolean;
+    userId?: number | undefined;
+  }>({
+    open: false,
+    userId: undefined,
+  });
+
   const [donateAmount, setDonateAmount] = useState(10);
 
   const handleOnCancelOpen = useCallback(() => {
@@ -122,6 +131,14 @@ const DonationBoardPage = () => {
     );
   }, [isLoading, isLoadingUserInfo, data, userInfo]);
 
+  const handleOnClickUser = useCallback(() => {
+    if (data && data.data)
+      setProfileProps({
+        open: true,
+        userId: data?.data.userId || undefined,
+      });
+  }, [data]);
+
   const footer = useMemo(() => {
     return (
       <>
@@ -192,8 +209,11 @@ const DonationBoardPage = () => {
                   data?.data.imageURL ||
                   'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png'
                 }
+                onClick={handleOnClickUser}
               />
-              <div className="name">{data?.data.organizationName || '-'}</div>
+              <div className="name" onClick={handleOnClickUser}>
+                {data?.data.organizationName || '-'}
+              </div>
             </div>
             <div className="content-container">{data?.data.content}</div>
             {!isMyBoard && (
@@ -222,6 +242,11 @@ const DonationBoardPage = () => {
               />
             </div>
           </Modal>
+          <AnotherUserProfileDrawer
+            open={profileProps.open}
+            userId={profileProps.userId}
+            onClose={() => setProfileProps({ open: false, userId: undefined })}
+          />
         </>
       )}
     </div>
