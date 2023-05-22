@@ -156,6 +156,7 @@ public class DealBoardService
                 .isHidden(dealBoardDTO.isHidden())
                 .isAuto(dealBoardDTO.isAuto())
                 .volunteerPeople(dealBoardDTO.getVolunteerPeople())
+                .isVolunteer(dealBoardDTO.isVolunteer())
                 .build();
 
         Board board = Board.builder().
@@ -204,6 +205,7 @@ public class DealBoardService
                 .startTime(dealBoardDTO.getStartTime())
                 .endTime(dealBoardDTO.getEndTime())
                 .isHidden(dealBoardDTO.isHidden())
+                .isVolunteer(dealBoardDTO.isVolunteer())
                 .build();
 
         Board board = Board.builder().
