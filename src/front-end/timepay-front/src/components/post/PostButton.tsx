@@ -1,43 +1,60 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useCallback, useEffect } from 'react';
 import { Modal } from 'antd';
 import { cssPostButton, cssPostButtons } from './PostButton.style';
 
+import {
+  usePutBoardStateStart,
+  usePutBoardStateFinish,
+} from '../../api/hooks/board';
+import { useMutation, useQueryClient } from 'react-query';
+
 const PostButton = () => {
+  const queryClient = useQueryClient();
+  const url = window.location.pathname;
+  const real_id = url.substring(6);
+  const usePutBoardStateStartMutation = usePutBoardStateStart(
+    parseInt(real_id),
+  );
+  const usePutBoardStateFinishMutation = usePutBoardStateFinish(
+    parseInt(real_id),
+  );
+
   const [buttonState, setButtonState] = useState<string>('start');
+  const [buttonText, setButtonText] = useState<string>('활동시작');
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const buttonText = useMemo(() => {
-    switch (buttonState) {
-      case 'start':
-        return '활동시작';
-      case 'completed':
-        return '활동완료';
-      case 'deleted':
-        return '활동취소';
-      case 'theEnd':
-        return '활동이 종료된 게시글입니다 :)';
-      default:
-        return '';
-    }
-  }, [buttonState]);
+  // const buttonText = useMemo(() => {
+  //   switch (buttonState) {
+  //     case 'start'
+  //       return '활동시작';
+  //     case 'completed':
+  //       return '활동완료';
+  //     case 'deleted':
+  //       return '활동취소';
+  //     case 'theEnd':
+  //       return '활동이 종료된 게시글입니다 :)';
+  //     default:
+  //       return '';
+  //   }
+  // }, [buttonState]);
 
-  const onClickButton = (): void => {
-    switch (buttonState) {
-      case 'start':
-        setButtonState('completed');
-        break;
-      case 'completed':
-        setButtonState('theEnd');
-        break;
-      case 'deleted':
-        setButtonState('theEnd');
-        break;
-      case 'theEnd':
-        break;
-      default:
-        break;
-    }
-  };
+  // const onClickButton = (): void => {
+  //   switch (buttonState) {
+  //     case 'start':
+  //       setButtonState('completed');
+  //       break;
+  //     case 'completed':
+  //       setButtonState('theEnd');
+  //       break;
+  //     case 'deleted':
+  //       setButtonState('theEnd');
+  //       break;
+  //     case 'theEnd':
+  //       break;
+  //     default:
+  //       break;
+  //   }
+  // };
 
   const showModal = () => {
     if (buttonState === 'completed') {
@@ -55,6 +72,28 @@ const PostButton = () => {
     setIsModalOpen(false);
   };
 
+  const startActivity = useCallback(async () => {
+    try {
+      await usePutBoardStateStartMutation.mutateAsync();
+      queryClient.invalidateQueries('');
+      setButtonState('completed');
+      setButtonText('활동완료');
+    } catch (error) {
+      console.error('start에서 오류가 발생했습니다.', error);
+    }
+  }, [buttonState, queryClient, buttonText]);
+
+  const finishActivity = useCallback(async () => {
+    try {
+      await usePutBoardStateFinishMutation.mutateAsync();
+      queryClient.invalidateQueries('');
+      setButtonState('theEnd');
+      setButtonText('활동이 종료된 게시글입니다 :)');
+    } catch (error) {
+      console.error('finish에서 오류가 발생했습니다.', error);
+    }
+  }, [buttonState, queryClient, buttonText]);
+
   return (
     <>
       <div css={cssPostButtons}>
@@ -62,8 +101,7 @@ const PostButton = () => {
           <button
             css={cssPostButton}
             onClick={() => {
-              onClickButton();
-              // showModal();
+              startActivity();
             }}
             className={`${buttonState}`}
           >
@@ -74,7 +112,7 @@ const PostButton = () => {
             <button
               css={cssPostButton}
               onClick={() => {
-                setButtonState('theEnd');
+                finishActivity();
                 showModal();
               }}
               className="completed"
@@ -84,7 +122,7 @@ const PostButton = () => {
             <button
               css={cssPostButton}
               onClick={() => {
-                setButtonState('theEnd');
+                finishActivity();
               }}
               className="deleted"
             >
@@ -95,7 +133,6 @@ const PostButton = () => {
           <button
             css={cssPostButton}
             onClick={() => {
-              onClickButton();
               showModal();
             }}
             className={`${buttonState}`}

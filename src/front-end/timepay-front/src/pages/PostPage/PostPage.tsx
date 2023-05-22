@@ -56,8 +56,7 @@ import {
   useGetComments,
   useDeleteComment,
 } from '../../api/hooks/comment';
-import { useMutation } from 'react-query';
-import { useQueryClient } from 'react-query';
+import { useMutation, useQueryClient } from 'react-query';
 
 import { PATH } from '../../utils/paths';
 import { COMMON_COLOR } from '../../styles/constants/colors';
@@ -109,6 +108,10 @@ const PostPage = () => {
   const createCommentMutation = useCreateComment(parseInt(real_id));
   const comments = useGetComments(parseInt(real_id));
   const useDeleteCommentMutation = useDeleteComment();
+
+  useEffect(() => {
+    console.log(data?.data.state);
+  }, [data?.data.state]);
 
   useEffect(() => {
     apiRequest
