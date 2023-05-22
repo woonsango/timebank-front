@@ -88,16 +88,21 @@ const HomePage = () => {
   }, [confirm, logoutToken]);
   return (
     <div css={cssHomePageStyle(scaleValue)}>
-      <div css={cssBox}>
-        <Button
-          className="agentAction"
-          type="primary"
-          block
-          onClick={openMuliTokenModal}
-        >
-          대리인 활동중입니다
-        </Button>
-      </div>
+      {!token || token === 'undefined' ? (
+        <div></div>
+      ) : (
+        <div css={cssBox}>
+          <Button
+            className="agentAction"
+            type="primary"
+            block
+            onClick={openMuliTokenModal}
+          >
+            대리인 활동중입니다
+          </Button>
+        </div>
+      )}
+
       <div className="title-search-container">
         <Logo />
         <div className="title-search">
