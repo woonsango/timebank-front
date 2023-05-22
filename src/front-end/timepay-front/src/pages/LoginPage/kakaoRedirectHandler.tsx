@@ -5,7 +5,11 @@ import { useCallback, useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { PATH } from '../../utils/paths';
-import { setTokenToCookie } from '../../utils/token';
+import {
+  getMultiTokenFromCookie,
+  setMultiTokenToCookie,
+  setTokenToCookie,
+} from '../../utils/token';
 import { saveUid } from './saveUid';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { agencyState, userState } from '../../states/user';
@@ -59,6 +63,9 @@ const KakaoRedirectHandler = () => {
         if (response.data.signUp === true) {
           /*jwt 토큰 저장*/
           setTokenToCookie(response.data.jwt, 10);
+          if (getMultiTokenFromCookie()) {
+            setMultiTokenToCookie('undefined', 0);
+          }
           console.log('토큰 저장:', response.data.jwt);
           setUserState(response.data);
           setAgencyState(null);
