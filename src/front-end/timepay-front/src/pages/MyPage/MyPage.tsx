@@ -9,7 +9,7 @@ import { apiRequest } from '../../api/request';
 import { API_URL } from '../../api/urls';
 import { useAgencyLogout, useDeleteAgency } from '../../api/hooks/agency';
 import { message, Modal } from 'antd';
-import { setTokenToCookie } from '../../utils/token';
+import { getMultiTokenFromCookie, setTokenToCookie } from '../../utils/token';
 import { useDelete, useLogout } from '../../api/hooks/user';
 import {
   cssMyInfoStyle,
@@ -44,6 +44,7 @@ const MyPage = () => {
   const [personalNum, setPersonalNum]: any = useState();
   const [timePay, setTimePay]: any = useState();
   const [agencyInfo, setAgencyInfo] = useState<IAgency>();
+  const multiToken = getMultiTokenFromCookie();
 
   const handlePageMove = useCallback(
     (path: string) => {
@@ -339,22 +340,28 @@ const MyPage = () => {
                 </button>
               </div>
             )}
-            <div className="MyPageMoveBox">
-              <button
-                className="MyPageText"
-                onClick={() => handlePageMove(PATH.AGENT)}
-              >
-                대리인 관리
-              </button>
-            </div>
-            <div className="MyPageMoveBox">
-              <button
-                className="MyPageText"
-                onClick={() => handlePageMove(PATH.APPLICANT)}
-              >
-                신청인 관리
-              </button>
-            </div>
+            {!multiToken || multiToken === 'undefined' ? (
+              <>
+                <div className="MyPageMoveBox">
+                  <button
+                    className="MyPageText"
+                    onClick={() => handlePageMove(PATH.AGENT)}
+                  >
+                    대리인 관리
+                  </button>
+                </div>
+                <div className="MyPageMoveBox">
+                  <button
+                    className="MyPageText"
+                    onClick={() => handlePageMove(PATH.APPLICANT)}
+                  >
+                    신청인 관리
+                  </button>
+                </div>
+              </>
+            ) : (
+              <></>
+            )}
 
             <div className="MyPageMoveBox">
               <button
@@ -373,16 +380,26 @@ const MyPage = () => {
                 카테고리 알림 설정
               </button>
             </div>
-            <div className="MyPageMoveBox">
-              <button className="MyPageText" onClick={handleOnLogOut}>
-                로그아웃
-              </button>
-            </div>
-            <div className="MyPageMoveBox">
-              <button className="MyPageText" onClick={handleOnCloseWithdraw}>
-                탈퇴하기
-              </button>
-            </div>
+
+            {!multiToken || multiToken === 'undefined' ? (
+              <>
+                <div className="MyPageMoveBox">
+                  <button className="MyPageText" onClick={handleOnLogOut}>
+                    로그아웃
+                  </button>
+                </div>
+                <div className="MyPageMoveBox">
+                  <button
+                    className="MyPageText"
+                    onClick={handleOnCloseWithdraw}
+                  >
+                    탈퇴하기
+                  </button>
+                </div>
+              </>
+            ) : (
+              <></>
+            )}
           </div>
         </div>
       </div>

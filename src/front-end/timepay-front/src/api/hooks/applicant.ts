@@ -50,3 +50,13 @@ export const useDeleteApplicant = () => {
       apiRequest.delete(API_URL.APPLICANT, { data: { uid: data.uid } }),
   });
 };
+
+export const usePostApplicantTrans = () => {
+  return useMutation<AxiosResponse<any>, AxiosError, any>({
+    mutationKey: 'usePostApplicantTrans',
+    mutationFn: (data: IDeleteApplicantRequest) =>
+      apiRequest.post(API_URL.APPLICANT__TRANS, {
+        uid: data.uid,
+      }),
+  });
+};

@@ -5,13 +5,24 @@ import { apiRequest } from '../../api/request';
 import { API_URL } from '../../api/urls';
 import useFontSize from '../../hooks/useFontSize';
 import { cssBtnSpace, cssMyInfoStyle } from './ApplicantPage.style';
-import { Button, Modal, Space, Table, Typography } from 'antd';
+import { Button, Modal, Space, Table, Typography, message } from 'antd';
 import { COMMON_COLOR } from '../../styles/constants/colors';
 import { ExclamationCircleFilled } from '@ant-design/icons';
 import ApplicantModal from '../../components/ApplicantModal';
 import { IApplicant } from '../../api/interfaces/IApplicant';
 import ApplicantReceivedModal from '../../components/ApplicantReceivedModal';
-import { useGetApplicant } from '../../api/hooks/applicant';
+import {
+  useGetApplicant,
+  usePostApplicantTrans,
+} from '../../api/hooks/applicant';
+import {
+  getMultiTokenFromCookie,
+  getTokenFromCookie,
+  setMultiTokenToCookie,
+  setTokenToCookie,
+} from '../../utils/token';
+import cookie from 'cookie';
+import { useNavigate } from 'react-router-dom';
 
 const ApplicantPage = () => {
   const setHeaderTitle = useSetRecoilState(headerTitleState);
@@ -25,6 +36,9 @@ const ApplicantPage = () => {
 
   const { scaleValue } = useFontSize();
   const { Text } = Typography;
+  const postApplicantTrans = usePostApplicantTrans();
+  const [modal, contextHolder] = Modal.useModal();
+  const navigate = useNavigate();
 
   const handleOnCancelModal = useCallback(() => {
     setIsOpenRegisterModal(false);
@@ -58,18 +72,45 @@ const ApplicantPage = () => {
     setHeaderTitle('신청인 관리');
   }, [setHeaderTitle]);
 
-  const onClickSwitch = useCallback((appliNumber: number) => {
-    console.log(appliNumber);
-  }, []);
+  const turnToken = useCallback(
+    (token: string) => {
+      console.log('token', token);
+      setMultiTokenToCookie(token, 10);
+      navigate('/my');
+    },
+    [navigate],
+  );
 
-  // const dataSource: IApplicant[] = [];
-  // for (let i = 0; i < 100; i++) {
-  //   dataSource.push({
-  //     appliName: '길동홍',
-  //     appliUid: i,
-  //   });
-  // }
-  console.log(data?.data.applicant);
+  const onClickSwitch = useCallback(
+    async (appliNumber: number) => {
+      await postApplicantTrans.mutateAsync(
+        { uid: appliNumber },
+        {
+          onSuccess: (result) => {
+            modal.success({
+              title: '대리인 활동 시작',
+              content: (
+                <span>
+                  <p />
+                  대리인 활동을 시작하실수 있습니다. <p />
+                  로그인을 다시하면 대리인 상태가 풀립니다.
+                  <p />
+                </span>
+              ),
+              onOk: () => turnToken(result.data.token),
+              okText: '대리인 활동 시작하기',
+            });
+            console.log(result.data.token);
+          },
+          onError: (err) => {
+            console.log(err.response?.status);
+          },
+        },
+      );
+    },
+    [modal, postApplicantTrans, turnToken],
+  );
+
   const dataSource = data?.data.applicant
     ? data?.data.applicant.map((data) => ({
         ...data,
@@ -113,6 +154,7 @@ const ApplicantPage = () => {
       <div css={cssMyInfoStyle(scaleValue)}>
         <div className="MyTopBox">
           <div className="MyImageWrap">
+            {contextHolder}
             <img src={image} className="MyProfileImage" alt="내 프로필" />
           </div>
           <div className="space"></div>
