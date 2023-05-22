@@ -24,7 +24,8 @@ import {
   cssPostDetailAttachment,
   cssReportContainer,
   cssReportBtnStyle,
-  cssPostFooter,
+  cssAuthorFooter,
+  cssNonAuthorFooter,
   cssPostDetail,
   cssLine2,
   cssPostBtn,
@@ -420,10 +421,15 @@ const PostPage = () => {
           )}
         </div>
       </div>
-      <Footer css={cssPostFooter}>
+      <Footer css={author ? cssAuthorFooter : cssNonAuthorFooter}>
         <div css={cssLine2} />
-        <PostButton />
-        <div css={cssLine5} />
+        {author && (
+          <>
+            <PostButton />
+            <div css={cssLine5} />
+          </>
+        )}
+
         <div css={cssPostFooter2}>
           <InputText onChange={handleInputTextChange} inputText={inputText} />
           <button css={cssPostBtn} onClick={handleSubmitComment}>
