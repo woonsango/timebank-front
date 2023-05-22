@@ -19,6 +19,13 @@ export const cssRegisterModal = (scaleValue: number) => css`
   .myUIDnumber {
     color: ${COMMON_COLOR.FONT2};
   }
+  .inputBox {
+    text-align: center;
+    align-items: center;
+    .nameBox {
+      padding-right: 110px;
+    }
+  }
   .guide {
     text-align: center;
     align-items: center;

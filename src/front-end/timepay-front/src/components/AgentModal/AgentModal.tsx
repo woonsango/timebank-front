@@ -1,4 +1,13 @@
-import { Button, Form, Input, message, Modal, Space, Table } from 'antd';
+import {
+  Button,
+  Form,
+  Input,
+  InputNumber,
+  message,
+  Modal,
+  Space,
+  Table,
+} from 'antd';
 import type { ColumnType } from 'antd/es/table';
 import { useCallback, useMemo } from 'react';
 import dayjs from 'dayjs';
@@ -73,18 +82,20 @@ const AgentModal = ({ myUID, isOpen, onCancel }: AgentModalProps) => {
       closable={false}
       css={cssRegisterModal(scaleValue)}
     >
-      <p />
-      나의 UID : <span className="myUIDnumber">{myUID}</span>
-      <p />
-      {contextHolder}
-      <Form form={form} layout="horizontal">
-        <Form.Item name="uid">
-          <Input
-            style={{ width: 210 }}
-            placeholder="대리인의 UID를 입력해주세요"
-          />
-        </Form.Item>
-      </Form>
+      <div className="inputBox">
+        <p className="nameBox">
+          나의 UID : <span className="myUIDnumber">#{myUID}</span>
+        </p>
+        {contextHolder}
+        <Form form={form} layout="horizontal">
+          <Form.Item name="uid">
+            <InputNumber
+              style={{ width: 210 }}
+              placeholder="대리인의 UID를 입력해주세요"
+            />
+          </Form.Item>
+        </Form>
+      </div>
       <span className="guide">
         대리인 신청시 대리인에게
         <br />
