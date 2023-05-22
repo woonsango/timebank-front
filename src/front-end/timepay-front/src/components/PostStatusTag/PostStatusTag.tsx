@@ -10,9 +10,11 @@ export interface PostStatusTagColorProps {
   backgroundColor?: string;
 }
 
-const PostStatusTag = ({ status }: { status?: string | null }) => {
+const PostStatusTag = ({ status }: { status?: string | null | undefined }) => {
   const { scaleValue } = useFontSize();
-  const [currentStatus, setCurrentStatus] = useState<string | null>(null);
+  const [currentStatus, setCurrentStatus] = useState<string | null | undefined>(
+    null,
+  );
 
   const statusColor: PostStatusTagColorProps = useMemo(() => {
     switch (getStatus(currentStatus)) {
@@ -46,7 +48,6 @@ const PostStatusTag = ({ status }: { status?: string | null }) => {
 
   useEffect(() => {
     setCurrentStatus(status);
-    console.log('status', status);
   }, [status]);
 
   return (

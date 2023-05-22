@@ -110,9 +110,11 @@ const PostPage = () => {
   const comments = useGetComments(parseInt(real_id));
   const useDeleteCommentMutation = useDeleteComment();
 
+  const [postState, setPostState] = useState();
   useEffect(() => {
-    console.log(data?.data.state);
-  }, [data?.data.state]);
+    setPostState(data?.data.state);
+    console.log(postState);
+  }, [data?.data.state, postState]);
 
   useEffect(() => {
     apiRequest
@@ -426,13 +428,12 @@ const PostPage = () => {
       </div>
       <Footer css={author ? cssAuthorFooter : cssNonAuthorFooter}>
         <div css={cssLine2} />
-        {author && (
+        {author || postState === 'ACTIVITY_COMPLETE' ? (
           <>
             <PostButton />
             <div css={cssLine5} />
           </>
-        )}
-
+        ) : null}
         <div css={cssPostFooter2}>
           <InputText onChange={handleInputTextChange} inputText={inputText} />
           <button css={cssPostBtn} onClick={handleSubmitComment}>
