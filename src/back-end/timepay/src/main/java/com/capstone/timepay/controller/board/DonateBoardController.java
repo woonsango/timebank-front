@@ -60,10 +60,9 @@ public class DonateBoardController {
     @PutMapping("/organizations/donate/update/{boardId}")
     @ApiOperation(value = "기부게시판 수정하기")
     public DonateBoardDTO updateDonate(@PathVariable("boardId") Long boardId,
-                                       @RequestBody DonateBoardDTO donateBoardDTO,
-                                       Principal principal)
+                                       @RequestBody DonateBoardDTO donateBoardDTO)
     {
-        return donateBoardService.updateDonate(boardId, donateBoardDTO, principal);
+        return donateBoardService.updateDonate(boardId, donateBoardDTO);
     }
 
     @DeleteMapping("/organizations/donate/delete/{boardId}")

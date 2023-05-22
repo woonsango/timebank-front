@@ -51,22 +51,11 @@ public class DonateBoardService
                 .donateTimePay(0)
                 .category(donateBoardDTO.getCategory())
                 .userId(user.getUserId())
-                .userName(user.getName())
+                .organizationName(user.getOrganization().getOrganizationName())
                 .userNickname(user.getNickname())
                 .userType("기관 회원")
+                .imageURL(user.getOrganization().getImageUrl())
                 .build();
-
-        UserProfile userProfile = user.getUserProfile();
-        if (userProfile != null) {
-            String imageUrl = userProfile.getImageUrl();
-            if (imageUrl != null) {
-                donateBoard.setImageURL(imageUrl);
-            } else {
-                donateBoard.setImageURL("없음");
-            }
-        } else {
-            donateBoard.setImageURL(null);
-        }
 
         donateBoardRepository.save(donateBoard);
         return DonateBoardDTO.toDonateDTO(donateBoard);
@@ -92,10 +81,7 @@ public class DonateBoardService
         return DonateBoardDTO.toDonateDTO(donateBoard);
     }
 
-    public DonateBoardDTO updateDonate(Long boardId, DonateBoardDTO donateBoardDTO, Principal principal) {
-        User user = userRepository.findByEmail(principal.getName()).orElseThrow(() -> {
-            return new IllegalArgumentException("해당 유저는 존재하지 않습니다");
-        });
+    public DonateBoardDTO updateDonate(Long boardId, DonateBoardDTO donateBoardDTO) {
 
         DonateBoard donateBoard = donateBoardRepository.findById(boardId).orElseThrow(() -> {
             return new IllegalArgumentException("해당 게시판이 존재하지 않습니다");
