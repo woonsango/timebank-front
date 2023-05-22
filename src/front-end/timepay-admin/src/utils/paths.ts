@@ -10,4 +10,5 @@ export const PATH = {
   PUSH_MANAGEMENT: '/push-management',
   ADMIN_MANAGEMENT: '/admin-management',
   CATEGORY_MANAGEMENT: 'category-management',
+  AGENCY_MANAGEMENT: '/agency-management',
 };

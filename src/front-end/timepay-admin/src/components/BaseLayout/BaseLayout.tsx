@@ -9,6 +9,7 @@ import {
   TeamOutlined,
   UserSwitchOutlined,
   OrderedListOutlined,
+  BankOutlined,
 } from '@ant-design/icons';
 import { Button, Layout, Menu, MenuProps, message } from 'antd';
 import { useMemo, useState } from 'react';
@@ -97,6 +98,15 @@ const BaseLayout = () => {
         icon: (
           <Link to={PATH.USER_MANAGEMENT}>
             <TeamOutlined />
+          </Link>
+        ),
+      },
+      {
+        key: PATH.AGENCY_MANAGEMENT,
+        label: '기관 관리',
+        icon: (
+          <Link to={PATH.AGENCY_MANAGEMENT}>
+            <BankOutlined />
           </Link>
         ),
       },

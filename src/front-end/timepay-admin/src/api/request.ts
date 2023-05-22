@@ -39,7 +39,7 @@ export const apiRequest = {
   post: (url: string, data: unknown) => request.post(url, data),
   postFormData: (url: string, formData: FormData) =>
     request.post(url, formData),
-  patch: (url: string, data: unknown) => request.patch(url, data),
+  patch: (url: string, data?: unknown) => request.patch(url, data),
   put: (url: string, data: unknown) => request.put(url, data),
   delete: (url: string, data?: any) => request.delete(url, data),
 };
