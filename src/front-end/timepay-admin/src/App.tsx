@@ -54,6 +54,10 @@ function App() {
               path={PATH.REPORT_MANAGEMENT}
               element={<PageRoutes.ReportManagementPage />}
             />
+            <Route
+              path={PATH.AGENCY_MANAGEMENT}
+              element={<PageRoutes.AgencyManagementPage />}
+            />
           </Route>
         </Routes>
       </ConfigProvider>

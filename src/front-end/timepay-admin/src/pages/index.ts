@@ -11,6 +11,7 @@ import ReportManagementPage from './ReportManagement';
 import LoginPage from './Login';
 import PasswordEditPage from './PasswordEdit';
 import InquiryDetailManagementPage from './InquiryDetailManagement';
+import AgencyManagementPage from './AgencyManagement/AgencyManagementPage';
 
 const PageRoutes = {
   LoginPage,
@@ -24,6 +25,7 @@ const PageRoutes = {
   PushManagementPage,
   ReportManagementPage,
   InquiryDetailManagementPage,
+  AgencyManagementPage,
 };
 
 export default PageRoutes;
