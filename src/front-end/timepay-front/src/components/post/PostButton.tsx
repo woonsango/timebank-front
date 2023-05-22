@@ -20,19 +20,19 @@ const PostButton = () => {
   );
 
   const [buttonState, setButtonState] = useState<string>(() => {
-    const storedState = localStorage.getItem('buttonState');
+    const storedState = localStorage.getItem(`buttonState_${real_id}`);
     return storedState ? storedState : 'start';
   });
   const [buttonText, setButtonText] = useState<string>(() => {
-    const storedText = localStorage.getItem('buttonText');
+    const storedText = localStorage.getItem(`buttonText_${real_id}`);
     return storedText ? storedText : '활동시작';
   });
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
-    localStorage.setItem('buttonState', buttonState);
-    localStorage.setItem('buttonText', buttonText);
-  }, [buttonState, buttonText]);
+    localStorage.setItem(`buttonState_${real_id}`, buttonState);
+    localStorage.setItem(`buttonText_${real_id}`, buttonText);
+  }, [buttonState, buttonText, real_id]);
 
   const startActivity = useCallback(async () => {
     try {

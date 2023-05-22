@@ -428,12 +428,20 @@ const PostPage = () => {
       </div>
       <Footer css={author ? cssAuthorFooter : cssNonAuthorFooter}>
         <div css={cssLine2} />
-        {author || postState === 'ACTIVITY_COMPLETE' ? (
+        {author && (
           <>
             <PostButton />
             <div css={cssLine5} />
           </>
-        ) : null}
+        )}
+
+        {!author && postState === 'ACTIVITY_COMPLETE' && (
+          <>
+            <PostButton />
+            <div css={cssLine5} />
+          </>
+        )}
+
         <div css={cssPostFooter2}>
           <InputText onChange={handleInputTextChange} inputText={inputText} />
           <button css={cssPostBtn} onClick={handleSubmitComment}>
