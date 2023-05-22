@@ -18,11 +18,11 @@ const PostStatusTag = ({ status }: { status?: string | null | undefined }) => {
 
   const statusColor: PostStatusTagColorProps = useMemo(() => {
     switch (getStatus(currentStatus)) {
-      case '매칭중':
+      case '모집중':
         return {
           pointColor: COMMON_COLOR.MAIN1,
         };
-      case '매칭완료':
+      case '모집완료':
         return {
           pointColor: COMMON_COLOR.FONT2,
         };
