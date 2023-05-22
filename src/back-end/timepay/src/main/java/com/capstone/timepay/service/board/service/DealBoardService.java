@@ -292,7 +292,8 @@ public class DealBoardService
         });
 
         dealBoard.setBoardStatus(BoardStatus.ACTIVITY_COMPLETE);
-        organizationManageService.activityComplete(boardId); // 준원님 요청
+        if (dealBoard.isVolunteer())
+            organizationManageService.activityComplete(boardId); // 준원님 요청
         dealBoardRepository.save(dealBoard);
         return DealBoardDTO.toDealBoardDTO(dealBoard);
     }
