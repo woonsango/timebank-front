@@ -81,10 +81,7 @@ public class DonateBoardService
         return DonateBoardDTO.toDonateDTO(donateBoard);
     }
 
-    public DonateBoardDTO updateDonate(Long boardId, DonateBoardDTO donateBoardDTO, Principal principal) {
-        User user = userRepository.findByEmail(principal.getName()).orElseThrow(() -> {
-            return new IllegalArgumentException("해당 유저는 존재하지 않습니다");
-        });
+    public DonateBoardDTO updateDonate(Long boardId, DonateBoardDTO donateBoardDTO) {
 
         DonateBoard donateBoard = donateBoardRepository.findById(boardId).orElseThrow(() -> {
             return new IllegalArgumentException("해당 게시판이 존재하지 않습니다");
