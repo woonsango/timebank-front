@@ -25,6 +25,10 @@ export const API_URL = {
   BOARDS__SEARCH: '/api/admins/boards/search',
   BOARDS__HIDDEN: '/api/admins/boards/hidden',
   BOARDS__STATUS: '/api/admins/boards/status',
+  ORGANIZATION_MAIN: '/api/admins/organization-user-management/main',
+  ORGANIZATION_SEARCH: '/api/admins/organization-user-management/search',
+  ORGANIZATION_PENALTY: '/api/admins/organization-user-management/penalty',
+  ORGANIZATION_AUTHORITY: '/api/admins/organization-user-management/authority',
 };
 
 /** 토큰을 넣지 않아도 되는 api url 모음 */
