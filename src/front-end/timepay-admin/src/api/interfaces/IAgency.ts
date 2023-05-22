@@ -1,8 +1,8 @@
 import { PageableData } from './ICommon';
 
 export interface IGetAgencyRequest {
-  pageIndex: 0;
-  pageSize: 10;
+  pageIndex: number;
+  pageSize: number;
   query?: string;
   value?: string;
   volunteer?: string | null;
