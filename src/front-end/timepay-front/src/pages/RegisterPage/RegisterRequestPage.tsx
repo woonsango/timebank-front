@@ -8,10 +8,11 @@ import {
   UploadFile,
   Radio,
   DatePicker,
+  Checkbox,
 } from 'antd';
 import { RcFile, UploadChangeParam, UploadProps } from 'antd/es/upload';
 import { useCallback, useState, useMemo, useEffect } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import {
   cssPostPageStyle,
   cssPostTitleStyle,
@@ -36,12 +37,18 @@ import 'dayjs/locale/ko';
 import locale from 'antd/es/date-picker/locale/ko_KR';
 import { useGetCategory } from '../../api/hooks/category';
 import { COMMON_COLOR } from '../../styles/constants/colors';
+import { useGetUserInfo } from '../../api/hooks/user';
+import {
+  cssPostAutoStyle,
+  cssPostInputNumberStyle,
+} from './RegisterRequest.styles';
 
 const { TextArea } = Input;
 const MAX_IMAGES = 5;
 
 const RegisterRequestPage = () => {
   const queryClient = useQueryClient();
+
   const setHeaderTitle = useSetRecoilState(headerTitleState);
   useEffect(() => {
     setHeaderTitle('도움요청');
@@ -66,6 +73,8 @@ const RegisterRequestPage = () => {
     useYn: 'Y',
   });
 
+  const { data: userInfo, isLoading: isLoadingUser } = useGetUserInfo();
+
   const normFile = (e: any) => {
     if (Array.isArray(e)) {
       return e;
@@ -76,6 +85,20 @@ const RegisterRequestPage = () => {
   // 사진
   const [images, setImages] = useState<File[]>([]);
   const [previewUrls, setPreviewUrls] = useState<string[]>([]);
+  const [isVolunteer, setIsVolunteer] = useState(false);
+
+  const isAgency = useMemo(() => {
+    if (userInfo?.data.body.manager_name) return true;
+    return false;
+  }, [userInfo]);
+
+  const isVolunteerAvailable = useMemo(() => {
+    return (
+      isAgency &&
+      !!userInfo?.data.body.certification_url &&
+      userInfo?.data.body.certification_url !== 'none'
+    );
+  }, [isAgency, userInfo]);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files as FileList);
@@ -184,7 +207,18 @@ const RegisterRequestPage = () => {
 
       const newPost = {
         ...values,
-        d_board_id: parseInt(values.d_board_id),
+        d_board_id: values.d_board_id ? parseInt(values.d_board_id) : null,
+        volunteer: isVolunteerAvailable ? values.volunteer : false,
+        volunteerPeople: isVolunteerAvailable
+          ? parseInt(values.volunteerPeople)
+          : 0,
+        volunteerTime: isVolunteerAvailable
+          ? values.volunteer
+            ? values.volunteerTime > 0
+              ? parseInt(values.volunteerTime)
+              : exchangeTimepay
+            : 0
+          : 0,
         images: null,
         startTime: `${values.activityDate.format(
           'YYYY-MM-DD',
@@ -227,7 +261,13 @@ const RegisterRequestPage = () => {
         },
       });
     },
-    [messageApi, navigate, createDealBoardsMutation],
+    [
+      messageApi,
+      navigate,
+      exchangeTimepay,
+      isVolunteerAvailable,
+      createDealBoardsMutation,
+    ],
   );
 
   const uploadButton = useMemo(() => {
@@ -270,11 +310,64 @@ const RegisterRequestPage = () => {
           },
         ]}
       />
+
       <Form onFinish={handleOnSubmit} form={form} layout="vertical">
+        {isAgency && (
+          <Form.Item
+            label=""
+            name="volunteer"
+            css={cssPostCategoryStyle}
+            valuePropName="checked"
+            extra="봉사활동 지급 게시글 등록은 봉사활동 자격 서류 인증을 완료한 기관만 가능합니다."
+          >
+            <Checkbox
+              disabled={!isVolunteerAvailable}
+              onChange={(e) => {
+                setIsVolunteer(e.target.checked);
+              }}
+            >
+              봉사활동 지급 여부
+            </Checkbox>
+          </Form.Item>
+        )}
+        {isAgency && (
+          <Form.Item
+            label="봉사활동 인원"
+            name="volunteerPeople"
+            css={cssPostInputNumberStyle}
+            extra="인원 * 타임페이가 소모될 예정입니다."
+          >
+            <Input
+              min={1}
+              disabled={!isVolunteerAvailable || !isVolunteer}
+              addonAfter="명"
+            />
+          </Form.Item>
+        )}
+        {isAgency && (
+          <Form.Item
+            label="지급할 봉사활동 시간"
+            name="volunteerTime"
+            css={cssPostInputNumberStyle}
+            extra={
+              <>
+                활동 완료 시 봉사자에게 지급할 봉사시간입니다. <br /> 작성하지
+                않을 경우 타임페이 양과 동일합니다.
+              </>
+            }
+            rules={[{ required: false }]}
+          >
+            <Input
+              min={1}
+              disabled={!isVolunteerAvailable || !isVolunteer}
+              addonAfter="시간"
+            />
+          </Form.Item>
+        )}
         <Form.Item
           label="카테고리 선택"
           name="category"
-          css={cssPostCategoryStyle}
+          css={isAgency ? cssPostDateStyle : cssPostCategoryStyle}
         >
           <Radio.Group onChange={handleCategoryChange}>
             {data?.data.map((category) => (
@@ -419,7 +512,15 @@ const RegisterRequestPage = () => {
             {imgFileList.length === 1 ? null : uploadButton}
           </Upload>
         </Form.Item>
-
+        <Form.Item
+          label=""
+          name="auto"
+          css={cssPostAutoStyle}
+          valuePropName="checked"
+          extra="설정 시 선착순으로 매칭됩니다."
+        >
+          <Checkbox>자동매칭 여부</Checkbox>
+        </Form.Item>
         <div css={cssPostFooterStyle}>
           {isDisabled ? (
             <Button css={cssPostBtnStyle2}>작성완료</Button>

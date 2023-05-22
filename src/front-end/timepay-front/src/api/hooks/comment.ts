@@ -1,7 +1,6 @@
 import { AxiosError, AxiosResponse } from 'axios';
 import { useMutation, useQuery } from 'react-query';
 import { IComment, IPostComment } from '../interfaces/IComment';
-import { IPost } from '../interfaces/IPost';
 import { apiRequest } from '../request';
 import { API_URL } from '../urls';
 
@@ -14,8 +13,8 @@ export const useGetComment = () => {
 };
 
 export const useGetComments = (postPk: number) => {
-  return useQuery<AxiosResponse<IComment>, AxiosError>({
-    queryKey: ['useGetComments'],
+  return useQuery<AxiosResponse<IPostComment[]>, AxiosError>({
+    queryKey: ['useGetComments', postPk],
     queryFn: () => apiRequest.get(`${API_URL.DEAL_BOARDS_COMMENT}/${postPk}`),
     refetchOnWindowFocus: false,
   });
@@ -33,7 +32,7 @@ export const useCreateComment = (postPk: number) => {
 
 export const useDeleteComment = () => {
   return useMutation<
-    AxiosResponse<IComment>,
+    AxiosResponse<any>,
     AxiosError,
     { postPk: number; id: number }
   >({

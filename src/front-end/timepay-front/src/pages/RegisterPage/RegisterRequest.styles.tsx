@@ -62,3 +62,14 @@ export const cssRegisterRequestStepItemStyle = (isCurrent: boolean) => css`
     word-break: keep-all;
   }
 `;
+
+export const cssPostInputNumberStyle = css`
+  margin: 0 20px;
+  .ant-input-wrapper {
+    width: 140px !important;
+  }
+`;
+
+export const cssPostAutoStyle = css`
+  margin: 0 20px;
+`;

@@ -316,3 +316,15 @@ export const cssLine5 = css`
   border-top: 1.2px solid ${COMMON_COLOR.FONT4};
   background-color: black;
 `;
+
+export const cssSpinStyle = css`
+  text-align: center !important;
+  padding-top: 280px !important;
+  width: 100%;
+`;
+
+export const cssSpinCommentStyle = css`
+  text-align: center !important;
+  padding-top: 50px !important;
+  width: 100%;
+`;

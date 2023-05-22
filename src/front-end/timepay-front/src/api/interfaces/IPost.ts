@@ -107,6 +107,7 @@ export interface IBoard {
   userNickname?: string;
   userType?: string;
   imageUrl?: string;
+  userId?: number | null; // 기관 회원일 경우 유저 pk
   // 아래는 실제로는 없는데 SimplePostCard에서 DonationBoard 같이 쓰면 에러나서 추가
   id: null;
   organizationName: null;
