@@ -127,11 +127,18 @@ const PostPage = () => {
     return userInfo?.data.body.nick_name;
   }, [userInfo]);
 
+  const isAgency = useMemo(() => {
+    if (userInfo?.data.body.manager_name) return true;
+    return false;
+  }, [userInfo]);
+
   // 수정 및 삭제 버튼 표시 여부를 결정하는 함수
   const isAuthor = useMemo(() => {
     // 게시글 작성자일 때 true
-    return board?.userNickname === userNickname;
-  }, [board, userNickname]);
+    return isAgency
+      ? board?.userId === userInfo?.data.body.uid
+      : board?.userNickname === userNickname;
+  }, [board, isAgency, userInfo, userNickname]);
 
   const handleDelete = useCallback(async () => {
     Modal.confirm({
