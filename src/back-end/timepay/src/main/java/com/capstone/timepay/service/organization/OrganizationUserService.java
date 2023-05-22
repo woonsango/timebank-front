@@ -77,7 +77,6 @@ public class OrganizationUserService {
                 .pw(encodedPassword)
                 .employeeNum(dto.getEmployeeNum())
                 .timepay(dto.getTimepay())
-                .deviceToken(dto.getDeviceToken())
                 .authority("normal")    // 일단 기본 권한 부여
                 .imageUrl(imageUrl)
                 .certificationUrl(certificationUrl)
@@ -106,6 +105,7 @@ public class OrganizationUserService {
                     .nickname(dto.getManagerName())
                     .phone(dto.getManagerPhone())   // 담당자 폰 번호 저장
                     .sex("null")
+                    .deviceToken(dto.getDeviceToken())
                     .organization(newOrganization)
                     .userProfile(userProfile)
                     .userToken(userToken)
