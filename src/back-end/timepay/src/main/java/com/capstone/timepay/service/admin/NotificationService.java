@@ -18,6 +18,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -96,6 +97,7 @@ public class NotificationService {
         return resultMap;
     }
 
+    @Transactional
     public boolean viewNotification(Long notificationId) {
         Optional<Notification> notice = notificationRepository.findById(notificationId);
         if (!notice.isPresent()) {

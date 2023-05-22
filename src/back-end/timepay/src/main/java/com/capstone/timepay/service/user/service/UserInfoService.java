@@ -2,6 +2,7 @@ package com.capstone.timepay.service.user.service;
 
 import com.capstone.timepay.controller.admin.response.comment.CommentResponse;
 import com.capstone.timepay.controller.user.request.BookmarkDTO;
+import com.capstone.timepay.controller.user.request.DeviceTokenDTO;
 import com.capstone.timepay.controller.user.request.RequestDTO;
 import com.capstone.timepay.controller.user.request.UpdateRequestDTO;
 import com.capstone.timepay.controller.user.response.GetResponseDTO;
@@ -35,6 +36,7 @@ import com.google.firebase.auth.FirebaseAuthException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.*;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -543,5 +545,13 @@ public class UserInfoService {
                 new IllegalArgumentException("존재하지 않는 유저입니다."));
         user.setBookmark(bookmarkDTO.getBookmark());
         userRepository.save(user);
+    }
+
+    public ResponseEntity<?> updateUserDeviceToken(String username, DeviceTokenDTO deviceToken) {
+        User user = userRepository.findByEmail(username).orElseThrow(() ->
+                new IllegalArgumentException("존재하지 않는 유저입니다."));
+        user.setDeviceToken(deviceToken.getDeviceToken());
+        userRepository.save(user);
+        return new ResponseEntity<>("Success", HttpStatus.OK);
     }
 }

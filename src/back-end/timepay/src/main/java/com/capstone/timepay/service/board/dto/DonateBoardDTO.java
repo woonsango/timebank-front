@@ -2,10 +2,12 @@ package com.capstone.timepay.service.board.dto;
 
 import com.capstone.timepay.domain.dealBoard.DealBoard;
 import com.capstone.timepay.domain.donateBoard.DonateBoard;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import com.capstone.timepay.domain.user.User;
+import com.capstone.timepay.domain.user.UserRepository;
+import lombok.*;
+
+import java.security.Principal;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -20,8 +22,35 @@ public class DonateBoardDTO {
     private Integer donateTimePay; // 기부받은 타임페이
     private String category;
 
-    public static DonateBoardDTO toDonateDTO(DonateBoard donateBoard)
+    // 유저 정보
+    private Long userId;
+    private String userName;
+    private String userNickname;
+    private String imageURL;
+    private String userType;
+    private LocalDateTime createAt;
+
+
+    public static DonateBoardDTO toDonateDTO(DonateBoard donateBoard, User user)
     {
+        if (user.getOrganization() == null)
+        {
+            return new DonateBoardDTO(
+                    donateBoard.getId(),
+                    donateBoard.getTitle(),
+                    donateBoard.getContent(),
+                    donateBoard.getType(),
+                    donateBoard.getTargetTimePay(),
+                    donateBoard.getDonateTimePay(),
+                    donateBoard.getCategory(),
+                    user.getUserId(),
+                    user.getName(),
+                    user.getNickname(),
+                    user.getUserProfile().getImageUrl(),
+                    "일반 회원",
+                    donateBoard.getCreatedAt()
+            );
+        }
         return new DonateBoardDTO(
                 donateBoard.getId(),
                 donateBoard.getTitle(),
@@ -29,7 +58,13 @@ public class DonateBoardDTO {
                 donateBoard.getType(),
                 donateBoard.getTargetTimePay(),
                 donateBoard.getDonateTimePay(),
-                donateBoard.getCategory()
+                donateBoard.getCategory(),
+                user.getUserId(),
+                user.getName(),
+                user.getNickname(),
+                user.getUserProfile().getImageUrl(),
+                "기관 회원",
+                donateBoard.getCreatedAt()
         );
     }
 }

@@ -103,11 +103,13 @@ public class AgentService {
             if(!agentInfo.isAccept()) {
                 if (agentApplyRequest.isApply()) { // true
                     agentInfo.setAccept(true);
+                    agentRepository.save(agentInfo);
                     agentStatusResponse = new AgentStatusResponse(true,
                             "성공적으로 수락하였습니다.");
                 }
                 else {
                     agentInfo.setAccept(false);
+                    agentRepository.save(agentInfo);
                     agentStatusResponse = new AgentStatusResponse(true,
                             "성공적으로 거절하였습니다.");
                 }

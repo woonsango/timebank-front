@@ -2,6 +2,7 @@ package com.capstone.timepay.domain.dealRegister;
 
 import com.capstone.timepay.domain.BaseTimeEntity;
 import com.capstone.timepay.domain.dealBoard.DealBoard;
+import com.capstone.timepay.domain.donateBoard.DonateBoard;
 import com.capstone.timepay.domain.user.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;

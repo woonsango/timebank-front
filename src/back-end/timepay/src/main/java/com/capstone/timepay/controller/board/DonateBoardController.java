@@ -29,23 +29,28 @@ public class DonateBoardController {
     // 기부하기 게시글 작성
     @PostMapping("/organizations/donate/write")
     @ApiOperation(value = "기부하기 게시글 작성")
-    public ResponseEntity donateWrite(@RequestBody DonateBoardDTO donateBoardDTO)
+    public ResponseEntity donateWrite(@RequestBody DonateBoardDTO donateBoardDTO,
+                                      Principal principal)
     {
+        User user = userRepository.findByEmail(principal.getName()).orElseThrow(() -> {
+            return new IllegalArgumentException("해당 유저는 존재하지 않습니다");
+        });
         // 현재 유저가 기관유저가 아닐경우 작성 권한이 없음
-//        if (user.getOrganization() == null)
-//        {
-//            return new ResponseEntity("개인 유저는 게시글을 작성할 수 없습니다.", HttpStatus.OK);
-//        }
-        return new ResponseEntity(donateBoardService.donateWrite(donateBoardDTO), HttpStatus.OK);
+        if (user.getOrganization() == null)
+        {
+            return new ResponseEntity("개인 유저는 게시글을 작성할 수 없습니다.", HttpStatus.OK);
+        }
+        return new ResponseEntity(donateBoardService.donateWrite(donateBoardDTO, principal), HttpStatus.OK);
     }
 
     @GetMapping("/donate")
     @ApiOperation(value = "작성한 기부 게시판 모두 보기")
     public ResponseEntity<Page<DonateBoardDTO>> getDonates(
             @RequestParam(value = "pagingIndex", defaultValue = "0") int pagingIndex,
-            @RequestParam(value = "pagingSize", defaultValue = "10") int pagingSize)
+            @RequestParam(value = "pagingSize", defaultValue = "10") int pagingSize,
+            Principal principal)
     {
-        Page<DonateBoardDTO> paging = donateBoardService.getDonateBoards(pagingIndex, pagingSize);
+        Page<DonateBoardDTO> paging = donateBoardService.getDonateBoards(pagingIndex, pagingSize, principal);
         if (paging.isEmpty())
         {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -55,17 +60,19 @@ public class DonateBoardController {
 
     @GetMapping("/donate/{boardId}")
     @ApiOperation(value = "작성한 기부 게시판 하나 보기")
-    public DonateBoardDTO getDonate(@PathVariable("boardId") Long boardId)
+    public DonateBoardDTO getDonate(@PathVariable("boardId") Long boardId,
+                                    Principal principal)
     {
-        return donateBoardService.getDonateBoard(boardId);
+        return donateBoardService.getDonateBoard(boardId, principal);
     }
 
     @PutMapping("/organizations/donate/update/{boardId}")
     @ApiOperation(value = "기부게시판 수정하기")
     public DonateBoardDTO updateDonate(@PathVariable("boardId") Long boardId,
-                                       @RequestBody DonateBoardDTO donateBoardDTO)
+                                       @RequestBody DonateBoardDTO donateBoardDTO,
+                                       Principal principal)
     {
-        return donateBoardService.updateDonate(boardId, donateBoardDTO);
+        return donateBoardService.updateDonate(boardId, donateBoardDTO, principal);
     }
 
     @DeleteMapping("/organizations/donate/delete/{boardId}")

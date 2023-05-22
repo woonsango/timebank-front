@@ -32,6 +32,7 @@ public class NotificationInfoResponse {
         this.imageUrl = notification.getImageUrl();
         this.isNotice = notification.isNotice();
         this.content = notification.getContent();
+        this.isViewed = notification.isViewed();
         this.adminId = notification.getAdmin().getAdminId();
         this.adminName = notification.getAdmin().getAdminName();
         this.createdAt = notification.getCreatedAt();
