@@ -8,7 +8,15 @@ import {
 } from '../../pages/PostPage/PostPage.style';
 import { COMMON_COLOR } from '../../styles/constants/colors';
 
-export const ApplicantButton = ({ applicantList, onItemClick }) => {
+interface ApplicantButtonProps {
+  applicantList: string[];
+  onItemClick: (index: number, name: string) => void;
+}
+
+const ApplicantButton: React.FC<ApplicantButtonProps> = ({
+  applicantList,
+  onItemClick,
+}) => {
   const [isListModalOpen, setIsListModalOpen] = useState(false);
   const [selectedApplicantIndex, setSelectedApplicantIndex] = useState(-1);
   const [messageApi, contextHolder] = message.useMessage();
@@ -37,13 +45,12 @@ export const ApplicantButton = ({ applicantList, onItemClick }) => {
     setIsListModalOpen(false);
   };
 
-  const onItemClickHandler = (index) => {
+  const onItemClickHandler = (index: number) => {
     setSelectedApplicantIndex(index);
   };
 
   return (
     <div css={cssCommentContainer}>
-      <p>댓글</p>
       {contextHolder}
       <div css={cssCollectButton}>
         <Button css={cssCollectBtn} onClick={showListModal}>
@@ -83,3 +90,5 @@ export const ApplicantButton = ({ applicantList, onItemClick }) => {
     </div>
   );
 };
+
+export default ApplicantButton;

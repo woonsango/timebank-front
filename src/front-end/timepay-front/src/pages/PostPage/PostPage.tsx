@@ -48,7 +48,7 @@ import { apiRequest } from '../../api/request';
 import { API_URL } from '../../api/urls';
 import Item from '../../components/post/Item';
 import InputText from '../../components/post/InputText';
-import { ApplicantButton } from '../../components/post/ApplicantButton';
+import ApplicantButton from '../../components/post/ApplicantButton';
 
 import axios from 'axios';
 import { useDeleteBoard, useGetBoard } from '../../api/hooks/board';
@@ -400,10 +400,13 @@ const PostPage = () => {
           </div>
         </div>
         <div css={cssLine4} />
-        <ApplicantButton
-          applicantList={applicantList}
-          onItemClick={onApplicantClick}
-        />
+        <h1>댓글</h1>
+        {author && (
+          <ApplicantButton
+            applicantList={applicantList}
+            onItemClick={onApplicantClick}
+          />
+        )}
         <div css={cssPostDetailSixth}>
           {applicants.length > 0 ? (
             applicants.map((data) => (

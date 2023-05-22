@@ -50,6 +50,13 @@ export const cssPostDetailPage = css`
   display: flex;
   flex-direction: column;
   margin-top: 20px;
+  h1 {
+    font-size: 22px;
+    font-weight: 500;
+    margin: 0;
+    margin-top: 40px;
+    margin-left: 20px;
+  }
 `;
 
 // 1st block
@@ -209,12 +216,6 @@ export const cssCommentContainer = css`
   margin-top: 10px;
   margin-left: 25px;
   margin-right: 25px;
-  p {
-    font-size: 22px;
-    font-weight: 500;
-    margin: 0;
-    margin-top: 20px;
-  }
 `;
 export const cssCollectButton = css`
   display: flex;
