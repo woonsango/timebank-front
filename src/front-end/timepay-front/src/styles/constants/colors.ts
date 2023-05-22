@@ -18,4 +18,5 @@ export const COMMON_COLOR = {
   WARM_GRAY: '#F6F6F6',
   LOGO1: '#FFC700',
   BRIGHT_GRAY: '#F2F2F2',
+  AGENT_RED: '#FF6B00',
 };

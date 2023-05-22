@@ -5,7 +5,11 @@ import { useCallback, useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { PATH } from '../../utils/paths';
-import { setTokenToCookie } from '../../utils/token';
+import {
+  getMultiTokenFromCookie,
+  setMultiTokenToCookie,
+  setTokenToCookie,
+} from '../../utils/token';
 import { saveUid } from './saveUid';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { agencyState, userState } from '../../states/user';

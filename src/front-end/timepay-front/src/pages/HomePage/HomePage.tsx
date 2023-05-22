@@ -1,6 +1,10 @@
-import { cssCategoryListStyle, cssHomePageStyle } from './HomePage.styles';
+import {
+  cssBox,
+  cssCategoryListStyle,
+  cssHomePageStyle,
+} from './HomePage.styles';
 import { ReactComponent as Logo } from '../../assets/images/icons/timepay-character-logo.svg';
-import { Button, Input, Spin } from 'antd';
+import { Button, Input, Modal, Spin } from 'antd';
 import { useGetCategory } from '../../api/hooks/category';
 import { useNavigate } from 'react-router-dom';
 import { useCallback, useState } from 'react';
@@ -11,6 +15,11 @@ import {
   initialBoardSearchState,
 } from '../../states/boardSearch';
 import useFontSize from '../../hooks/useFontSize';
+import {
+  getMultiTokenFromCookie,
+  setMultiTokenToCookie,
+} from '../../utils/token';
+import { COMMON_COLOR } from '../../styles/constants/colors';
 
 const HomePage = () => {
   const navigate = useNavigate();
@@ -53,8 +62,47 @@ const HomePage = () => {
     [navigate, setBoardSearchState],
   );
 
+  const { confirm } = Modal;
+  const token = getMultiTokenFromCookie();
+
+  const logoutToken = useCallback(() => {
+    setMultiTokenToCookie('undefined', 0);
+    navigate('/my');
+  }, [navigate]);
+  const openMuliTokenModal = useCallback(() => {
+    confirm({
+      title: '대리인 활동 종료',
+      content: (
+        <span>
+          <p />
+          대리인 활동을 종료할 수 있습니다. <p />
+          <p />
+        </span>
+      ),
+      onOk: logoutToken,
+      okText: '대리인 활동 종료하기',
+      okButtonProps: { style: { backgroundColor: COMMON_COLOR.MAIN2 } },
+      onCancel() {},
+      cancelText: '취소',
+    });
+  }, [confirm, logoutToken]);
   return (
     <div css={cssHomePageStyle(scaleValue)}>
+      {!token || token === 'undefined' ? (
+        <div></div>
+      ) : (
+        <div css={cssBox}>
+          <Button
+            className="agentAction"
+            type="primary"
+            block
+            onClick={openMuliTokenModal}
+          >
+            대리인 활동중입니다
+          </Button>
+        </div>
+      )}
+
       <div className="title-search-container">
         <Logo />
         <div className="title-search">

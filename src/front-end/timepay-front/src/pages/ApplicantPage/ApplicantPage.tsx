@@ -5,12 +5,24 @@ import { apiRequest } from '../../api/request';
 import { API_URL } from '../../api/urls';
 import useFontSize from '../../hooks/useFontSize';
 import { cssBtnSpace, cssMyInfoStyle } from './ApplicantPage.style';
-import { Button, Modal, Space, Table, Typography } from 'antd';
+import { Button, Modal, Space, Table, Typography, message } from 'antd';
 import { COMMON_COLOR } from '../../styles/constants/colors';
 import { ExclamationCircleFilled } from '@ant-design/icons';
 import ApplicantModal from '../../components/ApplicantModal';
 import { IApplicant } from '../../api/interfaces/IApplicant';
 import ApplicantReceivedModal from '../../components/ApplicantReceivedModal';
+import {
+  useGetApplicant,
+  usePostApplicantTrans,
+} from '../../api/hooks/applicant';
+import {
+  getMultiTokenFromCookie,
+  getTokenFromCookie,
+  setMultiTokenToCookie,
+  setTokenToCookie,
+} from '../../utils/token';
+import cookie from 'cookie';
+import { useNavigate } from 'react-router-dom';
 
 const ApplicantPage = () => {
   const setHeaderTitle = useSetRecoilState(headerTitleState);
@@ -20,10 +32,13 @@ const ApplicantPage = () => {
   const [image, setImage]: any = useState();
   const [nickName, setNickName]: any = useState();
   const [personalNum, setPersonalNum]: any = useState();
+  const { data } = useGetApplicant();
 
   const { scaleValue } = useFontSize();
   const { Text } = Typography;
-  const { confirm } = Modal;
+  const postApplicantTrans = usePostApplicantTrans();
+  const [modal, contextHolder] = Modal.useModal();
+  const navigate = useNavigate();
 
   const handleOnCancelModal = useCallback(() => {
     setIsOpenRegisterModal(false);
@@ -57,35 +72,64 @@ const ApplicantPage = () => {
     setHeaderTitle('신청인 관리');
   }, [setHeaderTitle]);
 
-  const onClickSwitch = useCallback((appliNumber: number) => {
-    console.log(appliNumber);
-  }, []);
+  const turnToken = useCallback(
+    (token: string) => {
+      console.log('token', token);
+      setMultiTokenToCookie(token, 10);
+      navigate('/my');
+    },
+    [navigate],
+  );
 
-  const agent = '미지정'; //api 받아오면 조건문 추가
-  //신청자 보여주는것도 테이블
-  //신청자 삭제는 radio 테이블
-  //받은 신청 목록 보여주는것도 테이블 쓰면 될듯 (column Header off 해서)
+  const onClickSwitch = useCallback(
+    async (appliNumber: number) => {
+      await postApplicantTrans.mutateAsync(
+        { uid: appliNumber },
+        {
+          onSuccess: (result) => {
+            modal.success({
+              title: '대리인 활동 시작',
+              content: (
+                <span>
+                  <p />
+                  대리인 활동을 시작하실수 있습니다. <p />
+                  로그인을 다시하면 대리인 상태가 풀립니다.
+                  <p />
+                </span>
+              ),
+              onOk: () => turnToken(result.data.token),
+              okText: '대리인 활동 시작하기',
+            });
+            console.log(result.data.token);
+          },
+          onError: (err) => {
+            console.log(err.response?.status);
+          },
+        },
+      );
+    },
+    [modal, postApplicantTrans, turnToken],
+  );
 
-  const dataSource: IApplicant[] = [];
-  for (let i = 0; i < 100; i++) {
-    dataSource.push({
-      appliName: '길동홍',
-      appliUid: i,
-    });
-  }
+  const dataSource = data?.data.applicant
+    ? data?.data.applicant.map((data) => ({
+        ...data,
+        displayUid: `#${data.appliUid}`,
+      }))
+    : [];
 
   const columns = [
-    {
-      title: 'appliUid',
-      dataIndex: 'appliUid',
-      key: 'appliUid',
-      width: 10,
-    },
     {
       title: 'appliName',
       dataIndex: 'appliName',
       key: 'appliName',
-      width: 10,
+      width: 7,
+    },
+    {
+      title: 'displayUid',
+      dataIndex: 'displayUid',
+      key: 'displayUid',
+      width: 7,
     },
     {
       title: '계정전환',
@@ -110,6 +154,7 @@ const ApplicantPage = () => {
       <div css={cssMyInfoStyle(scaleValue)}>
         <div className="MyTopBox">
           <div className="MyImageWrap">
+            {contextHolder}
             <img src={image} className="MyProfileImage" alt="내 프로필" />
           </div>
           <div className="space"></div>
@@ -127,6 +172,7 @@ const ApplicantPage = () => {
             showHeader={false}
             pagination={false}
             scroll={{ y: 240 }}
+            locale={{ emptyText: '등록된 신청자가 없습니다.' }}
           />
 
           <div className="space-align-container" css={cssBtnSpace(scaleValue)}>
@@ -162,7 +208,6 @@ const ApplicantPage = () => {
       <ApplicantReceivedModal
         isOpen={isOpenReceivedModal}
         onCancel={handleOnCancelModal}
-        applicants={dataSource}
       />
     </div>
   );

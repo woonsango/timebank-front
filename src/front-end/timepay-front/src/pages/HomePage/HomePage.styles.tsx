@@ -1,5 +1,12 @@
 import { css } from '@emotion/react';
 import { COMMON_COLOR } from '../../styles/constants/colors';
+export const cssBox = css`
+  .ant-btn {
+    position: fixed;
+    z-index: 200;
+    background-color: ${COMMON_COLOR.AGENT_RED};
+  }
+`;
 
 export const cssHomePageStyle = (scaleValue: number) => css`
   display: flex;

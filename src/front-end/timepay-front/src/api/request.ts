@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { getTokenFromCookie } from '../utils/token';
+import { getMultiTokenFromCookie, getTokenFromCookie } from '../utils/token';
 import { FORM_DATA_REQUIRED_URLS, HEADER_NOT_REQUIRED_URLS } from './urls';
 
 const request = axios.create({
@@ -12,7 +12,9 @@ const request = axios.create({
 });
 
 request.interceptors.request.use((config) => {
-  const token = getTokenFromCookie();
+  const isMulti = getMultiTokenFromCookie();
+  const token =
+    !isMulti || isMulti === 'undefined' ? getTokenFromCookie() : isMulti;
   // 여기에 token 이 필요한 api 요청일 때만 추가
   config.headers.set(
     'Authorization',

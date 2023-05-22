@@ -33,6 +33,13 @@ export const API_URL = {
   DONATION_BOARD_ID: '/api/donate',
   DONATE_TIMEPAY: '/api/donate/timepay',
   DONATE_BOARDS: '/api/donate',
+  AGENT: '/api/users/applicants', //신청인이 대리인을 조회
+  AGENT__REGISTER: '/api/users/applicants/register', //신청인이 대리인을 등록
+  AGENT__DELETE: '/api/users/applicants', //신청인이 대리인을 삭제
+  APPLICANT: '/api/users/agents', //대리인이 신청인을 조회 및 관리
+  APPLICANT__WAITING: '/api/users/agents/waiting', //대리인이 받은 신청 목록을 조회
+  APPLICANT__APPLY: '/api/users/agents/waiting/apply', //대리인이 신청을 수락 및 거절
+  APPLICANT__TRANS: '/api/users/agents/trans', //대리인의 신청인의 계정으로 전환
   DONATION_BOARD_EDIT: '/api/organizations/donate/update',
   DONATION_BOARD_DELETE: '/api/organizations/donate/delete',
 };

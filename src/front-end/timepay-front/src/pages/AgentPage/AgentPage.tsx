@@ -7,22 +7,36 @@ import useFontSize from '../../hooks/useFontSize';
 import { cssBtnSpace, cssMyInfoStyle } from './AgentPage.style';
 import { Button, Modal, Space, Typography } from 'antd';
 import { COMMON_COLOR } from '../../styles/constants/colors';
-import SizeContext from 'antd/es/config-provider/SizeContext';
 import AgentModal from '../../components/AgentModal';
 import { ExclamationCircleFilled } from '@ant-design/icons';
-import { cssModalFooter } from '../../components/AgentModal/AgentModal.style';
+import { useDeleteAgent, useGetAgent } from '../../api/hooks/agent';
+import { useQueryClient } from 'react-query';
 
 const AgentPage = () => {
   const setHeaderTitle = useSetRecoilState(headerTitleState);
   const [isOpenRegisterModal, setIsOpenRegisterModal] = useState(false);
 
   const [image, setImage]: any = useState();
-  const [nickName, setNickName]: any = useState();
-  const [personalNum, setPersonalNum]: any = useState();
 
   const { scaleValue } = useFontSize();
   const { Text } = Typography;
   const { confirm } = Modal;
+
+  const { data } = useGetAgent();
+  const deleteAgentMutation = useDeleteAgent();
+  const queryClient = useQueryClient();
+
+  console.log(data?.data);
+  const agentName = data?.data.agentName;
+  const agent = agentName
+    ? data?.data.accept
+      ? `${agentName}님`
+      : `(승인 대기중)${agentName}님`
+    : '미지정';
+  let isRegister: boolean = false;
+  if (agentName) {
+    isRegister = true;
+  }
 
   const handleOnCancelModal = useCallback(() => {
     setIsOpenRegisterModal(false);
@@ -40,8 +54,18 @@ const AgentPage = () => {
       okText: '삭제',
       okType: 'primary',
       okButtonProps: { style: { backgroundColor: COMMON_COLOR.MAIN2 } },
-      onOk() {
+      async onOk() {
         console.log('OK');
+        await deleteAgentMutation.mutateAsync(undefined, {
+          onSuccess: (result) => {
+            queryClient.invalidateQueries({
+              queryKey: ['useGetAgent'],
+            });
+          },
+          onError: (err) => {
+            console.log(err.response?.status);
+          },
+        });
       },
       cancelText: '취소',
 
@@ -59,8 +83,6 @@ const AgentPage = () => {
           res.data.body.image_url ||
             'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png',
         );
-        setNickName(res.data.body.nick_name);
-        setPersonalNum(res.data.body.id);
       })
       .catch((error) => {
         console.error('Error sending GET request:', error);
@@ -70,8 +92,6 @@ const AgentPage = () => {
   useEffect(() => {
     setHeaderTitle('대리인 관리');
   }, [setHeaderTitle]);
-
-  const agent = '미지정'; //api 받아오면 조건문 추가
 
   return (
     <>
@@ -83,8 +103,8 @@ const AgentPage = () => {
           <div className="space"></div>
 
           <div className="MyNameWrap">
-            <div className="MyName">{nickName}</div>
-            <div className="MyPersonalNum"> {'#' + personalNum}</div>
+            <div className="MyName">{data?.data.myName}</div>
+            <div className="MyPersonalNum"> {'#' + data?.data.myUid}</div>
           </div>
         </div>
         <div className="agentBox">
@@ -99,6 +119,7 @@ const AgentPage = () => {
                 type="primary"
                 style={{ background: COMMON_COLOR.MAIN1, width: 140 }}
                 onClick={isOpenModal}
+                disabled={isRegister}
               >
                 대리인 등록
               </Button>
@@ -115,7 +136,11 @@ const AgentPage = () => {
           </div>
         </div>
       </div>
-      <AgentModal isOpen={isOpenRegisterModal} onCancel={handleOnCancelModal} />
+      <AgentModal
+        myUID={data?.data.myUid as number}
+        isOpen={isOpenRegisterModal}
+        onCancel={handleOnCancelModal}
+      />
     </>
   );
 };

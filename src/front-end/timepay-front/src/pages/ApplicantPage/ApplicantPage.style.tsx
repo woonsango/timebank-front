@@ -90,6 +90,10 @@ export const cssBtnSpace = (scaleValue: number) => css`
     flex-wrap: wrap;
     align-items: flex-start;
   }
+  .ant-space-align-center {
+    display: flex;
+    justify-content: center;
+  }
   .space-align-block {
     flex: none;
     margin: 8px 4px;
