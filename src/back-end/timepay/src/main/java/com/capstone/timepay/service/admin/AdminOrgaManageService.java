@@ -108,7 +108,7 @@ public class AdminOrgaManageService {
         }
         else if(query.equals("user") && !Objects.isNull(query) && !Objects.isNull(value)) {
             User user = userRepository.findById(Long.parseLong(value)).orElse(null);
-            if(ObjectUtils.isEmpty(user)) return new PageImpl<>(new ArrayList<>());
+            if(Objects.isNull(user)) return new PageImpl<>(new ArrayList<>());
             responses.add(convertUserToResponse(user));
         }
         else if(query.equals("name") && !Objects.isNull(query) && !Objects.isNull(value)){
