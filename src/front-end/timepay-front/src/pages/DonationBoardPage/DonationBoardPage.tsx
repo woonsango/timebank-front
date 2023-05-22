@@ -4,6 +4,7 @@ import { useQueryClient } from 'react-query';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useSetRecoilState } from 'recoil';
 import {
+  useDeleteDonationBoard,
   useGetDonationBoardWithId,
   usePostDonateTimepay,
 } from '../../api/hooks/donation';
@@ -23,6 +24,7 @@ const DonationBoardPage = () => {
   );
   const { data: userInfo, isLoading: isLoadingUserInfo } = useGetUserInfo();
   const usePostDonateTimepayMutation = usePostDonateTimepay();
+  const useDeleteDonationBoardMutation = useDeleteDonationBoard();
 
   const setHeaderTitle = useSetRecoilState(headerTitleState);
 
@@ -81,6 +83,37 @@ const DonationBoardPage = () => {
     usePostDonateTimepayMutation,
   ]);
 
+  const handleOnDelete = useCallback(() => {
+    if (boardId)
+      Modal.confirm({
+        content: '정말 삭제하시겠습니까?',
+        okText: '확인',
+        cancelText: '취소',
+        onOk: async () => {
+          useDeleteDonationBoardMutation.mutateAsync(parseInt(boardId), {
+            onSuccess: () => {
+              messageApi.open({
+                type: 'success',
+                content: '삭제가 완료되었습니다.',
+                duration: 1,
+                onClose: () => {
+                  queryClient.invalidateQueries('useGetDonationBoards');
+                  queryClient.invalidateQueries('useGetDonationBoardWithId');
+                  navigate(PATH.HOME);
+                },
+              });
+            },
+          });
+        },
+      });
+  }, [
+    boardId,
+    navigate,
+    messageApi,
+    useDeleteDonationBoardMutation,
+    queryClient,
+  ]);
+
   const isMyBoard = useMemo(() => {
     return (
       !isLoading &&
@@ -134,7 +167,9 @@ const DonationBoardPage = () => {
                   >
                     수정
                   </Button>
-                  <Button type="default">삭제</Button>
+                  <Button type="default" onClick={handleOnDelete}>
+                    삭제
+                  </Button>
                 </div>
               )}
             </div>

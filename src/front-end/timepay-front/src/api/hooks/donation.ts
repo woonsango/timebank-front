@@ -94,6 +94,17 @@ export const usePutDonationBoardEdit = () => {
   >({
     mutationKey: 'usePutDonationBoardEdit',
     mutationFn: (data: IPutDonationBoardEditRequest) =>
-      apiRequest.put(`${API_URL.DONATION_EDIT}/${data.boardId}`, data.board),
+      apiRequest.put(
+        `${API_URL.DONATION_BOARD_EDIT}/${data.boardId}`,
+        data.board,
+      ),
+  });
+};
+
+export const useDeleteDonationBoard = () => {
+  return useMutation<AxiosResponse<any>, AxiosError, number>({
+    mutationKey: 'useDeleteDonationBoard',
+    mutationFn: (boardId: number) =>
+      apiRequest.delete(`${API_URL.DONATION_BOARD_DELETE}/${boardId}`),
   });
 };
