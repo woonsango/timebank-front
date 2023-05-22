@@ -149,8 +149,11 @@ const DonationBoardPage = () => {
                   percent={
                     data?.data.donateTimePay !== undefined &&
                     data.data.targetTimePay !== undefined
-                      ? (data?.data.donateTimePay / data?.data.targetTimePay) *
-                        100
+                      ? Math.floor(
+                          (data?.data.donateTimePay /
+                            data?.data.targetTimePay) *
+                            100,
+                        )
                       : 0
                   }
                   size="small"
