@@ -108,6 +108,8 @@ const PostButton = () => {
         title="활동을 시작하시겠습니까?"
         open={isModalOpen}
         onOk={handleConfirm}
+        okText="활동 시작"
+        cancelText="취소"
         onCancel={handleCancel}
         style={{ fontWeight: 400 }}
       >
@@ -116,9 +118,11 @@ const PostButton = () => {
         </h3>
       </Modal>
       <Modal
-        title="활동을 종료하시겠습니까?"
+        title="활동을 완료하시겠습니까?"
         open={isModalOpen2}
         onOk={handleConfirm}
+        okText="활동 완료"
+        cancelText="취소"
         onCancel={handleCancel}
         style={{ fontWeight: 400 }}
       >
