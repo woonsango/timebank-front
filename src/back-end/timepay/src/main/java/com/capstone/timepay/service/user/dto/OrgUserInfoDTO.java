@@ -23,14 +23,16 @@ public class OrgUserInfoDTO {
     private int employeeNum;
     private int timepay;
     private String id;
+    private String authority;
     private String imageUrl;
     private String certificationUrl;
+
 
     private Page<DealBoard> dealBoards;
     private Page<CommentResponse> dealBoardComments;
 
     public OrgUserInfoDTO(Long uid, String organizationName, String managerName, String managerPhone, String businessCode,
-                          int employeeNum, int timepay, String id, String imageUrl, String certificationUrl){
+                          int employeeNum, int timepay, String id, String authority, String imageUrl, String certificationUrl){
         this.uid = uid;
         this.organizationName = organizationName;
         this.managerName = managerName;
@@ -39,12 +41,13 @@ public class OrgUserInfoDTO {
         this.employeeNum = employeeNum;
         this.timepay = timepay;
         this.id = id;
+        this.authority = authority;
         this.imageUrl = imageUrl;
         this.certificationUrl = certificationUrl;
     }
 
     public OrgUserInfoDTO(Long uid, String organizationName, String managerName, String managerPhone, String businessCode,
-                          int employeeNum, int timepay, String id, String imageUrl, String certificationUrl,
+                          int employeeNum, int timepay, String id, String authority, String imageUrl, String certificationUrl,
                           Page<DealBoard> dealBoards){
         this.uid = uid;
         this.organizationName = organizationName;
@@ -54,6 +57,7 @@ public class OrgUserInfoDTO {
         this.employeeNum = employeeNum;
         this.timepay = timepay;
         this.id = id;
+        this.authority = authority;
         this.imageUrl = imageUrl;
         this.certificationUrl = certificationUrl;
         this.dealBoards = dealBoards;

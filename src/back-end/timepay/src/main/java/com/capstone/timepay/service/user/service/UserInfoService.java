@@ -220,6 +220,7 @@ public class UserInfoService {
                     org.getEmployeeNum(),
                     org.getTimepay(),
                     org.getAccount(),
+                    org.getAuthority(),
                     org.getImageUrl(),
                     org.getCertificationUrl()
             );
@@ -271,6 +272,7 @@ public class UserInfoService {
                     org.getEmployeeNum(),
                     org.getTimepay(),
                     org.getAccount(),
+                    org.getAuthority(),
                     org.getImageUrl(),
                     org.getCertificationUrl(),
                     dealBoards
@@ -342,6 +344,7 @@ public class UserInfoService {
                     org.getEmployeeNum(),
                     org.getTimepay(),
                     org.getAccount(),
+                    org.getAuthority(),
                     org.getImageUrl(),
                     org.getCertificationUrl()
             );
@@ -397,6 +400,7 @@ public class UserInfoService {
                     org.getEmployeeNum(),
                     org.getTimepay(),
                     org.getAccount(),
+                    org.getAuthority(),
                     org.getImageUrl(),
                     org.getCertificationUrl(),
                     dealBoards
