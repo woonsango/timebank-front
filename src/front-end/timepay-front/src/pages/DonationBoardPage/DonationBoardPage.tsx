@@ -122,9 +122,12 @@ const DonationBoardPage = () => {
             <div className="organization-info-container">
               <img
                 alt="기관"
-                src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
+                src={
+                  data?.data.imageURL ||
+                  'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png'
+                }
               />
-              <div className="name">기관 이름</div>
+              <div className="name">{data?.data.organizationName || '-'}</div>
             </div>
             <div className="content-container">{data?.data.content}</div>
             <Button type="primary" onClick={handleOnClickDonate}>
