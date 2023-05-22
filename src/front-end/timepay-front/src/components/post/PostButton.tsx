@@ -27,7 +27,8 @@ const PostButton = () => {
     const storedText = localStorage.getItem(`buttonText_${real_id}`);
     return storedText ? storedText : '활동시작';
   });
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [isModalOpen2, setIsModalOpen2] = useState<boolean>(false);
 
   useEffect(() => {
     localStorage.setItem(`buttonState_${real_id}`, buttonState);
@@ -36,27 +37,51 @@ const PostButton = () => {
 
   const startActivity = useCallback(async () => {
     try {
-      await usePutBoardStateStartMutation.mutateAsync();
-      queryClient.invalidateQueries('');
-      window.location.replace(url);
-      setButtonState('completed');
-      setButtonText('활동완료');
+      setIsModalOpen(true); // 모달 열기
     } catch (error) {
       console.error('start에서 오류가 발생했습니다.', error);
     }
-  }, [queryClient, url]);
+  }, []);
 
   const finishActivity = useCallback(async () => {
     try {
-      await usePutBoardStateFinishMutation.mutateAsync();
-      queryClient.invalidateQueries('');
-      window.location.replace(url);
-      setButtonState('theEnd');
-      setButtonText('활동이 종료된 게시글입니다 :)');
+      setIsModalOpen2(true); // 모달 열기
     } catch (error) {
       console.error('finish에서 오류가 발생했습니다.', error);
     }
-  }, [queryClient, url]);
+  }, []);
+
+  const handleConfirm = useCallback(async () => {
+    try {
+      if (buttonState === 'start') {
+        await usePutBoardStateStartMutation.mutateAsync();
+        setButtonState('completed');
+        setButtonText('활동완료');
+      } else {
+        await usePutBoardStateFinishMutation.mutateAsync();
+        setButtonState('theEnd');
+        setButtonText('활동이 종료된 게시글입니다 :)');
+      }
+      queryClient.invalidateQueries('');
+      window.location.replace(url);
+    } catch (error) {
+      console.error('확인에서 오류가 발생했습니다.', error);
+    } finally {
+      setIsModalOpen(false);
+      setIsModalOpen2(false);
+    }
+  }, [
+    buttonState,
+    usePutBoardStateStartMutation,
+    usePutBoardStateFinishMutation,
+    queryClient,
+    url,
+  ]);
+
+  const handleCancel = useCallback(() => {
+    setIsModalOpen(false);
+    setIsModalOpen2(false);
+  }, []);
 
   return (
     <>
@@ -79,6 +104,29 @@ const PostButton = () => {
           </button>
         )}
       </div>
+      <Modal
+        title="활동을 시작하시겠습니까?"
+        open={isModalOpen}
+        onOk={handleConfirm}
+        onCancel={handleCancel}
+        style={{ fontWeight: 400 }}
+      >
+        <h3 style={{ fontWeight: 400 }}>
+          활동을 시작하면 활동을 취소할 수 없습니다
+        </h3>
+      </Modal>
+      <Modal
+        title="활동을 종료하시겠습니까?"
+        open={isModalOpen2}
+        onOk={handleConfirm}
+        onCancel={handleCancel}
+        style={{ fontWeight: 400 }}
+      >
+        <h3 style={{ fontWeight: 400 }}>
+          활동이 종료되었다고 간주되며 <br />
+          타임페이가 교환됩니다.
+        </h3>
+      </Modal>
     </>
   );
 };
