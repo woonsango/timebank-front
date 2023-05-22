@@ -6,6 +6,7 @@ import { useQueryClient } from 'react-query';
 import { cssModalFooter, cssRegisterModal } from './ApplicantModal.style';
 import useFontSize from '../../hooks/useFontSize';
 import { IApplicant } from '../../api/interfaces/IApplicant';
+import { useDeleteApplicant } from '../../api/hooks/applicant';
 
 export interface AgentModalProps {
   applicants?: IApplicant[];
@@ -24,16 +25,33 @@ const ApplicantModal = ({ applicants, isOpen, onCancel }: AgentModalProps) => {
   const { scaleValue } = useFontSize();
 
   const [form] = Form.useForm();
+  const deleteApplicantMutation = useDeleteApplicant();
+  const [selectedApplicantUID, setSelectedApplicantUID] = useState<any>();
+  const [messageApi, contextHolder] = message.useMessage();
 
-  const myUID = '#54b6bd';
-
-  const onFinish = useCallback(() => {
+  const onRegisterClick = useCallback(async () => {
     console.log('test');
-  }, []);
-
-  const onRegisterClick = useCallback(() => {
-    console.log('test');
-  }, []);
+    if (selectedApplicantUID) {
+      await deleteApplicantMutation.mutateAsync(
+        { uid: selectedApplicantUID[0] },
+        {
+          onSuccess: (result) => {
+            queryClient.invalidateQueries({
+              queryKey: ['useGetApplicant'],
+            });
+          },
+          onError: (err) => {
+            console.log(err.response?.status);
+          },
+        },
+      );
+    } else {
+      messageApi.open({
+        type: 'warning',
+        content: '신청자를 선택해주세요',
+      });
+    }
+  }, [deleteApplicantMutation, messageApi, queryClient, selectedApplicantUID]);
 
   const rowSelection = {
     onChange: (selectedRowKeys: React.Key[], selectedRows: IApplicant[]) => {
@@ -42,6 +60,7 @@ const ApplicantModal = ({ applicants, isOpen, onCancel }: AgentModalProps) => {
         'selectedRows: ',
         selectedRows,
       );
+      setSelectedApplicantUID(selectedRowKeys);
     },
   };
 
@@ -91,6 +110,7 @@ const ApplicantModal = ({ applicants, isOpen, onCancel }: AgentModalProps) => {
       closable={false}
       css={cssRegisterModal(scaleValue)}
     >
+      {contextHolder}
       <Table
         rowSelection={{
           type: 'radio',
@@ -100,6 +120,13 @@ const ApplicantModal = ({ applicants, isOpen, onCancel }: AgentModalProps) => {
         rowKey="appliUid"
         columns={columns}
         showHeader={false}
+        locale={{
+          emptyText: (
+            <span>
+              <p>신청자가 없습니다</p>
+            </span>
+          ),
+        }}
         pagination={false}
         scroll={{ y: 240 }}
       />

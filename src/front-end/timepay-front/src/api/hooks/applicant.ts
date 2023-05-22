@@ -3,6 +3,7 @@ import { useMutation, useQuery } from 'react-query';
 import { apiRequest } from '../request';
 import { API_URL } from '../urls';
 import {
+  IDeleteApplicantRequest,
   IGetApplicantResponse,
   IPostApplicantRequest,
 } from '../interfaces/IApplicant';
@@ -39,5 +40,13 @@ export const usePostApplicantApply = () => {
         uid: data.uid,
         apply: data.apply,
       }),
+  });
+};
+
+export const useDeleteApplicant = () => {
+  return useMutation<AxiosResponse<any>, AxiosError, any>({
+    mutationKey: 'useDeleteApplicant',
+    mutationFn: (data: IDeleteApplicantRequest) =>
+      apiRequest.delete(API_URL.APPLICANT, { data: { uid: data.uid } }),
   });
 };

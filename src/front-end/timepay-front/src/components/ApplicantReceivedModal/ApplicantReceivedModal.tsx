@@ -52,6 +52,9 @@ const ApplicantReceivedModal = ({ isOpen, onCancel }: AgentModalProps) => {
             queryClient.invalidateQueries({
               queryKey: ['useGetApplicantWaiting'],
             });
+            queryClient.invalidateQueries({
+              queryKey: ['useGetApplicant'],
+            });
           },
           onError: (err) => {
             console.log(err.response?.status);
@@ -143,6 +146,13 @@ const ApplicantReceivedModal = ({ isOpen, onCancel }: AgentModalProps) => {
         columns={columns}
         showHeader={false}
         pagination={false}
+        locale={{
+          emptyText: (
+            <span>
+              <p>받은 신청이 없습니다</p>
+            </span>
+          ),
+        }}
         scroll={{ y: 240 }}
       />
     </Modal>

@@ -14,3 +14,7 @@ export interface IPostApplicantRequest {
   uid: number;
   apply: boolean;
 }
+
+export interface IDeleteApplicantRequest {
+  uid: number;
+}
