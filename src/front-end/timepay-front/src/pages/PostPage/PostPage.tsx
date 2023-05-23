@@ -1,6 +1,6 @@
 import { useCallback, useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Modal, Form, Input, message, Spin } from 'antd';
+import { Modal, Form, Input, message, Spin, Checkbox } from 'antd';
 import {
   cssPostDetailPage,
   cssPostDetailFirst,
@@ -111,6 +111,12 @@ const PostPage = () => {
     userId: undefined,
   });
 
+  const [applied, setApplied] = useState(false);
+  const isApplied = () => {
+    setApplied(true);
+  };
+  console.log('isApplied', applied);
+
   useEffect(() => {
     setHeaderTitle('도움요청');
   }, [setHeaderTitle]);
@@ -144,6 +150,10 @@ const PostPage = () => {
       ? board?.userId === userInfo?.data.body.uid
       : board?.userNickname === userNickname;
   }, [board, isAgency, userInfo, userNickname]);
+
+  const handleEditPageChange = () => {
+    navigate(`/edit/${real_id}`);
+  };
 
   const handleDelete = useCallback(async () => {
     Modal.confirm({
@@ -200,7 +210,7 @@ const PostPage = () => {
         });
         setCommentValue({
           adopted: false,
-          applied: false,
+          applied: applied,
           hidden: false,
           content: '',
         });
@@ -310,7 +320,9 @@ const PostPage = () => {
             {contextHolder}
             {isAuthor && (
               <div css={cssQnaDeleteStyle}>
-                <Button css={cssEditBtnStyle}>수정</Button>
+                <Button css={cssEditBtnStyle} onClick={handleEditPageChange}>
+                  수정
+                </Button>
                 <Button css={cssDeleteBtnStyle} onClick={handleDelete}>
                   삭제
                 </Button>
@@ -328,7 +340,7 @@ const PostPage = () => {
                 <div css={cssPostDetailCategory1}>카테고리</div>
                 <div css={cssPostDetailCategory2}>{board?.category}</div>
               </div>
-              <div css={cssPostDetailPay}>{board?.pay || '-'} TP</div>
+              <div css={cssPostDetailPay}>{board?.pay || '0'} TP</div>
             </div>
             <div css={cssPostDetailSecond}>
               <div css={cssPostDetailTitle}>{data?.data.title}</div>
@@ -338,11 +350,13 @@ const PostPage = () => {
             </div>
             <div css={cssPostDetailFourth}>
               <div css={cssPostDetailRegion}>
-                <FlagFilled style={{ marginRight: 10 }} />
+                <FlagFilled style={{ marginRight: 15, color: 'black' }} />
                 {data?.data.location}
               </div>
               <div css={cssPostDetailTime}>
-                <ClockCircleOutlined style={{ marginRight: 10 }} />
+                <ClockCircleOutlined
+                  style={{ marginRight: 15, color: 'black' }}
+                />
                 {dayjs(board?.startTime, 'YYYY-MM-DDTHH:mm:ss').format(
                   'MM월 DD일 HH시 mm분',
                 )}{' '}
@@ -355,7 +369,9 @@ const PostPage = () => {
             {board?.volunteer && volunteerInfo}
             <div css={cssPostDetailFifth}>
               <div className="content">내용</div>
-              <div css={cssPostDetailContent2}>{data?.data.content}</div>
+              <div css={cssPostDetailContent2}>
+                <span>{data?.data.content}</span>
+              </div>
               <div css={cssPostDetailAttachment}>{data?.data.imageUrl}</div>
             </div>
             <div css={cssPostDetailFirst}>
@@ -378,11 +394,11 @@ const PostPage = () => {
                 <p>관심 </p>
                 {like === true ? (
                   <button css={cssLike} onClick={handleLike}>
-                    <LikeClick />
+                    <LikeClick style={{ width: 25, height: 25 }} />
                   </button>
                 ) : (
                   <button css={cssLike} onClick={handleLike}>
-                    <LikeDefault />
+                    <LikeDefault style={{ width: 25, height: 25 }} />
                   </button>
                 )}
               </div>
@@ -397,6 +413,7 @@ const PostPage = () => {
                   {commentsList.length > 0 ? (
                     commentsList.map((data) => (
                       <Item
+                        a={applied}
                         c={data}
                         id={data.id}
                         key={data.id}
@@ -406,14 +423,22 @@ const PostPage = () => {
                     ))
                   ) : (
                     <p>
-                      아직 댓글이 없어요🥹 <br /> 첫 댓글을 입력해보세요!
+                      아직 댓글이 없어요 🥹 <br /> 첫 댓글을 입력해보세요!
                     </p>
                   )}
                 </div>
               </>
             )}
           </div>
-          <Footer css={isAuthor ? cssAuthorFooter : cssNonAuthorFooter}>
+          <Footer
+            css={
+              isAuthor
+                ? cssAuthorFooter
+                : board?.state === 'ACTIVITY_COMPLETE'
+                ? cssAuthorFooter
+                : cssNonAuthorFooter
+            }
+          >
             <div css={cssLine2} />
             {isAuthor && (
               <>
@@ -430,13 +455,18 @@ const PostPage = () => {
             )}
 
             <div css={cssPostFooter2}>
-              <InputText
-                onChange={handleInputTextChange}
-                inputText={commentValue.content}
-              />
-              <button css={cssPostBtn} onClick={handleSubmitComment}>
-                등록
-              </button>
+              <Checkbox className="checkbox" onChange={isApplied}>
+                지원
+              </Checkbox>
+              <div className="textInput">
+                <InputText
+                  onChange={handleInputTextChange}
+                  inputText={commentValue.content}
+                />
+                <button css={cssPostBtn} onClick={handleSubmitComment}>
+                  등록
+                </button>
+              </div>
             </div>
           </Footer>
         </>

@@ -24,14 +24,13 @@ export const cssLikeContainer = css`
     padding: 0;
     margin-top: 10px;
     margin-right: 10px;
-    font-size: 16px;
+    font-size: 18px;
     font-weight: 500;
   }
 `;
 export const cssLike = css`
-  width: 45px;
-  height: 35px;
-  margin-top: 2px;
+  width: 55px;
+  height: 45px;
   padding-top: 5px;
   border: 1px solid ${COMMON_COLOR.FONT1};
   border-radius: 5px;
@@ -81,11 +80,12 @@ export const cssPostDetailUser = css`
   margin-top: -35px;
   margin-left: 80px;
   font-weight: 500;
+  font-size: 20px;
 `;
 export const cssPostDetailCreatedAt = css`
   display: flex;
   justify-content: flex-end;
-  font-size: 16px;
+  font-size: 18px;
 `;
 
 // 2nd block
@@ -101,7 +101,8 @@ export const cssPostDetailSecond = css`
 export const cssPostDetailTitle = css`
   margin-top: 40px;
   font-size: 22px;
-  font-weight: 500;
+  font-weight: 600;
+  margin-right: 10px;
 `;
 export const cssPostDetailStatus = css`
   margin-top: 40px;
@@ -124,20 +125,21 @@ export const cssPostDetailThird = css`
 `;
 export const cssPostDetailCategory1 = css`
   margin-top: 20px;
-  margin-right: 10px;
-  font-size: 18px;
+  margin-right: 15px;
+  font-size: 19px;
   font-weight: 500;
 `;
 export const cssPostDetailCategory2 = css`
   margin-top: 20px;
-  font-size: 16px;
+  font-size: 19px;
   font-weight: 700;
   color: ${COMMON_COLOR.FONT2};
+  letter-spacing: 1px;
 `;
 export const cssPostDetailPay = css`
   margin-top: 20px;
-  font-size: 18px;
-  font-weight: 500;
+  font-size: 19px;
+  font-weight: 600;
   background-color: ${COMMON_COLOR.MAIN3};
   color: ${COMMON_COLOR.WHITE};
   border-radius: 10px;
@@ -153,13 +155,13 @@ export const cssPostDetailFourth = css`
 export const cssPostDetailRegion = css`
   margin-top: 20px;
   color: ${COMMON_COLOR.FONT2};
-  font-size: 16px;
+  font-size: 18px;
   font-weight: 600;
 `;
 export const cssPostDetailTime = css`
   margin-top: 10px;
   color: ${COMMON_COLOR.FONT2};
-  font-size: 16px;
+  font-size: 18px;
   font-weight: 600;
 `;
 
@@ -169,18 +171,24 @@ export const cssPostDetailFifth = css`
   margin-left: 25px;
   margin-right: 25px;
   .content {
-    font-size: 15px;
-    margin-left: 5px;
+    font-size: 18px;
+    font-weight: 500;
+    margin-left: 10px;
     margin-top: 10px;
   }
 `;
 export const cssPostDetailContent2 = css`
   margin-top: 10px;
-  padding: 10px 7px;
-  border: 1.3px solid ${COMMON_COLOR.FONT1};
+  padding: 10px;
+  border: 1.5px solid ${COMMON_COLOR.FONT1};
   border-radius: 10px;
-  font-size: 18px;
-  letter-spacing: 1.3px;
+  font-size: 19px;
+  font-weight: 400;
+  letter-spacing: 1px;
+  line-height: 24px;
+  span {
+    white-space: pre-line;
+  }
 `;
 export const cssPostDetailAttachment = css`
   margin-bottom: 10px;
@@ -194,10 +202,11 @@ export const cssPostDetailSixth = css`
   margin-bottom: 200px;
   p {
     text-align: center;
-    font-size: 15px;
+    font-size: 17px;
     font-weight: 500;
     color: ${COMMON_COLOR.FONT2};
-    line-height: 20px;
+    line-height: 23px;
+    letter-spacing: 0.5px;
   }
 `;
 
@@ -246,7 +255,7 @@ export const cssAuthorFooter = css`
   box-shadow: 0px -5px 2px 3px rgb(255, 255, 255, 0.5);
   position: fixed;
   width: 100%;
-  height: 160px;
+  height: 190px;
   bottom: 0;
   margin: 0;
   padding: 0;
@@ -256,15 +265,23 @@ export const cssNonAuthorFooter = css`
   box-shadow: 0px -5px 2px 3px rgb(255, 255, 255, 0.5);
   position: fixed;
   width: 100%;
-  height: 95px;
+  height: 125px;
   bottom: 0;
   margin: 0;
   padding: 0;
   background-color: ${COMMON_COLOR.WHITE};
 `;
 export const cssPostFooter2 = css`
-  display: flex;
-  flex-direction: row;
+  margin-left: 10px;
+  .textInput {
+    display: flex;
+    flex-direction: row;
+  }
+  .checkbox {
+    margin-top: 5px;
+    font-size: 18px;
+    margin-bottom: 5px;
+  }
 `;
 
 export const cssPostTextarea = css`

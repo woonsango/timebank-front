@@ -90,7 +90,7 @@ const SimplePostCard = ({ post }: SimplePostCardProps) => {
                   scaleValue,
                 )}
               >
-                {post?.pay || '-'} TP
+                {post?.pay || '0'} TP
               </div>
             )}
           </div>

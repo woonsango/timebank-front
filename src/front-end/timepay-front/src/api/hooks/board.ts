@@ -6,11 +6,13 @@ import {
   IGetSearchBoardResponse,
   IReportBoard,
   IBoard,
+  IPutBoardEditRequest,
 } from '../interfaces/IPost';
 import { apiRequest } from '../request';
 import { API_URL } from '../urls';
 import { useMutation, useQuery } from 'react-query';
-import { api } from '../../services';
+import { useNavigate } from 'react-router-dom';
+import { PATH } from '../../utils/paths';
 
 export const useInfiniteGetSearchBoard = (params: IGetSearchBoardRequest) => {
   return useInfiniteQuery<AxiosResponse<IGetSearchBoardResponse>, AxiosError>({
@@ -43,6 +45,31 @@ export const useGetBoard = (postPk: number) => {
     queryKey: ['useGetBoard', postPk],
     queryFn: () => apiRequest.get(`${API_URL.DEAL_BOARDS}/${postPk}`),
     refetchOnWindowFocus: false,
+  });
+};
+
+export const useGetBoardWithId = (postPk?: number) => {
+  const navigate = useNavigate();
+  return useQuery<AxiosResponse<IBoard>, AxiosError>({
+    queryKey: ['useGetDonationBoardWithId', postPk],
+    queryFn: () => apiRequest.get(`${API_URL.DEAL_BOARDS}/${postPk}`),
+    refetchOnWindowFocus: false,
+    retry: false, // api 호출 실패해도 계속 호출하지 않음
+    onError: (err: any) => {
+      console.log('[ERROR] useGetDonationBoardWithId', err);
+      navigate(PATH.HOME);
+    },
+  });
+};
+
+export const usePutBoard = () => {
+  return useMutation<AxiosResponse<any>, AxiosError, IPutBoardEditRequest>({
+    mutationKey: 'usePutDonationBoardEdit',
+    mutationFn: (data: IPutBoardEditRequest) =>
+      apiRequest.put(
+        `${API_URL.DEAL_BOARDS}/update/${data.boardId}`,
+        data.board,
+      ),
   });
 };
 

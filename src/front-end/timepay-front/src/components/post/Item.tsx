@@ -1,8 +1,12 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useState, useMemo } from 'react';
+import { css } from '@emotion/react';
 import {
   cssComments,
-  cssCommentItem,
+  cssMyCommentItem,
+  cssAppliedCommentItem,
+  cssOtherCommentItem,
   cssPostDetailProfile,
+  cssCommentUser,
   cssEditDelete,
   cssCommentText,
   cssCommentProfile,
@@ -10,9 +14,32 @@ import {
 import { Form, Input, Modal, Button } from 'antd';
 import { useDeleteComment } from '../../api/hooks/comment';
 import { useQueryClient } from 'react-query';
+import { useGetUserInfo } from '../../api/hooks/user';
 
 const Item = ({ c, messageApi, onShowProfile }: any) => {
+
   const queryClient = useQueryClient();
+
+  const { data: userInfo } = useGetUserInfo();
+  const userNickname = useMemo(() => {
+    return userInfo?.data.body.nick_name;
+  }, [userInfo]);
+
+  const isAgency = useMemo(() => {
+    if (userInfo?.data.body.manager_name) return true;
+    return false;
+  }, [userInfo]);
+
+  console.log(userNickname);
+
+  const isAuthor = useMemo(() => {
+    // 게시글 작성자일 때 true
+    return isAgency
+      ? c.userId === userInfo?.data.body.uid
+      : c.userNickname === userNickname;
+  }, [isAgency, userInfo, userNickname]);
+
+  console.log('A', isAuthor);
 
   const write_user = false; // true = 수정 / false = 신고
 
@@ -109,11 +136,23 @@ const Item = ({ c, messageApi, onShowProfile }: any) => {
         </Button>
       </div>
 
-      <div css={cssCommentItem}>
+      <div
+        css={
+          isAuthor
+            ? cssMyCommentItem
+            : a
+            ? cssAppliedCommentItem
+            : cssOtherCommentItem
+        }
+      >
         <div css={cssPostDetailProfile} onClick={() => onShowProfile(c.userId)}>
           <div css={cssCommentProfile}></div>
+          <div css={cssCommentUser}>{c.userNickname}</div>
         </div>
-        <div css={cssCommentText}>{c.content}</div>
+
+        <div css={cssCommentText}>
+          <span id="commentsSpan">{c.content}</span>
+        </div>
       </div>
     </div>
   );
