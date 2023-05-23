@@ -1,6 +1,6 @@
 import { useCallback, useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Modal, Form, Input, message, Spin } from 'antd';
+import { Modal, Form, Input, message, Spin, Checkbox } from 'antd';
 import {
   cssPostDetailPage,
   cssPostDetailFirst,
@@ -39,6 +39,7 @@ import {
   cssSpinStyle,
   cssSpinCommentStyle,
   cssVolunteerInfoStyle,
+  cssPostTextarea,
 } from './PostPage.style';
 import PostStatusTag from '../../components/PostStatusTag';
 import { ClockCircleOutlined, FlagFilled } from '@ant-design/icons';
@@ -103,6 +104,12 @@ const PostPage = () => {
     hidden: false,
     content: '',
   });
+
+  const [applied, setApplied] = useState(false);
+  const isApplied = () => {
+    setApplied(true);
+  };
+  console.log('isApplied', applied);
 
   useEffect(() => {
     setHeaderTitle('도움요청');
@@ -201,7 +208,7 @@ const PostPage = () => {
         });
         setCommentValue({
           adopted: false,
-          applied: false,
+          applied: applied,
           hidden: false,
           content: '',
         });
@@ -396,6 +403,7 @@ const PostPage = () => {
                   {commentsList.length > 0 ? (
                     commentsList.map((data) => (
                       <Item
+                        a={applied}
                         c={data}
                         id={data.id}
                         key={data.id}
@@ -436,13 +444,18 @@ const PostPage = () => {
             )}
 
             <div css={cssPostFooter2}>
-              <InputText
-                onChange={handleInputTextChange}
-                inputText={commentValue.content}
-              />
-              <button css={cssPostBtn} onClick={handleSubmitComment}>
-                등록
-              </button>
+              <Checkbox className="checkbox" onChange={isApplied}>
+                지원
+              </Checkbox>
+              <div className="textInput">
+                <InputText
+                  onChange={handleInputTextChange}
+                  inputText={commentValue.content}
+                />
+                <button css={cssPostBtn} onClick={handleSubmitComment}>
+                  등록
+                </button>
+              </div>
             </div>
           </Footer>
         </>

@@ -255,7 +255,7 @@ export const cssAuthorFooter = css`
   box-shadow: 0px -5px 2px 3px rgb(255, 255, 255, 0.5);
   position: fixed;
   width: 100%;
-  height: 160px;
+  height: 190px;
   bottom: 0;
   margin: 0;
   padding: 0;
@@ -265,15 +265,23 @@ export const cssNonAuthorFooter = css`
   box-shadow: 0px -5px 2px 3px rgb(255, 255, 255, 0.5);
   position: fixed;
   width: 100%;
-  height: 95px;
+  height: 125px;
   bottom: 0;
   margin: 0;
   padding: 0;
   background-color: ${COMMON_COLOR.WHITE};
 `;
 export const cssPostFooter2 = css`
-  display: flex;
-  flex-direction: row;
+  margin-left: 10px;
+  .textInput {
+    display: flex;
+    flex-direction: row;
+  }
+  .checkbox {
+    margin-top: 5px;
+    font-size: 18px;
+    margin-bottom: 5px;
+  }
 `;
 
 export const cssPostTextarea = css`
