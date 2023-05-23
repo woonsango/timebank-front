@@ -284,7 +284,9 @@ const PostPage = () => {
             {contextHolder}
             {isAuthor && (
               <div css={cssQnaDeleteStyle}>
-                <Button css={cssEditBtnStyle}>수정</Button>
+                <Button css={cssEditBtnStyle} onClick={handleEditPageChange}>
+                  수정
+                </Button>
                 <Button css={cssDeleteBtnStyle} onClick={handleDelete}>
                   삭제
                 </Button>
@@ -381,7 +383,15 @@ const PostPage = () => {
               </>
             )}
           </div>
-          <Footer css={isAuthor ? cssAuthorFooter : cssNonAuthorFooter}>
+          <Footer
+            css={
+              isAuthor
+                ? cssAuthorFooter
+                : board?.state === 'ACTIVITY_COMPLETE'
+                ? cssAuthorFooter
+                : cssNonAuthorFooter
+            }
+          >
             <div css={cssLine2} />
             {isAuthor && (
               <>

@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
-import { Button, Layout, message } from 'antd';
+import { useNavigate, useParams } from 'react-router-dom';
+import { Button, Layout, message, Modal, Form, Input } from 'antd';
 import TextArea from 'antd/es/input/TextArea';
 import { cssMainHeaderStyle } from '../../components/MainHeader/MainHeader.styles';
 import {
@@ -33,35 +33,46 @@ import {
 } from './PostEditPage.style';
 import { ClockCircleOutlined, FlagFilled } from '@ant-design/icons';
 import { useQueryClient } from 'react-query';
-import { usePutBoard, useGetBoard } from '../../api/hooks/board';
+import { usePutBoard, useGetBoardWithId } from '../../api/hooks/board';
 import { useSetRecoilState } from 'recoil';
 import { headerTitleState } from '../../states/uiState';
-import { endTime, startTime } from '../../states/register';
+import { PATH } from '../../utils/paths';
+import dayjs from 'dayjs';
 
 const Footer = Layout;
 
 const PostEditPage = () => {
+  const url = window.location.pathname;
+  const boardId = url.substring(6);
+
   const navigate = useNavigate();
   const setHeaderTitle = useSetRecoilState(headerTitleState);
   useEffect(() => {
     setHeaderTitle('게시글 수정');
   }, [setHeaderTitle]);
 
+  const { data, isLoading } = useGetBoardWithId(parseInt(boardId));
+  useEffect(() => {
+    console.log(data);
+  }, [data]);
+
   const queryClient = useQueryClient();
   const [messageApi, contextHolder] = message.useMessage();
-  const url = window.location.pathname;
-  const real_id = url.substring(6);
-  const { data, isLoading } = useGetBoard(parseInt(real_id));
-  const usePutBoardMutation = usePutBoard(parseInt(real_id));
 
-  const [title, setTitle] = useState('');
-  const [content, setContent] = useState('');
-  const id = Number(real_id);
+  // 수정 화면 들어가면 바로 데이터가 안 보임
+
+  const usePutBoardMutation = usePutBoard();
+
+  const [title, setTitle] = useState();
+  const [location, setLocation] = useState<string>('');
+  const [content, setContent] = useState();
 
   const handleTitle = (e: any) => {
     setTitle(e.target.value);
   };
-
+  const handleLocationChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setLocation(event.target.value);
+  };
   const handleContent = (e: any) => {
     setContent(e.target.value);
   };
@@ -70,82 +81,110 @@ const PostEditPage = () => {
     navigate(-1);
   }, [navigate]);
 
-  const handleClickSave = useCallback(async () => {
-    try {
-      await usePutBoardMutation.mutateAsync({
-        d_boardId: id,
-        title: title,
-        content: content,
-        startTime: startTime,
-        endTime: endTime,
+  const [form] = Form.useForm();
+
+  const handelClickSave = useCallback(
+    (values: any) => {
+      Modal.confirm({
+        content: '해당 내용으로 게시글을 수정하시겠습니까?',
+        okText: '확인',
+        cancelText: '취소',
+        onOk: async () => {
+          if (boardId && !isNaN(Number(boardId)))
+            await usePutBoardMutation.mutateAsync(
+              {
+                boardId: boardId,
+                board: {
+                  ...values,
+                  category: '기부하기',
+                  targetTimePay: parseInt(values.targetTimePay),
+                },
+              },
+              {
+                onSuccess: (data) => {
+                  queryClient.invalidateQueries('useGetDonationBoards');
+                  queryClient.invalidateQueries('useGetDonationBoardWithId');
+                  messageApi.success({
+                    content: '수정이 완료되었습니다.',
+                    duration: 1,
+                    onClose: () => {
+                      if (data && data.data && data.data.id)
+                        navigate(`${PATH.Post}/${boardId}`);
+                    },
+                  });
+                },
+              },
+            );
+        },
       });
-      navigate(-1);
-    } catch (error) {
-      console.error('확인에서 오류가 발생했습니다.', error);
-    }
-  }, [usePutBoardMutation, navigate, title, content]);
+    },
+    [queryClient, usePutBoardMutation, boardId, messageApi, navigate],
+  );
 
   return (
     <Layout css={cssPostDetail}>
-      <div css={cssPostEditPage}>
-        <div css={cssPostDetailFirst}>
-          <div css={cssPostDetailProfile}></div>
-          <div css={cssPostDetailUser}>{data?.data.userNickname}</div>
-        </div>
-        <div css={cssLine1} />
-        <div css={cssPostEditSecond}>
-          <div css={cssPostDetailTitle}>
-            <TextArea
-              defaultValue={data?.data.title}
-              css={cssPostTextarea}
-              style={{ height: 50, resize: 'none' }}
-              onChange={handleTitle}
-            />
+      <Form onFinish={handelClickSave} form={form}>
+        <div css={cssPostEditPage}>
+          <div css={cssPostDetailFirst}>
+            <div css={cssPostDetailProfile}></div>
+            <div css={cssPostDetailUser}>{data?.data.userNickname}</div>
+          </div>
+          <div css={cssLine1} />
+          <div css={cssPostEditSecond}>
+            <Form.Item label="제목" name="title" css={cssPostDetailTitle}>
+              <Input
+                defaultValue={data?.data.title}
+                placeholder="여기에 제목을 입력하세요"
+                maxLength={25}
+                onChange={handleTitle}
+                css={cssPostTextarea}
+              />
+            </Form.Item>
+          </div>
+          <div css={cssLine3} />
+          <div>
+            <div css={cssPostDetailThird}>
+              <div css={cssPostDetailCategory1}>카테고리</div>
+              <div css={cssPostDetailCategory2}>{data?.data.category}</div>
+              <div css={cssPostDetailPay}>{data?.data.pay} TP</div>
+            </div>
+          </div>
+          <div css={cssLine3} />
+          <div css={cssPostDetailFourth}>
+            <div css={cssPostDetailRegion}>
+              <FlagFilled style={{ marginRight: 10 }} />
+              {data?.data.location}
+            </div>
+            <div css={cssPostDetailTime}>
+              <ClockCircleOutlined style={{ marginRight: 10 }} />
+              {dayjs(data?.data.startTime).format('MM월 DD일 HH시 mm분')} ~{' '}
+              {dayjs(data?.data.endTime).format('HH시 mm분')}
+            </div>
+          </div>
+          <div css={cssLine1} />
+          <div css={cssPostDetailFifth}>
+            <div css={cssPostDetailContent1}>내용</div>
+            <Form.Item name="content">
+              <TextArea
+                rows={5}
+                style={{ resize: 'none' }}
+                css={cssPostEditContent2}
+                placeholder="여기에 내용을 입력하세요"
+                defaultValue={data?.data.content}
+                onChange={handleContent}
+              />
+            </Form.Item>
           </div>
         </div>
-        <div css={cssLine3} />
-        <div>
-          <div css={cssPostDetailThird}>
-            <div css={cssPostDetailCategory1}>카테고리</div>
-            <div css={cssPostDetailCategory2}>{data?.data.category}</div>
-            <div css={cssPostDetailPay}>{data?.data.pay} TP</div>
+        <Footer css={cssPostEditFooter}>
+          <div css={cssLine2} />
+          <div css={cssPostEditFooter2}>
+            <Button css={cssPostEditBtn2} type="primary" htmlType="submit">
+              수정
+            </Button>
           </div>
-        </div>
-        <div css={cssLine3} />
-        <div css={cssPostDetailFourth}>
-          <div css={cssPostDetailRegion}>
-            <FlagFilled style={{ marginRight: 10 }} />
-            {data?.data.location}
-          </div>
-          <div css={cssPostDetailTime}>
-            <ClockCircleOutlined style={{ marginRight: 10 }} />
-            {data?.data.startTime} ~ {data?.data.endTime}
-          </div>
-        </div>
-        <div css={cssLine1} />
-        <div css={cssPostDetailFifth}>
-          <div css={cssPostDetailContent1}>내용</div>
-          <TextArea
-            defaultValue={data?.data.content}
-            css={cssPostEditContent2}
-            style={{ height: 200, resize: 'none' }}
-            onChange={handleContent}
-          >
-            {data?.data.content}
-          </TextArea>
-        </div>
-      </div>
-      <Footer css={cssPostEditFooter}>
-        <div css={cssLine2} />
-        <div css={cssPostEditFooter2}>
-          <Button css={cssPostEditBtn1} onClick={handleClickCancel}>
-            취소
-          </Button>
-          <Button css={cssPostEditBtn2} onClick={handleClickSave}>
-            저장
-          </Button>
-        </div>
-      </Footer>
+        </Footer>
+      </Form>
     </Layout>
   );
 };

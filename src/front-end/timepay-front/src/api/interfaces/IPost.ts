@@ -131,3 +131,8 @@ export interface IGetSearchBoardRequest {
 export interface IGetSearchBoardResponse extends PageableData {
   content: IBoard[];
 }
+
+export interface IPutBoardEditRequest {
+  boardId: string;
+  board: IBoard;
+}
