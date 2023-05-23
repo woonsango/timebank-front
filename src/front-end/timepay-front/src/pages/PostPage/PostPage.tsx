@@ -130,9 +130,9 @@ const PostPage = () => {
   }, [userInfo]);
 
   const isAgency = useMemo(() => {
-    if (userInfo?.data.body.manager_name) return true;
+    if (board?.organizationName) return true;
     return false;
-  }, [userInfo]);
+  }, [board]);
 
   // 수정 및 삭제 버튼 표시 여부를 결정하는 함수
   const isAuthor = useMemo(() => {
