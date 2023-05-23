@@ -121,9 +121,18 @@ const PostEditPage = () => {
     [queryClient, usePutBoardMutation, boardId, messageApi, navigate],
   );
 
+  useEffect(() => {
+    if (data) {
+      form.setFieldsValue({
+        title: data?.data.title,
+        content: data?.data.content,
+      });
+    }
+  }, [data, form]);
+
   return (
     <Layout css={cssPostDetail}>
-      <Form onFinish={handelClickSave} form={form}>
+      <Form onFinish={handelClickSave} form={form} initialValues={{}}>
         <div css={cssPostEditPage}>
           <div css={cssPostDetailFirst}>
             <div css={cssPostDetailProfile}></div>
@@ -133,7 +142,6 @@ const PostEditPage = () => {
           <div css={cssPostEditSecond}>
             <Form.Item label="제목" name="title" css={cssPostDetailTitle}>
               <Input
-                defaultValue={data?.data.title}
                 placeholder="여기에 제목을 입력하세요"
                 maxLength={25}
                 onChange={handleTitle}
@@ -170,7 +178,6 @@ const PostEditPage = () => {
                 style={{ resize: 'none' }}
                 css={cssPostEditContent2}
                 placeholder="여기에 내용을 입력하세요"
-                defaultValue={data?.data.content}
                 onChange={handleContent}
               />
             </Form.Item>
