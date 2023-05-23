@@ -4,12 +4,20 @@ import {
   UploadOutlined,
   UserOutlined,
 } from '@ant-design/icons';
-import { Button, Modal, Table, Upload } from 'antd';
+import {
+  Button,
+  message,
+  Modal,
+  Table,
+  Upload,
+  UploadFile,
+  UploadProps,
+} from 'antd';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useSetRecoilState } from 'recoil';
 import {
-  IVolunteerBoardInfo,
+  IParticipateUser,
   IVolunteerUser,
 } from '../../api/interfaces/IVolunteer';
 import { headerTitleState } from '../../states/uiState';
@@ -23,6 +31,12 @@ import { ReactComponent as Clock } from '../../assets/images/icons/clock.svg';
 import { PATH } from '../../utils/paths';
 import dayjs from 'dayjs';
 import { isMobileWidth } from '../../utils/device';
+import {
+  useGetMyPageCertificate,
+  usePostQueryMyPageCertificatePublish,
+} from '../../api/hooks/agency';
+import { useQueryClient } from 'react-query';
+import { UploadChangeParam } from 'antd/es/upload';
 
 const VolunteerCertificationPaymentPage = () => {
   const navigate = useNavigate();
@@ -33,57 +47,22 @@ const VolunteerCertificationPaymentPage = () => {
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
   const [isShowUploadModal, setIsShowUploadModal] = useState(false);
   const [selectedUser, setSelectedUser] = useState<IVolunteerUser>();
+  const [fileList, setFileList] = useState<UploadFile[]>([]);
 
-  const dummyBoard: IVolunteerBoardInfo = useMemo(() => {
-    return {
-      title: 'XX 골목 연탄 배달 봉사',
-      location: '정릉 3동',
-      startTime: '2023-05-09T13:00:00',
-      endTime: '2023-05-09T16:00:00',
-      participateNum: 5,
-    };
-  }, []);
+  const [messageApi, contextHolder] = message.useMessage();
 
-  const dummyTableData: IVolunteerUser[] = [
-    {
-      userId: 2,
-      userName: '서준원',
-      userNickname: '준원이',
-      email: 'test@gmail.com',
-      phone: '010-1234-5678',
-      certificationUrl:
-        'https://storage.googleapis.com/timepay-79a6f.appspot.com/31f44eb3-1210-4a96-b1dd-a7526069fe7e_certificate.pdf',
-      published: true,
-    },
-    {
-      userId: 3,
-      userName: '김준영',
-      userNickname: '준영이',
-      email: 'test@gmail.com',
-      phone: '010-1234-5678',
-      certificationUrl:
-        'https://storage.googleapis.com/timepay-79a6f.appspot.com/31f44eb3-1210-4a96-b1dd-a7526069fe7e_certificate.pdf',
-      published: true,
-    },
-    {
-      userId: 4,
-      userName: '김명환',
-      userNickname: '명환이',
-      email: 'test@gmail.com',
-      phone: '010-1234-5678',
-      certificationUrl: null,
-      published: false,
-    },
-    {
-      userId: 5,
-      userName: '김용훈',
-      userNickname: '용훈이',
-      email: 'test@gmail.com',
-      phone: '010-1234-5678',
-      certificationUrl: null,
-      published: false,
-    },
-  ];
+  const queryClient = useQueryClient();
+  const { data, isLoading } = useGetMyPageCertificate(parseInt(boardId || ''));
+  const usePostQueryMyPageCertificatePublishMutation =
+    usePostQueryMyPageCertificatePublish();
+
+  const boardData = useMemo(() => {
+    if (!isLoading) return data?.data.volunteerInfo;
+  }, [data, isLoading]);
+
+  const volunteers = useMemo(() => {
+    if (!isLoading) return data?.data.participateUsers;
+  }, [data, isLoading]);
 
   const handleResizeWindowWidth = useCallback(() => {
     setWindowWidth(window.innerWidth);
@@ -93,32 +72,83 @@ const VolunteerCertificationPaymentPage = () => {
     setIsShowUploadModal(false);
   }, []);
 
+  const handleOnSubmitCertificate = useCallback(async () => {
+    if (fileList && fileList[0] && fileList[0].originFileObj) {
+      let formData = new FormData();
+      formData.append('boardId', boardId!);
+      formData.append('userId', selectedUser?.userId.toString()!);
+      formData.append('certification', fileList[0].originFileObj);
+
+      await usePostQueryMyPageCertificatePublishMutation.mutateAsync(formData, {
+        onSuccess: (result) => {
+          messageApi.open({
+            type: 'success',
+            content: '해당 회원에게 인증서를 지급했습니다.',
+            duration: 1,
+            onClose: () => {
+              handleOnCancelModal();
+              queryClient.invalidateQueries({
+                queryKey: ['useGetMyPageCertificate'],
+              });
+            },
+          });
+        },
+        onError: (err) => {
+          console.log(err);
+          messageApi.open({
+            type: 'error',
+            content: (
+              <>
+                오류 발생: <br />
+                {err}
+              </>
+            ),
+          });
+        },
+      });
+    }
+  }, [
+    boardId,
+    handleOnCancelModal,
+    fileList,
+    messageApi,
+    selectedUser,
+    queryClient,
+    usePostQueryMyPageCertificatePublishMutation,
+  ]);
+
+  const handleFileChange: UploadProps['onChange'] = (
+    info: UploadChangeParam<UploadFile>,
+  ) => {
+    setFileList(info.fileList);
+  };
+
   const boardInfo = useMemo(() => {
     return (
       <div css={cssVolunteerOverviewStyle}>
         <span className="header">봉사활동 정보</span>
-        <span className="title">{dummyBoard.title}</span>
+        <span className="title">{boardData?.title}</span>
         <div className="region">
-          <RegionPin /> {dummyBoard.location}
+          <RegionPin /> {boardData?.location}
         </div>
         <div className="time">
-          <Clock /> {dummyBoard.startTime.replaceAll('T', ' ').slice(0, 16)} ~{' '}
-          {dummyBoard.endTime.replaceAll('T', ' ').slice(0, 16)} (총{' '}
-          {dayjs(dummyBoard.endTime, 'YYYY-MM-DDTHH:mm:ss').diff(
-            dayjs(dummyBoard.startTime, 'YYYY-MM-DDTHH:mm:ss'),
+          <Clock /> {boardData?.startTime.replaceAll('T', ' ').slice(0, 16)} ~{' '}
+          {boardData?.endTime.split('T')[1].slice(0, 5)} (총{' '}
+          {dayjs(boardData?.endTime, 'YYYY-MM-DDTHH:mm:ss').diff(
+            dayjs(boardData?.startTime, 'YYYY-MM-DDTHH:mm:ss'),
             'hours',
           )}{' '}
           시간)
         </div>
         <div className="participateNum">
-          <UserOutlined /> {dummyBoard.participateNum} 명
+          <UserOutlined /> {boardData?.participateNum} 명
         </div>
         * 아래 활동자들에게 봉사활동 시간을 지급한 후 인증서를 등록해주세요.{' '}
         <br />* 인증서 등록 시 활동자에게 푸시 알림이 가며 활동자가 조회
         가능해집니다.
       </div>
     );
-  }, [dummyBoard]);
+  }, [boardData]);
 
   const columns = useMemo(() => {
     if (isMobileWidth(windowWidth))
@@ -132,7 +162,7 @@ const VolunteerCertificationPaymentPage = () => {
           title: '회원정보',
           dataIndex: 'userName',
           width: 180,
-          render: (userName: string, record: IVolunteerUser) => {
+          render: (userName: string, record: IParticipateUser) => {
             return (
               <div css={cssVolunteerUserInfoStyle}>
                 <span className="name">{userName}</span>
@@ -153,7 +183,7 @@ const VolunteerCertificationPaymentPage = () => {
           title: '인증서',
           dataIndex: 'certificationUrl',
           width: 90,
-          render: (certificationUrl: string, record: IVolunteerUser) => {
+          render: (certificationUrl: string, record: IParticipateUser) => {
             return (
               <>
                 <Button
@@ -206,7 +236,7 @@ const VolunteerCertificationPaymentPage = () => {
           title: '등록된 인증서',
           dataIndex: 'certificationUrl',
           width: 80,
-          render: (certificationUrl: string, record: IVolunteerUser) => {
+          render: (certificationUrl: string, record: IParticipateUser) => {
             return (
               <>
                 {record.published ? (
@@ -224,7 +254,7 @@ const VolunteerCertificationPaymentPage = () => {
           title: '인증서 등록',
           dataIndex: 'published',
           width: 80,
-          render: (published: boolean, record: IVolunteerUser) => {
+          render: (published: boolean, record: IParticipateUser) => {
             return (
               <Button
                 icon={<UploadOutlined />}
@@ -246,12 +276,12 @@ const VolunteerCertificationPaymentPage = () => {
     return (
       <>
         <Button onClick={handleOnCancelModal}>취소</Button>
-        <Button type="primary">
+        <Button type="primary" onClick={() => handleOnSubmitCertificate()}>
           {selectedUser?.published ? '재등록' : '등록'}
         </Button>
       </>
     );
-  }, [handleOnCancelModal, selectedUser]);
+  }, [handleOnCancelModal, handleOnSubmitCertificate, selectedUser]);
 
   useEffect(() => {
     setHeaderTitle('봉사활동 인증서 지급');
@@ -274,12 +304,13 @@ const VolunteerCertificationPaymentPage = () => {
 
   return (
     <div css={cssVolunteerCertificationPaymentPageStyle}>
+      {contextHolder}
       <Table
         bordered
         title={() => boardInfo}
         scroll={{ x: isMobileWidth(windowWidth) ? 300 : 1000 }}
         columns={columns}
-        dataSource={dummyTableData}
+        dataSource={volunteers?.content}
         rowKey="userId"
       />
       <Modal
@@ -292,6 +323,7 @@ const VolunteerCertificationPaymentPage = () => {
           beforeUpload={() => false}
           multiple={false}
           maxCount={1}
+          onChange={handleFileChange}
         >
           <p className="ant-upload-drag-icon">
             <InboxOutlined />

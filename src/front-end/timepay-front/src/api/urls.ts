@@ -45,6 +45,9 @@ export const API_URL = {
   APPLICANT__TRANS: '/api/users/agents/trans', //대리인의 신청인의 계정으로 전환
   DONATION_BOARD_EDIT: '/api/organizations/donate/update',
   DONATION_BOARD_DELETE: '/api/organizations/donate/delete',
+  ORGANIZATION__MY_PAGE__CERTIFICATE: '/api/organizations/mypage/certificate', // 특정활동 게시글 봉사활동 인증서 발급 현황
+  ORGANIZATION__MY_PAGE__PUBLISH:
+    '/api/organizations/mypage/certificate/publish', // 특정 유저 게시글 봉사활동 인증서 발급
 };
 
 // 토큰 필요 없는 애들
@@ -61,4 +64,5 @@ export const FORM_DATA_REQUIRED_URLS = [
   API_URL.USER_INFO_POST,
   API_URL.USER_INFO_PUT,
   API_URL.DEAL_BOARDS_WRITE,
+  API_URL.ORGANIZATION__MY_PAGE__PUBLISH,
 ];
