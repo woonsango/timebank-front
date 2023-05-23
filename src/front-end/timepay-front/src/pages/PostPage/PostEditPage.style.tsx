@@ -63,27 +63,30 @@ export const cssPostDetailStatus = css`
 
 // 3rd block
 export const cssPostDetailThird = css`
-  display: grid;
-  flex-direction: row;
-  grid-template-columns: 85px 5fr 68px;
-  align-items: center;
+  display: flex;
+  justify-content: space-between;
   margin-left: 25px;
   margin-right: 25px;
+  .category {
+    display: flex;
+    align-items: center;
+  }
 `;
 export const cssPostDetailCategory1 = css`
-  margin-top: 20px;
+  align-items: center;
   font-size: 18px;
   font-weight: 600;
   color: ${COMMON_COLOR.BLACK};
 `;
 export const cssPostDetailCategory2 = css`
-  margin-top: 20px;
+  margin-left: 20px;
   font-size: 16px;
   font-weight: 700;
   color: ${COMMON_COLOR.FONT2};
 `;
 export const cssPostDetailPay = css`
-  margin-top: 20px;
+  display: flex;
+  align-items: center;
   text-align: right;
   font-size: 18px;
   font-weight: 500;
@@ -94,19 +97,19 @@ export const cssPostDetailPay = css`
 
 // 4th block
 export const cssPostDetailFourth = css`
+  align-items: center;
   margin-left: 25px;
   margin-right: 25px;
 `;
 export const cssPostDetailRegion = css`
-  margin-top: 20px;
   color: ${COMMON_COLOR.FONT2};
-  font-size: 16px;
+  font-size: 18px;
   font-weight: 600;
 `;
 export const cssPostDetailTime = css`
   margin-top: 10px;
   color: ${COMMON_COLOR.FONT2};
-  font-size: 16px;
+  font-size: 18px;
   font-weight: 600;
 `;
 
@@ -149,6 +152,7 @@ export const cssPostEditFooter2 = css`
 `;
 
 export const cssPostTextarea = css`
+  margin: 0;
   margin-top: 10px;
   padding: 10px;
   border: 1.5px solid ${COMMON_COLOR.MAIN1};
@@ -175,6 +179,7 @@ export const cssLine1 = css`
   border-top: 1.5px solid ${COMMON_COLOR.LIGHT_GRAY};
   background-color: black;
   margin-top: 15px;
+  margin-bottom: 15px;
 `;
 export const cssLine2 = css`
   border-top: 1.5px solid ${COMMON_COLOR.LIGHT_GRAY};
@@ -184,4 +189,5 @@ export const cssLine3 = css`
   border-top: 1px solid ${COMMON_COLOR.LIGHT_GRAY};
   background-color: black;
   margin-top: 20px;
+  margin-bottom: 20px;
 `;

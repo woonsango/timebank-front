@@ -147,19 +147,21 @@ const PostEditPage = () => {
         <div css={cssLine3} />
         <div>
           <div css={cssPostDetailThird}>
-            <div css={cssPostDetailCategory1}>카테고리</div>
-            <div css={cssPostDetailCategory2}>{data?.data.category}</div>
+            <div className="category">
+              <div css={cssPostDetailCategory1}>카테고리</div>
+              <div css={cssPostDetailCategory2}>{data?.data.category}</div>
+            </div>
             <div css={cssPostDetailPay}>{data?.data.pay} TP</div>
           </div>
         </div>
         <div css={cssLine3} />
         <div css={cssPostDetailFourth}>
           <div css={cssPostDetailRegion}>
-            <FlagFilled style={{ marginRight: 10, color: 'black' }} />
+            <FlagFilled style={{ marginRight: 15, color: 'black' }} />
             {data?.data.location}
           </div>
           <div css={cssPostDetailTime}>
-            <ClockCircleOutlined style={{ marginRight: 10, color: 'black' }} />
+            <ClockCircleOutlined style={{ marginRight: 15, color: 'black' }} />
             {dayjs(data?.data.startTime).format('MM월 DD일 HH시 mm분')} ~{' '}
             {dayjs(data?.data.endTime).format('HH시 mm분')}
           </div>
