@@ -5,6 +5,7 @@ import com.capstone.timepay.controller.board.request.ReportRequestDTO;
 import com.capstone.timepay.domain.dealBoard.DealBoard;
 import com.capstone.timepay.domain.dealBoard.DealBoardRepository;
 import com.capstone.timepay.domain.dealBoardComment.DealBoardComment;
+import com.capstone.timepay.service.board.dto.AdoptedCommentDTO;
 import com.capstone.timepay.service.board.dto.DealBoardCommentDTO;
 import com.capstone.timepay.service.board.service.DealBoardCommentService;
 import com.capstone.timepay.service.board.service.DealRegisterService;
@@ -101,11 +102,11 @@ public class DealBoardCommentController {
     }
 
     @ApiOperation(value = "지원한 목록 중 댓글 선정하기")
-    @PutMapping("/{boardId}/adopted/{commentId}")
-    public DealBoardCommentDTO getAdoptedComments(@PathVariable("boardId") Long boardId,
-                                                  @PathVariable("commentId") Long commentId)
+    @PutMapping("/{boardId}/adopted")
+    public ResponseEntity getAdoptedComments(@PathVariable("boardId") Long boardId,
+                                                  @RequestBody AdoptedCommentDTO commentIds)
     {
-        return dealBoardCommentService.setAdoptedComments(commentId);
+        return new ResponseEntity(dealBoardCommentService.setAdoptedAllComments(boardId ,commentIds), HttpStatus.OK);
     }
 
     @ApiOperation(value = "선정된 댓글목록 확인")

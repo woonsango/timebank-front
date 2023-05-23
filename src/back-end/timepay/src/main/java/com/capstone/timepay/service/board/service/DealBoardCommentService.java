@@ -1,5 +1,6 @@
 package com.capstone.timepay.service.board.service;
 
+import com.capstone.timepay.domain.board.BoardStatus;
 import com.capstone.timepay.domain.comment.Comment;
 import com.capstone.timepay.domain.comment.CommentRepository;
 import com.capstone.timepay.domain.dealBoard.DealBoard;
@@ -8,8 +9,11 @@ import com.capstone.timepay.domain.dealBoardComment.DealBoardComment;
 import com.capstone.timepay.domain.dealBoardComment.DealBoardCommentRepository;
 import com.capstone.timepay.domain.user.User;
 import com.capstone.timepay.domain.user.UserRepository;
+import com.capstone.timepay.service.board.dto.AdoptedCommentDTO;
 import com.capstone.timepay.service.board.dto.DealBoardCommentDTO;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -120,5 +124,23 @@ public class DealBoardCommentService {
         // DealBoardComment 엔티티 삭제
         dealBoardCommentRepository.delete(dealBoardComment);
         return true;
+    }
+
+    public ResponseEntity setAdoptedAllComments(Long boardId, AdoptedCommentDTO commentIds)
+    {
+        List<Long> commentId = commentIds.getCommentsId();
+        for (int i = 0; i < commentId.size(); i++)
+        {
+            DealBoardComment dealBoardComment = dealBoardCommentRepository.findById(commentId.get(i)).orElseThrow(() -> {
+                return new IllegalArgumentException("댓글을 찾을 수 없음");
+            });
+            dealBoardComment.setAdopted(true);
+            dealBoardCommentRepository.save(dealBoardComment);
+        }
+        DealBoard dealBoard = dealBoardRepository.findById(boardId)
+                .orElseThrow(() -> new IllegalArgumentException("게시글을 찾을 수 없습니다."));
+        dealBoard.setBoardStatus(BoardStatus.MATCHING_COMPLETE);
+        dealBoardRepository.save(dealBoard);
+        return new ResponseEntity("댓글 지원 완료, 매칭 완료", HttpStatus.OK);
     }
 }
