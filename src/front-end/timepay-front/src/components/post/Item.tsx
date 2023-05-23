@@ -1,4 +1,5 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useState, useEffect } from 'react';
+import { css } from '@emotion/react';
 import {
   cssComments,
   cssCommentItem,
@@ -11,6 +12,7 @@ import {
 import { Form, Input, Modal, Button } from 'antd';
 import { useDeleteComment } from '../../api/hooks/comment';
 import { useQueryClient } from 'react-query';
+import { getLineCount } from '../../utils/getLineCount';
 
 const Item = ({ c, messageApi }: any) => {
   const queryClient = useQueryClient();
@@ -61,8 +63,20 @@ const Item = ({ c, messageApi }: any) => {
     [messageApi, real_id, queryClient, useDeleteCommentMutation],
   );
 
+  const [commentsLineCount, setCommentsLineCount] = useState(1);
+
+  useEffect(() => {
+    const spanElement = document.getElementById('commentsSpan');
+    if (spanElement) {
+      const lineCount = getLineCount(spanElement);
+      setCommentsLineCount(lineCount);
+    }
+  }, [commentsLineCount]);
+
+  console.log(commentsLineCount);
+
   return (
-    <div css={cssComments}>
+    <div css={cssComments(commentsLineCount)}>
       <div css={cssEditDelete}>
         {write_user ? (
           <Button className="edit">수정</Button>
@@ -115,8 +129,9 @@ const Item = ({ c, messageApi }: any) => {
           <div css={cssCommentProfile}></div>
           <div css={cssCommentUser}>{c.userNickname}</div>
         </div>
+
         <div css={cssCommentText}>
-          <span>{c.content}</span>
+          <span id="commentsSpan">{c.content}</span>
         </div>
       </div>
     </div>
