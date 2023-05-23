@@ -3,6 +3,7 @@ import { css } from '@emotion/react';
 import {
   cssComments,
   cssMyCommentItem,
+  cssAppliedCommentItem,
   cssOtherCommentItem,
   cssPostDetailProfile,
   cssCommentUser,
@@ -16,7 +17,7 @@ import { useQueryClient } from 'react-query';
 
 import { useGetUserInfo } from '../../api/hooks/user';
 
-const Item = ({ c, messageApi }: any) => {
+const Item = ({ a, c, messageApi }: any) => {
   const queryClient = useQueryClient();
 
   const { data: userInfo } = useGetUserInfo();
@@ -135,7 +136,15 @@ const Item = ({ c, messageApi }: any) => {
         </Button>
       </div>
 
-      <div css={isAuthor ? cssMyCommentItem : cssOtherCommentItem}>
+      <div
+        css={
+          isAuthor
+            ? cssMyCommentItem
+            : a
+            ? cssAppliedCommentItem
+            : cssOtherCommentItem
+        }
+      >
         <div css={cssPostDetailProfile}>
           <div css={cssCommentProfile}></div>
           <div css={cssCommentUser}>{c.userNickname}</div>

@@ -16,6 +16,17 @@ export const cssMyCommentItem = css`
   border-radius: 30px 0px 30px 30px;
   font-size: 18px;
 `;
+export const cssAppliedCommentItem = css`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  border: 1.3px solid ${COMMON_COLOR.MAIN1};
+  background: ${COMMON_COLOR.BRIGHT_GRAY};
+  margin-bottom: 15px;
+  padding: 15px;
+  border-radius: 30px 0px 30px 30px;
+  font-size: 18px;
+`;
 export const cssOtherCommentItem = css`
   display: flex;
   flex-direction: column;
