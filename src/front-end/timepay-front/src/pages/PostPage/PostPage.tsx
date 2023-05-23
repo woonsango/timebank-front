@@ -304,7 +304,7 @@ const PostPage = () => {
                 <div css={cssPostDetailCategory1}>카테고리</div>
                 <div css={cssPostDetailCategory2}>{board?.category}</div>
               </div>
-              <div css={cssPostDetailPay}>{board?.pay || '-'} TP</div>
+              <div css={cssPostDetailPay}>{board?.pay || '0'} TP</div>
             </div>
             <div css={cssPostDetailSecond}>
               <div css={cssPostDetailTitle}>{data?.data.title}</div>
