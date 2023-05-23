@@ -4,19 +4,20 @@ import { IComment, IPostComment } from '../interfaces/IComment';
 import { apiRequest } from '../request';
 import { API_URL } from '../urls';
 
-export const useGetComment = () => {
-  return useQuery<AxiosResponse<IComment>, AxiosError>({
-    queryKey: ['useGetComment'],
-    queryFn: () => apiRequest.get(API_URL.DEAL_BOARDS_COMMENT_APPLIED),
-    refetchOnWindowFocus: false,
-  });
-};
-
 export const useGetComments = (postPk: number) => {
   return useQuery<AxiosResponse<IPostComment[]>, AxiosError>({
     queryKey: ['useGetComments', postPk],
     queryFn: () => apiRequest.get(`${API_URL.DEAL_BOARDS_COMMENT}/${postPk}`),
     refetchOnWindowFocus: false,
+  });
+};
+
+export const useGetAppliedComment = (boardId: number) => {
+  return useQuery<AxiosResponse<IPostComment[]>, AxiosError>({
+    queryKey: ['useGetAppliedComment'],
+    queryFn: () => apiRequest.get(API_URL.DEAL_BOARDS_COMMENT_APPLIED(boardId)),
+    refetchOnWindowFocus: false,
+    enabled: !!boardId,
   });
 };
 
