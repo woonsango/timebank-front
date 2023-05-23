@@ -46,6 +46,14 @@ export const useGetBoard = (postPk: number) => {
   });
 };
 
+export const usePutBoard = (postPk: number) => {
+  return useMutation<AxiosResponse<any>, AxiosError, IBoard>({
+    mutationKey: 'usePutBoard',
+    mutationFn: (data) =>
+      apiRequest.put(`${API_URL.DEAL_BOARDS}/update/${postPk}`, { ...data }),
+  });
+};
+
 export const useDeleteBoard = () => {
   return useMutation<AxiosResponse<IDeleteBoard>, AxiosError, string>({
     mutationKey: 'useDeleteBoard',

@@ -1,8 +1,7 @@
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { Button, Layout } from 'antd';
+import { Button, Layout, message } from 'antd';
 import TextArea from 'antd/es/input/TextArea';
-import { IPost } from '../../api/interfaces/IPost';
 import { cssMainHeaderStyle } from '../../components/MainHeader/MainHeader.styles';
 import {
   cssPostEditPage,
@@ -33,79 +32,74 @@ import {
   cssPostEditFooter2,
 } from './PostEditPage.style';
 import { ClockCircleOutlined, FlagFilled } from '@ant-design/icons';
+import { useQueryClient } from 'react-query';
+import { usePutBoard, useGetBoard } from '../../api/hooks/board';
+import { useSetRecoilState } from 'recoil';
+import { headerTitleState } from '../../states/uiState';
+import { endTime, startTime } from '../../states/register';
 
 const Footer = Layout;
 
-interface PostProps {
-  post?: IPost;
-}
-
-const PostEditPage = ({ post }: PostProps) => {
+const PostEditPage = () => {
   const navigate = useNavigate();
-  const location = useLocation();
-  const {
-    title,
-    content,
-    category,
-    attachment,
-    pay,
-    startTime,
-    endTime,
-    region,
-    user,
-  } = location.state;
-
+  const setHeaderTitle = useSetRecoilState(headerTitleState);
   useEffect(() => {
-    /*
-    const getBoard = async () => {
-      const { data } = await axios.get();
-      return data;
-      
-    };
-    getBoard().then((result) => {
-       result?.editTitle     */
-    /*
-    });
-    */
-  }, []);
+    setHeaderTitle('게시글 수정');
+  }, [setHeaderTitle]);
 
-  /*
-  const handleTitleChange = useCallback(
-    (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-      setTitles(e.target.value);
-    },
-    [],
-  );
-  */
+  const queryClient = useQueryClient();
+  const [messageApi, contextHolder] = message.useMessage();
+  const url = window.location.pathname;
+  const real_id = url.substring(6);
+  const { data, isLoading } = useGetBoard(parseInt(real_id));
+  const usePutBoardMutation = usePutBoard(parseInt(real_id));
+
+  const [title, setTitle] = useState('');
+  const [content, setContent] = useState('');
+  const id = Number(real_id);
+
+  const handleTitle = (e: any) => {
+    setTitle(e.target.value);
+  };
+
+  const handleContent = (e: any) => {
+    setContent(e.target.value);
+  };
 
   const handleClickCancel = useCallback(() => {
     navigate(-1);
   }, [navigate]);
 
-  const handleClickSave = useCallback(() => {
-    // 수정된 게시글 정보를 API로 전송하는 로직
-    // ...
-
-    navigate(-1);
-  }, [navigate]);
+  const handleClickSave = useCallback(async () => {
+    try {
+      await usePutBoardMutation.mutateAsync({
+        d_boardId: id,
+        title: title,
+        content: content,
+        startTime: startTime,
+        endTime: endTime,
+      });
+      navigate(-1);
+    } catch (error) {
+      console.error('확인에서 오류가 발생했습니다.', error);
+    }
+  }, [usePutBoardMutation, navigate, title, content]);
 
   return (
     <Layout css={cssPostDetail}>
-      <div css={cssMainHeaderStyle}>
-        <span>게시글 수정</span>
-      </div>
       <div css={cssPostEditPage}>
         <div css={cssPostDetailFirst}>
           <div css={cssPostDetailProfile}></div>
-          <div css={cssPostDetailUser}>{user}</div>
+          <div css={cssPostDetailUser}>{data?.data.userNickname}</div>
         </div>
         <div css={cssLine1} />
         <div css={cssPostEditSecond}>
           <div css={cssPostDetailTitle}>
             <TextArea
-              defaultValue={title}
+              defaultValue={data?.data.title}
               css={cssPostTextarea}
               style={{ height: 50, resize: 'none' }}
+              onChange={handleTitle}
             />
           </div>
         </div>
@@ -113,32 +107,32 @@ const PostEditPage = ({ post }: PostProps) => {
         <div>
           <div css={cssPostDetailThird}>
             <div css={cssPostDetailCategory1}>카테고리</div>
-            <div css={cssPostDetailCategory2}>{category}</div>
-            <div css={cssPostDetailPay}>{pay} TP</div>
+            <div css={cssPostDetailCategory2}>{data?.data.category}</div>
+            <div css={cssPostDetailPay}>{data?.data.pay} TP</div>
           </div>
         </div>
         <div css={cssLine3} />
         <div css={cssPostDetailFourth}>
           <div css={cssPostDetailRegion}>
             <FlagFilled style={{ marginRight: 10 }} />
-            {region}
+            {data?.data.location}
           </div>
           <div css={cssPostDetailTime}>
             <ClockCircleOutlined style={{ marginRight: 10 }} />
-            {startTime} ~ {endTime}
+            {data?.data.startTime} ~ {data?.data.endTime}
           </div>
         </div>
         <div css={cssLine1} />
         <div css={cssPostDetailFifth}>
           <div css={cssPostDetailContent1}>내용</div>
           <TextArea
-            defaultValue={content}
+            defaultValue={data?.data.content}
             css={cssPostEditContent2}
             style={{ height: 200, resize: 'none' }}
+            onChange={handleContent}
           >
-            {content}
+            {data?.data.content}
           </TextArea>
-          <div css={cssPostDetailAttachment}>{attachment}</div>
         </div>
       </div>
       <Footer css={cssPostEditFooter}>

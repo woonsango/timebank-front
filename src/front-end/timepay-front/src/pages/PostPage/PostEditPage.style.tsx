@@ -28,7 +28,7 @@ export const cssPostDetail = css`
 export const cssPostEditPage = css`
   display: flex;
   flex-direction: column;
-  margin-top: 90px;
+  margin-top: 20px;
 `;
 
 // 1st block

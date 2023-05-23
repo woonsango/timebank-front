@@ -140,6 +140,10 @@ const PostPage = () => {
       : board?.userNickname === userNickname;
   }, [board, isAgency, userInfo, userNickname]);
 
+  const handleEditPageChange = () => {
+    navigate(`/edit/${real_id}`);
+  };
+
   const handleDelete = useCallback(async () => {
     Modal.confirm({
       content: '정말 게시글을 삭제하시겠습니까?',
