@@ -6,11 +6,22 @@ export const cssComments = css`
   margin-bottom: 20px;
   z-index: 1;
 `;
-export const cssCommentItem = css`
+export const cssMyCommentItem = css`
   display: flex;
   flex-direction: column;
   width: 100%;
   border: 1.3px solid ${COMMON_COLOR.LIGHT_GRAY};
+  margin-bottom: 15px;
+  padding: 15px;
+  border-radius: 30px 0px 30px 30px;
+  font-size: 18px;
+`;
+export const cssOtherCommentItem = css`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  border: 1.3px solid ${COMMON_COLOR.LIGHT_GRAY};
+  background: ${COMMON_COLOR.BRIGHT_GRAY};
   margin-bottom: 15px;
   padding: 15px;
   border-radius: 30px 0px 30px 30px;
@@ -31,7 +42,6 @@ export const cssCommentProfile = css`
   background-color: ${COMMON_COLOR.BLUE_GRAY};
 `;
 export const cssCommentUser = css`
-  background: ${COMMON_COLOR.WHITE};
   font-weight: 500;
   font-size: 18px;
   font-size: 18px;
