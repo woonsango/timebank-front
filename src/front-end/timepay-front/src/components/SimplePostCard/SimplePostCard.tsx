@@ -51,13 +51,13 @@ const SimplePostCard = ({ post }: SimplePostCardProps) => {
         <div css={cssSimplePostCardFooterStyle(scaleValue)}>
           <div className="nickname">
             {userType === '일반 유저' ? <UserOutlined /> : <AgencyUser />}
-            {nickname || '-'}
+            {userType === '일반 유저' ? nickname : post?.organizationName}
           </div>
           <div>{createdAt ? getDateDiffToday(createdAt) : '-'}</div>
         </div>
       );
     },
-    [scaleValue],
+    [post, scaleValue],
   );
 
   const postCardContent = useMemo(() => {
