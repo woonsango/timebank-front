@@ -16,8 +16,7 @@ import { useDeleteComment } from '../../api/hooks/comment';
 import { useQueryClient } from 'react-query';
 import { useGetUserInfo } from '../../api/hooks/user';
 
-const Item = ({ c, messageApi, onShowProfile }: any) => {
-
+const Item = ({ a, c, messageApi, onShowProfile }: any) => {
   const queryClient = useQueryClient();
 
   const { data: userInfo } = useGetUserInfo();
@@ -37,7 +36,7 @@ const Item = ({ c, messageApi, onShowProfile }: any) => {
     return isAgency
       ? c.userId === userInfo?.data.body.uid
       : c.userNickname === userNickname;
-  }, [isAgency, userInfo, userNickname]);
+  }, [isAgency, c, userInfo, userNickname]);
 
   console.log('A', isAuthor);
 
