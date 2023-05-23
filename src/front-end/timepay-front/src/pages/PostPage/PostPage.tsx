@@ -38,6 +38,7 @@ import {
   cssLikeContainer,
   cssSpinStyle,
   cssSpinCommentStyle,
+  cssVolunteerInfoStyle,
 } from './PostPage.style';
 import PostStatusTag from '../../components/PostStatusTag';
 import { ClockCircleOutlined, FlagFilled } from '@ant-design/icons';
@@ -45,6 +46,7 @@ import { Button, Layout } from 'antd';
 import PostButton from '../../components/post/PostButton';
 import { ReactComponent as LikeDefault } from '../../assets/images/icons/like_default.svg';
 import { ReactComponent as LikeClick } from '../../assets/images/icons/like_click.svg';
+import { ReactComponent as VolunteerBadge } from '../../assets/images/icons/volunteer-badge.svg';
 import Item from '../../components/post/Item';
 import InputText from '../../components/post/InputText';
 import ApplicantButton from '../../components/post/ApplicantButton';
@@ -270,6 +272,23 @@ const PostPage = () => {
     setLike(!like);
   };
 
+  const volunteerInfo = useMemo(() => {
+    return (
+      <div css={cssVolunteerInfoStyle}>
+        <div className="overview">
+          <VolunteerBadge /> <div>필요 인원: {board?.volunteerPeople} 명</div>
+        </div>
+        <ul>
+          <li>타임페이와 봉사활동 시간을 지급받을 수 있는 활동입니다.</li>
+          <li>
+            지급받은 봉사활동 인증서는 마이페이지 - 봉사활동 기록에서 확인할 수
+            있습니다.
+          </li>
+        </ul>
+      </div>
+    );
+  }, [board]);
+
   return (
     <Layout css={cssPostDetail}>
       {isLoading ? (
@@ -322,24 +341,7 @@ const PostPage = () => {
                 )}
               </div>
             </div>
-            {board?.volunteer && (
-              <div css={cssPostDetailFourth}>
-                <div css={cssPostDetailRegion}>
-                  <FlagFilled style={{ marginRight: 10 }} />
-                  {data?.data.location}
-                </div>
-                <div css={cssPostDetailTime}>
-                  <ClockCircleOutlined style={{ marginRight: 10 }} />
-                  {dayjs(board?.startTime, 'YYYY-MM-DDTHH:mm:ss').format(
-                    'MM월 DD일 HH시 mm분',
-                  )}{' '}
-                  ~{' '}
-                  {dayjs(board?.endTime, 'YYYY-MM-DDTHH:mm:ss').format(
-                    'HH시 mm분',
-                  )}
-                </div>
-              </div>
-            )}
+            {board?.volunteer && volunteerInfo}
             <div css={cssPostDetailFifth}>
               <div className="content">내용</div>
               <div css={cssPostDetailContent2}>{data?.data.content}</div>
