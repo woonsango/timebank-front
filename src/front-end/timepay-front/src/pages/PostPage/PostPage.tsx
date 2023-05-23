@@ -333,11 +333,13 @@ const PostPage = () => {
             </div>
             <div css={cssPostDetailFourth}>
               <div css={cssPostDetailRegion}>
-                <FlagFilled style={{ marginRight: 10 }} />
+                <FlagFilled style={{ marginRight: 15, color: 'black' }} />
                 {data?.data.location}
               </div>
               <div css={cssPostDetailTime}>
-                <ClockCircleOutlined style={{ marginRight: 10 }} />
+                <ClockCircleOutlined
+                  style={{ marginRight: 15, color: 'black' }}
+                />
                 {dayjs(board?.startTime, 'YYYY-MM-DDTHH:mm:ss').format(
                   'MM월 DD일 HH시 mm분',
                 )}{' '}
@@ -350,7 +352,9 @@ const PostPage = () => {
             {board?.volunteer && volunteerInfo}
             <div css={cssPostDetailFifth}>
               <div className="content">내용</div>
-              <div css={cssPostDetailContent2}>{data?.data.content}</div>
+              <div css={cssPostDetailContent2}>
+                <span>{data?.data.content}</span>
+              </div>
               <div css={cssPostDetailAttachment}>{data?.data.imageUrl}</div>
             </div>
             <div css={cssPostDetailFirst}>
@@ -367,11 +371,11 @@ const PostPage = () => {
                 <p>관심 </p>
                 {like === true ? (
                   <button css={cssLike} onClick={handleLike}>
-                    <LikeClick />
+                    <LikeClick style={{ width: 25, height: 25 }} />
                   </button>
                 ) : (
                   <button css={cssLike} onClick={handleLike}>
-                    <LikeDefault />
+                    <LikeDefault style={{ width: 25, height: 25 }} />
                   </button>
                 )}
               </div>
