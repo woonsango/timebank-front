@@ -328,3 +328,30 @@ export const cssSpinCommentStyle = css`
   padding-top: 50px !important;
   width: 100%;
 `;
+
+export const cssVolunteerInfoStyle = css`
+  margin: 30px 25px 0 25px;
+  background-color: #ffdf995c;
+  border-radius: 20px;
+  padding: 15px;
+  .overview {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 20px;
+    font-weight: 700;
+    font-size: 17px;
+    margin-bottom: 10px;
+    svg {
+      width: 53px;
+      height: auto;
+    }
+  }
+  ul {
+    color: ${COMMON_COLOR.FONT2};
+    font-weight: 500;
+    padding-left: 20px;
+    font-size: 13px;
+    word-break: keep-all;
+  }
+`;
