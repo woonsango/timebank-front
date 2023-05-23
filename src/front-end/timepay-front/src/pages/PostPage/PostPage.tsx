@@ -350,7 +350,11 @@ const PostPage = () => {
                 {data?.data.createdAt.substring(0, 10)}
               </div>
               <div css={cssPostDetailProfile}></div>
-              <div css={cssPostDetailUser}>{data?.data.userNickname}</div>
+              <div css={cssPostDetailUser}>
+                {isAgency
+                  ? data?.data.organizationName
+                  : data?.data.userNickname}
+              </div>
               <div css={cssLikeContainer}>
                 <p>관심 </p>
                 {like === true ? (
