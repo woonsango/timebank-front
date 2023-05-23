@@ -40,6 +40,7 @@ public class DealBoardResponse {
 
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+    private String organizationName;
 
     public DealBoardResponse(DealBoard dealBoard) {
         this.d_boardId = dealBoard.getD_boardId();
@@ -85,5 +86,11 @@ public class DealBoardResponse {
 
         this.createdAt = dealBoard.getCreatedAt();
         this.updatedAt = dealBoard.getUpdatedAt();
+
+        if (dealBoard.getDealRegisters().get(0).getUser().getOrganization() == null) {
+            this.organizationName = null;
+        } else {
+            this.organizationName = dealBoard.getDealRegisters().get(0).getUser().getOrganization().getOrganizationName();
+        }
     }
 }
