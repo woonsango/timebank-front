@@ -202,10 +202,11 @@ export const cssPostDetailSixth = css`
   margin-bottom: 200px;
   p {
     text-align: center;
-    font-size: 15px;
+    font-size: 17px;
     font-weight: 500;
     color: ${COMMON_COLOR.FONT2};
-    line-height: 20px;
+    line-height: 23px;
+    letter-spacing: 0.5px;
   }
 `;
 
