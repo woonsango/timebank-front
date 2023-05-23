@@ -322,6 +322,24 @@ const PostPage = () => {
                 )}
               </div>
             </div>
+            {board?.volunteer && (
+              <div css={cssPostDetailFourth}>
+                <div css={cssPostDetailRegion}>
+                  <FlagFilled style={{ marginRight: 10 }} />
+                  {data?.data.location}
+                </div>
+                <div css={cssPostDetailTime}>
+                  <ClockCircleOutlined style={{ marginRight: 10 }} />
+                  {dayjs(board?.startTime, 'YYYY-MM-DDTHH:mm:ss').format(
+                    'MM월 DD일 HH시 mm분',
+                  )}{' '}
+                  ~{' '}
+                  {dayjs(board?.endTime, 'YYYY-MM-DDTHH:mm:ss').format(
+                    'HH시 mm분',
+                  )}
+                </div>
+              </div>
+            )}
             <div css={cssPostDetailFifth}>
               <div className="content">내용</div>
               <div css={cssPostDetailContent2}>{data?.data.content}</div>
