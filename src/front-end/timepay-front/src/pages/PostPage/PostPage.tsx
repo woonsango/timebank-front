@@ -39,7 +39,6 @@ import {
   cssSpinStyle,
   cssSpinCommentStyle,
   cssVolunteerInfoStyle,
-  cssPostTextarea,
 } from './PostPage.style';
 import PostStatusTag from '../../components/PostStatusTag';
 import { ClockCircleOutlined, FlagFilled } from '@ant-design/icons';
