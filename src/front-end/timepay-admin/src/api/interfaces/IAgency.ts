@@ -20,6 +20,7 @@ export interface IAgency {
   authority: string;
   employeeNum: number;
   timepay: number;
+  blackList: boolean;
 }
 
 export interface IGetAgenciesResponse extends PageableData {
