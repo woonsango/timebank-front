@@ -17,7 +17,7 @@ const InputText = ({ onChange, inputText }: InputTextProps) => {
       value={inputText}
       css={cssPostTextarea}
       style={{
-        padding: 10,
+        padding: 0,
         height: 80,
         width: '90%',
         fontSize: 20,

@@ -1,6 +1,6 @@
 import { useCallback, useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Modal, Form, Input, message, Spin } from 'antd';
+import { Modal, Form, Input, message, Spin, Checkbox } from 'antd';
 import {
   cssPostDetailPage,
   cssPostDetailFirst,
@@ -104,6 +104,12 @@ const PostPage = () => {
     content: '',
   });
 
+  const [applied, setApplied] = useState(false);
+  const isApplied = () => {
+    setApplied(true);
+  };
+  console.log('isApplied', applied);
+
   useEffect(() => {
     setHeaderTitle('도움요청');
   }, [setHeaderTitle]);
@@ -201,7 +207,7 @@ const PostPage = () => {
         });
         setCommentValue({
           adopted: false,
-          applied: false,
+          applied: applied,
           hidden: false,
           content: '',
         });
@@ -333,11 +339,13 @@ const PostPage = () => {
             </div>
             <div css={cssPostDetailFourth}>
               <div css={cssPostDetailRegion}>
-                <FlagFilled style={{ marginRight: 10 }} />
+                <FlagFilled style={{ marginRight: 15, color: 'black' }} />
                 {data?.data.location}
               </div>
               <div css={cssPostDetailTime}>
-                <ClockCircleOutlined style={{ marginRight: 10 }} />
+                <ClockCircleOutlined
+                  style={{ marginRight: 15, color: 'black' }}
+                />
                 {dayjs(board?.startTime, 'YYYY-MM-DDTHH:mm:ss').format(
                   'MM월 DD일 HH시 mm분',
                 )}{' '}
@@ -350,7 +358,9 @@ const PostPage = () => {
             {board?.volunteer && volunteerInfo}
             <div css={cssPostDetailFifth}>
               <div className="content">내용</div>
-              <div css={cssPostDetailContent2}>{data?.data.content}</div>
+              <div css={cssPostDetailContent2}>
+                <span>{data?.data.content}</span>
+              </div>
               <div css={cssPostDetailAttachment}>{data?.data.imageUrl}</div>
             </div>
             <div css={cssPostDetailFirst}>
@@ -367,11 +377,11 @@ const PostPage = () => {
                 <p>관심 </p>
                 {like === true ? (
                   <button css={cssLike} onClick={handleLike}>
-                    <LikeClick />
+                    <LikeClick style={{ width: 25, height: 25 }} />
                   </button>
                 ) : (
                   <button css={cssLike} onClick={handleLike}>
-                    <LikeDefault />
+                    <LikeDefault style={{ width: 25, height: 25 }} />
                   </button>
                 )}
               </div>
@@ -392,6 +402,7 @@ const PostPage = () => {
                   {commentsList.length > 0 ? (
                     commentsList.map((data) => (
                       <Item
+                        a={applied}
                         c={data}
                         id={data.id}
                         key={data.id}
@@ -400,7 +411,7 @@ const PostPage = () => {
                     ))
                   ) : (
                     <p>
-                      아직 댓글이 없어요🥹 <br /> 첫 댓글을 입력해보세요!
+                      아직 댓글이 없어요 🥹 <br /> 첫 댓글을 입력해보세요!
                     </p>
                   )}
                 </div>
@@ -432,13 +443,18 @@ const PostPage = () => {
             )}
 
             <div css={cssPostFooter2}>
-              <InputText
-                onChange={handleInputTextChange}
-                inputText={commentValue.content}
-              />
-              <button css={cssPostBtn} onClick={handleSubmitComment}>
-                등록
-              </button>
+              <Checkbox className="checkbox" onChange={isApplied}>
+                지원
+              </Checkbox>
+              <div className="textInput">
+                <InputText
+                  onChange={handleInputTextChange}
+                  inputText={commentValue.content}
+                />
+                <button css={cssPostBtn} onClick={handleSubmitComment}>
+                  등록
+                </button>
+              </div>
             </div>
           </Footer>
         </>
