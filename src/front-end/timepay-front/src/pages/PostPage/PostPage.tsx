@@ -62,6 +62,7 @@ import { useSetRecoilState } from 'recoil';
 import { headerTitleState } from '../../states/uiState';
 import dayjs from 'dayjs';
 import { useGetUserInfo } from '../../api/hooks/user';
+import AnotherUserProfileDrawer from '../../components/AnotherUserProfileDrawer';
 
 // interface TList {
 //   id: number;
@@ -101,6 +102,13 @@ const PostPage = () => {
     applied: false,
     hidden: false,
     content: '',
+  });
+  const [profileProps, setProfileProps] = useState<{
+    open: boolean;
+    userId?: number | undefined;
+  }>({
+    open: false,
+    userId: undefined,
   });
 
   const [applied, setApplied] = useState(false);
@@ -290,6 +298,18 @@ const PostPage = () => {
     );
   }, [board]);
 
+  const handleOnClickUser = useCallback(
+    (userId?: number | null) => {
+      // 유저 닉네임 클릭시 프로필 노출
+      if (data && data.data)
+        setProfileProps({
+          open: true,
+          userId: userId || undefined,
+        });
+    },
+    [data],
+  );
+
   return (
     <Layout css={cssPostDetail}>
       {isLoading ? (
@@ -358,8 +378,14 @@ const PostPage = () => {
               <div css={cssPostDetailCreatedAt}>
                 {data?.data.createdAt.substring(0, 10)}
               </div>
-              <div css={cssPostDetailProfile}></div>
-              <div css={cssPostDetailUser}>
+              <div
+                css={cssPostDetailProfile}
+                onClick={() => handleOnClickUser(data?.data.userId)}
+              ></div>
+              <div
+                css={cssPostDetailUser}
+                onClick={() => handleOnClickUser(data?.data.userId)}
+              >
                 {isAgency
                   ? data?.data.organizationName
                   : data?.data.userNickname}
@@ -392,6 +418,7 @@ const PostPage = () => {
                         id={data.id}
                         key={data.id}
                         messageApi={messageApi}
+                        onShowProfile={handleOnClickUser}
                       />
                     ))
                   ) : (
@@ -444,6 +471,11 @@ const PostPage = () => {
           </Footer>
         </>
       )}
+      <AnotherUserProfileDrawer
+        open={profileProps.open}
+        userId={profileProps.userId}
+        onClose={() => setProfileProps({ open: false, userId: undefined })}
+      />
     </Layout>
   );
 };
