@@ -3,6 +3,7 @@ import {
   cssComments,
   cssCommentItem,
   cssPostDetailProfile,
+  cssCommentUser,
   cssEditDelete,
   cssCommentText,
   cssCommentProfile,
@@ -112,8 +113,11 @@ const Item = ({ c, messageApi }: any) => {
       <div css={cssCommentItem}>
         <div css={cssPostDetailProfile}>
           <div css={cssCommentProfile}></div>
+          <div css={cssCommentUser}>{c.userNickname}</div>
         </div>
-        <div css={cssCommentText}>{c.content}</div>
+        <div css={cssCommentText}>
+          <span>{c.content}</span>
+        </div>
       </div>
     </div>
   );
