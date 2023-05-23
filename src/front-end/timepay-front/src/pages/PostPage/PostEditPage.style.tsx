@@ -17,14 +17,6 @@ export const cssDeleteBtnStyle = css`
   font-weight: 500;
 `;
 
-export const cssPostDetail = css`
-  font-family: unset !important;
-  background: ${COMMON_COLOR.WHITE};
-  width: 100%;
-  height: 100vh;
-  display: flex;
-`;
-
 export const cssPostEditPage = css`
   display: flex;
   flex-direction: column;
@@ -62,8 +54,8 @@ export const cssPostEditSecond = css`
 `;
 export const cssPostDetailTitle = css`
   margin-top: 20px;
-  font-size: 22px;
-  font-weight: 500;
+  font-size: 19px;
+  font-weight: 600;
 `;
 export const cssPostDetailStatus = css`
   margin-top: 25px;
@@ -81,7 +73,8 @@ export const cssPostDetailThird = css`
 export const cssPostDetailCategory1 = css`
   margin-top: 20px;
   font-size: 18px;
-  font-weight: 500;
+  font-weight: 600;
+  color: ${COMMON_COLOR.BLACK};
 `;
 export const cssPostDetailCategory2 = css`
   margin-top: 20px;
@@ -91,11 +84,12 @@ export const cssPostDetailCategory2 = css`
 `;
 export const cssPostDetailPay = css`
   margin-top: 20px;
+  text-align: right;
   font-size: 18px;
   font-weight: 500;
   background-color: ${COMMON_COLOR.MAIN3};
   border-radius: 10px;
-  padding: 5px;
+  padding: 5px 8px;
 `;
 
 // 4th block
@@ -123,8 +117,8 @@ export const cssPostDetailFifth = css`
 `;
 export const cssPostDetailContent1 = css`
   margin-top: 20px;
-  font-size: 18px;
-  font-weight: 500;
+  font-size: 19px;
+  font-weight: 600;
 `;
 export const cssPostEditContent2 = css`
   margin-top: 10px;
@@ -163,22 +157,14 @@ export const cssPostTextarea = css`
   font-weight: 500;
   letter-spacing: 1.3px;
 `;
-export const cssPostEditBtn1 = css`
-  width: 50%;
-  height: 70px;
-  background-color: ${COMMON_COLOR.FONT1};
-  font-weight: 500;
-  font-size: 19px;
-  border-radius: 0;
-  border: none;
-  background-color: ${COMMON_COLOR.FONT1};
-`;
+
 export const cssPostEditBtn2 = css`
-  width: 50%;
+  width: 100%;
   height: 70px;
   background-color: ${COMMON_COLOR.FONT1};
-  font-weight: 500;
-  font-size: 19px;
+  font-weight: 600;
+  font-size: 22px;
+  letter-spacing: 2.5px;
   border-radius: 0;
   border: none;
   background-color: ${COMMON_COLOR.MAIN1};
@@ -186,23 +172,16 @@ export const cssPostEditBtn2 = css`
 
 // lines
 export const cssLine1 = css`
-  border-top: 1.5px solid ${COMMON_COLOR.FONT1};
+  border-top: 1.5px solid ${COMMON_COLOR.LIGHT_GRAY};
   background-color: black;
   margin-top: 15px;
 `;
 export const cssLine2 = css`
-  border-top: 1.5px solid ${COMMON_COLOR.FONT1};
+  border-top: 1.5px solid ${COMMON_COLOR.LIGHT_GRAY};
   background-color: black;
 `;
 export const cssLine3 = css`
-  border-top: 1.5px solid ${COMMON_COLOR.FONT1};
+  border-top: 1px solid ${COMMON_COLOR.LIGHT_GRAY};
   background-color: black;
   margin-top: 20px;
-  margin-left: 25px;
-  margin-right: 25px;
-`;
-
-export const cssLine5 = css`
-  border-top: 1.2px solid ${COMMON_COLOR.FONT4};
-  background-color: black;
 `;

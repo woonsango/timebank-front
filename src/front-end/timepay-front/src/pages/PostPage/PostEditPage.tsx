@@ -1,8 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { Button, Layout, message, Modal, Form, Input } from 'antd';
 import TextArea from 'antd/es/input/TextArea';
-import { cssMainHeaderStyle } from '../../components/MainHeader/MainHeader.styles';
 import {
   cssPostEditPage,
   cssPostDetailFirst,
@@ -24,9 +23,7 @@ import {
   cssPostDetailContent1,
   cssPostEditContent2,
   cssPostDetailAttachment,
-  cssPostDetail,
   cssPostTextarea,
-  cssPostEditBtn1,
   cssPostEditBtn2,
   cssPostEditFooter,
   cssPostEditFooter2,
@@ -131,68 +128,67 @@ const PostEditPage = () => {
   }, [data, form]);
 
   return (
-    <Layout css={cssPostDetail}>
-      <Form onFinish={handelClickSave} form={form} initialValues={{}}>
-        <div css={cssPostEditPage}>
-          <div css={cssPostDetailFirst}>
-            <div css={cssPostDetailProfile}></div>
-            <div css={cssPostDetailUser}>{data?.data.userNickname}</div>
-          </div>
-          <div css={cssLine1} />
-          <div css={cssPostEditSecond}>
-            <Form.Item label="제목" name="title" css={cssPostDetailTitle}>
-              <Input
-                placeholder="여기에 제목을 입력하세요"
-                maxLength={25}
-                onChange={handleTitle}
-                css={cssPostTextarea}
-              />
-            </Form.Item>
-          </div>
-          <div css={cssLine3} />
-          <div>
-            <div css={cssPostDetailThird}>
-              <div css={cssPostDetailCategory1}>카테고리</div>
-              <div css={cssPostDetailCategory2}>{data?.data.category}</div>
-              <div css={cssPostDetailPay}>{data?.data.pay} TP</div>
-            </div>
-          </div>
-          <div css={cssLine3} />
-          <div css={cssPostDetailFourth}>
-            <div css={cssPostDetailRegion}>
-              <FlagFilled style={{ marginRight: 10 }} />
-              {data?.data.location}
-            </div>
-            <div css={cssPostDetailTime}>
-              <ClockCircleOutlined style={{ marginRight: 10 }} />
-              {dayjs(data?.data.startTime).format('MM월 DD일 HH시 mm분')} ~{' '}
-              {dayjs(data?.data.endTime).format('HH시 mm분')}
-            </div>
-          </div>
-          <div css={cssLine1} />
-          <div css={cssPostDetailFifth}>
-            <div css={cssPostDetailContent1}>내용</div>
-            <Form.Item name="content">
-              <TextArea
-                rows={5}
-                style={{ resize: 'none' }}
-                css={cssPostEditContent2}
-                placeholder="여기에 내용을 입력하세요"
-                onChange={handleContent}
-              />
-            </Form.Item>
+    <Form onFinish={handelClickSave} form={form} initialValues={{}}>
+      <div css={cssPostEditPage}>
+        <div css={cssPostDetailFirst}>
+          <div css={cssPostDetailProfile}></div>
+          <div css={cssPostDetailUser}>{data?.data.userNickname}</div>
+        </div>
+        <div css={cssLine1} />
+        <div css={cssPostEditSecond}>
+          <div css={cssPostDetailTitle}>제목</div>
+          <Form.Item name="title">
+            <Input
+              placeholder="여기에 제목을 입력하세요"
+              maxLength={25}
+              onChange={handleTitle}
+              css={cssPostTextarea}
+            />
+          </Form.Item>
+        </div>
+        <div css={cssLine3} />
+        <div>
+          <div css={cssPostDetailThird}>
+            <div css={cssPostDetailCategory1}>카테고리</div>
+            <div css={cssPostDetailCategory2}>{data?.data.category}</div>
+            <div css={cssPostDetailPay}>{data?.data.pay} TP</div>
           </div>
         </div>
-        <Footer css={cssPostEditFooter}>
-          <div css={cssLine2} />
-          <div css={cssPostEditFooter2}>
-            <Button css={cssPostEditBtn2} type="primary" htmlType="submit">
-              수정
-            </Button>
+        <div css={cssLine3} />
+        <div css={cssPostDetailFourth}>
+          <div css={cssPostDetailRegion}>
+            <FlagFilled style={{ marginRight: 10, color: 'black' }} />
+            {data?.data.location}
           </div>
-        </Footer>
-      </Form>
-    </Layout>
+          <div css={cssPostDetailTime}>
+            <ClockCircleOutlined style={{ marginRight: 10, color: 'black' }} />
+            {dayjs(data?.data.startTime).format('MM월 DD일 HH시 mm분')} ~{' '}
+            {dayjs(data?.data.endTime).format('HH시 mm분')}
+          </div>
+        </div>
+        <div css={cssLine1} />
+        <div css={cssPostDetailFifth}>
+          <div css={cssPostDetailContent1}>내용</div>
+          <Form.Item name="content">
+            <TextArea
+              rows={5}
+              style={{ resize: 'none' }}
+              css={cssPostEditContent2}
+              placeholder="여기에 내용을 입력하세요"
+              onChange={handleContent}
+            />
+          </Form.Item>
+        </div>
+      </div>
+      <Footer css={cssPostEditFooter}>
+        <div css={cssLine2} />
+        <div css={cssPostEditFooter2}>
+          <Button css={cssPostEditBtn2} type="primary" htmlType="submit">
+            수정
+          </Button>
+        </div>
+      </Footer>
+    </Form>
   );
 };
 
