@@ -12,6 +12,7 @@ import {
   cssCommentProfile,
 } from './Item.style';
 import { Form, Input, Modal, Button } from 'antd';
+import { useGetBoard } from '../../api/hooks/board';
 import { useDeleteComment } from '../../api/hooks/comment';
 import { useQueryClient } from 'react-query';
 
@@ -20,6 +21,9 @@ import { useGetUserInfo } from '../../api/hooks/user';
 const Item = ({ c, messageApi }: any) => {
   const queryClient = useQueryClient();
 
+  const url = window.location.pathname;
+  const real_id = url.substring(6);
+  const { data, isLoading } = useGetBoard(parseInt(real_id));
   const { data: userInfo } = useGetUserInfo();
   const userNickname = useMemo(() => {
     return userInfo?.data.body.nick_name;
@@ -30,15 +34,10 @@ const Item = ({ c, messageApi }: any) => {
     return false;
   }, [userInfo]);
 
-  console.log(userNickname);
-  console.log(c.userNickname);
-
   const isAuthor = useMemo(() => {
     // 게시글 작성자일 때 true
-    return c.userNickname === userNickname;
+    return c.userNickname === data?.data.userNickname;
   }, [isAgency, userInfo, userNickname]);
-
-  console.log('A', isAuthor);
 
   const write_user = false; // true = 수정 / false = 신고
 
@@ -56,9 +55,6 @@ const Item = ({ c, messageApi }: any) => {
   const onCancel = () => {
     setIsOpenReportModal(false);
   };
-
-  const url = window.location.pathname;
-  const real_id = url.substring(6);
 
   const useDeleteCommentMutation = useDeleteComment();
 
@@ -139,7 +135,7 @@ const Item = ({ c, messageApi }: any) => {
 
       <div
         css={
-          !isAuthor
+          isAuthor
             ? cssMyCommentItem
             : c.applied
             ? cssAppliedCommentItem

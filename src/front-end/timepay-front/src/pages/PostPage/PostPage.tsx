@@ -299,6 +299,8 @@ const PostPage = () => {
     );
   }, [board]);
 
+  console.log('게시글 작성자?', data?.data.userNickname);
+
   return (
     <Layout css={cssPostDetail}>
       {isLoading ? (
