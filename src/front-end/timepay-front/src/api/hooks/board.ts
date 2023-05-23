@@ -91,16 +91,24 @@ export const useCreateReports = () => {
   });
 };
 
-export const usePutBoardStateStart = (postPk: number) => {
-  return useMutation<AxiosResponse<any>, AxiosError>({
-    mutationKey: 'usePutBoardState',
-    mutationFn: () => apiRequest.put(`${API_URL.DEAL_BOARDS}/${postPk}/start`),
+export const usePutBoardStateFinish = () => {
+  return useMutation<AxiosResponse<any>, AxiosError, number>({
+    mutationKey: 'usePutBoardStateFinish',
+    mutationFn: (boardId) =>
+      apiRequest.put(`${API_URL.DEAL_BOARDS}/${boardId}/finish`),
   });
 };
 
-export const usePutBoardStateFinish = (postPk: number) => {
-  return useMutation<AxiosResponse<any>, AxiosError>({
-    mutationKey: 'usePutBoardState',
-    mutationFn: () => apiRequest.put(`${API_URL.DEAL_BOARDS}/${postPk}/finish`),
+export const usePutBoardAdopt = () => {
+  return useMutation<
+    AxiosResponse<any>,
+    AxiosError,
+    { postPk: number; commentsId?: number[] }
+  >({
+    mutationKey: 'usePutBoardAdopt',
+    mutationFn: (data) =>
+      apiRequest.put(API_URL.DEAL_BOARDS_COMMENTS_ADOPTED(data.postPk), {
+        commentsId: data.commentsId || [],
+      }),
   });
 };

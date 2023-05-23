@@ -20,7 +20,7 @@ export const cssPostButton = css`
   :hover {
     color: ${COMMON_COLOR.WHITE};
   }
-  &.start {
+  &.apply {
     width: 95%;
     background-color: ${COMMON_COLOR.MAIN1};
   }
@@ -34,11 +34,27 @@ export const cssPostButton = css`
     background-color: #6c6363;
     margin-left: 6px;
   }
+
   &.theEnd {
     width: 95%;
     color: ${COMMON_COLOR.FONT3};
     background-color: ${COMMON_COLOR.WHITE};
     font-weight: 400;
     letter-spacing: 1.5px;
+  }
+  &.disable {
+    background-color: ${COMMON_COLOR.FONT1};
+  }
+`;
+
+export const cssCommentTableStyle = css`
+  .comment-user {
+    color: ${COMMON_COLOR.MAIN2};
+    font-weight: 700;
+    font-size: 15px;
+  }
+  .comment-content {
+    word-break: keep-all;
+    font-size: 18px;
   }
 `;

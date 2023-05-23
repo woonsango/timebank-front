@@ -49,7 +49,6 @@ import { ReactComponent as LikeClick } from '../../assets/images/icons/like_clic
 import { ReactComponent as VolunteerBadge } from '../../assets/images/icons/volunteer-badge.svg';
 import Item from '../../components/post/Item';
 import InputText from '../../components/post/InputText';
-import ApplicantButton from '../../components/post/ApplicantButton';
 import {
   useCreateReports,
   useDeleteBoard,
@@ -127,18 +126,14 @@ const PostPage = () => {
     }
   }, [comments]);
 
-  const applicantList = useMemo(() => {
-    return ['지원자1', '지원자2', '지원자3'];
-  }, []);
-
   const userNickname = useMemo(() => {
     return userInfo?.data.body.nick_name;
   }, [userInfo]);
 
   const isAgency = useMemo(() => {
-    if (userInfo?.data.body.manager_name) return true;
+    if (board?.organizationName) return true;
     return false;
-  }, [userInfo]);
+  }, [board]);
 
   // 수정 및 삭제 버튼 표시 여부를 결정하는 함수
   const isAuthor = useMemo(() => {
@@ -255,10 +250,6 @@ const PostPage = () => {
       },
     });
   }, [messageApi, useReportMutation, real_id]);
-
-  const onApplicantClick = (applicant: any) => {
-    console.log(`Selected applicant: ${applicant}`);
-  };
 
   // const onItemClick = (item: any) => {
   //   setSelectedItem(item);
@@ -392,12 +383,6 @@ const PostPage = () => {
               <Spin css={cssSpinCommentStyle} />
             ) : (
               <>
-                {isAuthor && (
-                  <ApplicantButton
-                    applicantList={applicantList}
-                    onItemClick={onApplicantClick}
-                  />
-                )}
                 <div css={cssPostDetailSixth}>
                   {commentsList.length > 0 ? (
                     commentsList.map((data) => (
@@ -430,14 +415,14 @@ const PostPage = () => {
             <div css={cssLine2} />
             {isAuthor && (
               <>
-                <PostButton />
+                <PostButton messageApi={messageApi} />
                 <div css={cssLine5} />
               </>
             )}
 
             {!isAuthor && board?.state === 'ACTIVITY_COMPLETE' && (
               <>
-                <PostButton />
+                <PostButton messageApi={messageApi} />
                 <div css={cssLine5} />
               </>
             )}

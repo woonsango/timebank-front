@@ -20,6 +20,8 @@ export interface IPostComment {
   content: string;
   hidden: boolean;
   id?: number;
+  userNickname?: string;
+  userId?: number;
 }
 
 export interface ICommentActivity extends IComment {
