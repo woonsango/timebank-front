@@ -11,7 +11,7 @@ import { Form, Input, Modal, Button } from 'antd';
 import { useDeleteComment } from '../../api/hooks/comment';
 import { useQueryClient } from 'react-query';
 
-const Item = ({ c, messageApi }: any) => {
+const Item = ({ c, messageApi, onShowProfile }: any) => {
   const queryClient = useQueryClient();
 
   const write_user = false; // true = 수정 / false = 신고
@@ -110,7 +110,7 @@ const Item = ({ c, messageApi }: any) => {
       </div>
 
       <div css={cssCommentItem}>
-        <div css={cssPostDetailProfile}>
+        <div css={cssPostDetailProfile} onClick={() => onShowProfile(c.userId)}>
           <div css={cssCommentProfile}></div>
         </div>
         <div css={cssCommentText}>{c.content}</div>
