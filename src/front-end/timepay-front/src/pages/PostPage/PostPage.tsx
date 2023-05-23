@@ -142,6 +142,10 @@ const PostPage = () => {
       : board?.userNickname === userNickname;
   }, [board, isAgency, userInfo, userNickname]);
 
+  const handleEditPageChange = () => {
+    navigate(`/edit/${real_id}`);
+  };
+
   const handleDelete = useCallback(async () => {
     Modal.confirm({
       content: '정말 게시글을 삭제하시겠습니까?',
@@ -299,7 +303,9 @@ const PostPage = () => {
             {contextHolder}
             {isAuthor && (
               <div css={cssQnaDeleteStyle}>
-                <Button css={cssEditBtnStyle}>수정</Button>
+                <Button css={cssEditBtnStyle} onClick={handleEditPageChange}>
+                  수정
+                </Button>
                 <Button css={cssDeleteBtnStyle} onClick={handleDelete}>
                   삭제
                 </Button>
@@ -317,7 +323,7 @@ const PostPage = () => {
                 <div css={cssPostDetailCategory1}>카테고리</div>
                 <div css={cssPostDetailCategory2}>{board?.category}</div>
               </div>
-              <div css={cssPostDetailPay}>{board?.pay || '-'} TP</div>
+              <div css={cssPostDetailPay}>{board?.pay || '0'} TP</div>
             </div>
             <div css={cssPostDetailSecond}>
               <div css={cssPostDetailTitle}>{data?.data.title}</div>
@@ -401,7 +407,15 @@ const PostPage = () => {
               </>
             )}
           </div>
-          <Footer css={isAuthor ? cssAuthorFooter : cssNonAuthorFooter}>
+          <Footer
+            css={
+              isAuthor
+                ? cssAuthorFooter
+                : board?.state === 'ACTIVITY_COMPLETE'
+                ? cssAuthorFooter
+                : cssNonAuthorFooter
+            }
+          >
             <div css={cssLine2} />
             {isAuthor && (
               <>
