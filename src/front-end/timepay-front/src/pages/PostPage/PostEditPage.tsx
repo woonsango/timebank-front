@@ -104,14 +104,12 @@ const PostEditPage = () => {
                   messageApi.success({
                     content: '수정이 완료되었습니다.',
                     duration: 1,
-                    onClose: () => {
-                      if (data && data.data && data.data.id)
-                        navigate(`${PATH.Post}/${boardId}`);
-                    },
+                    onClose: () => {},
                   });
                 },
               },
             );
+          navigate(`${PATH.Post}/${boardId}`);
         },
       });
     },
