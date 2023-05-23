@@ -108,7 +108,6 @@ const PostPage = () => {
   const isApplied = () => {
     setApplied(true);
   };
-  console.log('isApplied', applied);
 
   useEffect(() => {
     setHeaderTitle('도움요청');
@@ -211,6 +210,7 @@ const PostPage = () => {
           hidden: false,
           content: '',
         });
+        console.log('...', applied);
       },
       onError(error) {
         console.log('error');
@@ -402,7 +402,6 @@ const PostPage = () => {
                   {commentsList.length > 0 ? (
                     commentsList.map((data) => (
                       <Item
-                        a={applied}
                         c={data}
                         id={data.id}
                         key={data.id}

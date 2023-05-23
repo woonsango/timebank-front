@@ -17,7 +17,7 @@ import { useQueryClient } from 'react-query';
 
 import { useGetUserInfo } from '../../api/hooks/user';
 
-const Item = ({ a, c, messageApi }: any) => {
+const Item = ({ c, messageApi }: any) => {
   const queryClient = useQueryClient();
 
   const { data: userInfo } = useGetUserInfo();
@@ -31,12 +31,11 @@ const Item = ({ a, c, messageApi }: any) => {
   }, [userInfo]);
 
   console.log(userNickname);
+  console.log(c.userNickname);
 
   const isAuthor = useMemo(() => {
     // 게시글 작성자일 때 true
-    return isAgency
-      ? c.userId === userInfo?.data.body.uid
-      : c.userNickname === userNickname;
+    return c.userNickname === userNickname;
   }, [isAgency, userInfo, userNickname]);
 
   console.log('A', isAuthor);
@@ -86,6 +85,8 @@ const Item = ({ a, c, messageApi }: any) => {
     },
     [messageApi, real_id, queryClient, useDeleteCommentMutation],
   );
+
+  console.log('c.applied', c.applied);
 
   return (
     <div css={cssComments}>
@@ -138,9 +139,9 @@ const Item = ({ a, c, messageApi }: any) => {
 
       <div
         css={
-          isAuthor
+          !isAuthor
             ? cssMyCommentItem
-            : a
+            : c.applied
             ? cssAppliedCommentItem
             : cssOtherCommentItem
         }
