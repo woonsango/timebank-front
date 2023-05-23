@@ -1,5 +1,6 @@
 import { AxiosError, AxiosResponse } from 'axios';
 import { useMutation, useQuery } from 'react-query';
+import { GetPageableData2 } from '../interfaces/ICommon';
 import {
   IAgencyOrUser,
   IGetUserBoardRequest,
@@ -7,6 +8,7 @@ import {
   IGetUserCommentRequest,
   IGetUserCommentResponse,
 } from '../interfaces/IUser';
+import { IGetMyCertificateResponse } from '../interfaces/IVolunteer';
 import { apiRequest } from '../request';
 import { API_URL } from '../urls';
 
@@ -88,4 +90,19 @@ export const useGetUserComments = (
       enabled: enabled === undefined ? true : !!userId && enabled,
     },
   );
+};
+
+export const useGetUserCertificate = (params: GetPageableData2) => {
+  return useQuery<AxiosResponse<IGetMyCertificateResponse>, AxiosError>({
+    queryKey: ['useGetUserCertificate'],
+    queryFn: () =>
+      apiRequest.get(API_URL.MY_CERTIFICATION, {
+        params: params,
+      }),
+    refetchOnWindowFocus: false,
+    retry: false, // api 호출 실패해도 계속 호출하지 않음
+    onError: (err: any) => {
+      console.log('[ERROR] useGetUserCertificate:', err);
+    },
+  });
 };

@@ -54,3 +54,23 @@ export interface IGetMyPageCertificateResponse {
   volunteerInfo: IVolunteerInfo;
   participateUsers: IParticipateUsers;
 }
+
+export interface ICertification {
+  boardId: number;
+  title: string;
+  organizationName: string;
+  managerName: string;
+  managerPhone: string;
+  volunteerTime: number;
+  state: boolean;
+  certificationUrl: string;
+}
+
+export interface ICertificationList extends PageableData {
+  content: ICertification[];
+}
+
+export interface IGetMyCertificateResponse {
+  totalTime: number;
+  certificationListPage: ICertificationList;
+}
