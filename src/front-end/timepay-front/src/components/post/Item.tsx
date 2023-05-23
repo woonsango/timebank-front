@@ -62,20 +62,8 @@ const Item = ({ c, messageApi }: any) => {
     [messageApi, real_id, queryClient, useDeleteCommentMutation],
   );
 
-  const [commentsLineCount, setCommentsLineCount] = useState(1);
-
-  useEffect(() => {
-    const spanElement = document.getElementById('commentsSpan');
-    if (spanElement) {
-      const lineCount = getLineCount(spanElement);
-      setCommentsLineCount(lineCount);
-    }
-  }, [commentsLineCount]);
-
-  console.log(commentsLineCount);
-
   return (
-    <div css={cssComments(commentsLineCount)}>
+    <div css={cssComments}>
       <div css={cssEditDelete}>
         {write_user ? (
           <Button className="edit">수정</Button>
