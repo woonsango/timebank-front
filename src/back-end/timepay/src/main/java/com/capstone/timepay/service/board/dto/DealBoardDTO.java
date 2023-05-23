@@ -38,10 +38,13 @@ public class DealBoardDTO
     private String userName;
     private String userNickname;
     private boolean isVolunteer;
+    private String organizationName;
+    private String organizationImage;
 
     public static DealBoardDTO toDealBoardDTO(DealBoard dealBoard)
     {
-        if (dealBoard.getDealRegisters() != null && !dealBoard.getDealRegisters().isEmpty()) {
+        if (dealBoard.getDealRegisters().get(0).getUser().getOrganization() != null)
+        {
             return new DealBoardDTO(
                     dealBoard.getD_boardId(),
                     dealBoard.getTitle(),
@@ -62,7 +65,35 @@ public class DealBoardDTO
                     dealBoard.getDealRegisters().get(0).getUser().getUserId(),
                     dealBoard.getDealRegisters().get(0).getUser().getName(),
                     dealBoard.getDealRegisters().get(0).getUser().getNickname(),
-                    dealBoard.isVolunteer()
+                    dealBoard.isVolunteer(),
+                    dealBoard.getDealRegisters().get(0).getUser().getOrganization().getOrganizationName(),
+                    dealBoard.getDealRegisters().get(0).getUser().getOrganization().getImageUrl()
+            );
+        }
+        else if (dealBoard.getDealRegisters() != null && !dealBoard.getDealRegisters().isEmpty()) {
+            return new DealBoardDTO(
+                    dealBoard.getD_boardId(),
+                    dealBoard.getTitle(),
+                    dealBoard.getBoardStatus(),
+                    dealBoard.getType(),
+                    dealBoard.getContent(),
+                    dealBoard.getCategory(),
+                    dealBoard.getLocation(),
+                    dealBoard.getStartTime(),
+                    dealBoard.getEndTime(),
+                    dealBoard.getPay(),
+                    dealBoard.isHidden(),
+                    dealBoard.isAuto(),
+                    dealBoard.getDealAttatchments(),
+                    dealBoard.getVolunteerPeople(),
+                    dealBoard.getCreatedAt(),
+                    dealBoard.getUpdatedAt(),
+                    dealBoard.getDealRegisters().get(0).getUser().getUserId(),
+                    dealBoard.getDealRegisters().get(0).getUser().getName(),
+                    dealBoard.getDealRegisters().get(0).getUser().getNickname(),
+                    dealBoard.isVolunteer(),
+                    null,
+                    null
             );
         } else {
             return new DealBoardDTO(
@@ -85,36 +116,64 @@ public class DealBoardDTO
                     null,
                     null,
                     null,
-                    dealBoard.isVolunteer()
+                    dealBoard.isVolunteer(),
+                    null,
+                    null
             );
         }
     }
 
-    public static DealBoardDTO toDealBoardAndUserDTO(DealBoard dealBoard, User user)
-    {
-        return new DealBoardDTO(
-                dealBoard.getD_boardId(),
-                dealBoard.getTitle(),
-                dealBoard.getBoardStatus(),
-                dealBoard.getType(),
-                dealBoard.getContent(),
-                dealBoard.getCategory(),
-                dealBoard.getLocation(),
-                dealBoard.getStartTime(),
-                dealBoard.getEndTime(),
-                dealBoard.getPay(),
-                dealBoard.isHidden(),
-                dealBoard.isAuto(),
-                dealBoard.getDealAttatchments(),
-                dealBoard.getVolunteerPeople(),
-                dealBoard.getCreatedAt(),
-                dealBoard.getUpdatedAt(),
-                user.getUserId(),
-                user.getName(),
-                user.getNickname(),
-                dealBoard.isVolunteer()
-        );
+    public static DealBoardDTO toDealBoardAndUserDTO(DealBoard dealBoard, User user) {
+        if (user.getOrganization() == null) {
+            return new DealBoardDTO(
+                    dealBoard.getD_boardId(),
+                    dealBoard.getTitle(),
+                    dealBoard.getBoardStatus(),
+                    dealBoard.getType(),
+                    dealBoard.getContent(),
+                    dealBoard.getCategory(),
+                    dealBoard.getLocation(),
+                    dealBoard.getStartTime(),
+                    dealBoard.getEndTime(),
+                    dealBoard.getPay(),
+                    dealBoard.isHidden(),
+                    dealBoard.isAuto(),
+                    dealBoard.getDealAttatchments(),
+                    dealBoard.getVolunteerPeople(),
+                    dealBoard.getCreatedAt(),
+                    dealBoard.getUpdatedAt(),
+                    user.getUserId(),
+                    user.getName(),
+                    user.getNickname(),
+                    dealBoard.isVolunteer(),
+                    null,
+                    null
+            );
+        } else {
+            return new DealBoardDTO(
+                    dealBoard.getD_boardId(),
+                    dealBoard.getTitle(),
+                    dealBoard.getBoardStatus(),
+                    dealBoard.getType(),
+                    dealBoard.getContent(),
+                    dealBoard.getCategory(),
+                    dealBoard.getLocation(),
+                    dealBoard.getStartTime(),
+                    dealBoard.getEndTime(),
+                    dealBoard.getPay(),
+                    dealBoard.isHidden(),
+                    dealBoard.isAuto(),
+                    dealBoard.getDealAttatchments(),
+                    dealBoard.getVolunteerPeople(),
+                    dealBoard.getCreatedAt(),
+                    dealBoard.getUpdatedAt(),
+                    user.getUserId(),
+                    user.getName(),
+                    user.getNickname(),
+                    dealBoard.isVolunteer(),
+                    user.getOrganization().getOrganizationName(),
+                    user.getOrganization().getImageUrl()
+            );
+        }
     }
-
-
 }
