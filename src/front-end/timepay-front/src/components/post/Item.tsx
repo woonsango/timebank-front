@@ -12,7 +12,6 @@ import {
 import { Form, Input, Modal, Button } from 'antd';
 import { useDeleteComment } from '../../api/hooks/comment';
 import { useQueryClient } from 'react-query';
-import { getLineCount } from '../../utils/getLineCount';
 
 const Item = ({ c, messageApi }: any) => {
   const queryClient = useQueryClient();
