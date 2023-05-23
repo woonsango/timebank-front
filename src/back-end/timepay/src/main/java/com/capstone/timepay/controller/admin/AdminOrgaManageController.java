@@ -19,10 +19,10 @@ public class AdminOrgaManageController {
 
     @ApiOperation(value = "전체 기관 유저 정보 리스트 조회")
     @GetMapping("/main")
-    public ResponseEntity<?> main(@RequestParam(defaultValue = "0") int pageIndex,
-                                  @RequestParam(defaultValue = "50") int pageSize){
+    public ResponseEntity<?> main(@RequestParam(defaultValue = "0") int pagingIndex,
+                                  @RequestParam(defaultValue = "50") int pagingSize){
 
-        Page<OrganizationMain> responses = organizationManageService.showAllUserList(pageIndex, pageSize);
+        Page<OrganizationMain> responses = organizationManageService.showAllUserList(pagingIndex, pagingSize);
 
         return ResponseEntity.ok(responses);
     }

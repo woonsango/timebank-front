@@ -46,6 +46,7 @@ public class AdminOrgaManageService {
                         .authority(user.getOrganization().getAuthority())
                         .employeeNum(user.getOrganization().getEmployeeNum())
                         .timepay(user.getOrganization().getTimepay())
+                        .blackList(user.isBanned())
                         .build();
             }
         });
@@ -148,6 +149,7 @@ public class AdminOrgaManageService {
                     .authority(user.getOrganization().getAuthority())
                     .employeeNum(user.getOrganization().getEmployeeNum())
                     .timepay(user.getOrganization().getTimepay())
+                    .blackList(user.isBanned())
                     .build();
             responses.add(organization);
         }
@@ -167,6 +169,7 @@ public class AdminOrgaManageService {
                 .authority(user.getOrganization().getAuthority())
                 .employeeNum(user.getOrganization().getEmployeeNum())
                 .timepay(user.getOrganization().getTimepay())
+                .blackList(user.isBanned())
                 .build();
     }
 

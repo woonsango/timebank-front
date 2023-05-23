@@ -19,4 +19,5 @@ public class OrganizationMain {
     private String authority;
     private int employeeNum;
     private int timepay;
+    private boolean blackList;
 }
