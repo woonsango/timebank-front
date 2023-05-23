@@ -232,11 +232,11 @@ const AgencyTable = () => {
         dataSource={dataSource}
         rowKey="userId"
         loading={isLoading}
-        // pagination={customPaginationProps<IGetAgencyRequest>({
-        //   totalElements: data?.data.totalElements,
-        //   currentSearchValues: agencySearchValue,
-        //   setSearchValues: setAgencySearch,
-        // })}
+        pagination={customPaginationProps<IGetAgencyRequest>({
+          totalElements: data?.data.totalElements,
+          currentSearchValues: agencySearchValue,
+          setSearchValues: setAgencySearch,
+        })}
       />
     </>
   );

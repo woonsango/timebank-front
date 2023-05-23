@@ -1,8 +1,6 @@
-import { PageableData } from './ICommon';
+import { GetPageableData, PageableData } from './ICommon';
 
-export interface IGetAgencyRequest {
-  pageIndex: number;
-  pageSize: number;
+export interface IGetAgencyRequest extends GetPageableData {
   query?: string;
   value?: string;
   volunteer?: string | null;
