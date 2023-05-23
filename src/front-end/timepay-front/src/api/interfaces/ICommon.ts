@@ -29,3 +29,8 @@ export interface GetPageableData {
   pagingIndex?: number;
   pagingSize?: number;
 }
+
+export interface GetPageableData2 {
+  pageIndex?: number;
+  pageSize?: number;
+}

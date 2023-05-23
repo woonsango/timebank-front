@@ -91,12 +91,13 @@ const PostButton = ({ messageApi }: { messageApi: MessageInstance }) => {
         case '모집완료':
           return 'completed';
         case '활동완료':
+          if (isAuthor && data.data.volunteer) return 'link-volunteer';
           return 'theEnd';
         default:
           return 'theEnd';
       }
     } else return 'theEnd';
-  }, [data]);
+  }, [isAuthor, data]);
 
   const buttonDisabled = useMemo(() => {
     // 모집 완료 상태일 때 활동 끝 시간 이후가 아니면 활동 완료를 할 수 없음

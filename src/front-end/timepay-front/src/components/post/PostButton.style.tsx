@@ -34,7 +34,10 @@ export const cssPostButton = css`
     background-color: #6c6363;
     margin-left: 6px;
   }
-
+  &.link-volunteer {
+    width: 95%;
+    background-color: skyblue;
+  }
   &.theEnd {
     width: 95%;
     color: ${COMMON_COLOR.FONT3};
