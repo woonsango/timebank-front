@@ -170,19 +170,11 @@ public class DealBoardController
     {
         Map<String, Object> resultMap = new HashMap<>();
         DealBoard dealBoard  = dealBoardService.getId(boardId);
-        String boardEmail = dealRegisterService.getEmail(boardId);
 
         if (dealBoard == null)
         {
             resultMap.put("success", false);
             resultMap.put("message", "해당 게시글을 찾을 수 없습니다");
-            return resultMap;
-        }
-
-        if (!principal.getName().equals(boardEmail))
-        {
-            resultMap.put("success", false);
-            resultMap.put("message", "상태를 수정할 권한이 없습니다");
             return resultMap;
         }
 
@@ -198,19 +190,11 @@ public class DealBoardController
     {
         Map<String, Object> resultMap = new HashMap<>();
         DealBoard dealBoard  = dealBoardService.getId(boardId);
-        String boardEmail = dealRegisterService.getEmail(boardId);
 
         if (dealBoard == null)
         {
             resultMap.put("success", false);
             resultMap.put("message", "해당 게시글을 찾을 수 없습니다");
-            return resultMap;
-        }
-
-        if (!principal.getName().equals(boardEmail))
-        {
-            resultMap.put("success", false);
-            resultMap.put("message", "상태를 수정할 권한이 없습니다");
             return resultMap;
         }
 
