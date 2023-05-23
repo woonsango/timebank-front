@@ -19,6 +19,8 @@ public class DealBoardCommentDTO {
     private boolean isApplied;
     private boolean isAdopted;
     private boolean isHidden;
+    private Long userId;
+    private String userNickname;
 
     public static DealBoardCommentDTO toDealBoardCommentDTO(DealBoardComment dealBoardComment)
     {
@@ -27,7 +29,9 @@ public class DealBoardCommentDTO {
                 dealBoardComment.getContent(),
                 dealBoardComment.isApplied(),
                 dealBoardComment.isAdopted(),
-                dealBoardComment.isHidden()
+                dealBoardComment.isHidden(),
+                dealBoardComment.getUser().getUserId(),
+                dealBoardComment.getUser().getNickname()
         );
     }
 
