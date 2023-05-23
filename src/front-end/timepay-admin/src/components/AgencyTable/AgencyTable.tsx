@@ -207,6 +207,14 @@ const AgencyTable = () => {
         sorter: (a: IAgency, b: IAgency) => a.timepay - b.timepay,
       },
       {
+        title: '블랙리스트',
+        key: 'blackList',
+        dataIndex: 'blackList',
+        width: 140,
+        align: 'center',
+        render: (blackList: boolean) => (blackList ? 'Y' : 'N'),
+      },
+      {
         title: '패널티 부여',
         key: 'penalty',
         dataIndex: 'penalty',
@@ -232,11 +240,11 @@ const AgencyTable = () => {
         dataSource={dataSource}
         rowKey="userId"
         loading={isLoading}
-        // pagination={customPaginationProps<IGetAgencyRequest>({
-        //   totalElements: data?.data.totalElements,
-        //   currentSearchValues: agencySearchValue,
-        //   setSearchValues: setAgencySearch,
-        // })}
+        pagination={customPaginationProps<IGetAgencyRequest>({
+          totalElements: data?.data.totalElements,
+          currentSearchValues: agencySearchValue,
+          setSearchValues: setAgencySearch,
+        })}
       />
     </>
   );
