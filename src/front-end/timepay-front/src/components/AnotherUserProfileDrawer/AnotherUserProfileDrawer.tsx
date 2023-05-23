@@ -183,8 +183,10 @@ const AnotherUserProfileDrawer = ({
           <div className="profile-container">
             <img
               src={
-                userInfo.data.body.image_url ||
-                'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460__340.png'
+                userInfo.data.body.image_url &&
+                userInfo.data.body.image_url !== 'none'
+                  ? userInfo.data.body.image_url
+                  : 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460__340.png'
               }
               alt="프로필 이미지"
               width="70px"
