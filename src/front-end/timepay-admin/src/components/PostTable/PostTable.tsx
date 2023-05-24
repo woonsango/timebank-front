@@ -137,7 +137,7 @@ const PostTable = ({
         sorter: (a: IDealBoard, b: IDealBoard) =>
           dayjs(a.createdAt).isAfter(dayjs(b.createdAt)),
         render: (createdAt: string) =>
-          createdAt.split('.')[0].replace('T', ' '),
+          createdAt ? createdAt.split('.')[0].replace('T', ' ') : ' - ',
       },
       {
         title: '수정일시',
@@ -148,7 +148,7 @@ const PostTable = ({
         sorter: (a: IDealBoard, b: IDealBoard) =>
           dayjs(a.updatedAt).isAfter(dayjs(b.updatedAt)),
         render: (updatedAt: string) =>
-          updatedAt.split('.')[0].replace('T', ' '),
+          updatedAt ? updatedAt.split('.')[0].replace('T', ' ') : '-',
       },
       {
         title: '활동시간',
@@ -158,9 +158,9 @@ const PostTable = ({
         align: 'center',
         render: (startTime: string, record: IDealBoard) => (
           <div>
-            {startTime.replace('T', ' ')}
+            {startTime ? startTime.replace('T', ' ') : ' - '}
             <br />~<br />
-            {record.endTime.replace('T', ' ')}
+            {record.endTime ? record.endTime.replace('T', ' ') : ' - '}
           </div>
         ),
       },
