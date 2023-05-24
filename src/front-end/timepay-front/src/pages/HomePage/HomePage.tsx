@@ -20,7 +20,6 @@ import {
   setMultiTokenToCookie,
 } from '../../utils/token';
 import { COMMON_COLOR } from '../../styles/constants/colors';
-
 const HomePage = () => {
   const navigate = useNavigate();
 
@@ -69,6 +68,7 @@ const HomePage = () => {
     setMultiTokenToCookie('undefined', 0);
     navigate('/my');
   }, [navigate]);
+
   const openMuliTokenModal = useCallback(() => {
     confirm({
       title: '대리인 활동 종료',

@@ -175,161 +175,7 @@ const SearchHeader = () => {
   return (
     <>
       {!token || token === 'undefined' ? (
-        <div css={cssSearchHeaderStyle(scaleValue)}>
-          {contextHolder}
-          <div className="search-title-container">
-            <BackArrow className="back-arrow" onClick={handleClickBack} />
-            <Form
-              form={titleSearchForm}
-              className="title-form"
-              onFinish={handleOnSearchTitle}
-              onFinishFailed={handleOnFailSearchTitle}
-            >
-              <Form.Item name="title" initialValue={boardSearchValue.title}>
-                <Input placeholder="검색할 게시글의 제목을 입력해주세요" />
-              </Form.Item>
-              <Button htmlType="submit" type="primary" className="submit-btn">
-                검색
-              </Button>
-            </Form>
-          </div>
-          <div className="available-category-tag-container">
-            {isLoading ? (
-              <Spin />
-            ) : (
-              data?.data.map((category) => (
-                <Tag.CheckableTag
-                  checked={boardSearchValue.category === category.categoryName}
-                  key={category.categoryId}
-                  onChange={(checked) =>
-                    handleOnCategoryChange(category.categoryName, checked)
-                  }
-                >
-                  {category.categoryName}
-                </Tag.CheckableTag>
-              ))
-            )}
-          </div>
-          <Collapse
-            className="search-option-container"
-            expandIconPosition="end"
-            bordered={false}
-            activeKey={panelActiveKey}
-          >
-            <Collapse.Panel
-              key="search-option-collapse"
-              forceRender
-              showArrow={false}
-              header={
-                <div onClick={handleOnShowSearchOptionCollapse}>
-                  {panelActiveKey && panelActiveKey.length === 0 ? (
-                    <span>
-                      검색 옵션 보이기 <DownOutlined />
-                    </span>
-                  ) : (
-                    <span />
-                  )}
-                </div>
-              }
-            >
-              <Form
-                form={optionSearchForm}
-                className="option-form"
-                layout="horizontal"
-                colon={false}
-                onValuesChange={handleOnChangeOptionSearchForm}
-              >
-                <Form.Item
-                  name="type"
-                  className="type-div"
-                  initialValue={boardSearchValue.type}
-                >
-                  <Radio.Group buttonStyle="solid">
-                    <Radio.Button value="help">도움요청</Radio.Button>
-                    <Radio.Button value="helper">같이하기</Radio.Button>
-                    <Radio.Button value="event">기부하기</Radio.Button>
-                  </Radio.Group>
-                </Form.Item>
-
-                {/* RangePicker 로 넣은 경우 모바일 브라우저보다 크게 나와서 시작 일시, 끝 일시를 따로 받음*/}
-                <Form.Item className="date-time-form" label="활동시작 시간">
-                  <Form.Item name="startDate">
-                    <DatePicker
-                      locale={locale}
-                      placement="bottomRight"
-                      placeholder="날짜"
-                    />
-                  </Form.Item>
-                  <Form.Item name="startTime">
-                    <DatePicker.TimePicker
-                      locale={locale}
-                      format="HH:mm"
-                      placeholder="시간"
-                      minuteStep={30}
-                      showNow={false}
-                      // 확인 버튼 누르지 않아도 값이 지정되도록 커스텀
-                      popupClassName="time-picker-no-footer"
-                      onSelect={(value) => {
-                        const timeString = dayjs(value).format('HH:mm');
-                        optionSearchForm.setFieldValue(
-                          'startTime',
-                          dayjs(timeString, 'HH:mm'),
-                        );
-                        // setFieldValue 는 onValuesChange를 호출하지 못해서 직접 호출
-                        handleOnChangeOptionSearchForm(
-                          { startTime: dayjs(timeString, 'HH:mm') },
-                          optionSearchForm.getFieldsValue(),
-                        );
-                      }}
-                      disabled={!optionSearchForm.getFieldValue('startDate')}
-                    />
-                  </Form.Item>
-                </Form.Item>
-                <Form.Item className="date-time-form" label="활동 끝 시간">
-                  <Form.Item name="endDate">
-                    <DatePicker
-                      locale={locale}
-                      placement="bottomRight"
-                      placeholder="날짜"
-                    />
-                  </Form.Item>
-                  <Form.Item name="endTime">
-                    <DatePicker.TimePicker
-                      locale={locale}
-                      format="HH:mm"
-                      placeholder="시간"
-                      showNow={false}
-                      minuteStep={30}
-                      // 확인 버튼 누르지 않아도 값이 지정되도록 커스텀
-                      popupClassName="time-picker-no-footer"
-                      onSelect={(value) => {
-                        const timeString = dayjs(value).format('HH:mm');
-                        optionSearchForm.setFieldValue(
-                          'endTime',
-                          dayjs(timeString, 'HH:mm'),
-                        );
-                        // setFieldValue 는 onValuesChange를 호출하지 못해서 직접 호출
-                        handleOnChangeOptionSearchForm(
-                          { endTime: dayjs(timeString, 'HH:mm') },
-                          optionSearchForm.getFieldsValue(),
-                        );
-                      }}
-                      disabled={!optionSearchForm.getFieldValue('endDate')}
-                    />
-                  </Form.Item>
-                </Form.Item>
-                <Form.Item name="volunteer" valuePropName="checked">
-                  <Checkbox className="volunteer-check">
-                    봉사활동 게시글만 보기
-                  </Checkbox>
-                </Form.Item>
-              </Form>
-              <div onClick={handleOnHideSearchOptionCollapse}>
-                검색 옵션 닫기 <UpOutlined />
-              </div>
-            </Collapse.Panel>
-          </Collapse>
-        </div>
+        <div></div>
       ) : (
         <div css={cssBox}>
           <Button
@@ -340,165 +186,170 @@ const SearchHeader = () => {
           >
             대리인 활동중입니다
           </Button>
-          <div css={cssNewSearchHeaderStyle(scaleValue)}>
-            {contextHolder}
-            <div className="search-title-container">
-              <BackArrow className="back-arrow" onClick={handleClickBack} />
-              <Form
-                form={titleSearchForm}
-                className="title-form"
-                onFinish={handleOnSearchTitle}
-                onFinishFailed={handleOnFailSearchTitle}
-              >
-                <Form.Item name="title" initialValue={boardSearchValue.title}>
-                  <Input placeholder="검색할 게시글의 제목을 입력해주세요" />
-                </Form.Item>
-                <Button htmlType="submit" type="primary" className="submit-btn">
-                  검색
-                </Button>
-              </Form>
-            </div>
-            <div className="available-category-tag-container">
-              {isLoading ? (
-                <Spin />
-              ) : (
-                data?.data.map((category) => (
-                  <Tag.CheckableTag
-                    checked={
-                      boardSearchValue.category === category.categoryName
-                    }
-                    key={category.categoryId}
-                    onChange={(checked) =>
-                      handleOnCategoryChange(category.categoryName, checked)
-                    }
-                  >
-                    {category.categoryName}
-                  </Tag.CheckableTag>
-                ))
-              )}
-            </div>
-            <Collapse
-              className="search-option-container"
-              expandIconPosition="end"
-              bordered={false}
-              activeKey={panelActiveKey}
-            >
-              <Collapse.Panel
-                key="search-option-collapse"
-                forceRender
-                showArrow={false}
-                header={
-                  <div onClick={handleOnShowSearchOptionCollapse}>
-                    {panelActiveKey && panelActiveKey.length === 0 ? (
-                      <span>
-                        검색 옵션 보이기 <DownOutlined />
-                      </span>
-                    ) : (
-                      <span />
-                    )}
-                  </div>
-                }
-              >
-                <Form
-                  form={optionSearchForm}
-                  className="option-form"
-                  layout="horizontal"
-                  colon={false}
-                  onValuesChange={handleOnChangeOptionSearchForm}
-                >
-                  <Form.Item
-                    name="type"
-                    className="type-div"
-                    initialValue={boardSearchValue.type}
-                  >
-                    <Radio.Group buttonStyle="solid">
-                      <Radio.Button value="help">도움요청</Radio.Button>
-                      <Radio.Button value="helper">같이하기</Radio.Button>
-                      <Radio.Button value="event">기부하기</Radio.Button>
-                    </Radio.Group>
-                  </Form.Item>
-
-                  {/* RangePicker 로 넣은 경우 모바일 브라우저보다 크게 나와서 시작 일시, 끝 일시를 따로 받음*/}
-                  <Form.Item className="date-time-form" label="활동시작 시간">
-                    <Form.Item name="startDate">
-                      <DatePicker
-                        locale={locale}
-                        placement="bottomRight"
-                        placeholder="날짜"
-                      />
-                    </Form.Item>
-                    <Form.Item name="startTime">
-                      <DatePicker.TimePicker
-                        locale={locale}
-                        format="HH:mm"
-                        placeholder="시간"
-                        minuteStep={30}
-                        showNow={false}
-                        // 확인 버튼 누르지 않아도 값이 지정되도록 커스텀
-                        popupClassName="time-picker-no-footer"
-                        onSelect={(value) => {
-                          const timeString = dayjs(value).format('HH:mm');
-                          optionSearchForm.setFieldValue(
-                            'startTime',
-                            dayjs(timeString, 'HH:mm'),
-                          );
-                          // setFieldValue 는 onValuesChange를 호출하지 못해서 직접 호출
-                          handleOnChangeOptionSearchForm(
-                            { startTime: dayjs(timeString, 'HH:mm') },
-                            optionSearchForm.getFieldsValue(),
-                          );
-                        }}
-                        disabled={!optionSearchForm.getFieldValue('startDate')}
-                      />
-                    </Form.Item>
-                  </Form.Item>
-                  <Form.Item className="date-time-form" label="활동 끝 시간">
-                    <Form.Item name="endDate">
-                      <DatePicker
-                        locale={locale}
-                        placement="bottomRight"
-                        placeholder="날짜"
-                      />
-                    </Form.Item>
-                    <Form.Item name="endTime">
-                      <DatePicker.TimePicker
-                        locale={locale}
-                        format="HH:mm"
-                        placeholder="시간"
-                        showNow={false}
-                        minuteStep={30}
-                        // 확인 버튼 누르지 않아도 값이 지정되도록 커스텀
-                        popupClassName="time-picker-no-footer"
-                        onSelect={(value) => {
-                          const timeString = dayjs(value).format('HH:mm');
-                          optionSearchForm.setFieldValue(
-                            'endTime',
-                            dayjs(timeString, 'HH:mm'),
-                          );
-                          // setFieldValue 는 onValuesChange를 호출하지 못해서 직접 호출
-                          handleOnChangeOptionSearchForm(
-                            { endTime: dayjs(timeString, 'HH:mm') },
-                            optionSearchForm.getFieldsValue(),
-                          );
-                        }}
-                        disabled={!optionSearchForm.getFieldValue('endDate')}
-                      />
-                    </Form.Item>
-                  </Form.Item>
-                  <Form.Item name="volunteer" valuePropName="checked">
-                    <Checkbox className="volunteer-check">
-                      봉사활동 게시글만 보기
-                    </Checkbox>
-                  </Form.Item>
-                </Form>
-                <div onClick={handleOnHideSearchOptionCollapse}>
-                  검색 옵션 닫기 <UpOutlined />
-                </div>
-              </Collapse.Panel>
-            </Collapse>
-          </div>
         </div>
       )}
+
+      <div
+        css={
+          !token || token === 'undefined'
+            ? cssSearchHeaderStyle(scaleValue)
+            : cssNewSearchHeaderStyle(scaleValue)
+        }
+      >
+        {contextHolder}
+        <div className="search-title-container">
+          <BackArrow className="back-arrow" onClick={handleClickBack} />
+          <Form
+            form={titleSearchForm}
+            className="title-form"
+            onFinish={handleOnSearchTitle}
+            onFinishFailed={handleOnFailSearchTitle}
+          >
+            <Form.Item name="title" initialValue={boardSearchValue.title}>
+              <Input placeholder="검색할 게시글의 제목을 입력해주세요" />
+            </Form.Item>
+            <Button htmlType="submit" type="primary" className="submit-btn">
+              검색
+            </Button>
+          </Form>
+        </div>
+        <div className="available-category-tag-container">
+          {isLoading ? (
+            <Spin />
+          ) : (
+            data?.data.map((category) => (
+              <Tag.CheckableTag
+                checked={boardSearchValue.category === category.categoryName}
+                key={category.categoryId}
+                onChange={(checked) =>
+                  handleOnCategoryChange(category.categoryName, checked)
+                }
+              >
+                {category.categoryName}
+              </Tag.CheckableTag>
+            ))
+          )}
+        </div>
+        <Collapse
+          className="search-option-container"
+          expandIconPosition="end"
+          bordered={false}
+          activeKey={panelActiveKey}
+        >
+          <Collapse.Panel
+            key="search-option-collapse"
+            forceRender
+            showArrow={false}
+            header={
+              <div onClick={handleOnShowSearchOptionCollapse}>
+                {panelActiveKey && panelActiveKey.length === 0 ? (
+                  <span>
+                    검색 옵션 보이기 <DownOutlined />
+                  </span>
+                ) : (
+                  <span />
+                )}
+              </div>
+            }
+          >
+            <Form
+              form={optionSearchForm}
+              className="option-form"
+              layout="horizontal"
+              colon={false}
+              onValuesChange={handleOnChangeOptionSearchForm}
+            >
+              <Form.Item
+                name="type"
+                className="type-div"
+                initialValue={boardSearchValue.type}
+              >
+                <Radio.Group buttonStyle="solid">
+                  <Radio.Button value="help">도움요청</Radio.Button>
+                  <Radio.Button value="helper">같이하기</Radio.Button>
+                  <Radio.Button value="event">기부하기</Radio.Button>
+                </Radio.Group>
+              </Form.Item>
+
+              {/* RangePicker 로 넣은 경우 모바일 브라우저보다 크게 나와서 시작 일시, 끝 일시를 따로 받음*/}
+              <Form.Item className="date-time-form" label="활동시작 시간">
+                <Form.Item name="startDate">
+                  <DatePicker
+                    locale={locale}
+                    placement="bottomRight"
+                    placeholder="날짜"
+                  />
+                </Form.Item>
+                <Form.Item name="startTime">
+                  <DatePicker.TimePicker
+                    locale={locale}
+                    format="HH:mm"
+                    placeholder="시간"
+                    minuteStep={30}
+                    showNow={false}
+                    // 확인 버튼 누르지 않아도 값이 지정되도록 커스텀
+                    popupClassName="time-picker-no-footer"
+                    onSelect={(value) => {
+                      const timeString = dayjs(value).format('HH:mm');
+                      optionSearchForm.setFieldValue(
+                        'startTime',
+                        dayjs(timeString, 'HH:mm'),
+                      );
+                      // setFieldValue 는 onValuesChange를 호출하지 못해서 직접 호출
+                      handleOnChangeOptionSearchForm(
+                        { startTime: dayjs(timeString, 'HH:mm') },
+                        optionSearchForm.getFieldsValue(),
+                      );
+                    }}
+                    disabled={!optionSearchForm.getFieldValue('startDate')}
+                  />
+                </Form.Item>
+              </Form.Item>
+              <Form.Item className="date-time-form" label="활동 끝 시간">
+                <Form.Item name="endDate">
+                  <DatePicker
+                    locale={locale}
+                    placement="bottomRight"
+                    placeholder="날짜"
+                  />
+                </Form.Item>
+                <Form.Item name="endTime">
+                  <DatePicker.TimePicker
+                    locale={locale}
+                    format="HH:mm"
+                    placeholder="시간"
+                    showNow={false}
+                    minuteStep={30}
+                    // 확인 버튼 누르지 않아도 값이 지정되도록 커스텀
+                    popupClassName="time-picker-no-footer"
+                    onSelect={(value) => {
+                      const timeString = dayjs(value).format('HH:mm');
+                      optionSearchForm.setFieldValue(
+                        'endTime',
+                        dayjs(timeString, 'HH:mm'),
+                      );
+                      // setFieldValue 는 onValuesChange를 호출하지 못해서 직접 호출
+                      handleOnChangeOptionSearchForm(
+                        { endTime: dayjs(timeString, 'HH:mm') },
+                        optionSearchForm.getFieldsValue(),
+                      );
+                    }}
+                    disabled={!optionSearchForm.getFieldValue('endDate')}
+                  />
+                </Form.Item>
+              </Form.Item>
+              <Form.Item name="volunteer" valuePropName="checked">
+                <Checkbox className="volunteer-check">
+                  봉사활동 게시글만 보기
+                </Checkbox>
+              </Form.Item>
+            </Form>
+            <div onClick={handleOnHideSearchOptionCollapse}>
+              검색 옵션 닫기 <UpOutlined />
+            </div>
+          </Collapse.Panel>
+        </Collapse>
+      </div>
     </>
   );
 };
