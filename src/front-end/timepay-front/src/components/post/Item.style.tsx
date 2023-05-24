@@ -21,7 +21,7 @@ export const cssAppliedCommentItem = css`
   flex-direction: column;
   width: 100%;
   border: 1.3px solid ${COMMON_COLOR.MAIN1};
-  background: ${COMMON_COLOR.BRIGHT_GRAY};
+  background: ${COMMON_COLOR.WARM_GRAY};
   margin-bottom: 15px;
   padding: 15px;
   border-radius: 30px 0px 30px 30px;
@@ -32,7 +32,7 @@ export const cssOtherCommentItem = css`
   flex-direction: column;
   width: 100%;
   border: 1.3px solid ${COMMON_COLOR.LIGHT_GRAY};
-  background: ${COMMON_COLOR.BRIGHT_GRAY};
+  background: ${COMMON_COLOR.WARM_GRAY};
   margin-bottom: 15px;
   padding: 15px;
   border-radius: 30px 0px 30px 30px;

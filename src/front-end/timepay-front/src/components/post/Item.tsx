@@ -144,7 +144,16 @@ const Item = ({ a, c, messageApi, onShowProfile }: any) => {
         }
       >
         <div css={cssPostDetailProfile} onClick={() => onShowProfile(c.userId)}>
-          <div css={cssCommentProfile}></div>
+          <div css={cssCommentProfile}>
+            <img
+              src={
+                'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png'
+              }
+              className="MyProfileImage"
+              alt="내 프로필"
+              style={{ width: 40, height: 40, borderRadius: 20 }}
+            />
+          </div>
           <div css={cssCommentUser}>{c.userNickname}</div>
         </div>
 
