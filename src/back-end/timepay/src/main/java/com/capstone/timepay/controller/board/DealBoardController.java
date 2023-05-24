@@ -150,13 +150,6 @@ public class DealBoardController
             return deleteMap;
         }
 
-        if (!principal.getName().equals(boardEmail))
-        {
-            deleteMap.put("success", false);
-            deleteMap.put("message", "삭제 권한이 없습니다");
-            return deleteMap;
-        }
-
         dealBoardService.delete(id);
         deleteMap.put("success", true);
         return deleteMap;
