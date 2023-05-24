@@ -214,7 +214,9 @@ const RegisterRequestPage = () => {
           : 0,
         volunteerTime: isVolunteerAvailable
           ? values.volunteer
-            ? (exchangeTimepay / 60).toFixed(1)
+            ? values.volunteerTime
+              ? parseInt(values.volunteerTime)
+              : Math.ceil(exchangeTimepay / 60)
             : 0
           : 0,
         images: null,
@@ -342,7 +344,7 @@ const RegisterRequestPage = () => {
             />
           </Form.Item>
         )}
-        {/* {isAgency && ( // 게시글 조회에서 주지 않는 값이라 보류
+        {isAgency && (
           <Form.Item
             label="지급할 봉사활동 시간"
             name="volunteerTime"
@@ -350,18 +352,19 @@ const RegisterRequestPage = () => {
             extra={
               <>
                 활동 완료 시 봉사자에게 지급할 봉사시간입니다. <br /> 작성하지
-                않을 경우 타임페이 양과 동일합니다.
+                않을 경우 활동 시간에서 반올림합니다.
               </>
             }
             rules={[{ required: false }]}
           >
             <Input
               min={1}
+              step={1}
               disabled={!isVolunteerAvailable || !isVolunteer}
               addonAfter="시간"
             />
           </Form.Item>
-        )} */}
+        )}
         <Form.Item
           label="카테고리 선택"
           name="category"
