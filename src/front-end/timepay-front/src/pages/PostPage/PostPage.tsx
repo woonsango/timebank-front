@@ -286,7 +286,11 @@ const PostPage = () => {
     return (
       <div css={cssVolunteerInfoStyle}>
         <div className="overview">
-          <VolunteerBadge /> <div>필요 인원: {board?.volunteerPeople} 명</div>
+          <VolunteerBadge />{' '}
+          <div>
+            필요 인원: {board?.volunteerPeople} 명(봉사시간 :{' '}
+            {board?.volunteerTime || 0} 시간)
+          </div>
         </div>
         <ul>
           <li>타임페이와 봉사활동 시간을 지급받을 수 있는 활동입니다.</li>

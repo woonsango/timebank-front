@@ -268,8 +268,7 @@ const MyPage = () => {
               <div>
                 <span className="label">봉사활동 자격 서류 인증</span>
                 <span className="value">
-                  {agencyInfo.certification_url &&
-                  agencyInfo.certification_url !== 'none' ? (
+                  {agencyInfo.authority === 'volunteer' ? (
                     <CheckCircleFilled className="yes" />
                   ) : (
                     <CloseCircleFilled className="no" />
