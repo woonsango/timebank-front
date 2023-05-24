@@ -40,8 +40,6 @@ const Item = ({ a, c, messageApi, onShowProfile }: any) => {
       : c.userNickname === data?.data.userNickname;
   }, [isAgency, c, userInfo, userNickname]);
 
-  const write_user = false; // true = 수정 / false = 신고
-
   // 수정 기능
   const { TextArea } = Input;
   const [isOpenReportModal, setIsOpenReportModal] = useState(false);
@@ -88,7 +86,7 @@ const Item = ({ a, c, messageApi, onShowProfile }: any) => {
   return (
     <div css={cssComments}>
       <div css={cssEditDelete}>
-        {write_user ? (
+        {isAuthor ? (
           <Button className="edit">수정</Button>
         ) : (
           <Button className="edit" onClick={showReportModal}>
@@ -128,10 +126,18 @@ const Item = ({ a, c, messageApi, onShowProfile }: any) => {
             </div>
           </Form>
         </Modal>
-        <div className="sidebar">|</div>
-        <Button className="delete" onClick={() => handleDeleteComment(c.id)}>
-          삭제
-        </Button>
+
+        {c.userNickname === data?.data.userNickname && (
+          <>
+            <div className="sidebar">|</div>
+            <Button
+              className="delete"
+              onClick={() => handleDeleteComment(c.id)}
+            >
+              삭제
+            </Button>
+          </>
+        )}
       </div>
 
       <div
