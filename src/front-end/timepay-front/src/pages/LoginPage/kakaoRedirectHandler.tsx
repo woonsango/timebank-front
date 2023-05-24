@@ -60,6 +60,7 @@ const KakaoRedirectHandler = () => {
           if (response.data.signUp === true) {
             /*jwt 토큰 저장*/
             setTokenToCookie(response.data.jwt, 10);
+            setMultiTokenToCookie('undefined', 0);
             console.log('토큰 저장:', response.data.jwt);
             setUserState(response.data);
             setAgencyState(null);
