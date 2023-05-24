@@ -93,11 +93,7 @@ const RegisterRequestPage = () => {
   }, [userInfo]);
 
   const isVolunteerAvailable = useMemo(() => {
-    return (
-      isAgency &&
-      !!userInfo?.data.body.certification_url &&
-      userInfo?.data.body.certification_url !== 'none'
-    );
+    return isAgency && userInfo?.data.body?.authority === 'volunteer';
   }, [isAgency, userInfo]);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
