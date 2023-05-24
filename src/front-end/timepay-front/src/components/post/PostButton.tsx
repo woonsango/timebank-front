@@ -217,7 +217,7 @@ const PostButton = ({ messageApi }: { messageApi: MessageInstance }) => {
           css={cssCommentTableStyle}
           columns={columns}
           dataSource={appliedComments?.data}
-          key="id"
+          rowKey="id"
           bordered={false}
           rowSelection={rowSelection}
         />
