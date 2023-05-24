@@ -7,6 +7,8 @@ import com.capstone.timepay.domain.dealBoard.DealBoard;
 import com.capstone.timepay.domain.dealBoard.DealBoardRepository;
 import com.capstone.timepay.domain.dealBoardComment.DealBoardComment;
 import com.capstone.timepay.domain.dealBoardComment.DealBoardCommentRepository;
+import com.capstone.timepay.domain.organization.Organization;
+import com.capstone.timepay.domain.organization.OrganizationRepository;
 import com.capstone.timepay.domain.user.User;
 import com.capstone.timepay.domain.user.UserRepository;
 import com.capstone.timepay.service.board.dto.AdoptedCommentDTO;
@@ -17,6 +19,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,12 +32,24 @@ public class DealBoardCommentService {
     private final CommentRepository commentRepository;
     private final UserRepository userRepository;
     private final DealBoardService dealBoardService;
+    private final OrganizationRepository organizationRepository;
     // 댓글 작성하기
     @Transactional
     public DealBoardCommentDTO writeComment(Long boardId, DealBoardCommentDTO dealBoardCommentDTO,
-                                            String email)
+                                            Principal principal)
     {
-        User user = userRepository.findByEmail(email).orElse(null);
+        User user = userRepository.findByEmail(principal.getName()).orElse(null);
+
+        if (user == null)
+        {
+            Organization organization = organizationRepository.findByAccount(principal.getName()).orElse(null);
+            if (organization == null)
+                throw new IllegalArgumentException("유저가 존재하지 않습니다");
+            user = userRepository.findByOrganization(organization).orElseThrow(() -> {
+                return new IllegalArgumentException("그냥 유저가 존재하지 않습니다");
+            });
+        }
+
         DealBoard dealBoard = dealBoardRepository.findById(boardId).orElseThrow(() -> {
             return new IllegalArgumentException("게시판을 찾을 수 없음");
         });

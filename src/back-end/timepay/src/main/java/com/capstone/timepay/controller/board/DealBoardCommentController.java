@@ -59,13 +59,13 @@ public class DealBoardCommentController {
             {
                 dealBoardController.readyToStart(boardId, principal);
 
-                DealBoardCommentDTO response = dealBoardCommentService.writeComment(boardId, dealBoardCommentDTO, principal.getName());
+                DealBoardCommentDTO response = dealBoardCommentService.writeComment(boardId, dealBoardCommentDTO, principal);
                 dealBoardCommentService.setAdoptedComments(response.getId());
                 return new ResponseEntity(response, HttpStatus.OK);
 
             }
         }
-        return new ResponseEntity(dealBoardCommentService.writeComment(boardId, dealBoardCommentDTO, principal.getName()), HttpStatus.OK);
+        return new ResponseEntity(dealBoardCommentService.writeComment(boardId, dealBoardCommentDTO, principal), HttpStatus.OK);
     }
 
     // 댓글 삭제
