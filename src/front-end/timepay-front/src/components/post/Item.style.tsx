@@ -31,7 +31,7 @@ export const cssOtherCommentItem = css`
   display: flex;
   flex-direction: column;
   width: 100%;
-  border: 1.3px solid ${COMMON_COLOR.LIGHT_GRAY};
+  border: 1.3px solid ${COMMON_COLOR.SILVER_GRAY};
   background: ${COMMON_COLOR.WARM_GRAY};
   margin-bottom: 15px;
   padding: 15px;
