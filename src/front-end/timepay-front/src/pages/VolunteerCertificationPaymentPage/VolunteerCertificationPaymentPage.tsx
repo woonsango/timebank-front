@@ -29,7 +29,6 @@ import {
 import { ReactComponent as RegionPin } from '../../assets/images/icons/region-pin.svg';
 import { ReactComponent as Clock } from '../../assets/images/icons/clock.svg';
 import { PATH } from '../../utils/paths';
-import dayjs from 'dayjs';
 import { isMobileWidth } from '../../utils/device';
 import {
   useGetMyPageCertificate,
@@ -133,11 +132,8 @@ const VolunteerCertificationPaymentPage = () => {
         </div>
         <div className="time">
           <Clock /> {boardData?.startTime.replaceAll('T', ' ').slice(0, 16)} ~{' '}
-          {boardData?.endTime.split('T')[1].slice(0, 5)} (총{' '}
-          {dayjs(boardData?.endTime, 'YYYY-MM-DDTHH:mm:ss').diff(
-            dayjs(boardData?.startTime, 'YYYY-MM-DDTHH:mm:ss'),
-            'hours',
-          )}{' '}
+          {boardData?.endTime.split('T')[1].slice(0, 5)} (봉사시간:
+          {boardData?.volunteerTime || 0}
           시간)
         </div>
         <div className="participateNum">

@@ -35,6 +35,7 @@ export interface IVolunteerInfo {
   startTime: string;
   endTime: string;
   participateNum: number;
+  volunteerTime?: number;
 }
 
 export interface IParticipateUser {
