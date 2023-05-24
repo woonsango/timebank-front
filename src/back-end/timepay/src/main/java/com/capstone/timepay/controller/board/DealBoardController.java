@@ -92,7 +92,7 @@ public class DealBoardController
                                       @RequestPart(required = false) List<MultipartFile> images,
                                       Principal principal) throws Exception
     {
-        return new ResponseEntity(dealBoardService.helperWrite(dealBoardDTO, principal.getName(), "helper", images), HttpStatus.OK);
+        return new ResponseEntity(dealBoardService.helperWrite(dealBoardDTO, principal, "helper", images), HttpStatus.OK);
     }
 
     @ApiOperation(value = "거래게시판 도움요청 게시글 작성")
@@ -121,13 +121,6 @@ public class DealBoardController
             return updateMap;
         }
 
-        if (!principal.getName().equals(boardEmail))
-        {
-            updateMap.put("success", false);
-            updateMap.put("message", "수정 권한이 없습니다");
-            return updateMap;
-        }
-
         dealBoardService.update(id, dealBoardDTO);
         updateMap.put("success", true);
         updateMap.put("dealBoard", dealBoard);
@@ -147,13 +140,6 @@ public class DealBoardController
         {
             deleteMap.put("success", false);
             deleteMap.put("message", "해당 게시글을 찾을 수 없습니다");
-            return deleteMap;
-        }
-
-        if (!principal.getName().equals(boardEmail))
-        {
-            deleteMap.put("success", false);
-            deleteMap.put("message", "삭제 권한이 없습니다");
             return deleteMap;
         }
 

@@ -156,6 +156,7 @@ public class DealBoardService
                 .isHidden(dealBoardDTO.isHidden())
                 .isAuto(dealBoardDTO.isAuto())
                 .volunteerPeople(dealBoardDTO.getVolunteerPeople())
+                .volunteerTime(dealBoardDTO.getVolunteerTime())
                 .isVolunteer(dealBoardDTO.isVolunteer())
                 .build();
 
@@ -177,12 +178,20 @@ public class DealBoardService
     }
 
     @Transactional
-    public DealBoardDTO helperWrite(DealBoardDTO dealBoardDTO, String email,
+    public DealBoardDTO helperWrite(DealBoardDTO dealBoardDTO, Principal principal,
                                     String type, List<MultipartFile> images) throws IOException, FirebaseAuthException
     {
-        User user = userRepository.findByEmail(email).orElseThrow(() -> {
-            return new IllegalArgumentException("해당 유저를 찾을 수 없습니다.");
-        });
+        User user = userRepository.findByEmail(principal.getName()).orElse(null);
+
+        if (user == null)
+        {
+            Organization organization = organizationRepository.findByAccount(principal.getName()).orElse(null);
+            if (organization == null)
+                throw new IllegalArgumentException("유저가 존재하지 않습니다");
+            user = userRepository.findByOrganization(organization).orElseThrow(() -> {
+                return new IllegalArgumentException("그냥 유저가 존재하지 않습니다");
+            });
+        }
 
         if (images != null) {
             List<DealAttatchment> dealAttatchments = new ArrayList<>();

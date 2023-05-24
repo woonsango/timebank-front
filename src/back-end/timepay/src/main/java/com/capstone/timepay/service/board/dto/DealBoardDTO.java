@@ -40,6 +40,7 @@ public class DealBoardDTO
     private boolean isVolunteer;
     private String organizationName;
     private String organizationImage;
+    private int volunteerTime;
 
     public static DealBoardDTO toDealBoardDTO(DealBoard dealBoard)
     {
@@ -67,7 +68,8 @@ public class DealBoardDTO
                     dealBoard.getDealRegisters().get(0).getUser().getNickname(),
                     dealBoard.isVolunteer(),
                     dealBoard.getDealRegisters().get(0).getUser().getOrganization().getOrganizationName(),
-                    dealBoard.getDealRegisters().get(0).getUser().getOrganization().getImageUrl()
+                    dealBoard.getDealRegisters().get(0).getUser().getOrganization().getImageUrl(),
+                    dealBoard.getVolunteerTime()
             );
         }
         else if (dealBoard.getDealRegisters() != null && !dealBoard.getDealRegisters().isEmpty()) {
@@ -93,7 +95,8 @@ public class DealBoardDTO
                     dealBoard.getDealRegisters().get(0).getUser().getNickname(),
                     dealBoard.isVolunteer(),
                     null,
-                    null
+                    null,
+                    dealBoard.getVolunteerTime()
             );
         } else {
             return new DealBoardDTO(
@@ -118,7 +121,8 @@ public class DealBoardDTO
                     null,
                     dealBoard.isVolunteer(),
                     null,
-                    null
+                    null,
+                    dealBoard.getVolunteerTime()
             );
         }
     }
@@ -147,7 +151,8 @@ public class DealBoardDTO
                     user.getNickname(),
                     dealBoard.isVolunteer(),
                     null,
-                    null
+                    null,
+                    dealBoard.getVolunteerTime()
             );
         } else {
             return new DealBoardDTO(
@@ -172,7 +177,8 @@ public class DealBoardDTO
                     user.getNickname(),
                     dealBoard.isVolunteer(),
                     user.getOrganization().getOrganizationName(),
-                    user.getOrganization().getImageUrl()
+                    user.getOrganization().getImageUrl(),
+                    dealBoard.getVolunteerTime()
             );
         }
     }
