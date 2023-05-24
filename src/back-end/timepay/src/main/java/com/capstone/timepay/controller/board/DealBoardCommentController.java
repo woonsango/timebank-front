@@ -114,5 +114,13 @@ public class DealBoardCommentController {
     public List<DealBoardCommentDTO> getAdoptedComments(@PathVariable("boardId") Long boardId) {
         return dealBoardCommentService.getAdoptedComments(boardId);
     }
+
+    @ApiOperation(value = "거래게시글 댓글수정")
+    @PostMapping("/update/{commentId}")
+    public ResponseEntity updateDealBoardComment(@PathVariable("commentId") Long commentId,
+                                                @RequestBody DealBoardCommentDTO dealBoardCommentDTO)
+    {
+        return dealBoardCommentService.updateComment(commentId, dealBoardCommentDTO);
+    }
 }
 

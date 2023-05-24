@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.security.Principal;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -157,5 +158,19 @@ public class DealBoardCommentService {
         dealBoard.setBoardStatus(BoardStatus.MATCHING_COMPLETE);
         dealBoardRepository.save(dealBoard);
         return new ResponseEntity("댓글 지원 완료, 매칭 완료", HttpStatus.OK);
+    }
+
+    public ResponseEntity updateComment(Long commentId, DealBoardCommentDTO dealBoardCommentDTO)
+    {
+        DealBoardComment dealBoardComment = dealBoardCommentRepository.findById(commentId).orElseThrow(() -> {
+            return new IllegalArgumentException("댓글을 찾을 수 없음");
+        });
+
+        dealBoardComment.setAdopted(dealBoardCommentDTO.isAdopted());
+        dealBoardComment.setUpdatedAt(LocalDateTime.now());
+        dealBoardComment.setContent(dealBoardCommentDTO.getContent());
+        dealBoardComment.setHidden(dealBoardCommentDTO.isHidden());
+        dealBoardCommentRepository.save(dealBoardComment);
+        return new ResponseEntity(HttpStatus.OK);
     }
 }
