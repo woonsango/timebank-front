@@ -12,6 +12,7 @@ import {
   cssCommentProfile,
 } from './Item.style';
 import { Form, Input, Modal, Button } from 'antd';
+import { useGetBoard } from '../../api/hooks/board';
 import { useDeleteComment } from '../../api/hooks/comment';
 import { useQueryClient } from 'react-query';
 import { useGetUserInfo } from '../../api/hooks/user';
@@ -19,6 +20,9 @@ import { useGetUserInfo } from '../../api/hooks/user';
 const Item = ({ a, c, messageApi, onShowProfile }: any) => {
   const queryClient = useQueryClient();
 
+  const url = window.location.pathname;
+  const real_id = url.substring(6);
+  const { data, isLoading } = useGetBoard(parseInt(real_id));
   const { data: userInfo } = useGetUserInfo();
   const userNickname = useMemo(() => {
     return userInfo?.data.body.nick_name;
@@ -29,18 +33,12 @@ const Item = ({ a, c, messageApi, onShowProfile }: any) => {
     return false;
   }, [userInfo]);
 
-  console.log(userNickname);
-
   const isAuthor = useMemo(() => {
     // 게시글 작성자일 때 true
     return isAgency
       ? c.userId === userInfo?.data.body.uid
-      : c.userNickname === userNickname;
+      : c.userNickname === data?.data.userNickname;
   }, [isAgency, c, userInfo, userNickname]);
-
-  console.log('A', isAuthor);
-
-  const write_user = false; // true = 수정 / false = 신고
 
   // 수정 기능
   const { TextArea } = Input;
@@ -56,9 +54,6 @@ const Item = ({ a, c, messageApi, onShowProfile }: any) => {
   const onCancel = () => {
     setIsOpenReportModal(false);
   };
-
-  const url = window.location.pathname;
-  const real_id = url.substring(6);
 
   const useDeleteCommentMutation = useDeleteComment();
 
@@ -86,10 +81,12 @@ const Item = ({ a, c, messageApi, onShowProfile }: any) => {
     [messageApi, real_id, queryClient, useDeleteCommentMutation],
   );
 
+  console.log('c', c);
+
   return (
     <div css={cssComments}>
       <div css={cssEditDelete}>
-        {write_user ? (
+        {isAuthor ? (
           <Button className="edit">수정</Button>
         ) : (
           <Button className="edit" onClick={showReportModal}>
@@ -129,23 +126,40 @@ const Item = ({ a, c, messageApi, onShowProfile }: any) => {
             </div>
           </Form>
         </Modal>
-        <div className="sidebar">|</div>
-        <Button className="delete" onClick={() => handleDeleteComment(c.id)}>
-          삭제
-        </Button>
+
+        {c.userNickname === data?.data.userNickname && (
+          <>
+            <div className="sidebar">|</div>
+            <Button
+              className="delete"
+              onClick={() => handleDeleteComment(c.id)}
+            >
+              삭제
+            </Button>
+          </>
+        )}
       </div>
 
       <div
         css={
           isAuthor
             ? cssMyCommentItem
-            : a
+            : c.applied
             ? cssAppliedCommentItem
             : cssOtherCommentItem
         }
       >
         <div css={cssPostDetailProfile} onClick={() => onShowProfile(c.userId)}>
-          <div css={cssCommentProfile}></div>
+          <div css={cssCommentProfile}>
+            <img
+              src={
+                'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png'
+              }
+              className="MyProfileImage"
+              alt="내 프로필"
+              style={{ width: 40, height: 40, borderRadius: 20 }}
+            />
+          </div>
           <div css={cssCommentUser}>{c.userNickname}</div>
         </div>
 

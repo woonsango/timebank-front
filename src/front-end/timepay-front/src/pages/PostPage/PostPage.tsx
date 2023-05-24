@@ -111,11 +111,11 @@ const PostPage = () => {
     userId: undefined,
   });
 
-  const [applied, setApplied] = useState(false);
-  const isApplied = () => {
-    setApplied(true);
+  const [onApplied, setOnApplied] = useState(true);
+  const handleApplied = (e: any) => {
+    setOnApplied(e.target.checked);
+    console.log(onApplied);
   };
-  console.log('isApplied', applied);
 
   useEffect(() => {
     setHeaderTitle('도움요청');
@@ -210,16 +210,17 @@ const PostPage = () => {
         });
         setCommentValue({
           adopted: false,
-          applied: applied,
+          applied: onApplied,
           hidden: false,
           content: '',
         });
+        console.log('...', onApplied);
       },
       onError(error) {
         console.log('error');
       },
     });
-  }, [commentValue, createCommentMutation, queryClient]);
+  }, [commentValue, createCommentMutation, queryClient, onApplied]);
 
   const onReport = useCallback(async () => {
     Modal.confirm({
@@ -298,6 +299,7 @@ const PostPage = () => {
     );
   }, [board]);
 
+  console.log('게시글 작성자?', data?.data.userNickname);
   const handleOnClickUser = useCallback(
     (userId?: number | null) => {
       // 유저 닉네임 클릭시 프로필 노출
@@ -413,7 +415,6 @@ const PostPage = () => {
                   {commentsList.length > 0 ? (
                     commentsList.map((data) => (
                       <Item
-                        a={applied}
                         c={data}
                         id={data.id}
                         key={data.id}
@@ -455,7 +456,7 @@ const PostPage = () => {
             )}
 
             <div css={cssPostFooter2}>
-              <Checkbox className="checkbox" onChange={isApplied}>
+              <Checkbox className="checkbox" onChange={handleApplied}>
                 지원
               </Checkbox>
               <div className="textInput">
