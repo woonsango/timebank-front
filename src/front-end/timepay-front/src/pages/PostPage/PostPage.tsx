@@ -49,7 +49,6 @@ import { ReactComponent as LikeClick } from '../../assets/images/icons/like_clic
 import { ReactComponent as VolunteerBadge } from '../../assets/images/icons/volunteer-badge.svg';
 import Item from '../../components/post/Item';
 import InputText from '../../components/post/InputText';
-import ApplicantButton from '../../components/post/ApplicantButton';
 import {
   useCreateReports,
   useDeleteBoard,
@@ -63,6 +62,7 @@ import { useSetRecoilState } from 'recoil';
 import { headerTitleState } from '../../states/uiState';
 import dayjs from 'dayjs';
 import { useGetUserInfo } from '../../api/hooks/user';
+import AnotherUserProfileDrawer from '../../components/AnotherUserProfileDrawer';
 
 // interface TList {
 //   id: number;
@@ -103,6 +103,13 @@ const PostPage = () => {
     hidden: false,
     content: '',
   });
+  const [profileProps, setProfileProps] = useState<{
+    open: boolean;
+    userId?: number | undefined;
+  }>({
+    open: false,
+    userId: undefined,
+  });
 
   const [onApplied, setOnApplied] = useState(true);
   const handleApplied = (e: any) => {
@@ -127,18 +134,14 @@ const PostPage = () => {
     }
   }, [comments]);
 
-  const applicantList = useMemo(() => {
-    return ['지원자1', '지원자2', '지원자3'];
-  }, []);
-
   const userNickname = useMemo(() => {
     return userInfo?.data.body.nick_name;
   }, [userInfo]);
 
   const isAgency = useMemo(() => {
-    if (userInfo?.data.body.manager_name) return true;
+    if (board?.organizationName) return true;
     return false;
-  }, [userInfo]);
+  }, [board]);
 
   // 수정 및 삭제 버튼 표시 여부를 결정하는 함수
   const isAuthor = useMemo(() => {
@@ -257,10 +260,6 @@ const PostPage = () => {
     });
   }, [messageApi, useReportMutation, real_id]);
 
-  const onApplicantClick = (applicant: any) => {
-    console.log(`Selected applicant: ${applicant}`);
-  };
-
   // const onItemClick = (item: any) => {
   //   setSelectedItem(item);
   // };
@@ -301,6 +300,17 @@ const PostPage = () => {
   }, [board]);
 
   console.log('게시글 작성자?', data?.data.userNickname);
+  const handleOnClickUser = useCallback(
+    (userId?: number | null) => {
+      // 유저 닉네임 클릭시 프로필 노출
+      if (data && data.data)
+        setProfileProps({
+          open: true,
+          userId: userId || undefined,
+        });
+    },
+    [data],
+  );
 
   return (
     <Layout css={cssPostDetail}>
@@ -370,8 +380,14 @@ const PostPage = () => {
               <div css={cssPostDetailCreatedAt}>
                 {data?.data.createdAt.substring(0, 10)}
               </div>
-              <div css={cssPostDetailProfile}></div>
-              <div css={cssPostDetailUser}>
+              <div
+                css={cssPostDetailProfile}
+                onClick={() => handleOnClickUser(data?.data.userId)}
+              ></div>
+              <div
+                css={cssPostDetailUser}
+                onClick={() => handleOnClickUser(data?.data.userId)}
+              >
                 {isAgency
                   ? data?.data.organizationName
                   : data?.data.userNickname}
@@ -395,12 +411,6 @@ const PostPage = () => {
               <Spin css={cssSpinCommentStyle} />
             ) : (
               <>
-                {isAuthor && (
-                  <ApplicantButton
-                    applicantList={applicantList}
-                    onItemClick={onApplicantClick}
-                  />
-                )}
                 <div css={cssPostDetailSixth}>
                   {commentsList.length > 0 ? (
                     commentsList.map((data) => (
@@ -409,6 +419,7 @@ const PostPage = () => {
                         id={data.id}
                         key={data.id}
                         messageApi={messageApi}
+                        onShowProfile={handleOnClickUser}
                       />
                     ))
                   ) : (
@@ -432,14 +443,14 @@ const PostPage = () => {
             <div css={cssLine2} />
             {isAuthor && (
               <>
-                <PostButton />
+                <PostButton messageApi={messageApi} />
                 <div css={cssLine5} />
               </>
             )}
 
             {!isAuthor && board?.state === 'ACTIVITY_COMPLETE' && (
               <>
-                <PostButton />
+                <PostButton messageApi={messageApi} />
                 <div css={cssLine5} />
               </>
             )}
@@ -461,6 +472,11 @@ const PostPage = () => {
           </Footer>
         </>
       )}
+      <AnotherUserProfileDrawer
+        open={profileProps.open}
+        userId={profileProps.userId}
+        onClose={() => setProfileProps({ open: false, userId: undefined })}
+      />
     </Layout>
   );
 };

@@ -15,10 +15,9 @@ import { Form, Input, Modal, Button } from 'antd';
 import { useGetBoard } from '../../api/hooks/board';
 import { useDeleteComment } from '../../api/hooks/comment';
 import { useQueryClient } from 'react-query';
-
 import { useGetUserInfo } from '../../api/hooks/user';
 
-const Item = ({ c, messageApi }: any) => {
+const Item = ({ a, c, messageApi, onShowProfile }: any) => {
   const queryClient = useQueryClient();
 
   const url = window.location.pathname;
@@ -36,8 +35,10 @@ const Item = ({ c, messageApi }: any) => {
 
   const isAuthor = useMemo(() => {
     // 게시글 작성자일 때 true
-    return c.userNickname === data?.data.userNickname;
-  }, [isAgency, userInfo, userNickname]);
+    return isAgency
+      ? c.userId === userInfo?.data.body.uid
+      : c.userNickname === data?.data.userNickname;
+  }, [isAgency, c, userInfo, userNickname]);
 
   const write_user = false; // true = 수정 / false = 신고
 
@@ -142,7 +143,7 @@ const Item = ({ c, messageApi }: any) => {
             : cssOtherCommentItem
         }
       >
-        <div css={cssPostDetailProfile}>
+        <div css={cssPostDetailProfile} onClick={() => onShowProfile(c.userId)}>
           <div css={cssCommentProfile}></div>
           <div css={cssCommentUser}>{c.userNickname}</div>
         </div>
