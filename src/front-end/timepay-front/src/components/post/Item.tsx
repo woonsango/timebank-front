@@ -82,7 +82,7 @@ const Item = ({ c, messageApi }: any) => {
     [messageApi, real_id, queryClient, useDeleteCommentMutation],
   );
 
-  console.log('c.applied', c.applied);
+  console.log('c', c);
 
   return (
     <div css={cssComments}>

@@ -104,9 +104,10 @@ const PostPage = () => {
     content: '',
   });
 
-  const [applied, setApplied] = useState(false);
-  const isApplied = () => {
-    setApplied(true);
+  const [onApplied, setOnApplied] = useState(true);
+  const handleApplied = (e: any) => {
+    setOnApplied(e.target.checked);
+    console.log(onApplied);
   };
 
   useEffect(() => {
@@ -206,17 +207,17 @@ const PostPage = () => {
         });
         setCommentValue({
           adopted: false,
-          applied: applied,
+          applied: onApplied,
           hidden: false,
           content: '',
         });
-        console.log('...', applied);
+        console.log('...', onApplied);
       },
       onError(error) {
         console.log('error');
       },
     });
-  }, [commentValue, createCommentMutation, queryClient]);
+  }, [commentValue, createCommentMutation, queryClient, onApplied]);
 
   const onReport = useCallback(async () => {
     Modal.confirm({
@@ -444,7 +445,7 @@ const PostPage = () => {
             )}
 
             <div css={cssPostFooter2}>
-              <Checkbox className="checkbox" onChange={isApplied}>
+              <Checkbox className="checkbox" onChange={handleApplied}>
                 지원
               </Checkbox>
               <div className="textInput">
