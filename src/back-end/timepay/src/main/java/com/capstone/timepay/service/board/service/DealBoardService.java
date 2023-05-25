@@ -320,8 +320,14 @@ public class DealBoardService
 
         /* 타임페이 교환하는 로직 */
 
-        // 유저의 타임페이
-        int timePay = dealBoard.getDealRegisters().get(0).getUser().getUserProfile().getTimepay();
+        int timePay = 0;
+
+        // 기관, 일반 유저
+        if (dealBoard.getDealRegisters().get(0).getUser().getOrganization() != null) {
+            timePay = dealBoard.getDealRegisters().get(0).getUser().getOrganization().getTimepay();
+        } else {
+            timePay = dealBoard.getDealRegisters().get(0).getUser().getUserProfile().getTimepay();
+        }
         // 해당 게시글의 활동시간
         int activityStartTime = (dealBoard.getStartTime().getHour() * 60) + dealBoard.getStartTime().getMinute();
         int activityEndTime = (dealBoard.getEndTime().getHour() * 60) + dealBoard.getEndTime().getMinute();
@@ -330,7 +336,11 @@ public class DealBoardService
         int volunteerPeople = dealBoard.getDealBoardComments().size();
 
         // 작성자 타임페이 차감
-        dealBoard.getDealRegisters().get(0).getUser().getUserProfile().setTimepay(timePay - (activityTime * volunteerPeople));
+        if (dealBoard.getDealRegisters().get(0).getUser().getOrganization() != null) {
+            dealBoard.getDealRegisters().get(0).getUser().getOrganization().setTimepay(timePay - (activityTime * volunteerPeople));
+        } else {
+            dealBoard.getDealRegisters().get(0).getUser().getUserProfile().setTimepay(timePay - (activityTime * volunteerPeople));
+        }
 
         // 활동한 유저들 타임페이 증가시키는 로직
         List<DealBoardComment> dealBoardComments = dealBoard.getDealBoardComments();

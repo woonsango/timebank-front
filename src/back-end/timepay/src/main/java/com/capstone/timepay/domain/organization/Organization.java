@@ -2,10 +2,7 @@ package com.capstone.timepay.domain.organization;
 
 import com.capstone.timepay.domain.BaseTimeEntity;
 import com.capstone.timepay.domain.user.User;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
@@ -18,6 +15,7 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
+@Setter
 @Entity
 @Builder
 public class Organization extends BaseTimeEntity {
