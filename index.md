@@ -20,8 +20,12 @@
 
 타임페이는 이런 문제를 해결하는 시스템을 개발해 보다 체계적이고 자동화된 시간 은행 운영을 목표로 하는 프로젝트이다.  
 
-# 2. 소개 영상    
+# 2. 영상    
+
+# 소개 영상    
 [![Video Label](https://img.youtube.com/vi/1_zx2Ubk0jU/0.jpg)](https://youtu.be/1_zx2Ubk0jU) 
+# 시연 영상  
+[![image](https://github.com/kookmin-sw/capstone-2023-09/assets/55117730/35a8fe3c-1bf6-4a5d-b46e-b51c55a5627a)](https://youtu.be/_sWX-izpOYQ)
 
 # 3. 팀 소개
   
