@@ -34,6 +34,9 @@ export const cssSimplePostCardHeadStyle = (scaleValue: number) => css`
       height: calc(14px * ${scaleValue});
     }
   }
+  .ant-progress {
+    font-size: calc(12px * ${scaleValue});
+  }
 `;
 
 export const cssSimplePostCardBodyStyle = (scaleValue: number) => css`
