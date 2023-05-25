@@ -336,8 +336,10 @@ public class DealBoardService
         List<DealBoardComment> dealBoardComments = dealBoard.getDealBoardComments();
         for (DealBoardComment dealBoardComment : dealBoardComments)
         {
-            int userTimePay = dealBoardComment.getUser().getUserProfile().getTimepay();
-            dealBoardComment.getUser().getUserProfile().setTimepay(userTimePay + activityTime);
+            if (dealBoardComment.isAdopted()) {
+                int userTimePay = dealBoardComment.getUser().getUserProfile().getTimepay();
+                dealBoardComment.getUser().getUserProfile().setTimepay(userTimePay + activityTime);
+            }
         }
 
         dealBoardRepository.save(dealBoard);
