@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>index</title>
+</head>
+<body>
+<button onclick="freeReq()">자유게시판</button>
+<button onclick="helperReq()">도움주기 게시판</button>
+<button onclick="helpReq()">도움받기 게시판</button>
+</body>
+<script>
+    // function saveReq()
+    // {
+    //
+    // }
+
+    const freeReq = () => {
+        location.href = "/board/free";
+    }
+    const helperReq = () => {
+        location.href = "/board/helper";
+    }
+    const helpReq = () => {
+        location.href = "/board/help";
+    }
+</script>
+</html>
