@@ -321,6 +321,7 @@ public class DealBoardService
         /* 타임페이 교환하는 로직 */
 
         int timePay = 0;
+        int volunteerPeople = 0;
 
         // 기관, 일반 유저
         if (dealBoard.getDealRegisters().get(0).getUser().getOrganization() != null) {
@@ -333,7 +334,12 @@ public class DealBoardService
         int activityEndTime = (dealBoard.getEndTime().getHour() * 60) + dealBoard.getEndTime().getMinute();
         int activityTime = activityEndTime - activityStartTime;
         // 해당 게시글의 인원수
-        int volunteerPeople = dealBoard.getDealBoardComments().size();
+        List<DealBoardComment> dealBoardCommentPeople = dealBoard.getDealBoardComments();
+        for (DealBoardComment dealBoardComment : dealBoardCommentPeople)
+        {
+            if (dealBoardComment.isAdopted())
+                volunteerPeople++;
+        }
 
         // 작성자 타임페이 차감
         if (dealBoard.getDealRegisters().get(0).getUser().getOrganization() != null) {
