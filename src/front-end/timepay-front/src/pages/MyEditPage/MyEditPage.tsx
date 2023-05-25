@@ -20,6 +20,7 @@ import {
 import { cssJoinNick } from '../JoinPage/Join.styles';
 import { apiRequest } from '../../api/request';
 import { API_URL } from '../../api/urls';
+import useFontSize from '../../hooks/useFontSize';
 
 /*행정동 타입 선언*/
 type DongName = keyof typeof dongData;
@@ -44,6 +45,8 @@ const MyEditPage: React.FC = () => {
   const [viewNickname, setViewNickname] = useState<string>('');
 
   const [overlap, setOverlap] = useState<boolean>(false);
+
+  const { scaleValue } = useFontSize();
 
   const handleFileChange = (e: any) => {
     const imageFile = e.target.files[0];
@@ -236,7 +239,7 @@ const MyEditPage: React.FC = () => {
   }, [form, setHeaderTitle]);
 
   return (
-    <Space css={topWrapperCSS} align="baseline">
+    <Space css={topWrapperCSS(scaleValue)} align="baseline">
       {contextHolder}
       <Form
         form={form}

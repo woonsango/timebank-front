@@ -1,13 +1,13 @@
 import { css } from '@emotion/react';
 import { COMMON_COLOR } from '../../styles/constants/colors';
 
-export const cssMyVolunteerPageStyle = css`
+export const cssMyVolunteerPageStyle = (scaleValue: number) => css`
   padding: 20px;
   .volunteer-overview {
     font-style: normal;
     font-weight: 700;
-    font-size: 15px;
-    line-height: 15px;
+    font-size: calc(15px * ${scaleValue});
+    line-height: calc(15px * ${scaleValue});
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -17,7 +17,7 @@ export const cssMyVolunteerPageStyle = css`
   }
 
   .ant-table {
-    font-size: 16px;
+    font-size: calc(16px * ${scaleValue});
     width: 100%;
     .ant-table-cell {
       word-break: keep-all;
@@ -25,14 +25,14 @@ export const cssMyVolunteerPageStyle = css`
   }
   .agency-info {
     color: ${COMMON_COLOR.FONT2};
-    font-size: 14px;
+    font-size: calc(14px * ${scaleValue});
   }
   .ant-btn-link {
     padding: 0;
     height: max-content;
     color: ${COMMON_COLOR.MAIN2};
     font-weight: bold;
-    font-size: 16px;
+    font-size: calc(16px * ${scaleValue});
     span {
       text-decoration: underline;
     }
@@ -45,8 +45,8 @@ export const cssMyVolunteerPageStyle = css`
   }
   .volunteer-extra {
     color: ${COMMON_COLOR.FONT2};
-    font-size: 14px;
-    margin-top: 10px;
+    font-size: calc(14px * ${scaleValue});
+    margin-top: calc(10px * ${scaleValue});
   }
   .certificate {
     color: ${COMMON_COLOR.BLACK};
