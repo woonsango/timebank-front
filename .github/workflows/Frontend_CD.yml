@@ -54,6 +54,7 @@ jobs:
           docker stop $(docker ps -a -q) 
           docker rm $(docker ps -a -q) 
           docker pull ${{ secrets.DOCKER_USERNAME }}/timepay_front
+
           docker run -d -p 80:80 --name tp_frontend ${{ secrets.DOCKER_USERNAME }}/timepay_front
 
 
@@ -72,6 +73,7 @@ jobs:
         yarn build
       env:
         CI: false
+
       shell: bash
       
     ## docker build image
@@ -103,3 +105,4 @@ jobs:
           docker rm $(docker ps -a -q) 
           docker pull ${{ secrets.DOCKER_USERNAME }}/timepay_admin
           docker run -d -p 80:80 --name admin_frontend ${{ secrets.DOCKER_USERNAME }}/timepay_admin
+
