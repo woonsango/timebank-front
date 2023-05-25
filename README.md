@@ -1,7 +1,7 @@
 # 타임페이 커뮤니티 (2023 다학제간캡스톤디자인 9팀)
 
 # :loudspeaker: 프로젝트 소개
-![Rogo1](https://user-images.githubusercontent.com/54920331/228437271-e60bb141-a33e-4dba-877f-504ced3551d6.png)
+![image (2)](https://user-images.githubusercontent.com/54922639/229401459-e46e2962-ff23-48a9-842b-7e3a763c8c84.png)
 
 
 
