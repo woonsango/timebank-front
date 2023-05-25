@@ -5,12 +5,15 @@ import { useNavigate } from 'react-router-dom';
 import { useSetRecoilState } from 'recoil';
 import { useGetUserCertificate } from '../../api/hooks/user';
 import { ICertification } from '../../api/interfaces/IVolunteer';
+import useFontSize from '../../hooks/useFontSize';
 import { headerTitleState } from '../../states/uiState';
 import { cssMyVolunteerPageStyle } from './MyVolunteerPage.styles';
 
 const MyVolunteerPage = () => {
   const navigate = useNavigate();
   const setHeaderTitle = useSetRecoilState(headerTitleState);
+
+  const { scaleValue } = useFontSize();
 
   const { data, isLoading } = useGetUserCertificate({
     pageIndex: 0,
@@ -105,7 +108,7 @@ const MyVolunteerPage = () => {
   }, [handleOnClickTitle]);
 
   return (
-    <div css={cssMyVolunteerPageStyle}>
+    <div css={cssMyVolunteerPageStyle(scaleValue)}>
       {isLoading ? (
         <Spin />
       ) : (
