@@ -331,7 +331,7 @@ public class DealBoardService
         // 해당 게시글의 활동시간
         int activityStartTime = (dealBoard.getStartTime().getHour() * 60) + dealBoard.getStartTime().getMinute();
         int activityEndTime = (dealBoard.getEndTime().getHour() * 60) + dealBoard.getEndTime().getMinute();
-        int activityTime = activityStartTime - activityEndTime;
+        int activityTime = activityEndTime - activityStartTime;
         // 해당 게시글의 인원수
         int volunteerPeople = dealBoard.getDealBoardComments().size();
 
