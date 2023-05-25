@@ -113,9 +113,8 @@
     </tr>
     <tr>
       <td><strong>App</strong></td>
-      <td><img src="https://img.shields.io/badge/Flutter-02569B?style=for-the-badge&logo=flutter&logoColor=white"/>  
+      <td><img src="https://img.shields.io/badge/Flutter-02569B?style=for-the-badge&logo=flutter&logoColor=white"/></td>
     </tr>  
-</td>
     </tr>
     <tr>
       <td><strong>Programming Language</strong></td>
