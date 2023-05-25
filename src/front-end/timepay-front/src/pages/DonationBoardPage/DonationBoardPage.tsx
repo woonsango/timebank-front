@@ -11,6 +11,7 @@ import {
 import { useGetUserInfo } from '../../api/hooks/user';
 import AnotherUserProfileDrawer from '../../components/AnotherUserProfileDrawer';
 import PostTypeTag from '../../components/PostTypeTag';
+import useFontSize from '../../hooks/useFontSize';
 import { headerTitleState } from '../../states/uiState';
 import { PATH } from '../../utils/paths';
 import { cssDonationBoardPageStyle } from './DonationBoardPage.style';
@@ -18,6 +19,8 @@ import { cssDonationBoardPageStyle } from './DonationBoardPage.style';
 const DonationBoardPage = () => {
   const { boardId } = useParams();
   const navigate = useNavigate();
+
+  const { scaleValue } = useFontSize();
 
   const queryClient = useQueryClient();
   const { data, isLoading } = useGetDonationBoardWithId(
@@ -151,7 +154,7 @@ const DonationBoardPage = () => {
   }, [handleOnCancelOpen, handleOnDonate]);
 
   return (
-    <div css={cssDonationBoardPageStyle}>
+    <div css={cssDonationBoardPageStyle(scaleValue)}>
       {isLoading ? (
         <Spin />
       ) : (
@@ -228,6 +231,10 @@ const DonationBoardPage = () => {
             title="기부하기"
             footer={footer}
             className="donate-modal"
+            bodyStyle={{
+              padding: '20px 0px',
+              fontSize: `calc(14px * ${scaleValue})`,
+            }}
           >
             <div className="">
               기관 이름에게 얼마를 기부할까요?
