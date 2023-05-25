@@ -32,7 +32,7 @@
 ```
 💡 **1687
 ✉️ suyunup57@gmail.com
-🔥 #팀장 #UXUI디자인 #Frontend Admin
+🔥 #팀장 #UXUI디자인 #Frontend Admin #Flutter Android 리드/개발
 ```
 
 **김하연  🐣**
@@ -40,7 +40,7 @@
 ```
 💡 **1581
 ✉️ iioo3356@gmail.com
-🔥 #기획 #Frontend 리드/개발 - User, Admin
+🔥 #기획 #Frontend 리드/개발 - User, Admin #Flutter Android 
 ```
 
 **이진 🐻‍❄️**
@@ -106,7 +106,9 @@
     </tr>
     <tr>
       <td><strong>App</strong></td>
-      <td><img alt="RED" src ="https://img.shields.io/badge/AndroidStudio-3DDC84.svg?&style=for-the-badge&logo=AndroidStudio&logoColor=white"/></td>
+      <td><img src="https://img.shields.io/badge/Flutter-02569B?style=for-the-badge&logo=flutter&logoColor=white"/>  
+    </tr>  
+</td>
     </tr>
     <tr>
       <td><strong>Programming Language</strong></td>
