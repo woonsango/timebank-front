@@ -28,6 +28,9 @@ const MainHeader = () => {
 
   const logoutToken = useCallback(() => {
     setMultiTokenToCookie('undefined', 0);
+    if (window.location.pathname === '/my') {
+      window.location.reload();
+    }
     navigate('/my');
   }, [navigate]);
   const openMuliTokenModal = useCallback(() => {
