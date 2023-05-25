@@ -27,6 +27,9 @@
 # 시연 영상  
 [![image](https://github.com/kookmin-sw/capstone-2023-09/assets/55117730/35a8fe3c-1bf6-4a5d-b46e-b51c55a5627a)](https://youtu.be/_sWX-izpOYQ)
 
+
+
+
 # 3. 팀 소개
   
 ### **Frontend**
@@ -35,15 +38,15 @@
 
 ```
 💡 **1687
-✉️ suyunup57@gmail.com
-🔥 #팀장 #UXUI디자인 #Frontend Admin #Flutter Android 리드/개발
+📒 suyunup57@gmail.com
+🔥 #팀장 #UXUI디자인 #Frontend Admin, User #Flutter Android 리드/개발
 ```
 
 **김하연  🐣**
 
 ```
 💡 **1581
-✉️ iioo3356@gmail.com
+📒 iioo3356@gmail.com
 🔥 #기획 #Frontend 리드/개발 - User, Admin #Flutter Android 
 ```
 
@@ -51,50 +54,50 @@
 
 ```
 💡 **1648
-✉️ leejin684@gmail.com
+📒 leejin684@gmail.com
 🔥 #기획 #Frontend
 ```
 
-**황세윤** 🐑
+**황세윤 🐑** 
 
 ```
 💡 **3167
-✉️ yoony0193@kookmin.ac.kr
+📒 yoony0193@kookmin.ac.kr
 🔥 #기획 #Frontend
 ```
 
 ### **Backend**
 
-**이용훈**🦒
+**이용훈 🦒**
 
 ```
 💡 **5301
-✉️ cjswl1357@kookmin.ac.kr
-🔥 #Backend
+📒 cjswl1357@kookmin.ac.kr
+🔥 #Backend # 게시글 서버 개발
 ```
 
 **김명환 🐯**
 
 ```
 💡 **1582
-✉️ myeonghwan2@kookmin.ac.kr
+📒 myeonghwan2@kookmin.ac.kr
 🔥 #기획 #Backend #로그인 및 유저 관련 개발
 ```
 
-**김준영** 🦈
+**김준영 🦈** 
 
 ```
 💡 **3049
-✉️ mrgentle1@kookmin.ac.kr
-🔥 #Backend
+📒 mrgentle1@kookmin.ac.kr
+🔥 #Backend # 데이터베이스 서버 관련
 ```
 
-**서준원** 🦅
+**서준원 🦅** 
 
 ```
-💡 **3384
-✉️ wnsdnjs700@gmail.com
-🔥 #Backend
+💡 **3384
+📒 wnsdnjs700@gmail.com
+🔥 #Backend #기관 유저 관련 서버 개발 #관리자 서버 개발
 ```   
 
 # 4. 기술 스택
