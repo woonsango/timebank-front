@@ -178,8 +178,10 @@
 
 
 
-# 5. 사용법          
-<프론트엔드 로컬 실행 방법> 
+# 5. 사용법     
+
+## 프론트엔드
+### 로컬 실행 방법
 
 프로젝트 레포지터리 클론
 
@@ -206,7 +208,7 @@ remote 갱신
 ` $ yarn install`
 ` $ yarn start`
 
-<프론트엔드 배포 방법>
+### 배포 방법
 빌드 시 yarn build 실행
 
 `$ yarn build `
@@ -223,7 +225,8 @@ ssh로 ec2 인스턴스 접속
 
 위 과정을 github action을 통해 파이프라인을 구축하였습니다.
 
-<앱 로컬 실행 방법>
+## 앱 
+### 로컬 실행 방법
 vscode 사용
 
 앱 폴더 이동
@@ -234,8 +237,8 @@ vscode 사용
 vscode 명령어 팔레트 -> Flutter: Select Device -> 안드로이드 애뮬레이터 선택
 main.dart 파일에서 start debugging
 
-
-<백엔드 서버 빌드>
+## 백엔드
+### 서버 빌드
 프로젝트 레포지터리 클론
 
 `$ git clone https://github.com/kookmin-sw/capstone-2023-09.git`
