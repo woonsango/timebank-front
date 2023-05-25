@@ -10,11 +10,14 @@ import { useQueryClient } from 'react-query';
 import { useNavigate } from 'react-router-dom';
 import { usePutNotificationViewed } from '../../api/hooks/push';
 import { INotification } from '../../api/interfaces/IPush';
+import useFontSize from '../../hooks/useFontSize';
 import { cssPushCollapseStyle, cssPushPanelStyle } from './PushCollapse.styles';
 
 const PushCollapse = ({ pushes }: { pushes: INotification[] | undefined }) => {
   const queryClient = useQueryClient();
   const usePutNotificationViewedMutation = usePutNotificationViewed();
+
+  const { scaleValue } = useFontSize();
 
   const navigate = useNavigate();
   const getIcon = useCallback((push: INotification) => {
@@ -57,18 +60,22 @@ const PushCollapse = ({ pushes }: { pushes: INotification[] | undefined }) => {
 
   const handleOnClickHeader = useCallback(
     async (push: INotification) => {
-      await usePutNotificationViewedMutation.mutateAsync(push.notificationId, {
-        onSuccess: () => {
-          queryClient.invalidateQueries({
-            queryKey: ['useGetNotifications'],
-          });
-        },
-        onSettled: () => {
-          if (push.type !== 'notice' && push.link) {
-            navigate(push.link);
-          }
-        },
-      });
+      if (!push.viewed)
+        await usePutNotificationViewedMutation.mutateAsync(
+          push.notificationId,
+          {
+            onSuccess: () => {
+              queryClient.invalidateQueries({
+                queryKey: ['useGetNotifications'],
+              });
+            },
+            onSettled: () => {
+              if (push.type !== 'notice' && push.link) {
+                navigate(push.link);
+              }
+            },
+          },
+        );
     },
     [navigate, queryClient, usePutNotificationViewedMutation],
   );
@@ -87,14 +94,14 @@ const PushCollapse = ({ pushes }: { pushes: INotification[] | undefined }) => {
 
   return (
     <Collapse
-      css={cssPushCollapseStyle}
+      css={cssPushCollapseStyle(scaleValue)}
       expandIconPosition="end"
       bordered={false}
     >
       {pushes?.map((push, index) => (
         <Collapse.Panel
           className={push.viewed ? 'is-already-read' : 'not-read'}
-          css={cssPushPanelStyle}
+          css={cssPushPanelStyle(scaleValue)}
           key={index}
           header={getHeader(push)}
           showArrow={false}
