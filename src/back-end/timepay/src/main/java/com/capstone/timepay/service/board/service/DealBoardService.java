@@ -317,6 +317,29 @@ public class DealBoardService
         dealBoard.setBoardStatus(BoardStatus.ACTIVITY_COMPLETE);
         if (dealBoard.isVolunteer())
             organizationManageService.activityComplete(boardId); // 준원님 요청
+
+        /* 타임페이 교환하는 로직 */
+
+        // 유저의 타임페이
+        int timePay = dealBoard.getDealRegisters().get(0).getUser().getUserProfile().getTimepay();
+        // 해당 게시글의 활동시간
+        int activityStartTime = (dealBoard.getStartTime().getHour() * 60) + dealBoard.getStartTime().getMinute();
+        int activityEndTime = (dealBoard.getEndTime().getHour() * 60) + dealBoard.getEndTime().getMinute();
+        int activityTime = activityStartTime - activityEndTime;
+        // 해당 게시글의 인원수
+        int volunteerPeople = dealBoard.getDealBoardComments().size();
+
+        // 작성자 타임페이 차감
+        dealBoard.getDealRegisters().get(0).getUser().getUserProfile().setTimepay(timePay - (activityTime * volunteerPeople));
+
+        // 활동한 유저들 타임페이 증가시키는 로직
+        List<DealBoardComment> dealBoardComments = dealBoard.getDealBoardComments();
+        for (DealBoardComment dealBoardComment : dealBoardComments)
+        {
+            int userTimePay = dealBoardComment.getUser().getUserProfile().getTimepay();
+            dealBoardComment.getUser().getUserProfile().setTimepay(userTimePay + activityTime);
+        }
+
         dealBoardRepository.save(dealBoard);
         return DealBoardDTO.toDealBoardDTO(dealBoard);
     }
