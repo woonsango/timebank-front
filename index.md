@@ -74,7 +74,7 @@
 ```
 💡 **1582
 ✉️ myeonghwan2@kookmin.ac.kr
-🔥 #Backend #로그인 및 유저 관련 개발
+🔥 #기획 #Backend #로그인 및 유저 관련 개발
 ```
 
 **김준영** 🦈
@@ -176,15 +176,10 @@
 추후 추가 예정
 
 # 7. 소개 자료
-
-링크 걸어둘 예정   
 - 📒 [Timepay Community 중간 발표 자료 PDF](https://docs.google.com/presentation/d/19nXZx3U4Oq5vQGxINCsUBJORwcco-KPZcU7yrmfJQTs/edit?usp=sharing)
-- 📒 Timepay Community 최종 발표 PDF
-- 📒 Timepay Community 포스터 PDF
+- 📒 [Timepay Community 최종 발표 PDF](https://www.miricanvas.com/v/122thst)
+- 📒 [Timepay Community 포스터 PDF](https://www.miricanvas.com/v/122u2yq)
 
 # 8. 문서 자료
-링크 걸어둘 예정 
 - 📒 [Figma](https://www.figma.com/file/VgaJP6q5Fygk1v46pwOoqR/TIMEPAY-1%EC%B0%A8)
-- 📒 ERD Cloud
-
-
+- 📒 [ERD Cloud](https://www.erdcloud.com/d/7aFYMSGJGveZsKX6g)
