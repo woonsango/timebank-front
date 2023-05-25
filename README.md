@@ -7,7 +7,8 @@
 
 
 # :movie_camera: 소개 영상    
-
+[![Video Label](https://img.youtube.com/vi/1_zx2Ubk0jU/0.jpg)](https://youtu.be/1_zx2Ubk0jU) 
+# :movie_camera: 시연 영상  
 [![image](https://github.com/kookmin-sw/capstone-2023-09/assets/55117730/35a8fe3c-1bf6-4a5d-b46e-b51c55a5627a)](https://youtu.be/_sWX-izpOYQ)
 
 # :paperclip: 소개 자료
