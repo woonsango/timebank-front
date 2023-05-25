@@ -170,10 +170,87 @@
 
 
 # 5. 사용법          
-추후 추가 예정
+<프론트엔드 로컬 실행 방법> 
+
+프로젝트 레포지터리 클론
+
+` $ git clone https://github.com/kookmin-sw/capstone-2023-09.git `
+
+remote 갱신
+
+` $ git remote update`
+
+마스터 브랜치 이동
+
+` $ git checkout -t master branch`
+
+- 사용자 페이지 빌드
+	  사용자 페이지 디렉토리로 이동
+` $ cd ./capstone-2023-09/src/front-end/timepay-front`
+
+- 관리자 페이지 빌드
+관리자 페이지 디렉토리로 이동
+` $ cd ./capstone-2023-09/src/front-end/timepay-admin`
+
+디렉토리 이동후 yarn start 실행
+
+` $ yarn install`
+` $ yarn start`
+
+<프론트엔드 배포 방법>
+빌드 시 yarn build 실행
+
+`$ yarn build `
+
+도커 이미지 빌드
+
+도커 허브에 푸쉬
+
+ssh로 ec2 인스턴스 접속
+
+도커 허브에서 이미지 pull
+
+도커 컨테이너 start
+
+위 과정을 github action을 통해 파이프라인을 구축하였습니다.
+
+<앱 로컬 실행 방법>
+vscode 사용
+
+앱 폴더 이동
+
+`$ cd /Users/hayeonkim/capstone-2023-09/src/app/flutter`
+
+디바이스 선택
+vscode 명령어 팔레트 -> Flutter: Select Device -> 안드로이드 애뮬레이터 선택
+main.dart 파일에서 start debugging
+
+
+<백엔드 서버 빌드>
+프로젝트 레포지터리 클론
+
+`$ git clone https://github.com/kookmin-sw/capstone-2023-09.git`
+
+프로젝트 백엔드 브랜치로 이동
+
+`$ git checkout [backend branch]`
+
+작업 디렉토리로 이동
+
+`$ cd [backend branch]`
+
+도커 컨테이너 빌드
+
+`$ docker-compose up -d`
+
+
+작업한 내용을 github Action CI/CD에서 해당 브랜치 배포
+
+
 
 # 6. 시스템 구조도
-추후 추가 예정
+![Group 6 (2)](https://github.com/kookmin-sw/capstone-2023-09/assets/55117730/22227cda-5786-48d3-90db-1503a21e7ebf)
+
 
 # 7. 소개 자료
 - 📒 [Timepay Community 중간 발표 자료 PDF](https://docs.google.com/presentation/d/19nXZx3U4Oq5vQGxINCsUBJORwcco-KPZcU7yrmfJQTs/edit?usp=sharing)
