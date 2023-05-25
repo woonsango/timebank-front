@@ -15,7 +15,6 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
-@Setter
 @Entity
 @Builder
 public class Organization extends BaseTimeEntity {
@@ -51,5 +50,6 @@ public class Organization extends BaseTimeEntity {
     public void updateCertificationUrl(String certificationUrl){
         this.certificationUrl= certificationUrl;
     }
+    public void setTimepay(int newTimepay) { this.timepay = newTimepay; }
 
 }
