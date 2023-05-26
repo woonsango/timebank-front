@@ -15,4 +15,5 @@ public class VolunteerInfo {
     private LocalDateTime startTime;
     private LocalDateTime endTime;
     private int participateNum;
+    private int volunteerTime;
 }

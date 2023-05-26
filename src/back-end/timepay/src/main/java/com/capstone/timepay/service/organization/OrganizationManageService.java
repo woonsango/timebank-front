@@ -57,6 +57,7 @@ public class OrganizationManageService {
                 .location(dealBoard.getLocation())
                 .startTime(dealBoard.getStartTime())
                 .endTime(dealBoard.getEndTime())
+                .volunteerTime(dealBoard.getVolunteerTime())
                 .build();
 
         List<Certification> certifications = certificationRepository.findAllByDealBoardId(boardId);
