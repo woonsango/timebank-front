@@ -222,7 +222,8 @@ const PostButton = ({ messageApi }: { messageApi: MessageInstance }) => {
           rowSelection={rowSelection}
         />
         <br />
-        활동 완료 시 소모될 타임페이 :{' '}
+        현재 보유 타임페이: {userInfo?.data.body.time_pay || 0} TP <br />
+        활동 완료 시 소모될 타임페이:{' '}
         {selectedComment.length * (data?.data.pay || 1) || 0} TP
       </Modal>
       <Modal
