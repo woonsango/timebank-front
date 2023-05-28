@@ -221,6 +221,9 @@ const PostButton = ({ messageApi }: { messageApi: MessageInstance }) => {
           bordered={false}
           rowSelection={rowSelection}
         />
+        <br />
+        활동 완료 시 소모될 타임페이 :{' '}
+        {selectedComment.length * (data?.data.pay || 1) || 0} TP
       </Modal>
       <Modal
         title="활동을 완료하시겠습니까?"
