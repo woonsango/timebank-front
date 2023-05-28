@@ -1,6 +1,6 @@
 # 타임페이 커뮤니티 (2023 다학제간캡스톤디자인 9팀)  
+![타임페이 커뮤니티 9조 포스터 (1)-1](https://github.com/kookmin-sw/capstone-2023-09/assets/55117730/f831cdbe-6622-4e54-bfe0-13a2e0ccaf53)
 
-![image (2)](https://user-images.githubusercontent.com/54922639/229401459-e46e2962-ff23-48a9-842b-7e3a763c8c84.png)
 
 # 1. 프로젝트 소개
 
