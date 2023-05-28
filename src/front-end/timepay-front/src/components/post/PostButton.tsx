@@ -216,11 +216,19 @@ const PostButton = ({ messageApi }: { messageApi: MessageInstance }) => {
         <Table
           css={cssCommentTableStyle}
           columns={columns}
-          dataSource={appliedComments?.data}
+          // 유저 아이디 중복 제거(같은 유저 아이디 중 가장 첫번째 댓글만 노출됨.)
+          dataSource={appliedComments?.data.filter(
+            (item: IPostComment, index: number, array: IPostComment[]) =>
+              index === array.findIndex((t) => t.userId === item.userId),
+          )}
           rowKey="id"
           bordered={false}
           rowSelection={rowSelection}
         />
+        <br />
+        현재 보유 타임페이: {userInfo?.data.body.time_pay || 0} TP <br />
+        활동 완료 시 소모될 타임페이:{' '}
+        {selectedComment.length * (data?.data.pay || 1) || 0} TP
       </Modal>
       <Modal
         title="활동을 완료하시겠습니까?"

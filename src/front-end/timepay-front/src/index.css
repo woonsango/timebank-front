@@ -68,3 +68,7 @@ body {
 .applicantContent {
   height: 80vh;
 }
+
+.ant-modal-confirm-btns .ant-btn-primary {
+  background-color: #f1af23;
+}
