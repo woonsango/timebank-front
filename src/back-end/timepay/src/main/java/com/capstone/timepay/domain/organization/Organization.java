@@ -1,6 +1,7 @@
 package com.capstone.timepay.domain.organization;
 
 import com.capstone.timepay.domain.BaseTimeEntity;
+import com.capstone.timepay.domain.donateBoard.DonateBoard;
 import com.capstone.timepay.domain.user.User;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
@@ -51,5 +52,8 @@ public class Organization extends BaseTimeEntity {
         this.certificationUrl= certificationUrl;
     }
     public void setTimepay(int newTimepay) { this.timepay = newTimepay; }
+
+    @OneToMany(mappedBy = "organization")
+    private List<DonateBoard> donateBoards = new ArrayList<>();
 
 }

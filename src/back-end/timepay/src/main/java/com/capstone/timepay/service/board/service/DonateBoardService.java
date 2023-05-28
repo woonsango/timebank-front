@@ -112,8 +112,15 @@ public class DonateBoardService
         User user = userRepository.findByEmail(principal.getName()).orElseThrow(() -> {
             return new IllegalArgumentException("해당 유저는 존재하지 않습니다");
         });
+        // 게시판의 목표 타임페이 증가
         donateBoard.setDonateTimePay(donateBoard.getDonateTimePay() + donateDTO.getDonateTimePay());
+
+        // 기부한 유저의 타임페이 감소
         user.getUserProfile().setTimepay(user.getUserProfile().getTimepay() - donateDTO.getDonateTimePay());
+
+        // 글쓴 게시자의 타임페이 증가
+        donateBoard.getOrganization().setTimepay(donateBoard.getOrganization().getTimepay() + donateDTO.getDonateTimePay());
+
         donateBoardRepository.save(donateBoard);
         // 나중에 유저 정보 추가
     }
