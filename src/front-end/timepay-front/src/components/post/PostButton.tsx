@@ -216,7 +216,11 @@ const PostButton = ({ messageApi }: { messageApi: MessageInstance }) => {
         <Table
           css={cssCommentTableStyle}
           columns={columns}
-          dataSource={appliedComments?.data}
+          // 유저 아이디 중복 제거(같은 유저 아이디 중 가장 첫번째 댓글만 노출됨.)
+          dataSource={appliedComments?.data.filter(
+            (item: IPostComment, index: number, array: IPostComment[]) =>
+              index === array.findIndex((t) => t.userId === item.userId),
+          )}
           rowKey="id"
           bordered={false}
           rowSelection={rowSelection}
