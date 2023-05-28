@@ -41,7 +41,6 @@ public class Organization extends BaseTimeEntity {
                 .map(SimpleGrantedAuthority::new)
                 .collect(Collectors.toList());
     }
-
     public void updateAuthority(String authority){
         this.authority= authority;
     }
@@ -52,8 +51,5 @@ public class Organization extends BaseTimeEntity {
         this.certificationUrl= certificationUrl;
     }
     public void setTimepay(int newTimepay) { this.timepay = newTimepay; }
-
-    @OneToMany(mappedBy = "organization")
-    private List<DonateBoard> donateBoards = new ArrayList<>();
 
 }

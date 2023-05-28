@@ -26,11 +26,6 @@ public class DonateBoard extends BaseTimeEntity {
     private Integer targetTimePay; // 목표 타임페이
     private Integer donateTimePay; // 기부받은 타임페이
     private String category;
-
-    @ManyToOne
-    @JoinColumn(name = "organizationId")
-    private Organization organization;
-
     // 유저 정보
     private Long userId;
     private String organizationName;
