@@ -132,9 +132,8 @@ const VolunteerCertificationPaymentPage = () => {
         </div>
         <div className="time">
           <Clock /> {boardData?.startTime.replaceAll('T', ' ').slice(0, 16)} ~{' '}
-          {boardData?.endTime.split('T')[1].slice(0, 5)} (봉사시간:
-          {boardData?.volunteerTime || 0}
-          시간)
+          {boardData?.endTime.split('T')[1].slice(0, 5)} (지급할 봉사시간:{' '}
+          {boardData?.volunteerTime || 0} 시간)
         </div>
         <div className="participateNum">
           <UserOutlined /> {boardData?.participateNum} 명
