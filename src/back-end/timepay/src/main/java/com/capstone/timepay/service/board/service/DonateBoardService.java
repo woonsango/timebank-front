@@ -113,6 +113,7 @@ public class DonateBoardService
             return new IllegalArgumentException("해당 유저는 존재하지 않습니다");
         });
         donateBoard.setDonateTimePay(donateBoard.getDonateTimePay() + donateDTO.getDonateTimePay());
+        user.getUserProfile().setTimepay(user.getUserProfile().getTimepay() - donateDTO.getDonateTimePay());
         donateBoardRepository.save(donateBoard);
         // 나중에 유저 정보 추가
     }
