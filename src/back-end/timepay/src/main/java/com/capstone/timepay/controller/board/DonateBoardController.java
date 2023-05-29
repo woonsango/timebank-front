@@ -27,6 +27,15 @@ public class DonateBoardController {
     private final DonateBoardService donateBoardService;
     private final OrganizationUserService organizationUserService;
 
+    @GetMapping("/organizations/donate/mypage")
+    @ApiOperation(value = "내가 쓴 기부게시판 조회")
+    public ResponseEntity getMyDonateBoard(@RequestParam(value = "pagingIndex", defaultValue = "0") int pagingIndex,
+                                           @RequestParam(value = "pagingSize", defaultValue = "10") int pagingSize,
+                                           Principal principal)
+    {
+        return new ResponseEntity(donateBoardService.getMyDonate(pagingIndex, pagingSize, principal), HttpStatus.OK);
+    }
+
     // 기부하기 게시글 작성
     @PostMapping("/organizations/donate/write")
     @ApiOperation(value = "기부하기 게시글 작성")

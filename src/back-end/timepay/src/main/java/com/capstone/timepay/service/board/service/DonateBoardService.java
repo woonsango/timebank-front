@@ -10,6 +10,7 @@ import com.capstone.timepay.domain.organization.OrganizationRepository;
 import com.capstone.timepay.domain.user.User;
 import com.capstone.timepay.domain.user.UserRepository;
 import com.capstone.timepay.domain.userProfile.UserProfile;
+import com.capstone.timepay.service.board.dto.DealBoardDTO;
 import com.capstone.timepay.service.board.dto.DonateBoardDTO;
 import com.capstone.timepay.service.board.dto.DonateDTO;
 import lombok.RequiredArgsConstructor;
@@ -127,5 +128,19 @@ public class DonateBoardService
 
         donateBoardRepository.save(donateBoard);
         // 나중에 유저 정보 추가
+    }
+
+    public Page<DonateBoardDTO> getMyDonate(int pagingIndex, int pagingSize, Principal principal)
+    {
+        Organization organization = organizationRepository.findByAccount(principal.getName()).orElse(null);
+
+        User user = userRepository.findByOrganization(organization).orElseThrow(() -> {
+            return new IllegalArgumentException("해당 유저는 존재하지 않습니다");
+        });
+
+        Pageable pageable  = PageRequest.of(pagingIndex, pagingSize);
+        Page<DonateBoard> donateBoards = donateBoardRepository.findByUserId(user.getUserId(), pageable);
+
+        return donateBoards.map(DonateBoardDTO::toDonateDTO);
     }
 }
