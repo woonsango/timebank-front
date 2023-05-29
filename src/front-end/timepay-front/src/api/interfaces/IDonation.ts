@@ -29,6 +29,7 @@ export interface IDonationBoard {
   userId: number; // 유저 테이블에서의 pk -> 타 유저 프로필 등에 사용
   imageURL?: string;
   userType: string;
+  createAt: string;
   // 아래는 실제로는 없는데 SimplePostCard에서 Board랑 같이 쓰면 에러나서 추가
   d_boardId: null;
   pay: null;

@@ -163,7 +163,7 @@ const SimplePostCard = ({ post }: SimplePostCardProps) => {
       </Spin>
       {footerComponent(
         post?.userNickname || post?.organizationName!,
-        post?.createdAt,
+        post?.createdAt || post?.createAt,
         post?.userType,
       )}
     </Card>
