@@ -113,6 +113,7 @@ export interface IBoard {
   organizationName: null;
   donateTimePay: null;
   targetTimePay: null;
+  createAt: null;
 }
 export interface IGetSearchBoardRequest {
   title?: string;

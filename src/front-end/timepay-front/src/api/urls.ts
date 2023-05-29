@@ -49,6 +49,7 @@ export const API_URL = {
   ORGANIZATION__MY_PAGE__PUBLISH:
     '/api/organizations/mypage/certificate/publish', // 특정 유저 게시글 봉사활동 인증서 발급
   MY_CERTIFICATION: '/api/users/mypage/certification',
+  ORGANIZATION_DONATE_MY_PAGE: '/api/organizations/donate/mypage',
 };
 
 // 토큰 필요 없는 애들

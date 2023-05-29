@@ -1,6 +1,8 @@
 import { AxiosError, AxiosResponse } from 'axios';
 import { useMutation, useQuery } from 'react-query';
 import { IAgencyLoginRequest } from '../interfaces/IAgency';
+import { GetPageableData } from '../interfaces/ICommon';
+import { IGetDonationBoardsResponse } from '../interfaces/IDonation';
 import { IGetMyPageCertificateResponse } from '../interfaces/IVolunteer';
 import { apiRequest } from '../request';
 import { API_URL } from '../urls';
@@ -64,5 +66,20 @@ export const usePostQueryMyPageCertificatePublish = () => {
     mutationKey: 'usePostQueryMyPageCertificatePublish',
     mutationFn: (data) =>
       apiRequest.postFormData(API_URL.ORGANIZATION__MY_PAGE__PUBLISH, data),
+  });
+};
+
+export const useGetMyDonateBoard = (params: GetPageableData) => {
+  return useQuery<AxiosResponse<IGetDonationBoardsResponse>, AxiosError>({
+    queryKey: ['useGetMyDonateBoard', params],
+    queryFn: () =>
+      apiRequest.get(API_URL.ORGANIZATION_DONATE_MY_PAGE, {
+        params: { ...params },
+      }),
+    refetchOnWindowFocus: false,
+    retry: false, // api 호출 실패해도 계속 호출하지 않음
+    onError: (err: any) => {
+      console.log('[ERROR] useGetQueryMyPageCertificate:', err);
+    },
   });
 };
