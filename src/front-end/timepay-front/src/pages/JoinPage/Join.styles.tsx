@@ -1,4 +1,5 @@
 import { css } from '@emotion/react';
+import { COMMON_COLOR } from '../../styles/constants/colors';
 
 /*수직 수평 중앙 정렬*/
 export const topWrapperCSS = css`
@@ -39,4 +40,17 @@ export const cssJoinSelectBox = css`
 
 export const cssJoinNick = css`
   width: 100%;
+`;
+
+export const cssPolicyLinkStyle = css`
+  color: ${COMMON_COLOR.FONT2};
+  font-size: 16px;
+  letter-spacing: 0.38px;
+  margin-bottom: 15px;
+  span {
+    color: ${COMMON_COLOR.BLACK};
+    text-decoration: underline;
+    font-weight: 700;
+    letter-spacing: 0.38px;
+  }
 `;
