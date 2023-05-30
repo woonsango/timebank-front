@@ -1,16 +1,15 @@
-# flutter_application_1
+# 타임페이 앱
 
-A new Flutter project.
+Flutter를 사용해 개발함.
 
-## Getting Started
+## 안드로이드 로컬 실행 방법
 
-This project is a starting point for a Flutter application.
+vscode 사용
 
-A few resources to get you started if this is your first Flutter project:
+앱 폴더 이동
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+`$ cd /Users/hayeonkim/capstone-2023-09/src/app/flutter`
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+디바이스 선택
+vscode 명령어 팔레트 -> Flutter: Select Device -> 안드로이드 애뮬레이터 선택
+main.dart 파일에서 start debugging
