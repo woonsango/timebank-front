@@ -1,4 +1,4 @@
-package com.kookmin.flutter_application_1
+package com.kookmin.timepay
 
 import io.flutter.embedding.android.FlutterActivity
 
