@@ -7,6 +7,7 @@ import 'package:firebase_core/firebase_core.dart';
 // import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
+import "package:permission_handler/permission_handler.dart";
 
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   print("백그라운드 메시지 처리.. ${message.notification!.body!}");
@@ -71,6 +72,35 @@ class _WebViewAppState extends State<WebViewApp> {
     print("내 디바이스 토큰: $deviceToken");
   }
 
+  Future<bool> requestCameraPermission(BuildContext context) async {
+    Map<Permission, PermissionStatus> statuses = await [
+      Permission.camera,
+      Permission.storage,
+    ].request();
+    if (statuses[Permission.camera]!.isGranted == false ||
+        statuses[Permission.storage]!.isGranted == false) {
+      // 허용이 안된 경우
+      showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              content: Text("알림, 사진 및 동영상, 카메라에 대한 권한을 허용해주세요."),
+              actions: [
+                ElevatedButton(
+                    onPressed: () {
+                      openAppSettings(); // 앱 설정으로 이동
+                    },
+                    child: Text('설정하러 가기')),
+              ],
+            );
+          });
+      print("permission denied by user");
+      return false;
+    }
+    print("permission ok");
+    return true;
+  }
+
   @override
   void initState() {
     // if (Platform.isAndroid) {
@@ -125,7 +155,7 @@ class _WebViewAppState extends State<WebViewApp> {
         child: Scaffold(
           body: InAppWebView(
             key: webViewKey,
-            onWebViewCreated: (InAppWebViewController webViewController) {
+            onWebViewCreated: (InAppWebViewController webViewController) async {
               _completerController.future
                   .then((value) => _webViewController = value);
               _completerController.complete(webViewController);
@@ -137,6 +167,8 @@ class _WebViewAppState extends State<WebViewApp> {
                   });
               // 앱이 꺼졌다가 켜졌을 경우에 화면 이동 시킴
               webViewController.loadUrl(urlRequest: URLRequest(url: webUrl));
+              // 앱 화면을 열 떄마다 권한 체크
+              await requestCameraPermission(context);
             },
             initialUrlRequest: URLRequest(url: webUrl),
             initialOptions: InAppWebViewGroupOptions(
