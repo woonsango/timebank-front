@@ -32,10 +32,12 @@ import {
   cssJoinSubmitBtnBox,
   cssJoinNick,
   cssJoinMargin,
+  cssPolicyLinkStyle,
 } from './Join.styles';
 import { apiRequest } from '../../api/request';
 import { API_URL } from '../../api/urls';
 import { getDeviceToken } from '../../utils/device';
+import PolicyModal from '../../components/PolicyModal';
 
 /*행정동 타입 선언*/
 type DongName = keyof typeof dongData;
@@ -75,6 +77,7 @@ const JoinPage = () => {
   const [overlap, setOverlap] = useState<boolean>(false);
 
   const [deviceToken, setDeviceToken] = useState<string>();
+  const [isOpenPolicyModal, setIsOpenPolicyModal] = useState(false);
 
   const navigate = useNavigate();
 
@@ -429,13 +432,23 @@ const JoinPage = () => {
         >
           <Input onChange={onChangeIntroduction} />
         </Form.Item>
-
+        <div css={cssPolicyLinkStyle}>
+          클릭 시{' '}
+          <span onClick={() => setIsOpenPolicyModal(true)}>
+            이용약관 및 개인정보처리방침
+          </span>{' '}
+          에 동의로 간주합니다.
+        </div>
         <Form.Item name="submit" css={cssJoinSubmitBtnBox}>
           <Button type="primary" htmlType="submit" css={cssJoinSubmitBtn}>
             가입 완료
           </Button>
         </Form.Item>
       </Form>
+      <PolicyModal
+        open={isOpenPolicyModal}
+        onCancel={() => setIsOpenPolicyModal(false)}
+      />
     </Space>
   );
 };
