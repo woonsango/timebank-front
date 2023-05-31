@@ -133,8 +133,6 @@ class _WebViewAppState extends State<WebViewApp> {
 
     FirebaseMessaging.onMessageOpenedApp.listen(_handleMessage);
 
-    SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
-        overlays: [SystemUiOverlay.bottom]); // 윗쪽 바 숨김
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown
@@ -161,48 +159,57 @@ class _WebViewAppState extends State<WebViewApp> {
     return WillPopScope(
         onWillPop: () => _goBack(context),
         child: Scaffold(
-          body: InAppWebView(
-            key: webViewKey,
-            onWebViewCreated: (InAppWebViewController webViewController) async {
-              _completerController.future
-                  .then((value) => _webViewController = value);
-              _completerController.complete(webViewController);
-              webViewController.addJavaScriptHandler(
-                  //  디바이스 토큰을 웹뷰에 전달
-                  handlerName: 'getDeviceToken',
-                  callback: (args) {
-                    return deviceToken;
-                  });
-              // 앱이 꺼졌다가 켜졌을 경우에 화면 이동 시킴
-              webViewController.loadUrl(urlRequest: URLRequest(url: webUrl));
-              // 앱 화면을 열 떄마다 권한 체크
-              await requestCameraPermission(context);
-            },
-            initialUrlRequest: URLRequest(url: webUrl),
-            initialOptions: InAppWebViewGroupOptions(
-              crossPlatform: InAppWebViewOptions(
-                javaScriptCanOpenWindowsAutomatically: true, // 자바스크립트 새 창 실행 허용
-                javaScriptEnabled: true, // 자바스크립트 실행 허용
-                useOnDownloadStart: true,
-                useOnLoadResource: true,
-                allowFileAccessFromFileURLs: true,
-                verticalScrollBarEnabled: true,
-              ),
-              android: AndroidInAppWebViewOptions(
-                  allowContentAccess: true,
-                  builtInZoomControls: true,
-                  thirdPartyCookiesEnabled: true,
-                  allowFileAccess: true,
-                  supportMultipleWindows: true // 새 창 실행 허용
+            body: Padding(
+                padding: EdgeInsets.only(
+                    top: MediaQuery.of(context).viewPadding.top),
+                child: Container(
+                  width: double.infinity,
+                  height: double.infinity,
+                  child: InAppWebView(
+                    key: webViewKey,
+                    onWebViewCreated:
+                        (InAppWebViewController webViewController) async {
+                      _completerController.future
+                          .then((value) => _webViewController = value);
+                      _completerController.complete(webViewController);
+                      webViewController.addJavaScriptHandler(
+                          //  디바이스 토큰을 웹뷰에 전달
+                          handlerName: 'getDeviceToken',
+                          callback: (args) {
+                            return deviceToken;
+                          });
+                      // 앱이 꺼졌다가 켜졌을 경우에 화면 이동 시킴
+                      webViewController.loadUrl(
+                          urlRequest: URLRequest(url: webUrl));
+                      // 앱 화면을 열 떄마다 권한 체크
+                      await requestCameraPermission(context);
+                    },
+                    initialUrlRequest: URLRequest(url: webUrl),
+                    initialOptions: InAppWebViewGroupOptions(
+                      crossPlatform: InAppWebViewOptions(
+                        javaScriptCanOpenWindowsAutomatically:
+                            true, // 자바스크립트 새 창 실행 허용
+                        javaScriptEnabled: true, // 자바스크립트 실행 허용
+                        useOnDownloadStart: true,
+                        useOnLoadResource: true,
+                        allowFileAccessFromFileURLs: true,
+                        verticalScrollBarEnabled: true,
+                      ),
+                      android: AndroidInAppWebViewOptions(
+                          allowContentAccess: true,
+                          builtInZoomControls: true,
+                          thirdPartyCookiesEnabled: true,
+                          allowFileAccess: true,
+                          supportMultipleWindows: true // 새 창 실행 허용
+                          ),
+                    ),
+                    onConsoleMessage: (InAppWebViewController controller,
+                        ConsoleMessage consoleMessage) {
+                      // 웹에서 찍은 콘솔 볼 수 있음
+                      log("WEB CONSOLE: ${consoleMessage.message}");
+                    },
                   ),
-            ),
-            onConsoleMessage: (InAppWebViewController controller,
-                ConsoleMessage consoleMessage) {
-              // 웹에서 찍은 콘솔 볼 수 있음
-              log("WEB CONSOLE: ${consoleMessage.message}");
-            },
-          ),
-        ));
+                ))));
   }
 
   Future<bool> _goBack(BuildContext context) async {
