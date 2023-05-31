@@ -81,7 +81,7 @@
 ```
 💡 **1582
 📒 myeonghwan2@kookmin.ac.kr
-🔥 #기획 #Backend #로그인 및 유저 관련 개발
+🔥 #Backend #로그인, JWT 및 유저 서버 개발 #대리인, 즉석매칭 등 기획 및 개발
 ```
 
 **김준영 🦈** 
@@ -114,7 +114,7 @@
     <tr>
       <td><strong>App</strong></td>
       <td><img src="https://img.shields.io/badge/Flutter-02569B?style=for-the-badge&logo=flutter&logoColor=white"/>  
-    </tr>  
+      
 </td>
     </tr>
     <tr>
