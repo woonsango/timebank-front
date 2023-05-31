@@ -111,10 +111,9 @@ const PostPage = () => {
     userId: undefined,
   });
 
-  const [onApplied, setOnApplied] = useState(true);
+  // 지원 체크 박스 처리
   const handleApplied = (e: any) => {
-    setOnApplied(e.target.checked);
-    console.log(onApplied);
+    setCommentValue({ ...commentValue, applied: e.target.checked });
   };
 
   useEffect(() => {
@@ -201,26 +200,25 @@ const PostPage = () => {
   const handleSubmitComment = useCallback(async () => {
     await createCommentMutation.mutateAsync(commentValue, {
       onSuccess: (data) => {
-        console.log();
-        queryClient.invalidateQueries({
-          queryKey: ['useGetBoard'],
+        messageApi.success({
+          content: '댓글이 등록되었습니다.',
+          duration: 0.5,
+          onClose: () => {
+            setCommentValue({ ...commentValue, content: '' });
+            queryClient.invalidateQueries({
+              queryKey: ['useGetBoard'],
+            });
+            queryClient.invalidateQueries({
+              queryKey: ['useGetComments'],
+            });
+          },
         });
-        queryClient.invalidateQueries({
-          queryKey: ['useGetComments'],
-        });
-        setCommentValue({
-          adopted: false,
-          applied: onApplied,
-          hidden: false,
-          content: '',
-        });
-        console.log('...', onApplied);
       },
       onError(error) {
         console.log('error');
       },
     });
-  }, [commentValue, createCommentMutation, queryClient, onApplied]);
+  }, [messageApi, commentValue, createCommentMutation, queryClient]);
 
   const onReport = useCallback(async () => {
     Modal.confirm({
@@ -460,7 +458,11 @@ const PostPage = () => {
             )}
 
             <div css={cssPostFooter2}>
-              <Checkbox className="checkbox" onChange={handleApplied}>
+              <Checkbox
+                className="checkbox"
+                onChange={handleApplied}
+                checked={commentValue.applied}
+              >
                 지원
               </Checkbox>
               <div className="textInput">
