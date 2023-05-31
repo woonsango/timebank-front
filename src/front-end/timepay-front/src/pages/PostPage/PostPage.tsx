@@ -258,24 +258,6 @@ const PostPage = () => {
     });
   }, [messageApi, useReportMutation, real_id]);
 
-  // const onItemClick = (item: any) => {
-  //   setSelectedItem(item);
-  // };
-  // const isItemSelected = (item: any) => {
-  //   return selectedItem === item;
-  // };
-
-  // // 지원자 목록 모달 창
-  // const onOk2 = () => {
-  //   if (selectedItem) {
-  //     console.log('선택된 지원자: ', selectedItem);
-  //     setIsListModalOpen(false);
-  //   }
-  // };
-  // const onCancel2 = () => {
-  //   setIsListModalOpen(false);
-  // };
-
   const handleLike = () => {
     setLike(!like);
   };
@@ -301,7 +283,6 @@ const PostPage = () => {
     );
   }, [board]);
 
-  console.log('게시글 작성자?', data?.data.userNickname);
   const handleOnClickUser = useCallback(
     (userId?: number | null) => {
       // 유저 닉네임 클릭시 프로필 노출

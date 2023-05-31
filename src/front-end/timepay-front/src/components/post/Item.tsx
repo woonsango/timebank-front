@@ -1,5 +1,4 @@
 import React, { useCallback, useState, useMemo } from 'react';
-import { css } from '@emotion/react';
 import {
   cssComments,
   cssMyCommentItem,
@@ -80,8 +79,6 @@ const Item = ({ a, c, messageApi, onShowProfile }: any) => {
     },
     [messageApi, real_id, queryClient, useDeleteCommentMutation],
   );
-
-  console.log('c', c);
 
   return (
     <div css={cssComments}>
