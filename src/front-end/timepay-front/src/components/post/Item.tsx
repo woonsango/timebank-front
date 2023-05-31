@@ -11,7 +11,6 @@ import {
   cssCommentProfile,
 } from './Item.style';
 import { Form, Input, Modal, Button } from 'antd';
-import { useGetBoard } from '../../api/hooks/board';
 import { useDeleteComment } from '../../api/hooks/comment';
 import { useQueryClient } from 'react-query';
 import { useGetUserInfo } from '../../api/hooks/user';
@@ -21,7 +20,6 @@ const Item = ({ a, c, messageApi, onShowProfile }: any) => {
 
   const url = window.location.pathname;
   const real_id = url.substring(6);
-  const { data, isLoading } = useGetBoard(parseInt(real_id));
   const { data: userInfo } = useGetUserInfo();
   const userNickname = useMemo(() => {
     return userInfo?.data.body.nick_name;
@@ -31,12 +29,11 @@ const Item = ({ a, c, messageApi, onShowProfile }: any) => {
     if (userInfo?.data.body.manager_name) return true;
     return false;
   }, [userInfo]);
-
-  const isAuthor = useMemo(() => {
-    // 게시글 작성자일 때 true
+  const isCommentAuthor = useMemo(() => {
+    // 댓글 작성자일 때 true
     return isAgency
       ? c.userId === userInfo?.data.body.uid
-      : c.userNickname === data?.data.userNickname;
+      : c.userNickname === userNickname;
   }, [isAgency, c, userInfo, userNickname]);
 
   // 수정 기능
@@ -83,7 +80,7 @@ const Item = ({ a, c, messageApi, onShowProfile }: any) => {
   return (
     <div css={cssComments}>
       <div css={cssEditDelete}>
-        {isAuthor ? (
+        {isCommentAuthor ? (
           <Button className="edit">수정</Button>
         ) : (
           <Button className="edit" onClick={showReportModal}>
@@ -124,7 +121,7 @@ const Item = ({ a, c, messageApi, onShowProfile }: any) => {
           </Form>
         </Modal>
 
-        {c.userNickname === data?.data.userNickname && (
+        {isCommentAuthor && (
           <>
             <div className="sidebar">|</div>
             <Button
@@ -139,7 +136,7 @@ const Item = ({ a, c, messageApi, onShowProfile }: any) => {
 
       <div
         css={
-          isAuthor
+          isCommentAuthor
             ? cssMyCommentItem
             : c.applied
             ? cssAppliedCommentItem
