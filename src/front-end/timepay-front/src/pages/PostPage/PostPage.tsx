@@ -375,7 +375,7 @@ const PostPage = () => {
                   ? data?.data.organizationName
                   : data?.data.userNickname}
               </div>
-              <div css={cssLikeContainer}>
+              {/* <div css={cssLikeContainer}>
                 <p>관심 </p>
                 {like === true ? (
                   <button css={cssLike} onClick={handleLike}>
@@ -386,7 +386,7 @@ const PostPage = () => {
                     <LikeDefault style={{ width: 25, height: 25 }} />
                   </button>
                 )}
-              </div>
+              </div> */}
             </div>
             <div css={cssLine4} />
             <h1>댓글</h1>

@@ -62,6 +62,7 @@ export const cssPostDetailPage = css`
 export const cssPostDetailFirst = css`
   flex-direction: row;
   margin-top: 20px;
+  margin-bottom: 10px;
   margin-left: 25px;
   margin-right: 25px;
   font-size: 18px;
@@ -71,7 +72,7 @@ export const cssPostDetailProfile = css`
   justify-content: flex-start;
   width: 50px;
   height: 50px;
-  margin-top: 10px;
+
   margin-left: 5px;
   border-radius: 25px;
   background-color: ${COMMON_COLOR.BLUE_GRAY};
