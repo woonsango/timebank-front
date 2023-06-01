@@ -53,14 +53,16 @@ const KakaoRedirectHandler = () => {
       // Send GET request with authorizationCode
       axios
         .get(requestUrl)
-        .then((response) => {
+        .then(async (response) => {
           console.log(response);
 
           //signUp에 따른 처리
           if (response.data.signUp === true) {
             /*jwt 토큰 저장*/
             setTokenToCookie(response.data.jwt, 10);
-            setMultiTokenToCookie('undefined', 0);
+            if (await getDeviceToken()) {
+              setMultiTokenToCookie('undefined', 0);
+            }
             console.log('토큰 저장:', response.data.jwt);
             setUserState(response.data);
             setAgencyState(null);
