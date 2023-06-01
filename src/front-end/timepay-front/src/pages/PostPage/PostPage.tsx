@@ -88,6 +88,10 @@ const PostPage = () => {
 
   console.log(data);
 
+  const type = data?.data.type;
+
+  console.log('t', type);
+
   const { data: comments, isLoading: isLoadingComments } = useGetComments(
     parseInt(real_id),
   );
@@ -120,7 +124,11 @@ const PostPage = () => {
   };
 
   useEffect(() => {
-    setHeaderTitle('도움요청');
+    if (type === 'help') {
+      setHeaderTitle('도움요청');
+    } else {
+      setHeaderTitle('같이쓰기');
+    }
   }, [setHeaderTitle]);
 
   const board = useMemo(() => {
@@ -323,37 +331,43 @@ const PostPage = () => {
                 </Button>
               </div>
             )}
-            <div css={cssPostDetailThird}>
-              <div className="category">
-                <div css={cssPostDetailCategory1}>카테고리</div>
-                <div css={cssPostDetailCategory2}>{board?.category}</div>
+            {type === 'help' && (
+              <div css={cssPostDetailThird}>
+                <div className="category">
+                  <div css={cssPostDetailCategory1}>카테고리</div>
+                  <div css={cssPostDetailCategory2}>{board?.category}</div>
+                </div>
+                <div css={cssPostDetailPay}>{board?.pay || '0'} TP</div>
               </div>
-              <div css={cssPostDetailPay}>{board?.pay || '0'} TP</div>
-            </div>
+            )}
             <div css={cssPostDetailSecond}>
               <div css={cssPostDetailTitle}>{data?.data.title}</div>
-              <div css={cssPostDetailStatus}>
-                <PostStatusTag status={data?.data.state} />
-              </div>
+              {type === 'help' && (
+                <div css={cssPostDetailStatus}>
+                  <PostStatusTag status={data?.data.state} />
+                </div>
+              )}
             </div>
-            <div css={cssPostDetailFourth}>
-              <div css={cssPostDetailRegion}>
-                <FlagFilled style={{ marginRight: 15, color: 'black' }} />
-                {data?.data.location}
+            {type === 'help' && (
+              <div css={cssPostDetailFourth}>
+                <div css={cssPostDetailRegion}>
+                  <FlagFilled style={{ marginRight: 15, color: 'black' }} />
+                  {data?.data.location}
+                </div>
+                <div css={cssPostDetailTime}>
+                  <ClockCircleOutlined
+                    style={{ marginRight: 15, color: 'black' }}
+                  />
+                  {dayjs(board?.startTime, 'YYYY-MM-DDTHH:mm:ss').format(
+                    'MM월 DD일 HH시 mm분',
+                  )}{' '}
+                  ~{' '}
+                  {dayjs(board?.endTime, 'YYYY-MM-DDTHH:mm:ss').format(
+                    'HH시 mm분',
+                  )}
+                </div>
               </div>
-              <div css={cssPostDetailTime}>
-                <ClockCircleOutlined
-                  style={{ marginRight: 15, color: 'black' }}
-                />
-                {dayjs(board?.startTime, 'YYYY-MM-DDTHH:mm:ss').format(
-                  'MM월 DD일 HH시 mm분',
-                )}{' '}
-                ~{' '}
-                {dayjs(board?.endTime, 'YYYY-MM-DDTHH:mm:ss').format(
-                  'HH시 mm분',
-                )}
-              </div>
-            </div>
+            )}
             {board?.volunteer && volunteerInfo}
             <div css={cssPostDetailFifth}>
               <div className="content">내용</div>
