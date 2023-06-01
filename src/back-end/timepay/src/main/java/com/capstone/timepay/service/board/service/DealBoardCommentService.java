@@ -11,6 +11,8 @@ import com.capstone.timepay.domain.organization.Organization;
 import com.capstone.timepay.domain.organization.OrganizationRepository;
 import com.capstone.timepay.domain.user.User;
 import com.capstone.timepay.domain.user.UserRepository;
+import com.capstone.timepay.firebase.FirebaseService;
+import com.capstone.timepay.firebase.dto.FCMDto;
 import com.capstone.timepay.service.board.dto.AdoptedCommentDTO;
 import com.capstone.timepay.service.board.dto.DealBoardCommentDTO;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +25,7 @@ import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 @RequiredArgsConstructor
 @Service
@@ -34,11 +37,12 @@ public class DealBoardCommentService {
     private final UserRepository userRepository;
     private final DealBoardService dealBoardService;
     private final OrganizationRepository organizationRepository;
+    private final FirebaseService firebaseService;
+
     // 댓글 작성하기
     @Transactional
     public DealBoardCommentDTO writeComment(Long boardId, DealBoardCommentDTO dealBoardCommentDTO,
-                                            Principal principal)
-    {
+                                            Principal principal) throws ExecutionException, InterruptedException {
         User user = userRepository.findByEmail(principal.getName()).orElse(null);
 
         if (user == null)
@@ -69,8 +73,21 @@ public class DealBoardCommentService {
                 freeBoardComment(null).
                 dealBoardComment(dealBoardComment).
                 build();
-        commentRepository.save(comment);
 
+        String token = dealBoard.getDealRegisters().get(0).getUser().getDeviceToken();
+        if (token != null) {
+
+            FCMDto fcmDto = FCMDto.builder()
+                    .title("댓글이 달렸습니다.")
+                    .body(dealBoard.getTitle())
+                    .token(dealBoard.getDealRegisters().get(0).getUser().getDeviceToken())
+                    .build();
+
+            // 댓글 작성 시 알림
+            firebaseService.sendMessage(fcmDto);
+        }
+
+        commentRepository.save(comment);
         dealBoardCommentRepository.save(dealBoardComment);
 
         return DealBoardCommentDTO.toDealBoardCommentDTO(dealBoardComment);
@@ -106,14 +123,25 @@ public class DealBoardCommentService {
         return DealBoardCommentDTO.toDealBoardCommentDTOs(comments);
     }
 
-    public DealBoardCommentDTO setAdoptedComments(Long commentId)
-    {
+    public DealBoardCommentDTO setAdoptedComments(Long commentId) throws ExecutionException, InterruptedException {
         DealBoardComment dealBoardComment = dealBoardCommentRepository.findById(commentId).orElseThrow(() -> {
             return new IllegalArgumentException("댓글을 찾을 수 없음");
         });
         if (dealBoardComment.isAdopted() == false)
         {
             dealBoardComment.setAdopted(true);
+
+            String token = dealBoardComment.getUser().getDeviceToken();
+            if (token != null) {
+                FCMDto fcmDto = FCMDto.builder()
+                        .title("지원자로 선정되었습니다.")
+                        .body(dealBoardComment.getDealBoard().getTitle())
+                        .token(dealBoardComment.getUser().getDeviceToken())
+                        .build();
+
+                // 댓글 작성 시 알림
+                firebaseService.sendMessage(fcmDto);
+            }
             dealBoardCommentRepository.save(dealBoardComment);
         }
         return DealBoardCommentDTO.toDealBoardCommentDTO(dealBoardComment);
