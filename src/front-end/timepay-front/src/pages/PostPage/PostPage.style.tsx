@@ -60,53 +60,54 @@ export const cssPostDetailPage = css`
 
 // 1st block
 export const cssPostDetailFirst = css`
+  display: flex;
   flex-direction: row;
-  margin-top: 20px;
+  justify-content: flex-end;
+  margin-top: 35px;
   margin-bottom: 10px;
   margin-left: 25px;
   margin-right: 25px;
   font-size: 18px;
+  text-align: right;
 `;
 export const cssPostDetailProfile = css`
   display: flex;
-  justify-content: flex-start;
-  width: 50px;
-  height: 50px;
-
-  margin-left: 5px;
+  justify-content: flex-end;
+  width: 30px;
+  height: 30px;
+  margin-left: 15px;
   border-radius: 25px;
-  background-color: ${COMMON_COLOR.BLUE_GRAY};
 `;
 export const cssPostDetailUser = css`
-  margin-top: -35px;
-  margin-left: 80px;
+  margin-left: 8px;
+  margin-top: 3px;
   font-weight: 500;
-  font-size: 20px;
+  font-size: 18px;
 `;
 export const cssPostDetailCreatedAt = css`
+  margin-top: 20px;
   display: flex;
   justify-content: flex-end;
   font-size: 18px;
+  color: ${COMMON_COLOR.FONT3};
 `;
 
 // 2nd block
 export const cssPostDetailSecond = css`
   margin-left: 25px;
   margin-right: 25px;
-  margin-top: -10px;
+  margin-top: -5px;
   display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
+  flex-direction: column;
 `;
 export const cssPostDetailTitle = css`
-  margin-top: 40px;
+  margin-top: 20px;
   font-size: 22px;
   font-weight: 600;
   margin-right: 10px;
 `;
 export const cssPostDetailStatus = css`
-  margin-top: 40px;
+  margin-top: 20px;
 `;
 
 // 3rd block
@@ -115,7 +116,7 @@ export const cssPostDetailThird = css`
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  margin-top: 5px;
+  margin-top: 10px;
   margin-left: 25px;
   margin-right: 25px;
   .category {
@@ -141,7 +142,7 @@ export const cssPostDetailPay = css`
   margin-top: 20px;
   font-size: 19px;
   font-weight: 600;
-  background-color: ${COMMON_COLOR.MAIN3};
+  background-color: ${COMMON_COLOR.MAIN1};
   color: ${COMMON_COLOR.WHITE};
   border-radius: 10px;
   padding: 5px;
@@ -149,7 +150,7 @@ export const cssPostDetailPay = css`
 
 // 4th block
 export const cssPostDetailFourth = css`
-  margin-top: 25px;
+  margin-top: 20px;
   margin-left: 25px;
   margin-right: 25px;
 `;
@@ -168,7 +169,6 @@ export const cssPostDetailTime = css`
 
 // 5th block
 export const cssPostDetailFifth = css`
-  margin-top: 25px;
   margin-left: 25px;
   margin-right: 25px;
   .content {
@@ -182,7 +182,7 @@ export const cssPostDetailContent2 = css`
   margin-top: 10px;
   padding: 10px;
   border: 1.5px solid ${COMMON_COLOR.FONT1};
-  border-radius: 10px;
+  border-radius: 5px;
   font-size: 19px;
   font-weight: 400;
   letter-spacing: 1px;

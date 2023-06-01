@@ -331,6 +331,14 @@ const PostPage = () => {
                 </Button>
               </div>
             )}
+            <div css={cssPostDetailSecond}>
+              {type === 'help' && (
+                <div css={cssPostDetailStatus}>
+                  <PostStatusTag status={data?.data.state} />
+                </div>
+              )}
+              <div css={cssPostDetailTitle}>{data?.data.title}</div>
+            </div>
             {type === 'help' && (
               <div css={cssPostDetailThird}>
                 <div className="category">
@@ -340,14 +348,6 @@ const PostPage = () => {
                 <div css={cssPostDetailPay}>{board?.pay || '0'} TP</div>
               </div>
             )}
-            <div css={cssPostDetailSecond}>
-              <div css={cssPostDetailTitle}>{data?.data.title}</div>
-              {type === 'help' && (
-                <div css={cssPostDetailStatus}>
-                  <PostStatusTag status={data?.data.state} />
-                </div>
-              )}
-            </div>
             {type === 'help' && (
               <div css={cssPostDetailFourth}>
                 <div css={cssPostDetailRegion}>
@@ -369,21 +369,21 @@ const PostPage = () => {
               </div>
             )}
             {board?.volunteer && volunteerInfo}
-            <div css={cssPostDetailFifth}>
-              <div className="content">내용</div>
-              <div css={cssPostDetailContent2}>
-                <span>{data?.data.content}</span>
-              </div>
-              <div css={cssPostDetailAttachment}>{data?.data.imageUrl}</div>
-            </div>
+
             <div css={cssPostDetailFirst}>
-              <div css={cssPostDetailCreatedAt}>
-                {data?.data.createdAt.substring(0, 10)}
-              </div>
               <div
                 css={cssPostDetailProfile}
                 onClick={() => handleOnClickUser(data?.data.userId)}
-              ></div>
+              >
+                <img
+                  src={
+                    'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png'
+                  }
+                  className="MyProfileImage"
+                  alt="내 프로필"
+                  style={{ width: 33, height: 33, borderRadius: 20 }}
+                />
+              </div>
               <div
                 css={cssPostDetailUser}
                 onClick={() => handleOnClickUser(data?.data.userId)}
@@ -404,6 +404,16 @@ const PostPage = () => {
                   </button>
                 )}
               </div> */}
+            </div>
+
+            <div css={cssPostDetailFifth}>
+              <div css={cssPostDetailContent2}>
+                <span>{data?.data.content}</span>
+              </div>
+              <div css={cssPostDetailAttachment}>{data?.data.imageUrl}</div>
+              <div css={cssPostDetailCreatedAt}>
+                {data?.data.createdAt.substring(0, 10)}
+              </div>
             </div>
             <div css={cssLine4} />
             <h1>댓글</h1>
