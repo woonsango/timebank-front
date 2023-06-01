@@ -1,6 +1,23 @@
 import { css } from '@emotion/react';
 import { COMMON_COLOR } from '../../styles/constants/colors';
 
+export const cssCalendarHeader = css`
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 40px;
+  font-weight: bold;
+  padding-top: 5px;
+  padding-bottom: 15px;
+  .radioBtn {
+    display: flex;
+    justify-content: flex-end;
+    /* align-items: center; */
+    font-weight: normal;
+  }
+`;
+
 export const cssTimeTable = css`
   padding: 10px;
   .ant-typography {
