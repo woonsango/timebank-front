@@ -47,7 +47,7 @@ public class InstantMatchingService {
                     .content(instantMatchingBoardDTO.getContent())
                     .category(instantMatchingBoardDTO.getCategory())
                     .type("help")
-                    .boardStatus(BoardStatus.MATCHING_IN_PROGRESS)
+                    .boardStatus(BoardStatus.MATCHING_COMPLETE)
                     .location(instantMatchingBoardDTO.getLocation())
                     .startTime(instantMatchingBoardDTO.getStartTime())
                     .endTime(instantMatchingBoardDTO.getEndTime())
