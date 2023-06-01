@@ -20,10 +20,10 @@ public class CommentManageController {
 
     @ApiOperation(value = "전체 댓글 리스트 조회")
     @GetMapping("/main")
-    public ResponseEntity<?> main(@RequestParam(defaultValue = "0") int pageIndex,
-                                  @RequestParam(defaultValue = "50") int pageSize){
+    public ResponseEntity<?> main(@RequestParam(defaultValue = "0") int pagingIndex,
+                                  @RequestParam(defaultValue = "50") int pagingSize){
 
-        Page<CommentResponse> responses = commentManageService.showAllComments(pageIndex, pageSize);
+        Page<CommentResponse> responses = commentManageService.showAllComments(pagingIndex, pagingSize);
 
         return ResponseEntity.ok(responses);
     }

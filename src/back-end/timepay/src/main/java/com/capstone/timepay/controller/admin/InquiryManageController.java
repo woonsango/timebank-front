@@ -26,10 +26,10 @@ public class InquiryManageController {
 
     @ApiOperation(value = "전체 문의 리스트 조회")
     @GetMapping("/main")
-    public ResponseEntity<?> main(@RequestParam(defaultValue = "0") int pageIndex,
-                                  @RequestParam(defaultValue = "50") int pageSize){
+    public ResponseEntity<?> main(@RequestParam(defaultValue = "0") int pagingIndex,
+                                  @RequestParam(defaultValue = "50") int pagingSize){
 
-        Page<InquiryResponse> responses = inquiryManagerService.showAllInquiries(pageIndex, pageSize);
+        Page<InquiryResponse> responses = inquiryManagerService.showAllInquiries(pagingIndex, pagingSize);
 
         return ResponseEntity.ok(responses);
     }
@@ -39,9 +39,7 @@ public class InquiryManageController {
     public ResponseEntity<?> searchInquiries(@RequestParam String state,
                                              @RequestParam String category,
                                              @RequestParam(required = false) String writer,
-                                             @RequestParam(required = false) String title,
-                                             @RequestParam(defaultValue = "0") int pageIndex,
-                                             @RequestParam(defaultValue = "50") int pageSize){
+                                             @RequestParam(required = false) String title){
 
         Page<InquiryResponse> responses = inquiryManagerService.searchInquiriesByQuery(state, category, writer, title);
         return ResponseEntity.ok(responses);

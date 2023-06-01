@@ -19,10 +19,10 @@ public class CategoryManageController {
 
     @ApiOperation(value = "전체 카테고리 항목 조회")
     @GetMapping("/main")
-    public ResponseEntity<?> main(@RequestParam(defaultValue = "0") int pageIndex,
-                                  @RequestParam(defaultValue = "50") int pageSize){
+    public ResponseEntity<?> main(@RequestParam(defaultValue = "0") int pagingIndex,
+                                  @RequestParam(defaultValue = "50") int pagingSize){
 
-        Page<CategoryResponse> responses = categoryManageService.showAllCategories(pageIndex, pageSize);
+        Page<CategoryResponse> responses = categoryManageService.showAllCategories(pagingIndex, pagingSize);
 
         return ResponseEntity.ok(responses);
     }

@@ -46,8 +46,8 @@ public class OrganizationManageService {
 
     public CertificatePublishResponse publishCertificate(Long boardId) {
 
-        DealBoard dealBoard = dealBoardRepository.findById(boardId).orElseThrow(()->new IllegalArgumentException("존재하지 않는 게시글입니다."));
-        if(!dealBoard.isVolunteer()) throw new IllegalArgumentException("봉사활동 게시글이 아닙니다.");
+        DealBoard dealBoard = dealBoardRepository.findById(boardId).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 게시글입니다."));
+        if (!dealBoard.isVolunteer()) throw new IllegalArgumentException("봉사활동 게시글이 아닙니다.");
 
         // 선정된 사람들 찾아서 카운트 할 것.
         List<DealBoardComment> comments = dealBoardCommentRepository.findAllByDealBoardAndIsAdoptedTrue(dealBoard);
@@ -84,13 +84,13 @@ public class OrganizationManageService {
 
     }
 
-    public void activityComplete(Long boardId){
-        DealBoard dealBoard = dealBoardRepository.findById(boardId).orElseThrow(()->new IllegalArgumentException("존재하지 않는 게시글입니다."));
-        if(!dealBoard.isVolunteer()) throw new IllegalArgumentException("봉사활동 게시글이 아닙니다.");
+    public void activityComplete(Long boardId) {
+        DealBoard dealBoard = dealBoardRepository.findById(boardId).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 게시글입니다."));
+        if (!dealBoard.isVolunteer()) throw new IllegalArgumentException("봉사활동 게시글이 아닙니다.");
 
         List<DealBoardComment> comments = dealBoardCommentRepository.findAllByDealBoardAndIsAdoptedTrue(dealBoard);
 
-        for(DealBoardComment element : comments){
+        for (DealBoardComment element : comments) {
             Certification certification = Certification.builder()
                     .certificationUrl("none")
                     .dealBoardId(boardId)
@@ -105,8 +105,8 @@ public class OrganizationManageService {
 
     public void publishUserCertificate(Long boardId, Long userId, MultipartFile certificationFile) throws IOException, FirebaseAuthException {
 
-        User user = userRepository.findById(userId).orElseThrow(()->new IllegalArgumentException("존재하지 않는 유저입니다."));
-        Certification certification = certificationRepository.findByUserAndDealBoardId(user,boardId);
+        User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
+        Certification certification = certificationRepository.findByUserAndDealBoardId(user, boardId);
 
         user.updateTotalVolunteerTime(certification.getTime());
         certification.updateCertificationUrl(firebaseService.uploadFiles(certificationFile));
@@ -118,22 +118,23 @@ public class OrganizationManageService {
     }
 
     public CertificationListResponse getCertificationList(String email, int pageIndex, int pageSize) {
-        User user = userRepository.findByEmail(email).orElseThrow(()->new IllegalArgumentException("존재하지 않는 유저입니다."));
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
         Pageable pageable = PageRequest.of(pageIndex, pageSize, Sort.by("createdAt").descending());
 
-        Page<Certification> pages = certificationRepository.findAllByUserAndIsPublishedTrue(user,pageable);
+        Page<Certification> pages = certificationRepository.findAllByUserAndIsPublishedTrue(user, pageable);
 
         return CertificationListResponse.builder()
                 .totalTime(user.getTotalVolunteerTime())
                 .certificationListPage(convertResponsePages(pages))
                 .build();
     }
-    public Page<CertificationList> convertResponsePages(Page<Certification> pages){
+
+    public Page<CertificationList> convertResponsePages(Page<Certification> pages) {
         Page<CertificationList> pageResponses = pages.map(new Function<Certification, CertificationList>() {
             @Override
             public CertificationList apply(Certification certification) {
-                DealBoard dealboard = dealBoardRepository.findById(certification.getDealBoardId()).orElseThrow(()->new IllegalArgumentException("존재하지 않는 게시글입니다."));
-                DealRegister dealRegister = dealRegisterRepository.findByDealBoard(dealboard).orElseThrow(()->new IllegalArgumentException("존재하지 않는 게시글입니다."));
+                DealBoard dealboard = dealBoardRepository.findById(certification.getDealBoardId()).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 게시글입니다."));
+                DealRegister dealRegister = dealRegisterRepository.findByDealBoard(dealboard).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 게시글입니다."));
                 return CertificationList.builder()
                         .boardId(dealboard.getD_boardId())
                         .title(dealboard.getTitle())

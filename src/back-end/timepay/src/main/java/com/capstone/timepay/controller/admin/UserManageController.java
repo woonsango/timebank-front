@@ -27,10 +27,10 @@ public class UserManageController {
 
     @ApiOperation(value = "전체 유저 정보 리스트 조회")
     @GetMapping("/main")
-    public ResponseEntity<?> main(@RequestParam(defaultValue = "0") int pageIndex,
-                                  @RequestParam(defaultValue = "50") int pageSize){
+    public ResponseEntity<?> main(@RequestParam(defaultValue = "0") int pagingIndex,
+                                  @RequestParam(defaultValue = "50") int pagingSize){
 
-        Page<MainResponse> responses = userManageService.showAllUserList(pageIndex, pageSize);
+        Page<MainResponse> responses = userManageService.showAllUserList(pagingIndex, pagingSize);
 
         return ResponseEntity.ok(responses);
     }
@@ -40,10 +40,10 @@ public class UserManageController {
     public ResponseEntity<?> search(@RequestParam(required = false) Long userId,
                                     @RequestParam(required = false) String query,
                                     @RequestParam(required = false) String value,
-                                    @RequestParam(defaultValue = "0") int pageIndex,
-                                    @RequestParam(defaultValue = "50") int pageSize){
+                                    @RequestParam(defaultValue = "0") int pagingIndex,
+                                    @RequestParam(defaultValue = "50") int pagingSize){
 
-        Page<MainResponse> responses = userManageService.showAllUserBySearch(userId, query, value, pageIndex, pageSize);
+        Page<MainResponse> responses = userManageService.showAllUserBySearch(userId, query, value, pagingIndex, pagingSize);
 
         return ResponseEntity.ok(responses);
     }
@@ -51,10 +51,10 @@ public class UserManageController {
     @ApiOperation(value = "유저 활동 목록 조회")
     @GetMapping("/activity-list")
     public ResponseEntity<?> showActivityList(@RequestParam Long userId,
-                                              @RequestParam(defaultValue = "0") int pageIndex,
-                                              @RequestParam(defaultValue = "50") int pageSize){
+                                              @RequestParam(defaultValue = "0") int pagingIndex,
+                                              @RequestParam(defaultValue = "50") int pagingSize){
 
-        ActivityListDto activityListDto = userManageService.getActivityList(userId,pageIndex,pageSize);
+        ActivityListDto activityListDto = userManageService.getActivityList(userId,pagingIndex,pagingSize);
 
         return ResponseEntity.ok(activityListDto);
     }

@@ -26,10 +26,10 @@ public class ReportManageController {
 
     @ApiOperation(value = "전체 신고 리스트 조회")
     @GetMapping("/main")
-    public ResponseEntity<?> main(@RequestParam(defaultValue = "0") int pageIndex,
-                                  @RequestParam(defaultValue = "50") int pageSize){
+    public ResponseEntity<?> main(@RequestParam(defaultValue = "0") int pagingIndex,
+                                  @RequestParam(defaultValue = "50") int pagingSize){
 
-        Page<ReportResponse> responses = reportManageService.showAllReports(pageIndex, pageSize);
+        Page<ReportResponse> responses = reportManageService.showAllReports(pagingIndex, pagingSize);
 
         return ResponseEntity.ok(responses);
     }
