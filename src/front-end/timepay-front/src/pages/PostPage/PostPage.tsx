@@ -86,7 +86,8 @@ const PostPage = () => {
 
   const { data, isLoading } = useGetBoard(parseInt(real_id));
 
-  console.log(data);
+  const type = data?.data.type;
+
 
   const { data: comments, isLoading: isLoadingComments } = useGetComments(
     parseInt(real_id),
@@ -120,7 +121,11 @@ const PostPage = () => {
   };
 
   useEffect(() => {
-    setHeaderTitle('도움요청');
+    if (type === 'help') {
+      setHeaderTitle('도움요청');
+    } else {
+      setHeaderTitle('같이쓰기');
+    }
   }, [setHeaderTitle]);
 
   const board = useMemo(() => {
@@ -323,53 +328,59 @@ const PostPage = () => {
                 </Button>
               </div>
             )}
-            <div css={cssPostDetailThird}>
-              <div className="category">
-                <div css={cssPostDetailCategory1}>카테고리</div>
-                <div css={cssPostDetailCategory2}>{board?.category}</div>
-              </div>
-              <div css={cssPostDetailPay}>{board?.pay || '0'} TP</div>
-            </div>
             <div css={cssPostDetailSecond}>
+              {type === 'help' && (
+                <div css={cssPostDetailStatus}>
+                  <PostStatusTag status={data?.data.state} />
+                </div>
+              )}
               <div css={cssPostDetailTitle}>{data?.data.title}</div>
-              <div css={cssPostDetailStatus}>
-                <PostStatusTag status={data?.data.state} />
-              </div>
             </div>
-            <div css={cssPostDetailFourth}>
-              <div css={cssPostDetailRegion}>
-                <FlagFilled style={{ marginRight: 15, color: 'black' }} />
-                {data?.data.location}
+            {type === 'help' && (
+              <div css={cssPostDetailThird}>
+                <div className="category">
+                  <div css={cssPostDetailCategory1}>카테고리</div>
+                  <div css={cssPostDetailCategory2}>{board?.category}</div>
+                </div>
+                <div css={cssPostDetailPay}>{board?.pay || '0'} TP</div>
               </div>
-              <div css={cssPostDetailTime}>
-                <ClockCircleOutlined
-                  style={{ marginRight: 15, color: 'black' }}
-                />
-                {dayjs(board?.startTime, 'YYYY-MM-DDTHH:mm:ss').format(
-                  'MM월 DD일 HH시 mm분',
-                )}{' '}
-                ~{' '}
-                {dayjs(board?.endTime, 'YYYY-MM-DDTHH:mm:ss').format(
-                  'HH시 mm분',
-                )}
+            )}
+            {type === 'help' && (
+              <div css={cssPostDetailFourth}>
+                <div css={cssPostDetailRegion}>
+                  <FlagFilled style={{ marginRight: 15, color: 'black' }} />
+                  {data?.data.location}
+                </div>
+                <div css={cssPostDetailTime}>
+                  <ClockCircleOutlined
+                    style={{ marginRight: 15, color: 'black' }}
+                  />
+                  {dayjs(board?.startTime, 'YYYY-MM-DDTHH:mm:ss').format(
+                    'MM월 DD일 HH시 mm분',
+                  )}{' '}
+                  ~{' '}
+                  {dayjs(board?.endTime, 'YYYY-MM-DDTHH:mm:ss').format(
+                    'HH시 mm분',
+                  )}
+                </div>
               </div>
-            </div>
+            )}
             {board?.volunteer && volunteerInfo}
-            <div css={cssPostDetailFifth}>
-              <div className="content">내용</div>
-              <div css={cssPostDetailContent2}>
-                <span>{data?.data.content}</span>
-              </div>
-              <div css={cssPostDetailAttachment}>{data?.data.imageUrl}</div>
-            </div>
+
             <div css={cssPostDetailFirst}>
-              <div css={cssPostDetailCreatedAt}>
-                {data?.data.createdAt.substring(0, 10)}
-              </div>
               <div
                 css={cssPostDetailProfile}
                 onClick={() => handleOnClickUser(data?.data.userId)}
-              ></div>
+              >
+                <img
+                  src={
+                    'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png'
+                  }
+                  className="MyProfileImage"
+                  alt="내 프로필"
+                  style={{ width: 33, height: 33, borderRadius: 20 }}
+                />
+              </div>
               <div
                 css={cssPostDetailUser}
                 onClick={() => handleOnClickUser(data?.data.userId)}
@@ -390,6 +401,16 @@ const PostPage = () => {
                   </button>
                 )}
               </div> */}
+            </div>
+
+            <div css={cssPostDetailFifth}>
+              <div css={cssPostDetailContent2}>
+                <span>{data?.data.content}</span>
+              </div>
+              <div css={cssPostDetailAttachment}>{data?.data.imageUrl}</div>
+              <div css={cssPostDetailCreatedAt}>
+                {data?.data.createdAt.substring(0, 10)}
+              </div>
             </div>
             <div css={cssLine4} />
             <h1>댓글</h1>
