@@ -1,11 +1,11 @@
 import { useState } from 'react';
-
 import FullCalendar from '@fullcalendar/react';
 import { Calendar, EventInput } from '@fullcalendar/core/index.js';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import { cssTimeTable } from './TimeTable.style';
 import { Typography } from 'antd';
 import { useGetUserBoards } from '../../api/hooks/user';
+import { COMMON_COLOR } from '../../styles/constants/colors';
 const { Title } = Typography;
 
 //export function Calendar() {
@@ -20,7 +20,6 @@ const TimeTable = () => {
         end: data.endTime,
       }),
     ) || [];
-  // console.log(data?.data.body);
 
   return (
     <div className="calendarContainer" css={cssTimeTable}>
@@ -31,6 +30,15 @@ const TimeTable = () => {
         initialView="timeGridWeek"
         locale="ko"
         allDaySlot={false}
+        headerToolbar={{
+          center: 'new',
+        }}
+        customButtons={{
+          new: {
+            text: 'new',
+            click: () => console.log('new event'),
+          },
+        }}
         buttonText={{ today: '오늘날짜 보기' }}
         dayHeaderFormat={{
           weekday: 'short',
@@ -38,6 +46,7 @@ const TimeTable = () => {
         }}
         buttonIcons={{ prev: 'chevron-left' }}
         events={dataSource}
+        eventColor={COMMON_COLOR.MAIN1}
         eventTimeFormat={{
           hour: 'numeric',
           minute: '2-digit',

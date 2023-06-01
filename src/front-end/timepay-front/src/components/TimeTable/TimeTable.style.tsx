@@ -25,4 +25,28 @@ export const cssTimeTable = css`
   .fc-event-main {
     overflow: 'hidden';
   }
+  .fc-next-button {
+    background: ${COMMON_COLOR.MAIN1};
+    border-color: ${COMMON_COLOR.WHITE};
+  }
+  .fc-prev-button {
+    background: ${COMMON_COLOR.MAIN1};
+    border-color: ${COMMON_COLOR.WHITE};
+  }
+  .fc-today-button {
+    background: ${COMMON_COLOR.MAIN2} !important;
+    border-color: ${COMMON_COLOR.WHITE} !important;
+  }
+  .fc-button-primary {
+    background: ${COMMON_COLOR.MAIN1};
+    border-color: ${COMMON_COLOR.WHITE};
+  }
+  .fc-button-primary:hover {
+    background: ${COMMON_COLOR.MAIN1};
+    border-color: ${COMMON_COLOR.WHITE};
+  }
+  .fc-new-button {
+    background: ${COMMON_COLOR.MAIN2};
+    border-color: ${COMMON_COLOR.WHITE};
+  }
 `;
