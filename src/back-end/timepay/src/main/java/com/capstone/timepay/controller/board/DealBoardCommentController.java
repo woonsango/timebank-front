@@ -4,13 +4,11 @@ package com.capstone.timepay.controller.board;
 import com.capstone.timepay.controller.board.request.ReportRequestDTO;
 import com.capstone.timepay.domain.dealBoard.DealBoard;
 import com.capstone.timepay.domain.dealBoard.DealBoardRepository;
-import com.capstone.timepay.domain.dealBoardComment.DealBoardComment;
 import com.capstone.timepay.service.board.dto.AdoptedCommentDTO;
 import com.capstone.timepay.service.board.dto.DealBoardCommentDTO;
 import com.capstone.timepay.service.board.service.DealBoardCommentService;
 import com.capstone.timepay.service.board.service.DealRegisterService;
 import com.capstone.timepay.service.board.service.ReportService;
-import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -20,9 +18,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.concurrent.ExecutionException;
 
 
 @RestController
@@ -48,8 +45,7 @@ public class DealBoardCommentController {
     @PostMapping("/write/{boardId}")
     public ResponseEntity writeDealBoardComment(@PathVariable("boardId") Long boardId,
                                                 @RequestBody DealBoardCommentDTO dealBoardCommentDTO,
-                                                Principal principal)
-    {
+                                                Principal principal) throws ExecutionException, InterruptedException {
         DealBoard dealBoard = dealBoardRepository.findById(boardId).orElseThrow(() -> {
             return new IllegalArgumentException("게시판을 찾을 수 없음");
         });
