@@ -96,7 +96,7 @@ export const cssPostDetailCreatedAt = css`
 export const cssPostDetailSecond = css`
   margin-left: 25px;
   margin-right: 25px;
-  margin-top: -5px;
+  margin-top: 20px;
   display: flex;
   flex-direction: column;
 `;
@@ -107,7 +107,7 @@ export const cssPostDetailTitle = css`
   margin-right: 10px;
 `;
 export const cssPostDetailStatus = css`
-  margin-top: 20px;
+  margin-top: -5px;
 `;
 
 // 3rd block
