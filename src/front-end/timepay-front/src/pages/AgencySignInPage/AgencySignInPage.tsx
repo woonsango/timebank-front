@@ -1,3 +1,4 @@
+import { DoubleLeftOutlined } from '@ant-design/icons';
 import { Button, Form, Input, message, Typography } from 'antd';
 import { useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -8,7 +9,10 @@ import { agencyState, userState } from '../../states/user';
 import { PATH } from '../../utils/paths';
 import { passwordRegex } from '../../utils/regex';
 import { setTokenToCookie } from '../../utils/token';
-import { cssAgencySignInPaeStyle } from './AgencySignInPage.styles';
+import {
+  cssAgencySignInPaeStyle,
+  cssLinkNormalBtnStyle,
+} from './AgencySignInPage.styles';
 
 const AgencySignInPage = () => {
   const navigate = useNavigate();
@@ -72,6 +76,14 @@ const AgencySignInPage = () => {
 
   return (
     <div css={cssAgencySignInPaeStyle}>
+      <Button
+        type="link"
+        css={cssLinkNormalBtnStyle}
+        onClick={() => navigate(PATH.LOGIN)}
+      >
+        <DoubleLeftOutlined />
+        개인 회원 로그인하기
+      </Button>
       {contextHolder}
       <div className="title">
         <Typography.Text>모두에게 동일한 시간</Typography.Text>
