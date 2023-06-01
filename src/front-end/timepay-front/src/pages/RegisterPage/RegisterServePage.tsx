@@ -1,15 +1,4 @@
-import {
-  Steps,
-  Input,
-  Button,
-  Form,
-  message,
-  Upload,
-  UploadFile,
-  Radio,
-  DatePicker,
-  Checkbox,
-} from 'antd';
+import { Steps, Input, Button, Form, message, Upload, UploadFile } from 'antd';
 import { RcFile, UploadChangeParam, UploadProps } from 'antd/es/upload';
 import { useCallback, useState, useMemo, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -25,11 +14,10 @@ import {
   cssPostFooterStyle,
   cssPostDateStyle,
 } from './RegisterFreePage.style';
-import { FlagFilled } from '@ant-design/icons';
 import { useSetRecoilState } from 'recoil';
 import { headerTitleState } from '../../states/uiState';
 import { useQueryClient } from 'react-query';
-import { useCreateDealBoards } from '../../api/hooks/register';
+import { useCreateFreeBoards } from '../../api/hooks/register';
 import dummyProfileImg from '../../assets/images/icons/dummy-profile-img.png';
 import { useGetCategory } from '../../api/hooks/category';
 import { COMMON_COLOR } from '../../styles/constants/colors';
@@ -47,7 +35,6 @@ const RegisterServePage = () => {
   }, [setHeaderTitle]);
 
   const [title, setTitle] = useState<string>('');
-  const [location, setLocation] = useState<string>('');
   const [content, setContent] = useState<string>('');
   const [exchangeTimepay, setExchangeTimepay] = useState(0);
   const [form] = Form.useForm();
@@ -55,7 +42,7 @@ const RegisterServePage = () => {
   const [previewImage, setPreviewImage] = useState('');
   const [previewOpen, setPreviewOpen] = useState(false);
 
-  const createDealBoardsMutation = useCreateDealBoards();
+  const createFreeBoardsMutation = useCreateFreeBoards();
   const [messageApi, contextHolder] = message.useMessage();
 
   const { data, isLoading } = useGetCategory({
@@ -191,7 +178,7 @@ const RegisterServePage = () => {
         new Blob([JSON.stringify(newPost)], { type: 'application/json' }),
       );
 
-      await createDealBoardsMutation.mutateAsync(formData, {
+      await createFreeBoardsMutation.mutateAsync(formData, {
         onSuccess: (result) => {
           messageApi.open({
             type: 'success',
@@ -216,14 +203,7 @@ const RegisterServePage = () => {
         },
       });
     },
-    [
-      userInfo,
-      messageApi,
-      navigate,
-      exchangeTimepay,
-      isVolunteerAvailable,
-      createDealBoardsMutation,
-    ],
+    [createFreeBoardsMutation],
   );
 
   const uploadButton = useMemo(() => {

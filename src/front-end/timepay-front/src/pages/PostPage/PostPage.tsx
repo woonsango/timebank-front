@@ -85,6 +85,9 @@ const PostPage = () => {
   const real_id = url.substring(6);
 
   const { data, isLoading } = useGetBoard(parseInt(real_id));
+
+  console.log(data);
+
   const { data: comments, isLoading: isLoadingComments } = useGetComments(
     parseInt(real_id),
   );
