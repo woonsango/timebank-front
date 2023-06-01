@@ -1,6 +1,23 @@
 import { css } from '@emotion/react';
 import { COMMON_COLOR } from '../../styles/constants/colors';
 
+export const cssCalendarHeader = css`
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 25px;
+  font-weight: bold;
+  padding-top: 5px;
+  padding-bottom: 15px;
+  .radioBtn {
+    display: flex;
+    justify-content: flex-end;
+    /* align-items: center; */
+    font-weight: normal;
+  }
+`;
+
 export const cssTimeTable = css`
   padding: 10px;
   .ant-typography {
@@ -24,5 +41,29 @@ export const cssTimeTable = css`
   }
   .fc-event-main {
     overflow: 'hidden';
+  }
+  .fc-next-button {
+    background: ${COMMON_COLOR.MAIN1};
+    border-color: ${COMMON_COLOR.WHITE};
+  }
+  .fc-prev-button {
+    background: ${COMMON_COLOR.MAIN1};
+    border-color: ${COMMON_COLOR.WHITE};
+  }
+  .fc-today-button {
+    background: ${COMMON_COLOR.MAIN2} !important;
+    border-color: ${COMMON_COLOR.WHITE} !important;
+  }
+  .fc-button-primary {
+    background: ${COMMON_COLOR.MAIN1};
+    border-color: ${COMMON_COLOR.WHITE};
+  }
+  .fc-button-primary:hover {
+    background: ${COMMON_COLOR.MAIN1};
+    border-color: ${COMMON_COLOR.WHITE};
+  }
+  .fc-new-button {
+    background: ${COMMON_COLOR.MAIN2};
+    border-color: ${COMMON_COLOR.WHITE};
   }
 `;

@@ -86,11 +86,8 @@ const PostPage = () => {
 
   const { data, isLoading } = useGetBoard(parseInt(real_id));
 
-  console.log(data);
-
   const type = data?.data.type;
 
-  console.log('t', type);
 
   const { data: comments, isLoading: isLoadingComments } = useGetComments(
     parseInt(real_id),

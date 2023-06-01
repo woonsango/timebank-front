@@ -37,6 +37,7 @@ void initializeNotification() async {
 }
 
 Future<void> main() async {
+  await Future.delayed(Duration(seconds: 1));
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   initializeNotification();
