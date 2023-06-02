@@ -31,7 +31,7 @@ const RegisterServePage = () => {
 
   const setHeaderTitle = useSetRecoilState(headerTitleState);
   useEffect(() => {
-    setHeaderTitle('같이쓰기');
+    setHeaderTitle('같이하기');
   }, [setHeaderTitle]);
 
   const [title, setTitle] = useState<string>('');
