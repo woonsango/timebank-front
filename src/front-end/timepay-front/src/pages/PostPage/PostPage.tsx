@@ -88,7 +88,6 @@ const PostPage = () => {
 
   const type = data?.data.type;
 
-
   const { data: comments, isLoading: isLoadingComments } = useGetComments(
     parseInt(real_id),
   );
@@ -124,7 +123,7 @@ const PostPage = () => {
     if (type === 'help') {
       setHeaderTitle('도움요청');
     } else {
-      setHeaderTitle('같이쓰기');
+      setHeaderTitle('같이하기');
     }
   }, [setHeaderTitle]);
 
