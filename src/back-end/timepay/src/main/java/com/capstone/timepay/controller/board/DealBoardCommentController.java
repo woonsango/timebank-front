@@ -68,13 +68,7 @@ public class DealBoardCommentController {
     @ApiOperation(value = "거래게시글 댓글 삭제")
     @DeleteMapping("delete/{boardId}/{commentId}")
     public ResponseEntity<String> deleteComment(@PathVariable("boardId") Long boardId,
-                                                @PathVariable("commentId") Long commentId,
-                                                Principal principal) {
-        String userEmail = dealRegisterService.getEmail(boardId);
-        if (!principal.getName().equals(userEmail)) {
-            throw new IllegalArgumentException("해당 댓글을 지울 권한이 없습니다");
-        }
-
+                                                @PathVariable("commentId") Long commentId) {
         boolean isDeleted = dealBoardCommentService.deleteCommentById(commentId);
         if (isDeleted) {
             return new ResponseEntity<>("댓글이 삭제되었습니다.", HttpStatus.OK);
