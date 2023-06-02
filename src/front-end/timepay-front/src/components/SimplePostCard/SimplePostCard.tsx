@@ -36,6 +36,10 @@ const SimplePostCard = ({ post }: SimplePostCardProps) => {
     return getType(post?.type) === '기부하기';
   }, [post?.type]);
 
+  const isTogether = useMemo(() => {
+    return getType(post?.type) === '같이하기';
+  }, [post?.type]);
+
   const handlePageChange = useCallback(() => {
     if (isDonate) navigate(`${PATH.DONATION_BOARD}/${post?.id}`);
     else navigate(`/post/${post?.d_boardId}`, {});
@@ -101,7 +105,9 @@ const SimplePostCard = ({ post }: SimplePostCardProps) => {
           </div>
         </div>
         <div css={cssSimplePostCardBodyStyle(scaleValue)}>
-          {isDonate ? (
+          {isTogether ? (
+            <></>
+          ) : isDonate ? (
             <>
               <div className="post-card-location">
                 목표 : {post?.targetTimePay} TP
@@ -145,7 +151,7 @@ const SimplePostCard = ({ post }: SimplePostCardProps) => {
         </div>
       </div>
     );
-  }, [post, scaleValue, isDonate]);
+  }, [post, scaleValue, isDonate, isTogether]);
 
   return (
     <Card
