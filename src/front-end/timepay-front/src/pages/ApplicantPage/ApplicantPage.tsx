@@ -76,7 +76,7 @@ const ApplicantPage = () => {
     (token: string) => {
       console.log('token', token);
       setMultiTokenToCookie(token, 10);
-      navigate('/my');
+      navigate('/my', { replace: true });
     },
     [navigate],
   );

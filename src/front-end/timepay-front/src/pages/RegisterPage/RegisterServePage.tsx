@@ -1,68 +1,56 @@
-import {
-  Steps,
-  Input,
-  Button,
-  Form,
-  message,
-  Upload,
-  UploadFile,
-  Radio,
-  DatePicker,
-} from 'antd';
+import { Steps, Input, Button, Form, message, Upload, UploadFile } from 'antd';
 import { RcFile, UploadChangeParam, UploadProps } from 'antd/es/upload';
 import { useCallback, useState, useMemo, useEffect } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import {
   cssPostPageStyle,
-  cssPostTitleStyle,
+  cssPostTitleStyle2,
   cssPostTitleInputStyle,
   cssLineStyle,
   cssPostContentStyle,
   cssPostContentInputStyle,
   cssPostBtnStyle,
+  cssPostBtnStyle2,
   cssPostFooterStyle,
-  cssPostCategoryStyle,
   cssPostDateStyle,
 } from './RegisterFreePage.style';
-import { FlagFilled } from '@ant-design/icons';
 import { useSetRecoilState } from 'recoil';
 import { headerTitleState } from '../../states/uiState';
 import { useQueryClient } from 'react-query';
-import { useCreateDealBoards } from '../../api/hooks/register';
+import { useCreateFreeBoards } from '../../api/hooks/register';
 import dummyProfileImg from '../../assets/images/icons/dummy-profile-img.png';
-import dayjs from 'dayjs';
-import 'dayjs/locale/ko';
-import locale from 'antd/es/date-picker/locale/ko_KR';
 import { useGetCategory } from '../../api/hooks/category';
 import { COMMON_COLOR } from '../../styles/constants/colors';
+import { useGetUserInfo } from '../../api/hooks/user';
 
 const { TextArea } = Input;
 const MAX_IMAGES = 5;
 
-const RegisterRequestPage = () => {
+const RegisterServePage = () => {
   const queryClient = useQueryClient();
+
   const setHeaderTitle = useSetRecoilState(headerTitleState);
   useEffect(() => {
-    setHeaderTitle('도움요청');
+    setHeaderTitle('같이하기');
   }, [setHeaderTitle]);
 
   const [title, setTitle] = useState<string>('');
-  const [location, setLocation] = useState<string>('');
   const [content, setContent] = useState<string>('');
+  const [exchangeTimepay, setExchangeTimepay] = useState(0);
   const [form] = Form.useForm();
   const [imgFileList, setImgFileList] = useState<UploadFile[]>([]);
   const [previewImage, setPreviewImage] = useState('');
   const [previewOpen, setPreviewOpen] = useState(false);
 
-  const createDealBoardsMutation = useCreateDealBoards();
+  const createFreeBoardsMutation = useCreateFreeBoards();
   const [messageApi, contextHolder] = message.useMessage();
 
-  const pay = 100;
-
   const { data, isLoading } = useGetCategory({
-    type: '도움요청',
+    type: '같이쓰기',
     useYn: 'Y',
   });
+
+  const { data: userInfo, isLoading: isLoadingUser } = useGetUserInfo();
 
   const normFile = (e: any) => {
     if (Array.isArray(e)) {
@@ -74,6 +62,19 @@ const RegisterRequestPage = () => {
   // 사진
   const [images, setImages] = useState<File[]>([]);
   const [previewUrls, setPreviewUrls] = useState<string[]>([]);
+
+  const isAgency = useMemo(() => {
+    if (userInfo?.data.body.manager_name) return true;
+    return false;
+  }, [userInfo]);
+
+  const isVolunteerAvailable = useMemo(() => {
+    return (
+      isAgency &&
+      !!userInfo?.data.body.certification_url &&
+      userInfo?.data.body.certification_url !== 'none'
+    );
+  }, [isAgency, userInfo]);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files as FileList);
@@ -117,8 +118,6 @@ const RegisterRequestPage = () => {
 
   ////////
 
-  // 보유 타임페이보다 지급 타임페이가 큰 경우의 로직 나중에.. 구현
-
   // 뒤로가기
   const navigate = useNavigate();
   const handleClickBack = useCallback(() => {
@@ -126,13 +125,10 @@ const RegisterRequestPage = () => {
   }, [navigate]);
 
   // 버튼 활성화 관련
-  const isDisabled = !title || !content || !location;
+  const isDisabled = !title || !content;
 
   const handleTitleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setTitle(event.target.value);
-  };
-  const handleLocationChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setLocation(event.target.value);
   };
   const handleContentChange = (
     event: React.ChangeEvent<HTMLTextAreaElement>,
@@ -171,7 +167,7 @@ const RegisterRequestPage = () => {
 
       const newPost = {
         ...values,
-        d_board_id: parseInt(values.d_board_id),
+        d_board_id: values.d_board_id ? parseInt(values.d_board_id) : null,
         images: null,
       };
 
@@ -182,7 +178,7 @@ const RegisterRequestPage = () => {
         new Blob([JSON.stringify(newPost)], { type: 'application/json' }),
       );
 
-      await createDealBoardsMutation.mutateAsync(formData, {
+      await createFreeBoardsMutation.mutateAsync(formData, {
         onSuccess: (result) => {
           messageApi.open({
             type: 'success',
@@ -207,7 +203,7 @@ const RegisterRequestPage = () => {
         },
       });
     },
-    [messageApi, navigate, createDealBoardsMutation],
+    [createFreeBoardsMutation],
   );
 
   const uploadButton = useMemo(() => {
@@ -217,13 +213,11 @@ const RegisterRequestPage = () => {
   const [current, setCurrent] = useState(0);
 
   const handleCategoryChange = (value: any) => {
-    setCurrent(1); // Change to the next step when category is selected
-    // handle the category change logic if needed
+    setCurrent(1);
   };
 
   const handleTimeLocationChange = () => {
-    setCurrent(2); // Change to the next step when time and location are entered
-    // handle the time and location change logic if needed
+    setCurrent(2); // startTime과 endTime 값을 가져옵니다.
   };
 
   return (
@@ -234,112 +228,27 @@ const RegisterRequestPage = () => {
         current={current}
         style={{
           position: 'fixed',
-          zIndex: 1,
+          zIndex: 100,
           background: `${COMMON_COLOR.WHITE}`,
-          paddingLeft: 10,
+          paddingLeft: 20,
           paddingTop: 10,
           boxShadow: '0px 2px 5px rgba(0, 0, 0, 0.2)',
         }}
         items={[
           {
-            title: '카테고리 선택',
+            title: '제목 입력',
           },
           {
-            title: '시간/장소 입력',
-          },
-          {
-            title: '게시글 내용 입력',
+            title: '내용 입력',
           },
         ]}
       />
 
-      <Form.Item
-        label="카테고리 선택"
-        name="category"
-        css={cssPostCategoryStyle}
-      >
-        <Radio.Group onChange={handleCategoryChange}>
-          {data?.data.map((category) => (
-            <Radio.Button
-              key={category.categoryId}
-              value={category.categoryId}
-              style={{
-                borderRadius: '0',
-                margin: '5px',
-                fontWeight: '500',
-              }}
-            >
-              {category.categoryName}
-            </Radio.Button>
-          ))}
-        </Radio.Group>
-      </Form.Item>
-
-      <div css={cssLineStyle} />
-
-      <Form.Item
-        name="activityDate"
-        label="활동일"
-        initialValue={dayjs()}
-        css={cssPostDateStyle}
-      >
-        <DatePicker format="YYYY년 MM월 DD일" />
-      </Form.Item>
-
-      <div className="time">
-        <Form.Item
-          name="startTime"
-          label="활동을 시작할 시간"
-          css={cssPostDateStyle}
-          initialValue={dayjs()}
-        >
-          <DatePicker.TimePicker
-            locale={locale}
-            format="HH시 mm분"
-            placeholder="시간"
-            showNow={false}
-            minuteStep={30}
-          />
-        </Form.Item>
-        <Form.Item
-          name="endTime"
-          label="활동이 끝날 시간"
-          css={cssPostDateStyle}
-          initialValue={dayjs()}
-        >
-          <DatePicker.TimePicker
-            locale={locale}
-            format="HH시 mm분"
-            placeholder="시간"
-            showNow={false}
-            minuteStep={30}
-            allowClear={false}
-          />
-        </Form.Item>
-      </div>
-
-      <Form.Item label="장소" name="location" css={cssPostDateStyle}>
-        <Input
-          size="large"
-          placeholder="희망하는 장소를 입력하세요 :)"
-          style={{
-            paddingLeft: '15px',
-            width: '280px',
-          }}
-          prefix={<FlagFilled style={{ marginRight: '5px' }} />}
-          onChange={(event) => {
-            handleLocationChange(event);
-            handleTimeLocationChange();
-          }}
-        />
-      </Form.Item>
-      <div css={cssLineStyle} />
-
       <Form onFinish={handleOnSubmit} form={form} layout="vertical">
-        <Form.Item label="제목" name="title" css={cssPostTitleStyle}>
+        <Form.Item label="제목" name="title" css={cssPostTitleStyle2}>
           <Input
             css={cssPostTitleInputStyle}
-            placeholder="제목을 입력하세요"
+            placeholder="여기에 제목을 입력하세요"
             maxLength={25}
             value={title}
             onChange={handleTitleChange}
@@ -348,11 +257,10 @@ const RegisterRequestPage = () => {
 
         <Form.Item label="내용" name="content" css={cssPostContentStyle}>
           <TextArea
-            rows={10}
-            bordered={false}
+            rows={5}
             style={{ resize: 'none' }}
             css={cssPostContentInputStyle}
-            placeholder="내용을 입력하세요"
+            placeholder="여기에 내용을 입력하세요"
             value={content}
             onChange={handleContentChange}
           />
@@ -362,6 +270,7 @@ const RegisterRequestPage = () => {
           name="images"
           getValueFromEvent={normFile}
           valuePropName="fileList"
+          css={cssPostDateStyle}
         >
           <Upload
             onChange={handleImgChange}
@@ -376,19 +285,9 @@ const RegisterRequestPage = () => {
 
         <div css={cssPostFooterStyle}>
           {isDisabled ? (
-            <Button
-              htmlType="submit"
-              css={cssPostBtnStyle}
-              disabled={isDisabled}
-            >
-              작성완료
-            </Button>
+            <Button css={cssPostBtnStyle2}>작성완료</Button>
           ) : (
-            <Button
-              htmlType="submit"
-              css={cssPostBtnStyle}
-              disabled={isDisabled}
-            >
+            <Button htmlType="submit" css={cssPostBtnStyle}>
               작성완료
             </Button>
           )}
@@ -398,4 +297,4 @@ const RegisterRequestPage = () => {
   );
 };
 
-export default RegisterRequestPage;
+export default RegisterServePage;

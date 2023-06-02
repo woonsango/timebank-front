@@ -55,3 +55,14 @@ export const cssAgencySignInPaeStyle = css`
     }
   }
 `;
+
+export const cssLinkNormalBtnStyle = css`
+  span {
+    font-size: 14px !important;
+    color: ${COMMON_COLOR.FONT2} !important;
+    text-decoration: underline;
+  }
+  position: absolute;
+  top: 5px;
+  left: 5px;
+`;

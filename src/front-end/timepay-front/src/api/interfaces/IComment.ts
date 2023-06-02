@@ -12,6 +12,8 @@ export interface IComment {
   updatedTime?: string;
   content: string;
   hidden: boolean;
+  startTime: any;
+  endTime: any;
 }
 
 export interface IPostComment {

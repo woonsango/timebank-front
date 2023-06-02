@@ -16,13 +16,12 @@ export const useGetFreeBoards = () => {
   });
 };
 
+// 같이 쓰기
 export const useCreateFreeBoards = () => {
-  return useMutation<AxiosResponse<boolean>, AxiosError, IPostFreeBoard>({
+  return useMutation<AxiosResponse<any>, AxiosError, FormData>({
     mutationKey: 'usePostFreeBoards',
     mutationFn: (data) =>
-      apiRequest.post(API_URL.FREE_BOARDS_WRITE, {
-        ...data,
-      }),
+      apiRequest.postFormData(API_URL.FREE_BOARDS_WRITE, data),
   });
 };
 

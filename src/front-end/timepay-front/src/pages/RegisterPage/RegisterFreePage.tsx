@@ -1,32 +1,104 @@
-import { Layout, Input, Button, Image } from 'antd';
-import { useNavigate, Link } from 'react-router-dom';
-import { PATH } from '../../utils/paths';
-import { useCallback, useState } from 'react';
-import { ReactComponent as BackArrow } from '../../assets/images/icons/header-back-arrow.svg';
-import { cssMainHeaderStyle } from '../../components/MainHeader/MainHeader.styles';
+import {
+  Steps,
+  Input,
+  Button,
+  Form,
+  message,
+  Upload,
+  UploadFile,
+  Radio,
+  DatePicker,
+  Checkbox,
+} from 'antd';
+import { RcFile, UploadChangeParam, UploadProps } from 'antd/es/upload';
+import { useCallback, useState, useMemo, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   cssPostPageStyle,
+  cssPostTitleStyle,
   cssPostTitleInputStyle,
   cssLineStyle,
+  cssPostContentStyle,
   cssPostContentInputStyle,
   cssPostBtnStyle,
+  cssPostBtnStyle2,
   cssPostFooterStyle,
+  cssPostCategoryStyle,
+  cssPostDateStyle,
 } from './RegisterFreePage.style';
+import { FlagFilled } from '@ant-design/icons';
+import { useSetRecoilState } from 'recoil';
+import { headerTitleState } from '../../states/uiState';
+import { useQueryClient } from 'react-query';
+import { useCreateDealBoards } from '../../api/hooks/register';
+import dummyProfileImg from '../../assets/images/icons/dummy-profile-img.png';
+import dayjs from 'dayjs';
+import 'dayjs/locale/ko';
+import locale from 'antd/es/date-picker/locale/ko_KR';
+import { useGetCategory } from '../../api/hooks/category';
+import { COMMON_COLOR } from '../../styles/constants/colors';
+import { useGetUserInfo } from '../../api/hooks/user';
+import {
+  cssPostAutoStyle,
+  cssPostInputNumberStyle,
+} from './RegisterRequest.styles';
 
-import axios from 'axios';
-
-const { Header, Content, Footer } = Layout;
 const { TextArea } = Input;
-
 const MAX_IMAGES = 5;
 
 const RegisterFreePage = () => {
+  const queryClient = useQueryClient();
+
+  const setHeaderTitle = useSetRecoilState(headerTitleState);
+  useEffect(() => {
+    setHeaderTitle('도움요청');
+  }, [setHeaderTitle]);
+
   const [title, setTitle] = useState<string>('');
+  const [location, setLocation] = useState<string>('');
   const [content, setContent] = useState<string>('');
+  const [exchangeTimepay, setExchangeTimepay] = useState(0);
+  const [form] = Form.useForm();
+  const [imgFileList, setImgFileList] = useState<UploadFile[]>([]);
+  const [previewImage, setPreviewImage] = useState('');
+  const [previewOpen, setPreviewOpen] = useState(false);
+
+  const createDealBoardsMutation = useCreateDealBoards();
+  const [messageApi, contextHolder] = message.useMessage();
+
+  const pay = 100;
+
+  const { data, isLoading } = useGetCategory({
+    type: '같이쓰기',
+    useYn: 'Y',
+  });
+
+  const { data: userInfo, isLoading: isLoadingUser } = useGetUserInfo();
+
+  const normFile = (e: any) => {
+    if (Array.isArray(e)) {
+      return e;
+    }
+    return e?.fileList;
+  };
+
+  // 사진
   const [images, setImages] = useState<File[]>([]);
   const [previewUrls, setPreviewUrls] = useState<string[]>([]);
+  const [isVolunteer, setIsVolunteer] = useState(false);
 
-  const navigate = useNavigate();
+  const isAgency = useMemo(() => {
+    if (userInfo?.data.body.manager_name) return true;
+    return false;
+  }, [userInfo]);
+
+  const isVolunteerAvailable = useMemo(() => {
+    return (
+      isAgency &&
+      !!userInfo?.data.body.certification_url &&
+      userInfo?.data.body.certification_url !== 'none'
+    );
+  }, [isAgency, userInfo]);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files as FileList);
@@ -45,16 +117,47 @@ const RegisterFreePage = () => {
     setPreviewUrls((prevState) => prevState.filter((_, i) => i !== index));
   };
 
-  // 뒤로 가기
+  //////////
+
+  const getBase64 = (file: RcFile): Promise<string> =>
+    new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result as string);
+      reader.onerror = (error) => reject(error);
+    });
+  const handleImgChange: UploadProps['onChange'] = (
+    info: UploadChangeParam<UploadFile>,
+  ) => {
+    setImgFileList(info.fileList);
+  };
+  const handlePreview = async (file: UploadFile) => {
+    if (!file.url && !file.preview) {
+      file.preview = await getBase64(file.originFileObj as RcFile);
+    }
+    setPreviewImage(file.url || (file.preview as string));
+    setPreviewOpen(true);
+  };
+  const handleCancelPreview = useCallback(() => setPreviewOpen(false), []);
+
+  ////////
+
+  // 보유 타임페이보다 지급 타임페이가 큰 경우의 로직 나중에.. 구현
+
+  // 뒤로가기
+  const navigate = useNavigate();
   const handleClickBack = useCallback(() => {
     navigate(-1);
   }, [navigate]);
 
   // 버튼 활성화 관련
-  const isDisabled = !title || !content;
+  const isDisabled = !title || !content || !location;
 
   const handleTitleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setTitle(event.target.value);
+  };
+  const handleLocationChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setLocation(event.target.value);
   };
   const handleContentChange = (
     event: React.ChangeEvent<HTMLTextAreaElement>,
@@ -84,140 +187,200 @@ const RegisterFreePage = () => {
     setPreviewUrls(newPreviewUrls);
   };
 
-  const handleSubmit = () => {
-    const formData = new FormData();
-    formData.append('title', title);
-    formData.append('content', content);
-    images.forEach((image) => formData.append('images', image));
-    axios
-      .post('/api/free-boards/write', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
+  const handleOnChangeTime = useCallback((changedValues: any, values: any) => {
+    if (values.startTime && values.endTime) {
+      const startTime = values.startTime.clone();
+      const endTime = values.endTime.clone();
+      const duration = endTime.diff(startTime, 'minutes');
+      setExchangeTimepay(duration);
+    } else {
+      setExchangeTimepay(30);
+    }
+  }, []);
+
+  const handleOnSubmit = useCallback(
+    async (values: any) => {
+      let formData = new FormData();
+      if (values.images && values.images.length > 0) {
+        formData.append('image', values.images[0].originFileObj);
+      }
+
+      const newPost = {
+        ...values,
+        d_board_id: values.d_board_id ? parseInt(values.d_board_id) : null,
+        volunteer: isVolunteerAvailable ? values.volunteer : false,
+        volunteerPeople: isVolunteerAvailable
+          ? parseInt(values.volunteerPeople)
+          : 0,
+        volunteerTime: isVolunteerAvailable
+          ? values.volunteer
+            ? (exchangeTimepay / 60).toFixed(1)
+            : 0
+          : 0,
+        images: null,
+        startTime: `${values.activityDate.format(
+          'YYYY-MM-DD',
+        )}T${values.startTime.format('HH:mm:ss')}.000Z`,
+        endTime: `${values.activityDate.format(
+          'YYYY-MM-DD',
+        )}T${values.endTime.format('HH:mm:ss')}.000Z`,
+        pay: exchangeTimepay,
+      };
+
+      console.log(newPost);
+
+      formData.append(
+        'dealBoardDTO',
+        new Blob([JSON.stringify(newPost)], { type: 'application/json' }),
+      );
+
+      await createDealBoardsMutation.mutateAsync(formData, {
+        onSuccess: (result) => {
+          messageApi.open({
+            type: 'success',
+            content: '게시글이 등록되었습니다.',
+            duration: 1,
+            onClose: () => {
+              navigate(-1);
+            },
+          });
         },
-      })
-      .then((response) => {
-        console.log('게시글이 등록🤩');
-      })
-      .catch((error) => {
-        console.error('게시글 등록 실패🥹', error);
+        onError: (err) => {
+          console.log(err);
+          messageApi.open({
+            type: 'error',
+            content: (
+              <>
+                오류 발생: <br />
+                {err}
+              </>
+            ),
+          });
+        },
       });
-    /* 실행되는 코드!
-      axios
-      .post('/api/free-boards/write', { title, content })
-      .then((response) => {
-        // 요청이 성공적으로 처리되었을 때 실행될 코드 작성
-        console.log('게시글이 성공적으로 등록되었습니다.');
-        // 등록 후에는 홈 화면으로 이동
-        navigate(PATH.HOME);
-      })
-      .catch((error) => {
-        // 요청이 실패했을 때 실행될 코드 작성
-        console.error('게시글 등록에 실패했습니다.', error);
-      });
-      */
+    },
+    [
+      messageApi,
+      navigate,
+      exchangeTimepay,
+      isVolunteerAvailable,
+      createDealBoardsMutation,
+    ],
+  );
+
+  const uploadButton = useMemo(() => {
+    return <img width="100%" height="100%" src={dummyProfileImg} alt="+" />;
+  }, []);
+
+  const [current, setCurrent] = useState(0);
+
+  const handleCategoryChange = (value: any) => {
+    setCurrent(1);
+  };
+
+  const handleTimeLocationChange = () => {
+    setCurrent(2); // startTime과 endTime 값을 가져옵니다.
   };
 
   return (
-    <Layout css={cssPostPageStyle}>
-      <div className="wrapper">
-        <Header css={cssMainHeaderStyle}>
-          <BackArrow onClick={handleClickBack} />
-          <span>글쓰기</span>
-        </Header>
-        <Content style={{ paddingTop: 60 }}>
-          <input
+    <div css={cssPostPageStyle}>
+      {contextHolder}
+      <Steps
+        direction="vertical"
+        current={current}
+        style={{
+          position: 'fixed',
+          zIndex: 100,
+          background: `${COMMON_COLOR.WHITE}`,
+          paddingLeft: 20,
+          paddingTop: 10,
+          boxShadow: '0px 2px 5px rgba(0, 0, 0, 0.2)',
+        }}
+        items={[
+          {
+            title: '제목 입력',
+          },
+          {
+            title: '내용 입력',
+          },
+        ]}
+      />
+
+      <Form onFinish={handleOnSubmit} form={form} layout="vertical">
+        <Form.Item label="장소" name="location" css={cssPostDateStyle}>
+          <Input
+            size="large"
+            placeholder="여기에 장소를 입력하세요"
+            style={{
+              paddingLeft: '15px',
+              width: '230px',
+            }}
+            prefix={<FlagFilled style={{ marginRight: '5px' }} />}
+            onChange={(event) => {
+              handleLocationChange(event);
+              handleTimeLocationChange();
+            }}
+          />
+        </Form.Item>
+        <div css={cssLineStyle} />
+
+        <Form.Item label="제목" name="title" css={cssPostTitleStyle}>
+          <Input
             css={cssPostTitleInputStyle}
-            placeholder="제목을 입력하세요"
+            placeholder="여기에 제목을 입력하세요"
             maxLength={25}
             value={title}
             onChange={handleTitleChange}
           />
-          <div css={cssLineStyle} />
+        </Form.Item>
+
+        <Form.Item label="내용" name="content" css={cssPostContentStyle}>
           <TextArea
-            rows={10}
-            bordered={false}
+            rows={5}
             style={{ resize: 'none' }}
             css={cssPostContentInputStyle}
-            placeholder="내용을 입력하세요"
+            placeholder="여기에 내용을 입력하세요"
             value={content}
             onChange={handleContentChange}
           />
-          <div css={cssLineStyle} />
-          <div className="image-container">
-            <div className="imageFont">사진 ({images.length} / 5)</div>
-
-            {previewUrls.length < MAX_IMAGES && (
-              <div className="cssImageWrapper1">
-                <div className="cssImagePlaceholder">
-                  <label htmlFor="upload">
-                    <div className="uploadBtn">
-                      📷 <br />
-                      사진 추가
-                    </div>
-                  </label>
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={handleFileChange}
-                    id="upload"
-                  />
-                </div>
-              </div>
-            )}
-
-            <div className="images-container">
-              {previewUrls.map((url, index) => (
-                <div className="cssImageWrapper2" key={index}>
-                  <img src={url} className="cssSelectedImage" alt="uploaded" />
-                  <div className="cssImages">
-                    <div className="cssImagePlaceholder2">
-                      <label htmlFor="change">
-                        <div className="changeBtn">사진 변경</div>
-                      </label>
-                      <input
-                        className="fileButton"
-                        type="file"
-                        accept="image/*"
-                        onChange={(e) => handleImageChange(e, index)}
-                        id="change"
-                      />
-                    </div>
-                    <Button
-                      danger
-                      className="deleteBtn"
-                      onClick={() => handleDeleteImage(index)}
-                    >
-                      삭제
-                    </Button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </Content>
-      </div>
-      <Footer css={cssPostFooterStyle}>
-        {isDisabled ? (
-          <Button
-            css={cssPostBtnStyle}
-            onClick={handleSubmit}
-            disabled={isDisabled}
+        </Form.Item>
+        <div css={cssLineStyle} />
+        <Form.Item
+          name="images"
+          getValueFromEvent={normFile}
+          valuePropName="fileList"
+          css={cssPostDateStyle}
+        >
+          <Upload
+            onChange={handleImgChange}
+            onPreview={handlePreview}
+            multiple={false}
+            beforeUpload={() => false}
+            accept="image/png, image/jpg, image/jpeg"
           >
-            작성완료
-          </Button>
-        ) : (
-          <Link to={PATH.HOME}>
-            <Button
-              css={cssPostBtnStyle}
-              onClick={handleSubmit}
-              disabled={isDisabled}
-            >
+            {imgFileList.length === 1 ? null : uploadButton}
+          </Upload>
+        </Form.Item>
+        <Form.Item
+          label=""
+          name="auto"
+          css={cssPostAutoStyle}
+          valuePropName="checked"
+          extra="설정 시 선착순으로 매칭됩니다."
+        >
+          <Checkbox>자동매칭 여부</Checkbox>
+        </Form.Item>
+        <div css={cssPostFooterStyle}>
+          {isDisabled ? (
+            <Button css={cssPostBtnStyle2}>작성완료</Button>
+          ) : (
+            <Button htmlType="submit" css={cssPostBtnStyle}>
               작성완료
             </Button>
-          </Link>
-        )}
-      </Footer>
-    </Layout>
+          )}
+        </div>
+      </Form>
+    </div>
   );
 };
 

@@ -7,6 +7,8 @@ import 'package:firebase_core/firebase_core.dart';
 // import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
+import "package:permission_handler/permission_handler.dart";
+import 'package:flutter/services.dart';
 
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   print("백그라운드 메시지 처리.. ${message.notification!.body!}");
@@ -35,6 +37,7 @@ void initializeNotification() async {
 }
 
 Future<void> main() async {
+  await Future.delayed(Duration(seconds: 1));
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   initializeNotification();
@@ -71,6 +74,35 @@ class _WebViewAppState extends State<WebViewApp> {
     print("내 디바이스 토큰: $deviceToken");
   }
 
+  Future<bool> requestCameraPermission(BuildContext context) async {
+    Map<Permission, PermissionStatus> statuses = await [
+      Permission.camera,
+      Permission.storage,
+    ].request();
+    if (statuses[Permission.camera]!.isGranted == false ||
+        statuses[Permission.storage]!.isGranted == false) {
+      // 허용이 안된 경우
+      showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              content: Text("알림, 사진 및 동영상, 카메라에 대한 권한을 허용해주세요."),
+              actions: [
+                ElevatedButton(
+                    onPressed: () {
+                      openAppSettings(); // 앱 설정으로 이동
+                    },
+                    child: Text('설정하러 가기')),
+              ],
+            );
+          });
+      print("permission denied by user");
+      return false;
+    }
+    print("permission ok");
+    return true;
+  }
+
   @override
   void initState() {
     // if (Platform.isAndroid) {
@@ -102,6 +134,11 @@ class _WebViewAppState extends State<WebViewApp> {
 
     FirebaseMessaging.onMessageOpenedApp.listen(_handleMessage);
 
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown
+    ]); // 세로 고정
+
     super.initState();
   }
 
@@ -123,46 +160,57 @@ class _WebViewAppState extends State<WebViewApp> {
     return WillPopScope(
         onWillPop: () => _goBack(context),
         child: Scaffold(
-          body: InAppWebView(
-            key: webViewKey,
-            onWebViewCreated: (InAppWebViewController webViewController) {
-              _completerController.future
-                  .then((value) => _webViewController = value);
-              _completerController.complete(webViewController);
-              webViewController.addJavaScriptHandler(
-                  //  디바이스 토큰을 웹뷰에 전달
-                  handlerName: 'getDeviceToken',
-                  callback: (args) {
-                    return deviceToken;
-                  });
-              // 앱이 꺼졌다가 켜졌을 경우에 화면 이동 시킴
-              webViewController.loadUrl(urlRequest: URLRequest(url: webUrl));
-            },
-            initialUrlRequest: URLRequest(url: webUrl),
-            initialOptions: InAppWebViewGroupOptions(
-              crossPlatform: InAppWebViewOptions(
-                javaScriptCanOpenWindowsAutomatically: true, // 자바스크립트 새 창 실행 허용
-                javaScriptEnabled: true, // 자바스크립트 실행 허용
-                useOnDownloadStart: true,
-                useOnLoadResource: true,
-                allowFileAccessFromFileURLs: true,
-                verticalScrollBarEnabled: true,
-              ),
-              android: AndroidInAppWebViewOptions(
-                  allowContentAccess: true,
-                  builtInZoomControls: true,
-                  thirdPartyCookiesEnabled: true,
-                  allowFileAccess: true,
-                  supportMultipleWindows: true // 새 창 실행 허용
+            body: Padding(
+                padding: EdgeInsets.only(
+                    top: MediaQuery.of(context).viewPadding.top),
+                child: Container(
+                  width: double.infinity,
+                  height: double.infinity,
+                  child: InAppWebView(
+                    key: webViewKey,
+                    onWebViewCreated:
+                        (InAppWebViewController webViewController) async {
+                      _completerController.future
+                          .then((value) => _webViewController = value);
+                      _completerController.complete(webViewController);
+                      webViewController.addJavaScriptHandler(
+                          //  디바이스 토큰을 웹뷰에 전달
+                          handlerName: 'getDeviceToken',
+                          callback: (args) {
+                            return deviceToken;
+                          });
+                      // 앱이 꺼졌다가 켜졌을 경우에 화면 이동 시킴
+                      webViewController.loadUrl(
+                          urlRequest: URLRequest(url: webUrl));
+                      // 앱 화면을 열 떄마다 권한 체크
+                      await requestCameraPermission(context);
+                    },
+                    initialUrlRequest: URLRequest(url: webUrl),
+                    initialOptions: InAppWebViewGroupOptions(
+                      crossPlatform: InAppWebViewOptions(
+                        javaScriptCanOpenWindowsAutomatically:
+                            true, // 자바스크립트 새 창 실행 허용
+                        javaScriptEnabled: true, // 자바스크립트 실행 허용
+                        useOnDownloadStart: true,
+                        useOnLoadResource: true,
+                        allowFileAccessFromFileURLs: true,
+                        verticalScrollBarEnabled: true,
+                      ),
+                      android: AndroidInAppWebViewOptions(
+                          allowContentAccess: true,
+                          builtInZoomControls: true,
+                          thirdPartyCookiesEnabled: true,
+                          allowFileAccess: true,
+                          supportMultipleWindows: true // 새 창 실행 허용
+                          ),
+                    ),
+                    onConsoleMessage: (InAppWebViewController controller,
+                        ConsoleMessage consoleMessage) {
+                      // 웹에서 찍은 콘솔 볼 수 있음
+                      log("WEB CONSOLE: ${consoleMessage.message}");
+                    },
                   ),
-            ),
-            onConsoleMessage: (InAppWebViewController controller,
-                ConsoleMessage consoleMessage) {
-              // 웹에서 찍은 콘솔 볼 수 있음
-              log("WEB CONSOLE: ${consoleMessage.message}");
-            },
-          ),
-        ));
+                ))));
   }
 
   Future<bool> _goBack(BuildContext context) async {

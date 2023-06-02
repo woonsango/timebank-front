@@ -56,6 +56,15 @@ export const cssPostTitleStyle = css`
     outline: none;
   }
 `;
+export const cssPostTitleStyle2 = css`
+  font-size: 18px;
+  margin-top: 120px;
+  margin-left: 20px;
+  margin-right: 20px;
+  :focus {
+    outline: none;
+  }
+`;
 export const cssPostTitleInputStyle = css`
   font-size: 18px;
   padding: 5px 10px;

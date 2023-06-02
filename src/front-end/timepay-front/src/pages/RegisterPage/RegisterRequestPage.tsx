@@ -9,6 +9,7 @@ import {
   Radio,
   DatePicker,
   Checkbox,
+  Modal,
 } from 'antd';
 import { RcFile, UploadChangeParam, UploadProps } from 'antd/es/upload';
 import { useCallback, useState, useMemo, useEffect } from 'react';
@@ -196,68 +197,96 @@ const RegisterRequestPage = () => {
 
   const handleOnSubmit = useCallback(
     async (values: any) => {
-      let formData = new FormData();
-      if (values.images && values.images.length > 0) {
-        formData.append('image', values.images[0].originFileObj);
+      if (
+        userInfo?.data.body.time_pay &&
+        userInfo?.data.body.time_pay < exchangeTimepay
+      ) {
+        Modal.warning({
+          title: '도움요청 불가',
+          content: (
+            <>
+              보유한 타임페이가 부족해서 도움을 요청할 수 없습니다!
+              <br />
+              활동 시간을 줄이거나 도움을 주고 타임페이를 얻어보세요!
+              <br />
+              <br />
+              <div style={{ fontSize: 16, fontWeight: 700 }}>
+                보유한 타임페이 : {userInfo.data.body.time_pay || 0} TP <br />
+                부족한 타임페이 :{' '}
+                <span style={{ color: COMMON_COLOR.MAIN2 }}>
+                  {exchangeTimepay - userInfo.data.body.time_pay || 0} TP
+                </span>
+              </div>
+              <br />
+            </>
+          ),
+          okText: '확인',
+        });
+      } else {
+        let formData = new FormData();
+        if (values.images && values.images.length > 0) {
+          formData.append('image', values.images[0].originFileObj);
+        }
+
+        const newPost = {
+          ...values,
+          d_board_id: values.d_board_id ? parseInt(values.d_board_id) : null,
+          volunteer: isVolunteerAvailable ? values.volunteer : false,
+          volunteerPeople: isVolunteerAvailable
+            ? parseInt(values.volunteerPeople)
+            : 0,
+          volunteerTime: isVolunteerAvailable
+            ? values.volunteer
+              ? values.volunteerTime
+                ? parseInt(values.volunteerTime)
+                : Math.ceil(exchangeTimepay / 60)
+              : 0
+            : 0,
+          images: null,
+          startTime: `${values.activityDate.format(
+            'YYYY-MM-DD',
+          )}T${values.startTime.format('HH:mm:ss')}.000Z`,
+          endTime: `${values.activityDate.format(
+            'YYYY-MM-DD',
+          )}T${values.endTime.format('HH:mm:ss')}.000Z`,
+          pay: exchangeTimepay,
+        };
+
+        console.log(newPost);
+
+        formData.append(
+          'dealBoardDTO',
+          new Blob([JSON.stringify(newPost)], { type: 'application/json' }),
+        );
+
+        await createDealBoardsMutation.mutateAsync(formData, {
+          onSuccess: (result) => {
+            messageApi.open({
+              type: 'success',
+              content: '게시글이 등록되었습니다.',
+              duration: 1,
+              onClose: () => {
+                navigate(-1);
+              },
+            });
+          },
+          onError: (err) => {
+            console.log(err);
+            messageApi.open({
+              type: 'error',
+              content: (
+                <>
+                  오류 발생: <br />
+                  {err}
+                </>
+              ),
+            });
+          },
+        });
       }
-
-      const newPost = {
-        ...values,
-        d_board_id: values.d_board_id ? parseInt(values.d_board_id) : null,
-        volunteer: isVolunteerAvailable ? values.volunteer : false,
-        volunteerPeople: isVolunteerAvailable
-          ? parseInt(values.volunteerPeople)
-          : 0,
-        volunteerTime: isVolunteerAvailable
-          ? values.volunteer
-            ? values.volunteerTime
-              ? parseInt(values.volunteerTime)
-              : Math.ceil(exchangeTimepay / 60)
-            : 0
-          : 0,
-        images: null,
-        startTime: `${values.activityDate.format(
-          'YYYY-MM-DD',
-        )}T${values.startTime.format('HH:mm:ss')}.000Z`,
-        endTime: `${values.activityDate.format(
-          'YYYY-MM-DD',
-        )}T${values.endTime.format('HH:mm:ss')}.000Z`,
-        pay: exchangeTimepay,
-      };
-
-      console.log(newPost);
-
-      formData.append(
-        'dealBoardDTO',
-        new Blob([JSON.stringify(newPost)], { type: 'application/json' }),
-      );
-
-      await createDealBoardsMutation.mutateAsync(formData, {
-        onSuccess: (result) => {
-          messageApi.open({
-            type: 'success',
-            content: '게시글이 등록되었습니다.',
-            duration: 1,
-            onClose: () => {
-              navigate(-1);
-            },
-          });
-        },
-        onError: (err) => {
-          console.log(err);
-          messageApi.open({
-            type: 'error',
-            content: (
-              <>
-                오류 발생: <br />
-                {err}
-              </>
-            ),
-          });
-        },
-      });
     },
     [
+      userInfo,
       messageApi,
       navigate,
       exchangeTimepay,

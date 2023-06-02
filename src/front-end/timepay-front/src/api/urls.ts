@@ -11,7 +11,7 @@ export const API_URL = {
   DEAL_BOARDS_COMMENTS_ADOPTED: (boardId: number) =>
     `/api/deal-boards/comments/${boardId}/adopted`,
   FREE_BOARDS: '/api/free-boards',
-  FREE_BOARDS_WRITE: '/api/free-boards/write',
+  FREE_BOARDS_WRITE: '/api/deal-boards/write/helper', // 같이쓰기
   DEAL_BOARDS_WRITE: '/api/deal-boards/write/help', // 도움받기
   INQUIRY_WRITE: '/api/inquiry-boards/write',
   INQUIRY: 'api/inquiry-boards',
@@ -49,6 +49,7 @@ export const API_URL = {
   ORGANIZATION__MY_PAGE__PUBLISH:
     '/api/organizations/mypage/certificate/publish', // 특정 유저 게시글 봉사활동 인증서 발급
   MY_CERTIFICATION: '/api/users/mypage/certification',
+  ORGANIZATION_DONATE_MY_PAGE: '/api/organizations/donate/mypage',
 };
 
 // 토큰 필요 없는 애들
@@ -65,5 +66,6 @@ export const FORM_DATA_REQUIRED_URLS = [
   API_URL.USER_INFO_POST,
   API_URL.USER_INFO_PUT,
   API_URL.DEAL_BOARDS_WRITE,
+  API_URL.FREE_BOARDS_WRITE,
   API_URL.ORGANIZATION__MY_PAGE__PUBLISH,
 ];

@@ -1,7 +1,11 @@
 import { Form, Pagination, Select, Spin, Tabs, TabsProps } from 'antd';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useSetRecoilState } from 'recoil';
-import { useGetUserBoards, useGetUserComments } from '../../api/hooks/user';
+import {
+  useGetUserBoards,
+  useGetUserComments,
+  useGetUserInfo,
+} from '../../api/hooks/user';
 import {
   IGetUserBoardRequest,
   IGetUserCommentRequest,
@@ -20,6 +24,10 @@ import { ICommentActivity } from '../../api/interfaces/IComment';
 import { IBoard } from '../../api/interfaces/IPost';
 import TimeTable from '../../components/TimeTable';
 import useFontSize from '../../hooks/useFontSize';
+import { useGetMyDonateBoard } from '../../api/hooks/agency';
+import { IDonationBoard } from '../../api/interfaces/IDonation';
+import ActivityDonationCard from '../../components/ActivityDonationCard';
+import { GetPageableData } from '../../api/interfaces/ICommon';
 
 const ActivityRecordPage = () => {
   const { scaleValue } = useFontSize();
@@ -36,16 +44,27 @@ const ActivityRecordPage = () => {
       pageSize: 5,
     });
 
+  const [donateSearchValue, setDonateSearchValue] = useState<GetPageableData>({
+    pagingIndex: 0,
+    pagingSize: 5,
+  });
+
   const { data: boardData, isLoading: boardDataLoading } =
     useGetUserBoards(boardSearchValue);
   const { data: commentData, isLoading: commentDataLoading } =
     useGetUserComments(commentSearchValue);
+  const { data: donateData, isLoading: donateDataLoading } =
+    useGetMyDonateBoard(donateSearchValue);
+  const { data: userInfo } = useGetUserInfo();
 
   const [postForm] = Form.useForm();
   const [commentForm] = Form.useForm();
+
   const ACTIVITY_TAB_KEYS = useMemo(() => {
-    return { POST: '게시글', COMMENT: '댓글' } as const;
-  }, []);
+    if (userInfo?.data.body.organization_name)
+      return { POST: '게시글', COMMENT: '댓글', DONATE: '모금 현황' };
+    return { POST: '게시글', COMMENT: '댓글' };
+  }, [userInfo]);
 
   const setHeaderTitle = useSetRecoilState(headerTitleState);
 
@@ -57,7 +76,9 @@ const ActivityRecordPage = () => {
     return commentData?.data.body.content;
   }, [commentData]);
 
-  // console.log(commentData?.data.body.content);
+  const donations = useMemo(() => {
+    return donateData?.data.content;
+  }, [donateData]);
 
   const handleOnChangeBoardForm = useCallback(
     (changedValues: { [key: string]: any }) => {
@@ -114,8 +135,15 @@ const ActivityRecordPage = () => {
     [commentSearchValue],
   );
 
+  const handleOnChangePageDonate = useCallback(
+    (page: number) => {
+      setDonateSearchValue({ ...donateSearchValue, pagingIndex: page - 1 });
+    },
+    [donateSearchValue],
+  );
+
   const items: TabsProps['items'] = useMemo(() => {
-    return [
+    const items = [
       {
         key: ACTIVITY_TAB_KEYS.POST,
         label: ACTIVITY_TAB_KEYS.POST,
@@ -266,16 +294,67 @@ const ActivityRecordPage = () => {
         ),
       },
     ];
+    if (ACTIVITY_TAB_KEYS.DONATE) {
+      items.push({
+        key: ACTIVITY_TAB_KEYS.DONATE,
+        label: ACTIVITY_TAB_KEYS.DONATE,
+        children: (
+          <div
+            css={cssActivityRecordPageStyle(scaleValue)}
+            style={{ width: '100%' }}
+          >
+            <Form css={cssHorizontalForm(scaleValue)}>
+              <div />
+              <div>총 {donateData?.data.totalElements || 0} 개</div>
+            </Form>
+            <div>
+              {!donateDataLoading && donations ? (
+                donations.length > 0 ? (
+                  <>
+                    {donations?.map((donateBoard: IDonationBoard) => (
+                      <ActivityDonationCard
+                        key={donateBoard.id}
+                        board={donateBoard}
+                      />
+                    ))}
+                    {donateData && donateData.data.totalPages > 1 && (
+                      <Pagination
+                        current={(donateSearchValue.pagingIndex || 0) + 1}
+                        pageSize={5}
+                        total={donateData?.data.totalElements}
+                        onChange={handleOnChangePageDonate}
+                      />
+                    )}
+                  </>
+                ) : (
+                  <div css={cssNothingStyle(scaleValue)}>
+                    <span className="emoji">😅</span>
+                    <span>해당하는 게시글이 없습니다.</span>
+                  </div>
+                )
+              ) : (
+                <Spin css={cssSpinStyle} size="large" />
+              )}
+            </div>
+          </div>
+        ),
+      });
+    }
+    return items;
   }, [
     scaleValue,
     boardSearchValue,
     commentSearchValue,
+    donateSearchValue,
     boardData,
     commentData,
+    donateData,
     boards,
     comments,
+    donations,
     boardDataLoading,
     commentDataLoading,
+    donateDataLoading,
     postForm,
     commentForm,
     ACTIVITY_TAB_KEYS,
@@ -283,6 +362,7 @@ const ActivityRecordPage = () => {
     handleOnChangeCommentForm,
     handleOnChangePageBoard,
     handleOnChangePageComment,
+    handleOnChangePageDonate,
   ]);
 
   useEffect(() => {

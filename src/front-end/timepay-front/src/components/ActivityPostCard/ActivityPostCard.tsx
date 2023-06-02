@@ -14,7 +14,7 @@ const ActivityPostCard = ({ post }: ActivityPostCardProps) => {
   const { scaleValue } = useFontSize();
 
   const isHelpActivity = useMemo(() => {
-    return post.type === 'help' || post.type === 'helper';
+    return post.type === 'help';
   }, [post]);
 
   return (

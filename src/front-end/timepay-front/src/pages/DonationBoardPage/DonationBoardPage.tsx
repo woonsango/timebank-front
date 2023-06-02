@@ -209,8 +209,9 @@ const DonationBoardPage = () => {
               <img
                 alt="기관"
                 src={
-                  data?.data.imageURL ||
-                  'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png'
+                  data?.data.imageURL && data.data.imageURL !== 'none'
+                    ? data.data.imageURL
+                    : 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png'
                 }
                 onClick={handleOnClickUser}
               />

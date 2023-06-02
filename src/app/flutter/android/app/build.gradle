@@ -28,8 +28,16 @@ apply plugin: 'com.google.gms.google-services'
 apply plugin: 'kotlin-android'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 
+// start of Gradle 서명 구성
+def keystoreProperties = new Properties()
+def keystorePropertiesFile = rootProject.file('key.properties')
+if (keystorePropertiesFile.exists()) {
+    keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+}
+// end of Gradle 서명 구성
+
 android {
-    namespace "com.kookmin.flutter_application_1"
+    namespace "com.kookmin.timepay"
     compileSdkVersion flutter.compileSdkVersion
     ndkVersion flutter.ndkVersion
 
@@ -48,7 +56,7 @@ android {
 
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId "com.kookmin.flutter_application_1"
+        applicationId "com.kookmin.timepay"
         // You can update the following values to match your application needs.
         // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-gradle-build-configuration.
         minSdkVersion 19        // MODIFY
@@ -57,14 +65,38 @@ android {
         versionName flutterVersionName
         
     }
+    // 빌드 시 필요
+    // start of signingConfigs
+    // signingConfigs {
+    //     release {
+    //         keyAlias keystoreProperties['keyAlias']
+    //         keyPassword keystoreProperties['keyPassword']
+    //         storeFile file(keystoreProperties['storeFile'])
+    //         storePassword keystoreProperties['storePassword']
+    //     }
+    // }
+    // // end of signingConfigs
+    // buildTypes {
+    //     release {
+    //         // TODO: Add your own signing config for the release build.
+    //         // Signing with the debug keys for now, so `flutter run --release` works.
+    //         signingConfig signingConfigs.release
+    //         // start of 코드난독화 및 사이즈 축소
+    //         minifyEnabled true
+    //         shrinkResources true 
+    //         proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+    //         // end of 코드난독화 및 사이즈 축소
+    //     }
+    // }
 
+    
+    // 디버그 시 필요
     buildTypes {
         release {
-            // TODO: Add your own signing config for the release build.
-            // Signing with the debug keys for now, so `flutter run --release` works.
             signingConfig signingConfigs.debug
         }
     }
+    
 }
 
 flutter {
