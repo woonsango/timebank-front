@@ -50,7 +50,10 @@ const ActivityPostCard = ({ post }: ActivityPostCardProps) => {
         </>
       ) : (
         <div className="activity-post-date-time">
-          작성시간 : {post.createdAt}
+          작성시간 :{' '}
+          {post && post.createdAt
+            ? (post.createdAt || '').split('.')[0].replaceAll('T', ' ')
+            : '-'}
         </div>
       )}
     </NavLink>
