@@ -292,7 +292,7 @@ const JoinPage = () => {
         .then((res) => {
           console.log('POST 성공');
           console.log(res);
-          goTo(PATH.CATEGORY_SELECT);
+          goTo(PATH.LOGIN);
         })
         .catch((err) => {
           console.log('POST 실패');
