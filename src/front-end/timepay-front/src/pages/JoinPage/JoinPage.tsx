@@ -292,7 +292,15 @@ const JoinPage = () => {
         .then((res) => {
           console.log('POST 성공');
           console.log(res);
-          goTo(PATH.LOGIN);
+          messageApi
+            .open({
+              type: 'success',
+              content: '회원가입이 완료되었습니다.',
+              duration: 1,
+            })
+            .then(function () {
+              goTo(PATH.LOGIN);
+            });
         })
         .catch((err) => {
           console.log('POST 실패');
