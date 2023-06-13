@@ -6,7 +6,7 @@ export const cssCalendarHeader = css`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-size: 25px;
+  font-size: 20px;
   font-weight: bold;
   padding-top: 5px;
   padding-bottom: 15px;

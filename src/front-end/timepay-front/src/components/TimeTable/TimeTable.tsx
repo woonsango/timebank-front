@@ -113,7 +113,7 @@ const TimeTable = () => {
         initialView="timeGridWeek"
         locale="ko"
         allDaySlot={false}
-        buttonText={{ today: '오늘 날짜 확인' }}
+        buttonText={{ today: '오늘 날짜' }}
         dayHeaderFormat={{
           weekday: 'short',
           day: 'numeric',
