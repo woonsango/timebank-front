@@ -16,13 +16,13 @@ import javax.persistence.*;
 @Entity
 public class DealAttatchment extends BaseTimeEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long d_attatchmentId;
 
     @Column
     private String imageUrl;
 
     @ManyToOne
-    @JoinColumn(name="d_board_id")
+    @JoinColumn(name="deal_board_id")
     private DealBoard dealBoard;
 }

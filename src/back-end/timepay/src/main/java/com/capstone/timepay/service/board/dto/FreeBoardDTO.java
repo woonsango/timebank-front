@@ -1,39 +1,37 @@
 package com.capstone.timepay.service.board.dto;
 
+import com.capstone.timepay.domain.freeAttatchment.FreeAttatchment;
 import com.capstone.timepay.domain.freeBoard.FreeBoard;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-import javax.persistence.Column;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
-@ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class FreeBoardDTO {
-    private Long id; // pk
-    private LocalDateTime freeCreatedAt;    // 생성날짜
-    private LocalDateTime freeUpdatedAt;    // 수정날짜
-    private String freeTitle;               // 제목
-    private String freeContent;             // 내용
-    private String freeWriter;              // 작성자 (나중에 유저 클래스로 변경)
-    private String freeCategory;            // 카테고리
-    private int freeBoardHits;           // 조회수
-
-//    public static BoardDTO toBoardDTO();
+public class FreeBoardDTO
+{
+    private Long id;
+    private String title;
+    private String content;
+    private String category;
+    private boolean isHidden;
+    private List<FreeAttatchment> images;
 
     public static FreeBoardDTO toFreeBoardDTO(FreeBoard freeBoard)
     {
-        FreeBoardDTO freeBoardDTO = new FreeBoardDTO();
-        freeBoardDTO.setId(freeBoard.getId());
-        freeBoardDTO.setFreeWriter(freeBoard.getFreeWriter());
-        freeBoardDTO.setFreeTitle(freeBoard.getFreeTitle());
-        freeBoardDTO.setFreeContent(freeBoard.getFreeContent());
-        freeBoardDTO.setFreeCategory(freeBoard.getFreeCategory());
-        freeBoardDTO.setFreeBoardHits(freeBoard.getFreeBoardHits());
-        freeBoardDTO.setFreeCreatedAt(freeBoard.getCreatedAt());
-        freeBoardDTO.setFreeUpdatedAt(freeBoard.getUpdatedAt());
-        return freeBoardDTO;
+        return new FreeBoardDTO(
+                freeBoard.getF_boardId(),
+                freeBoard.getTitle(),
+                freeBoard.getContent(),
+                freeBoard.getCategory(),
+                freeBoard.isHidden(),
+                freeBoard.getFreeAttatchments()
+        );
     }
 }

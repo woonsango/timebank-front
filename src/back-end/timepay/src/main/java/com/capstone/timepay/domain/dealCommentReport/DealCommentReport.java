@@ -17,13 +17,17 @@ import javax.persistence.*;
 @Entity
 public class DealCommentReport extends BaseTimeEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long dc_reportId;
 
     @Column
     private String content;
-
+    private String process;
     @ManyToOne
     @JoinColumn(name="d_comment_id")
     private DealBoardComment dealBoardComment;
+
+    @ManyToOne
+    @JoinColumn(name="user_id")
+    private User user;
 }

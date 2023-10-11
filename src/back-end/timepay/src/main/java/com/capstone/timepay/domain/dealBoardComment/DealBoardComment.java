@@ -1,15 +1,14 @@
 package com.capstone.timepay.domain.dealBoardComment;
 
 import com.capstone.timepay.domain.BaseTimeEntity;
+import com.capstone.timepay.domain.comment.Comment;
 import com.capstone.timepay.domain.dealBoard.DealBoard;
-import com.capstone.timepay.domain.dealBoardReport.DealBoardReport;
 import com.capstone.timepay.domain.dealCommentReport.DealCommentReport;
-import com.capstone.timepay.domain.freeBoard.FreeBoard;
 import com.capstone.timepay.domain.user.User;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -19,26 +18,35 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
+@Setter
 @Entity
 public class DealBoardComment extends BaseTimeEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long d_commentId;
 
-    @Column
+    @Column(nullable = false)
     private String content;
     private boolean isApplied;
     private boolean isAdopted;
+    // 비공개여부
+    private boolean isHidden;
 
-    @OneToMany(mappedBy = "dealBoardComment", orphanRemoval = true)
+    @JsonIgnore
+    @OneToMany(mappedBy = "dealBoardComment", orphanRemoval = true, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<DealCommentReport> dealCommentReports = new ArrayList<>();
 
-    @ManyToOne
-    @JoinColumn(name="d_board_id")
+    @JsonIgnore
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="d_boardId")
     private DealBoard dealBoard;
 
-    @ManyToOne
+    @JsonIgnore
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="user_id")
     private User user;
 
+    public void updateIsHidden(boolean isHidden){
+        this.isHidden = isHidden;
+    }
 }

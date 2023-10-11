@@ -1,58 +1,61 @@
 package com.capstone.timepay.domain.freeBoard;
 
 import com.capstone.timepay.domain.BaseTimeEntity;
-import com.capstone.timepay.domain.dealAttatchment.DealAttatchment;
-import com.capstone.timepay.domain.dealBoardComment.DealBoardComment;
-import com.capstone.timepay.domain.dealBoardReport.DealBoardReport;
-import com.capstone.timepay.domain.dealRegister.DealRegister;
 import com.capstone.timepay.domain.freeAttatchment.FreeAttatchment;
 import com.capstone.timepay.domain.freeBoardComment.FreeBoardComment;
 import com.capstone.timepay.domain.freeBoardReport.FreeBoardReport;
 import com.capstone.timepay.domain.freeRegister.FreeRegister;
-import com.capstone.timepay.service.board.dto.FreeBoardDTO;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+@NoArgsConstructor
+@AllArgsConstructor
 @Getter
 @Setter
 @Entity
-@Table(name = "fboard")
-public class FreeBoard extends BaseTimeEntity {
+@Builder
+public class FreeBoard extends BaseTimeEntity
+{
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long f_boardId;
 
+    @Column(nullable = false, length = 100)
+    private String title;
+
+    @Lob // 대용량 데이터
+    @Column(nullable = false)
+    private String content;
+    private String category;
+    private String type;
+
+    // 숨김처리
     @Column
-    private String freeWriter;
-    // 나중에 유저가 생성되면 User클래스로 수정해줘야함
+    private boolean isHidden;
 
-    @Column
-    private String freeTitle;
+    /*
+        TODO: 게시글 유형, 상태, 지급 타임페이, 장소 보낼필요있음
+        유저 정보도 보내야하는것 아닌가?
+     */
 
-    @Column
-    private String freeContent;
-
-    @Column
-    private String freeCategory;
-
-    // 조회수
-    @Column
-    private int freeBoardHits;
-
-    @OneToMany(mappedBy = "freeBoard", orphanRemoval = true)
+    @JsonIgnore
+    @OneToMany(mappedBy = "freeBoard", orphanRemoval = true, fetch = FetchType.LAZY)
     private List<FreeBoardComment> freeBoardComments = new ArrayList<>();
 
-    @OneToMany(mappedBy = "freeBoard", orphanRemoval = true)
+    @JsonIgnore
+    @OneToMany(mappedBy = "freeBoard", orphanRemoval = true, fetch = FetchType.LAZY)
     private List<FreeAttatchment> freeAttatchments = new ArrayList<>();
 
-    @OneToMany(mappedBy = "freeBoard", orphanRemoval = true)
+    @JsonIgnore
+    @OneToMany(mappedBy = "freeBoard", orphanRemoval = true, fetch = FetchType.LAZY)
     private List<FreeRegister> freeRegisters = new ArrayList<>();
 
-    @OneToMany(mappedBy = "freeBoard", orphanRemoval = true)
+    @JsonIgnore
+    @OneToMany(mappedBy = "freeBoard", orphanRemoval = true, fetch = FetchType.LAZY)
     private List<FreeBoardReport> freeBoardReports = new ArrayList<>();
 
 
