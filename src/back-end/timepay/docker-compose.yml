@@ -2,9 +2,12 @@ version: '3'
 services:
   mysql:
     image: mysql:8
-    container_name: capstone_timepay_backend
+    container_name: mysql
     ports:
       - "3306:3306"
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: timepay
+  webapp:
+    image: timepay:backend
+    build: .
