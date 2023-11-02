@@ -82,7 +82,7 @@ const PostPage = () => {
   const [messageApi, contextHolder] = message.useMessage();
 
   const url = window.location.pathname;
-  const real_id = url.substring(6);
+  const real_id = url.substring(url.lastIndexOf('/')+1);
 
   const { data, isLoading } = useGetBoard(parseInt(real_id));
 

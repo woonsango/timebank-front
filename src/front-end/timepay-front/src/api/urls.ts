@@ -1,11 +1,11 @@
 export const API_URL = {
   DEAL_BOARDS: '/api/deal-boards',
   DEAL_BOARDS_DELETE: '/api/deal-boards/delete',
-  DEAL_BOARDS__SEARCH: 'deal-boards/search',
+  DEAL_BOARDS__SEARCH: '/api/deal-boards/search',
   DEAL_REPORT: '/deal-boards/:id/report',
   DEAL_BOARDS_COMMENT: '/api/deal-boards/comments',
   DEAL_BOARDS_COMMENT_APPLIED: (boardId: number) =>
-    `api/deal-boards/comments/${boardId}/applied`,
+    `/api/deal-boards/comments/${boardId}/applied`,
   DEAL_BOARDS_COMMENT_WRITE: '/api/deal-boards/comments/write',
   DEAL_BOARDS_COMMENT_DELETE: '/api/deal-boards/comments/delete',
   DEAL_BOARDS_COMMENTS_ADOPTED: (boardId: number) =>
@@ -14,8 +14,8 @@ export const API_URL = {
   FREE_BOARDS_WRITE: '/api/deal-boards/write/helper', // 같이쓰기
   DEAL_BOARDS_WRITE: '/api/deal-boards/write/help', // 도움받기
   INQUIRY_WRITE: '/api/inquiry-boards/write',
-  INQUIRY: 'api/inquiry-boards',
-  NOTIFICATIONS: 'api/notifications',
+  INQUIRY: '/api/inquiry-boards',
+  NOTIFICATIONS: '/api/notifications',
   ORGANIZATIONS_REGISTER: '/api/organizations/register',
   ORGANIZATIONS_LOGIN: '/api/organizations/login',
   ORGANIZATIONS_LOGOUT: '/api/organizations/logout',

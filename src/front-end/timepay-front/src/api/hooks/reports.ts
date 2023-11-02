@@ -10,9 +10,11 @@ export const useCreateReports = () => {
     { real_id: number; body: IReportBoard }
   >({
     mutationKey: 'useReports',
-    mutationFn: (data) =>
-      apiRequest.post(`/api/deal-boards/${data.real_id}/report`, {
+    mutationFn: (data) => {
+      console.log(data);
+      return apiRequest.post(`/api/deal-boards/${data.real_id}/report`, {
         ...data.body,
-      }),
+      })
+    },
   });
 };

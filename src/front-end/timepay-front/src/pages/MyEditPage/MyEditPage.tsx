@@ -312,7 +312,7 @@ const MyEditPage: React.FC = () => {
             <Select
               value={dong as DongName}
               onChange={onChangeDong}
-              options={gu.map((city) => ({ label: city, value: city }))}
+              options={gu?.map((city) => ({ label: city, value: city }))}
               style={{ width: 100 }}
             />
           </Space>

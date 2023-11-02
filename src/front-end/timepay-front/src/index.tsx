@@ -16,7 +16,7 @@ const queryClient = new QueryClient();
 
 root.render(
   <QueryClientProvider client={queryClient}>
-    <BrowserRouter>
+    <BrowserRouter basename="/app">
       <App />
     </BrowserRouter>
     <ReactQueryDevtools initialIsOpen={false} position="bottom-right" />

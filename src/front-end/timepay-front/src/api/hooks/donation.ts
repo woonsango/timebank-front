@@ -46,13 +46,13 @@ export const useInfiniteGetDonationBoards = (
       navigate(PATH.HOME);
     },
     getNextPageParam: (lastPage, allPages) => {
-      if (lastPage.data.totalPages - 1 === lastPage.data.pageable.pageNumber)
+      if (lastPage.data.totalPages - 1 === (lastPage.data.pageable?.pageNumber||0))
         return undefined;
-      return lastPage.data.pageable.pageNumber + 1;
+      return lastPage.data.pageable?.pageNumber + 1;
     },
     getPreviousPageParam: (firstPage, allPages) => {
-      if (firstPage.data.pageable.pageNumber === 0) return undefined;
-      return firstPage.data.pageable.pageNumber - 1;
+      if ((firstPage.data.pageable?.pageNumber) === 0) return undefined;
+      return firstPage.data.pageable?.pageNumber - 1;
     },
     enabled: params.type === 'event',
   });

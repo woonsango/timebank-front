@@ -25,7 +25,7 @@ const PostButton = ({ messageApi }: { messageApi: MessageInstance }) => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const url = window.location.pathname;
-  const real_id = url.substring(6);
+  const real_id = url.substring(url.lastIndexOf('/')+1);
 
   const { data: userInfo } = useGetUserInfo();
   const { data } = useGetBoard(parseInt(real_id));

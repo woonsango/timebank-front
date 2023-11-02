@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.time.LocalDateTime;
 
 @RestController
-@RequestMapping("/deal-boards/search")
+@RequestMapping("/api/deal-boards/search")
 @RequiredArgsConstructor
 public class DealBoardSearchController {
 

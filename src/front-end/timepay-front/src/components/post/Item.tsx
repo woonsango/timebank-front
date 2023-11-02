@@ -19,7 +19,7 @@ const Item = ({ a, c, messageApi, onShowProfile }: any) => {
   const queryClient = useQueryClient();
 
   const url = window.location.pathname;
-  const real_id = url.substring(6);
+  const real_id = url.substring(url.lastIndexOf('/')+1);
   const { data: userInfo } = useGetUserInfo();
   const userNickname = useMemo(() => {
     return userInfo?.data.body.nick_name;

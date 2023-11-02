@@ -27,7 +27,7 @@ public class DonateBoardController {
     private final DonateBoardService donateBoardService;
     private final OrganizationUserService organizationUserService;
 
-    @GetMapping("/organizations/donate/mypage")
+    @GetMapping("/api/organizations/donate/mypage")
     @ApiOperation(value = "내가 쓴 기부게시판 조회")
     public ResponseEntity getMyDonateBoard(@RequestParam(value = "pagingIndex", defaultValue = "0") int pagingIndex,
                                            @RequestParam(value = "pagingSize", defaultValue = "10") int pagingSize,
@@ -37,7 +37,7 @@ public class DonateBoardController {
     }
 
     // 기부하기 게시글 작성
-    @PostMapping("/organizations/donate/write")
+    @PostMapping("/api/organizations/donate/write")
     @ApiOperation(value = "기부하기 게시글 작성")
     public ResponseEntity donateWrite(@RequestBody DonateBoardDTO donateBoardDTO,
                                       Principal principal)
@@ -66,7 +66,7 @@ public class DonateBoardController {
         return donateBoardService.getDonateBoard(boardId);
     }
 
-    @PutMapping("/organizations/donate/update/{boardId}")
+    @PutMapping("/api/organizations/donate/update/{boardId}")
     @ApiOperation(value = "기부게시판 수정하기")
     public DonateBoardDTO updateDonate(@PathVariable("boardId") Long boardId,
                                        @RequestBody DonateBoardDTO donateBoardDTO)
@@ -74,7 +74,7 @@ public class DonateBoardController {
         return donateBoardService.updateDonate(boardId, donateBoardDTO);
     }
 
-    @DeleteMapping("/organizations/donate/delete/{boardId}")
+    @DeleteMapping("/api/organizations/donate/delete/{boardId}")
     @ApiOperation(value = "기부게시판 삭제하기")
     public void deleteDonate(@PathVariable("boardId") Long boardId)
     {

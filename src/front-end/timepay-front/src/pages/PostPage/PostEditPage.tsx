@@ -40,7 +40,7 @@ const Footer = Layout;
 
 const PostEditPage = () => {
   const url = window.location.pathname;
-  const boardId = url.substring(6);
+  const boardId = url.substring(url.lastIndexOf('/')+1);
 
   const navigate = useNavigate();
   const setHeaderTitle = useSetRecoilState(headerTitleState);

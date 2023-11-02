@@ -1,0 +1,46 @@
+version: '3'
+services:
+  mysql:
+    image: mysql:8
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: timepay
+    volumes:
+      - /root/data/mysql/db:/var/lib/mysql
+      - /root/data/mysql/conf:/etc/mysql/conf.d
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    restart: always
+    environment:
+      PMA_ARBITARY: "1"
+      PMA_ABSOLUTE_URI: "https://timepay.cs.kookmin.ac.kr/_/mysql/"
+      PMA_HOST: "mysql"
+      PMA_PMADB: phpmyadmin
+    links:
+      - mysql
+    ports:
+      - 9090:80
+    volumes:
+      - /root/data/phpmyadmin/sessions:/docker/phpmyadmin/sessions
+  backend:
+    build: ./src/back-end/
+
+    #image: kmucs/timebank/timepay:2023.1
+  web:
+    build:
+      context: ./src/front-end/
+      args:
+          MAVEN_URL: ${MAVEN_URL}
+    #image: kmucs/timebank/timepay-web:2023.1
+    volumes:
+      - ./templates:/etc/nginx/templates
+    ports:
+      - "80:80"
+    environment:
+      NGINX_HOST: "timepay.cs.kookmin.ac.kr"
+      NGINX_PORT: "80"
+    links:
+      - phpmyadmin
+      - backend
+    

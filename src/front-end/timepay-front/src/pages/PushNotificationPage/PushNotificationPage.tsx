@@ -23,7 +23,7 @@ const PushNotificationPage = () => {
   });
 
   const notifications = useMemo(() => {
-    return data?.data.content.map((notice) => ({
+    return (data?.data.content || []).map((notice) => ({
       ...notice,
       isAlreadyRead: true,
       type: 'notice',

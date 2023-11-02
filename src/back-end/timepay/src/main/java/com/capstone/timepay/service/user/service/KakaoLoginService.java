@@ -44,10 +44,12 @@ public class KakaoLoginService {
             BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(conn.getOutputStream()));
             StringBuilder sb = new StringBuilder();
             sb.append("grant_type=authorization_code");
-            sb.append("&client_id=79587b639a3a9ca1c9433fa63bc55863");
+            sb.append("&client_id=e1d781c0bf8fcc076c53ca37bc99f22c");
+            //sb.append("&client_id=79587b639a3a9ca1c9433fa63bc55863");
             //sb.append("&redirect_uri=http://localhost:8080/oauth/redirect/kakao"); // 서버 로컬 테스트용
             //sb.append("&redirect_uri=http://localhost:3000/oauth/redirect/kakao"); // 프론트 로컬 테스트용
-            sb.append("&redirect_uri=http://13.125.249.51/oauth/redirect/kakao"); // 배포할 때 이 코드 사용
+            //sb.append("&redirect_uri=http://13.125.249.51/oauth/redirect/kakao"); // 배포할 때 이 코드 사용
+            sb.append("&redirect_uri=https://timepay.cs.kookmin.ac.kr/app/oauth/redirect/kakao"); // 배포할 때 이 코드 사용
 
 
             sb.append("&code=" + code);
@@ -125,9 +127,10 @@ public class KakaoLoginService {
             boolean hasEmail = element.getAsJsonObject().get("kakao_account").getAsJsonObject().get("has_email").getAsBoolean();
 
             /* email 값 비교하여 중복된 데이터는 데이터베이스에 저장X */
-            if(hasEmail) {
+            //if(hasEmail) {
                 /* 이메일 가져오기 */
-                email = element.getAsJsonObject().get("kakao_account").getAsJsonObject().get("email").getAsString();
+                //email = element.getAsJsonObject().get("kakao_account").getAsJsonObject().get("email").getAsString();
+                email = element.getAsJsonObject().get("id") + "@kakao.com";
                 kakaoUser = userRepository.findByEmail(email).orElse(null);
                 password = email + Key;
                 if (kakaoUser == null) {
@@ -182,12 +185,12 @@ public class KakaoLoginService {
 
 
                 br.close();
-            } else{
+            //} else{
                 /* 이메일 항목을 동의하지 않으면 null 값을 리턴받음 */
                 /* null 값을 리턴받으면 회원가입이 불가능함 */
                 /* 즉 이메일 항목을 동의하지 않으면 회원가입 불가능 */
-                return null;
-            }
+            //    return null;
+            //}
 
         } catch (IOException e) {
             e.printStackTrace();
