@@ -22,6 +22,8 @@ import {
 import { IAgency } from '../../api/interfaces/IAgency';
 import { CheckCircleFilled, CloseCircleFilled } from '@ant-design/icons';
 import useFontSize from '../../hooks/useFontSize';
+import { ReactComponent as BackArrow } from '../../assets/images/icons/header-back-arrow.svg';
+import { cssMainHeaderStyle } from '../../components/MainHeader/MainHeader.styles';
 
 const MyPage = () => {
   const navigate = useNavigate();
@@ -220,8 +222,16 @@ const MyPage = () => {
       });
   }, []);
 
+  const handleClickBack = useCallback(() => {
+    navigate(PATH.HOME);
+  }, [navigate]);
+
   return (
     <div css={cssMyStyle(scaleValue)}>
+      <div css={cssMainHeaderStyle}>
+        <BackArrow onClick={handleClickBack} />
+        <span>내 정보</span>
+      </div>
       {contextHolder}
       <div className="MyContentWrap">
         <div className="MyEdit">
@@ -329,6 +339,30 @@ const MyPage = () => {
                 활동 기록
               </button>
             </div> */}
+            {<div className="MyPageMoveBox">
+              <button
+                className="MyPageText"
+                onClick={() => handlePageMove(PATH.SHARE)}
+              >
+                마을시간은행 초대하기
+              </button>
+            </div>}
+            {<div className="MyPageMoveBox">
+              <button
+                className="MyPageText"
+                onClick={() => handlePageMove(PATH.MY_ACTIVITY_RECORD)}
+              >
+                활동 내역
+              </button>
+            </div>}
+            {/*<div className="MyPageMoveBox">
+              <button
+                className="MyPageText"
+                onClick={() => handlePageMove(PATH.NOTIFICATION)}
+              >
+                알림
+              </button>
+            </div>*/}
             {!agencyInfo && (
               <div className="MyPageMoveBox">
                 <button
@@ -356,7 +390,16 @@ const MyPage = () => {
                   >
                     신청인 관리
                   </button>
+                  </div>
+                  <div className="MyPageMoveBox">
+                  <button
+                    className="MyPageText"
+                    onClick={() => handlePageMove(PATH.BANKING)}
+                  >
+                    송금하기
+                  </button>
                 </div>
+                
               </>
             ) : (
               <></>

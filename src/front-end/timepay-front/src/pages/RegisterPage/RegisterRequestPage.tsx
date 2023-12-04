@@ -10,6 +10,8 @@ import {
   DatePicker,
   Checkbox,
   Modal,
+  Row,
+  Col
 } from 'antd';
 import { RcFile, UploadChangeParam, UploadProps } from 'antd/es/upload';
 import { useCallback, useState, useMemo, useEffect } from 'react';
@@ -26,6 +28,10 @@ import {
   cssPostFooterStyle,
   cssPostCategoryStyle,
   cssPostDateStyle,
+  cssPostFooterNextStyle,
+  cssPostBtnLeftStyle,
+  cssPostBtnRightStyle,
+  cssPostBtnFirstStyle,
 } from './RegisterFreePage.style';
 import { FlagFilled } from '@ant-design/icons';
 import { useSetRecoilState } from 'recoil';
@@ -43,6 +49,9 @@ import {
   cssPostAutoStyle,
   cssPostInputNumberStyle,
 } from './RegisterRequest.styles';
+import moment from 'moment';
+import { Rule } from 'antd/lib/form';
+
 
 const { TextArea } = Input;
 const MAX_IMAGES = 5;
@@ -63,6 +72,8 @@ const RegisterRequestPage = () => {
   const [imgFileList, setImgFileList] = useState<UploadFile[]>([]);
   const [previewImage, setPreviewImage] = useState('');
   const [previewOpen, setPreviewOpen] = useState(false);
+  const [selectedDate, setSelectedDate] = useState(dayjs());
+
 
   const createDealBoardsMutation = useCreateDealBoards();
   const [messageApi, contextHolder] = message.useMessage();
@@ -87,6 +98,7 @@ const RegisterRequestPage = () => {
   const [images, setImages] = useState<File[]>([]);
   const [previewUrls, setPreviewUrls] = useState<string[]>([]);
   const [isVolunteer, setIsVolunteer] = useState(false);
+  const [section, setSection] = useState(0);
 
   const isAgency = useMemo(() => {
     if (userInfo?.data.body.manager_name) return true;
@@ -243,12 +255,12 @@ const RegisterRequestPage = () => {
               : 0
             : 0,
           images: null,
-          startTime: `${values.activityDate.format(
+          startTime: `${moment(values.activityDate).format(
             'YYYY-MM-DD',
-          )}T${values.startTime.format('HH:mm:ss')}.000Z`,
-          endTime: `${values.activityDate.format(
+          )}T${moment(values.startTime).format('HH:mm:ss')}.000Z`,
+          endTime: `${moment(values.activityDate).format(
             'YYYY-MM-DD',
-          )}T${values.endTime.format('HH:mm:ss')}.000Z`,
+          )}T${moment(values.endTime).format('HH:mm:ss')}.000Z`,
           pay: exchangeTimepay,
         };
 
@@ -309,128 +321,135 @@ const RegisterRequestPage = () => {
     setCurrent(2); // startTime과 endTime 값을 가져옵니다.
   };
 
-  return (
-    <div css={cssPostPageStyle}>
-      {contextHolder}
-      <Steps
-        direction="vertical"
-        current={current}
-        style={{
-          position: 'fixed',
-          zIndex: 100,
-          background: `${COMMON_COLOR.WHITE}`,
-          paddingLeft: 20,
-          paddingTop: 10,
-          boxShadow: '0px 2px 5px rgba(0, 0, 0, 0.2)',
-        }}
-        items={[
-          {
-            title: '카테고리 선택',
-          },
-          {
-            title: '시간/장소 입력',
-          },
-          {
-            title: '게시글 내용 입력',
-          },
-        ]}
-      />
+  // const [startTime, setStartTime] = useState(new Date());  // 각각 입력된 값을 DatePicker 형식으로 바꾸기 위함
+  // const [endTime, setEndTime] = useState(new Date());
 
-      <Form onFinish={handleOnSubmit} form={form} layout="vertical">
-        {isAgency && (
-          <Form.Item
-            label=""
-            name="volunteer"
-            css={cssPostCategoryStyle}
-            valuePropName="checked"
-            extra="봉사활동 지급 게시글 등록은 봉사활동 자격 서류 인증을 완료한 기관만 가능합니다."
-          >
-            <Checkbox
-              disabled={!isVolunteerAvailable}
-              onChange={(e) => {
-                setIsVolunteer(e.target.checked);
-              }}
+  // const validateEndTime = (rule: Rule) => {
+  //   const startTime = form.getFieldValue('startTime');
+  //   const endTime = form.getFieldValue('endTime');
+  //   if (endTime && startTime && endTime.isBefore(startTime)) {
+  //     return Promise.reject('종료 시간은 시작 시간보다 빨라야 합니다.');
+  //   }
+  //   return Promise.resolve();
+  // };
+
+
+  return (
+    <div>
+      {
+        section === 0 && (
+          <>
+            {
+              
+              <div css={cssPostPageStyle}>
+              {isAgency && (
+            <Form.Item
+              label=""
+              name="volunteer"
+              css={cssPostCategoryStyle}
+              valuePropName="checked"
+              extra="봉사활동 지급 게시글 등록은 봉사활동 자격 서류 인증을 완료한 기관만 가능합니다."
             >
-              봉사활동 지급 여부
-            </Checkbox>
-          </Form.Item>
-        )}
-        {isAgency && (
-          <Form.Item
-            label="봉사활동 인원"
-            name="volunteerPeople"
-            css={cssPostInputNumberStyle}
-            extra="인원 * 타임페이가 소모될 예정입니다."
-          >
-            <Input
-              min={1}
-              disabled={!isVolunteerAvailable || !isVolunteer}
-              addonAfter="명"
-            />
-          </Form.Item>
-        )}
-        {isAgency && (
-          <Form.Item
-            label="지급할 봉사활동 시간"
-            name="volunteerTime"
-            css={cssPostInputNumberStyle}
-            extra={
-              <>
-                활동 완료 시 봉사자에게 지급할 봉사시간입니다. <br /> 작성하지
-                않을 경우 활동 시간에서 반올림합니다.
-              </>
-            }
-            rules={[{ required: false }]}
-          >
-            <Input
-              min={1}
-              step={1}
-              disabled={!isVolunteerAvailable || !isVolunteer}
-              addonAfter="시간"
-            />
-          </Form.Item>
-        )}
-        <Form.Item
-          label="카테고리 선택"
-          name="category"
-          css={isAgency ? cssPostDateStyle : cssPostCategoryStyle}
-        >
-          <Radio.Group onChange={handleCategoryChange}>
-            {data?.data.map((category) => (
-              <Radio.Button
-                key={category.categoryId}
-                value={category.categoryName}
-                style={{
-                  borderRadius: '0',
-                  margin: '5px',
-                  fontWeight: '500',
+              <Checkbox
+                disabled={!isVolunteerAvailable}
+                onChange={(e) => {
+                  setIsVolunteer(e.target.checked);
                 }}
               >
-                {category.categoryName}
-              </Radio.Button>
-            ))}
-          </Radio.Group>
-        </Form.Item>
-
-        <div css={cssLineStyle} />
-
-        <Form.Item
-          name="activityDate"
-          label="활동일"
-          initialValue={dayjs()}
-          css={cssPostDateStyle}
-        >
-          <DatePicker format="YYYY년 MM월 DD일" />
-        </Form.Item>
-
-        <div className="time">
+                봉사활동 지급 여부
+              </Checkbox>
+            </Form.Item>
+          )}
+          {isAgency && (
+            <Form.Item
+              label="봉사활동 인원"
+              name="volunteerPeople"
+              css={cssPostInputNumberStyle}
+              extra="인원 * 타임페이가 소모될 예정입니다."
+            >
+              <Input
+                min={1}
+                disabled={!isVolunteerAvailable || !isVolunteer}
+                addonAfter="명"
+              />
+            </Form.Item>
+          )}
+          {isAgency && (
+            <Form.Item
+              label="지급할 봉사활동 시간"
+              name="volunteerTime"
+              css={cssPostInputNumberStyle}
+              extra={
+                <>
+                  활동 완료 시 봉사자에게 지급할 봉사시간입니다. <br /> 작성하지
+                  않을 경우 활동 시간에서 반올림합니다.
+                </>
+              }
+              rules={[{ required: false }]}
+            >
+              <Input
+                min={1}
+                step={1}
+                disabled={!isVolunteerAvailable || !isVolunteer}
+                addonAfter="시간"
+              />
+            </Form.Item>
+          )}
           <Form.Item
-            name="startTime"
-            label="활동을 시작할 시간"
-            css={cssPostDateStyle}
-            initialValue={dayjs().minute(0)}
+            label="카테고리 선택"
+            name="category"
+            css={isAgency ? cssPostDateStyle : cssPostCategoryStyle}
           >
-            <DatePicker.TimePicker
+            <Radio.Group onChange={handleCategoryChange}>
+              {data?.data.map((category) => (
+                <Radio.Button
+                  key={category.categoryId}
+                  value={category.categoryName}
+                  style={{
+                    borderRadius: '0',
+                    margin: '5px',
+                    fontWeight: '500',
+                  }}
+                >
+                  {category.categoryName}
+                </Radio.Button>
+              ))}
+            </Radio.Group>
+          </Form.Item>
+              </div>
+                }
+              <div css={cssPostFooterNextStyle}>
+                <Button onClick={() => setSection(1)} css={cssPostBtnFirstStyle}>다음 화면으로</Button>
+              </div>
+            
+          </>
+        )
+      }
+
+      {
+        section === 1 && (
+          <>
+            {
+              <div css={cssPostPageStyle}>
+                <Form.Item
+                  name="activityDate"
+                  label="활동일"
+                  initialValue={dayjs()}
+                  css={cssPostDateStyle}
+                >
+                  <DatePicker
+                    format="YYYY년 MM월 DD일"
+                  />
+                </Form.Item>
+
+          <div className="time">
+            <Form.Item
+              name="startTime"
+              label="활동을 시작할 시간"
+              css={cssPostDateStyle}
+              initialValue={dayjs().minute(0)}
+            >
+              <DatePicker.TimePicker
               locale={locale}
               format="HH시 mm분"
               placeholder="시간"
@@ -439,11 +458,13 @@ const RegisterRequestPage = () => {
               popupClassName="time-picker-no-footer"
               onSelect={(value) => {
                 form.setFieldValue('startTime', value);
+                console.log('Selected Start Time:', value);
                 handleOnChangeTime({ startTime: value }, form.getFieldsValue());
               }}
             />
-          </Form.Item>
-          <Form.Item
+            </Form.Item>
+
+            <Form.Item
             name="endTime"
             label="활동이 끝날 시간"
             css={cssPostDateStyle}
@@ -467,7 +488,28 @@ const RegisterRequestPage = () => {
                     const { startTime } = form.getFieldsValue(['startTime']);
                     if (startTime) {
                       const selectedHour = startTime.hour();
-                      return Array.from({ length: selectedHour }, (_, i) => i);
+                      const selectedMinute = startTime.minute();
+                      if (startTime) {
+                        if (selectedMinute === 30) {  // 30분 선택 시, 선택한 시간 이후부터 가능
+                          return Array.from({ length: selectedHour+1 }, (_, i) => i);
+                        } else {  // 00분 선택 시, 선택한 시간부터 가능
+                          return Array.from({ length: selectedHour }, (_, i) => i);
+                        }
+                      }
+                    }
+                    return [];
+                  },
+                  disabledMinutes: (hour) => {
+                    const { startTime } = form.getFieldsValue(['startTime']);
+                    if (startTime) {
+                      const selectedHour = startTime.hour();
+                      const selectedMinute = startTime.minute();
+                      if (selectedHour === hour) {
+                        if (selectedMinute === 0) {
+                          // 00분 선택 시, 30분만 가능
+                          return Array.from({ length: selectedMinute + 30 }, (_, i) => i);
+                        }
+                      }
                     }
                     return [];
                   },
@@ -476,87 +518,144 @@ const RegisterRequestPage = () => {
             />
           </Form.Item>
         </div>
-        <div className="guide">
-          <div>
-            교환할 타임페이 양 :{' '}
-            <b>{exchangeTimepay ? exchangeTimepay + ' TP' : ''}</b>{' '}
+            
+          <div className="guide">
+            <div>
+              교환할 타임페이 양 :{' '}
+              <b>{exchangeTimepay ? exchangeTimepay + ' TP' : ''}</b>{' '}
+            </div>
+            <div>도움을 받은 분의 타임페이가 충분한지 확인해주세요.</div>
           </div>
-          <div>도움을 받은 분의 타임페이가 충분한지 확인해주세요.</div>
-        </div>
 
-        <Form.Item label="장소" name="location" css={cssPostDateStyle}>
-          <Input
-            size="large"
-            placeholder="여기에 장소를 입력하세요"
-            style={{
-              paddingLeft: '15px',
-              width: '230px',
-            }}
-            prefix={<FlagFilled style={{ marginRight: '5px' }} />}
-            onChange={(event) => {
-              handleLocationChange(event);
-              handleTimeLocationChange();
-            }}
-          />
-        </Form.Item>
-        <div css={cssLineStyle} />
+          <Form.Item label="장소" css={cssPostDateStyle}>
+            <Input
+              size="large"
+              placeholder="여기에 장소를 입력하세요"
+              style={{
+                paddingLeft: '15px',
+                width: '230px',
+              }}
+              value={location}
+              prefix={<FlagFilled style={{ marginRight: '5px' }} />}
+              onChange={(event) => {
+                handleLocationChange(event);
+                handleTimeLocationChange();
+              }}
+            />
+          </Form.Item>
+              </div>
+                }
+              <div css={cssPostFooterNextStyle}>
+              <Button onClick={() => setSection(0)} css={cssPostBtnLeftStyle}>이전 화면으로</Button>
+              <Button onClick={() => setSection(2)} css={cssPostBtnRightStyle}>다음 화면으로</Button>
+              </div>
+            
+          </>
+        )
+      }
 
-        <Form.Item label="제목" name="title" css={cssPostTitleStyle}>
-          <Input
-            css={cssPostTitleInputStyle}
-            placeholder="여기에 제목을 입력하세요"
-            maxLength={25}
-            value={title}
-            onChange={handleTitleChange}
-          />
-        </Form.Item>
+      {
+        section === 2 && (
+          <>
+            {<div css={cssPostPageStyle}>
+        {contextHolder}
+        
 
-        <Form.Item label="내용" name="content" css={cssPostContentStyle}>
-          <TextArea
-            rows={5}
-            style={{ resize: 'none' }}
-            css={cssPostContentInputStyle}
-            placeholder="여기에 내용을 입력하세요"
-            value={content}
-            onChange={handleContentChange}
-          />
-        </Form.Item>
-        <div css={cssLineStyle} />
-        <Form.Item
-          name="images"
-          getValueFromEvent={normFile}
-          valuePropName="fileList"
-          css={cssPostDateStyle}
-        >
-          <Upload
-            onChange={handleImgChange}
-            onPreview={handlePreview}
-            multiple={false}
-            beforeUpload={() => false}
-            accept="image/png, image/jpg, image/jpeg"
+        <Form onFinish={handleOnSubmit} form={form} layout="vertical">
+          
+{/* 
+          <div css={cssLineStyle} />
+
+          
+          <div css={cssLineStyle} /> */}
+
+          <Form.Item label="제목" name="title" css={cssPostTitleStyle}>
+            <Input
+              css={cssPostTitleInputStyle}
+              placeholder="여기에 제목을 입력하세요"
+              maxLength={25}
+              value={title}
+              onChange={handleTitleChange}
+            />
+          </Form.Item>
+
+          <Form.Item label="내용" name="content" css={cssPostContentStyle}>
+            <TextArea
+              rows={5}
+              style={{ resize: 'none' }}
+              css={cssPostContentInputStyle}
+              placeholder="여기에 내용을 입력하세요"
+              value={content}
+              onChange={handleContentChange}
+            />
+          </Form.Item>
+          <div css={cssLineStyle} />
+          <Form.Item
+            name="images"
+            getValueFromEvent={normFile}
+            valuePropName="fileList"
+            css={cssPostDateStyle}
           >
-            {imgFileList.length === 1 ? null : uploadButton}
-          </Upload>
-        </Form.Item>
-        <Form.Item
-          label=""
-          name="auto"
-          css={cssPostAutoStyle}
-          valuePropName="checked"
-          extra="설정 시 선착순으로 매칭됩니다."
-        >
-          <Checkbox>자동매칭 여부</Checkbox>
-        </Form.Item>
-        <div css={cssPostFooterStyle}>
-          {isDisabled ? (
-            <Button css={cssPostBtnStyle2}>작성완료</Button>
-          ) : (
-            <Button htmlType="submit" css={cssPostBtnStyle}>
-              작성완료
-            </Button>
-          )}
-        </div>
-      </Form>
+            <Upload
+              onChange={handleImgChange}
+              onPreview={handlePreview}
+              multiple={false}
+              beforeUpload={() => false}
+              accept="image/png, image/jpg, image/jpeg"
+            >
+              {imgFileList.length === 1 ? null : uploadButton}
+            </Upload>
+          </Form.Item>
+          {/* <Button htmlType='submit' onClick={() => console.log(1234)}>야야야</Button> */}
+          <Form.Item
+            label=""
+            name="auto"
+            css={cssPostAutoStyle}
+            valuePropName="checked"
+            extra="설정 시 선착순으로 매칭됩니다."
+          >
+            <Checkbox>자동매칭 여부</Checkbox>
+          </Form.Item>
+            {isDisabled ? (
+              <Button css={cssPostBtnStyle2}>작성완료</Button>
+            ) : (
+              <Button htmlType="submit" css={cssPostBtnStyle} onClick={() =>console.log('야')}>
+                작성완료
+              </Button>
+              
+            )}
+        </Form>
+      </div>}
+              <div css={cssPostFooterNextStyle}>
+              <Button htmlType='button' onClick={() => setSection(1)} css={cssPostBtnLeftStyle}>이전 화면으로</Button>
+              </div>
+            
+      {/* <Steps
+        direction="vertical"
+        current={current}
+        style={{
+          position: 'fixed',
+          zIndex: 100,
+          background: `${COMMON_COLOR.WHITE}`,
+          paddingLeft: 20,
+          paddingTop: 10,
+          boxShadow: '0px 2px 5px rgba(0, 0, 0, 0.2)',
+        }}
+        items={[
+          {
+            title: '카테고리 선택',
+          },
+          {
+            title: '시간/장소 입력',
+          },
+          {
+            title: '게시글 내용 입력',
+          },
+        ]}
+      /> */}
+          </>
+        )
+      }
     </div>
   );
 };
