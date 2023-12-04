@@ -33,6 +33,8 @@ const AgentModal = ({ myUID, isOpen, onCancel }: AgentModalProps) => {
   const onRegisterClick = useCallback(async () => {
     const formValues = form.getFieldsValue();
     console.log(formValues);
+    let mhptext = document.getElementById('mph') as HTMLInputElement;
+    let hptext = Number(mhptext.value);
     await postAgentRegister.mutateAsync(formValues, {
       onSuccess: () => {
         messageApi.open({
@@ -47,6 +49,13 @@ const AgentModal = ({ myUID, isOpen, onCancel }: AgentModalProps) => {
       },
       onError: (err) => {
         console.log(err.response?.status);
+        if(myUID === hptext){
+          messageApi.open({
+          type: 'error',
+          content: '다른 사람의 UID를 입력해주세요.',
+        });
+        }
+        
       },
     });
   }, [form, messageApi, onCancel, postAgentRegister, queryClient]);
@@ -90,6 +99,7 @@ const AgentModal = ({ myUID, isOpen, onCancel }: AgentModalProps) => {
         <Form form={form} layout="horizontal">
           <Form.Item name="uid">
             <InputNumber
+              id="mph"
               style={{ width: 210 }}
               placeholder="대리인의 UID를 입력해주세요"
             />

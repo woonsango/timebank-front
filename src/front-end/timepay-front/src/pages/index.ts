@@ -4,6 +4,7 @@ import JoinPage from './JoinPage';
 import FinishJoinPage from './FinishJoinPage';
 import HomePage from './HomePage';
 import MyPage from './MyPage';
+import WritePage from './WritePage';
 import MyEditPage from './MyEditPage';
 import SearchPage from './SearchPage';
 import RegisterFreePage from './RegisterPage/RegisterFreePage';
@@ -27,6 +28,9 @@ import DonationBoardPage from './DonationBoardPage';
 import AgentPage from './AgentPage';
 import ApplicantPage from './ApplicantPage';
 import DonationBoardEditPage from './DonationBoardEditPage';
+import SharePage from './SharePage';
+import SearchHomePage from './SearchHomePage'; 
+import BankingPage from './BankingPage';
 
 const PageRoutes = {
   LoginPage,
@@ -35,6 +39,7 @@ const PageRoutes = {
   FinishJoinPage,
   HomePage,
   MyPage,
+  WritePage,
   MyEditPage,
   SearchPage,
   RegisterFreePage,
@@ -58,6 +63,9 @@ const PageRoutes = {
   DonationBoardPage,
   AgentPage,
   ApplicantPage,
+  SharePage,
+  SearchHomePage,
+  BankingPage,
 };
 
 export default PageRoutes;

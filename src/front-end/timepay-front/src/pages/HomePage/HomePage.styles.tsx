@@ -8,6 +8,21 @@ export const cssBox = css`
   }
 `;
 
+export const cssSearch = css`
+  min-width: 54px;
+  background-color: ${COMMON_COLOR.MAIN1};
+  color: ${COMMON_COLOR.WHITE} !important;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 54px !important;
+  border: none;
+  float: right;
+  right: -40%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+
 export const cssHomePageStyle = (scaleValue: number) => css`
   display: flex;
   flex-direction: column;
@@ -17,7 +32,7 @@ export const cssHomePageStyle = (scaleValue: number) => css`
     align-items: center;
     gap: calc(30px * ${scaleValue});
     background-color: ${COMMON_COLOR.LOGO1};
-    padding-top: 100px;
+    padding-top: 10px;
     padding-bottom: calc(36px * ${scaleValue});
     .title-search {
       display: flex;
@@ -55,7 +70,7 @@ export const cssHomePageStyle = (scaleValue: number) => css`
     line-height: calc(15px * ${scaleValue});
     color: ${COMMON_COLOR.FONT3};
   }
-  .info-container {
+  .info-container { 
     font-style: normal;
     font-weight: 700;
     font-size: calc(14px * ${scaleValue});
@@ -83,3 +98,30 @@ export const cssCategoryListStyle = (scaleValue: number) => css`
     color: ${COMMON_COLOR.FONT2};
   }
 `;
+
+export const cssBtnStyle1 = css`
+  flex: 1;
+  font-size: 20px;
+  width: 33vw;
+  height: 30vh;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+  @media (max-width: 768px) {
+    font-size: 12px;
+  }
+`;
+
+export const cssWriteContainer = css`
+  display: flex;
+  position: fixed;
+  bottom: 0; /* 화면 하단에 위치하도록 설정 */
+  left: 0;
+  width: 100vw;
+  justify-content: space-around;
+  align-items: center;
+  height: 50vh; /* 버튼 높이의 2배로 설정 */
+`;
+

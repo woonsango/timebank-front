@@ -6,6 +6,7 @@ export const PATH = {
   HOME: '/home',
   SEARCH: '/search',
   MY_PAGE: '/my',
+  WritePage: '/write-page',  // WritePage 경로
   Register_HR: '/register/help-request',
   Register_HS: '/register/help-serve',
   Register_F: '/register/free',
@@ -32,6 +33,9 @@ export const PATH = {
   DONATION_BOARD: '/donation',
   AGENT: '/agent',
   APPLICANT: '/applicant',
+  SHARE: '/share',
+  SEARCH_HOME: '/search-home',
+  BANKING: '/banking',
 };
 
 export const deployHostName = 'http://13.125.249.51';
