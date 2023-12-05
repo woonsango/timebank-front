@@ -24,6 +24,7 @@ import {
   setMultiTokenToCookie,
 } from '../../utils/token';
 import { COMMON_COLOR } from '../../styles/constants/colors';
+import InstantActivityQRModal from '../../components/InstantActivityQRModal';
 
 //*********/
 import {Link} from 'react-router-dom';
@@ -36,6 +37,10 @@ const HomePage = () => {
   const boardSearchValue = useRecoilValue(boardSearchState);
   const setBoardSearchState = useSetRecoilState(boardSearchState);
   const { scaleValue } = useFontSize();
+
+  const handleOnCloseQRModal = useCallback(() => {
+    setIsOpenQR(false);
+  }, []);
 
   const { data, isLoading } = useGetCategory({
     type: '도움요청',
@@ -128,7 +133,7 @@ const HomePage = () => {
       okText: '도움이 필요합니다',
       cancelText: '취소',
       onOk: () => {
-        if (userInfoData?.data.body.id) setIsOpenQR(true);
+        setIsOpenQR(true);
       },
     });
   }, [userInfoData]);
@@ -153,8 +158,8 @@ const HomePage = () => {
       <Button className="cssHomeHeaderNotificationStyle" css={cssSearch}>
             <BellOutlined onClick={handleOnLinkNotification} />
           {/* 알림 */}
-        </Button>
-        <Logo />
+      </Button>
+      <Logo />
         {/* <div className="title-search">
           <Input
             defaultValue={boardSearchValue.title}
@@ -166,7 +171,7 @@ const HomePage = () => {
           </Button>
         </div> */}
       </div>
-      <div className="category-search-container">
+      {/* <div className="category-search-container">
         {isLoading ? (
           <Spin size="large" />
         ) : (
@@ -184,7 +189,7 @@ const HomePage = () => {
             </div>
           </>
         )}
-      </div>
+      </div> */}
       <div className="info-container">
         타임페이 커뮤니티에서 모든 사용자는 도움을 주는 대가로 타임페이를 받을
         수 있어요. <br />
@@ -192,10 +197,17 @@ const HomePage = () => {
       </div>
       <div css={cssWriteContainer}>
         {/* <div style={{position: 'fixed', width: '100vw', height: '79vh', display: 'flex', flexDirection: 'column'}}> */}
-          <Button onClick={handleOnLinkRequest} css={cssBtnStyle1}><Link to={PATH.Register_HR}>도움요청<br/>도움이 필요할 때<br/>다른 분에게 요청해보세요!</Link></Button>
-          <Button onClick={handleOnLinkWith} css={cssBtnStyle1}><Link to={PATH.Register_HS}>같이하기<br/>마음이 맞는 사람끼리<br/>같이 활동해보세요!</Link></Button>
-          <Button onClick={handleOnShowQRModal} css={cssBtnStyle1}><Link to={PATH.Register_HR}>바로도움요청<br/>급하게 도움이 필요할 때<br/>도움을 요청해보세요!</Link></Button>
+          <Button onClick={handleOnLinkRequest} css={cssBtnStyle1}><Link to={PATH.Register_HR}><span style={{font:'20px'}}>도움요청</span><br/>도움이 필요할 때<br/>다른 분에게 요청해보세요!</Link></Button>
+          <Button onClick={handleOnLinkWith} css={cssBtnStyle1}><Link to={PATH.Register_HS}><span>같이하기</span><br/>마음이 맞는 사람끼리<br/>같이 활동해보세요!</Link></Button>
+          <Button onClick={handleOnShowQRModal} css={cssBtnStyle1}><Link to={PATH.HOME}><span>바로도움요청</span><br/>급하게 도움이 필요할 때<br/>도움을 요청해보세요!</Link></Button>
         {/* </div> */}
+      </div>
+      <div>
+      <InstantActivityQRModal
+        isOpen={isOpenQR}
+        onCancel={handleOnCloseQRModal}
+        helpPk={useGetUserInfo().data?.data.body.id}
+      />
       </div>
     </div>
     

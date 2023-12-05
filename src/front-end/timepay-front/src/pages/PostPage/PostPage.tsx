@@ -120,12 +120,15 @@ const PostPage = () => {
   };
 
   useEffect(() => {
-    if (type === 'help' ||  type === 'success') {
+    console.log(type);
+    if (type === 'help') {
       setHeaderTitle('도움요청');
-    } else {
+    } else if (type === 'helper'){
       setHeaderTitle('같이하기');
+    } else {
+      setHeaderTitle('');
     }
-  }, [setHeaderTitle]);
+  }, [type]);
 
   const board = useMemo(() => {
     return data?.data;
@@ -205,6 +208,10 @@ const PostPage = () => {
 
   // 댓글 등록
   const handleSubmitComment = useCallback(async () => {
+    if (!commentValue.content.trim()) {
+      // 댓글이 비어 있다면 등록 프로세스를 실행하지 않음
+      return;
+    }
     await createCommentMutation.mutateAsync(commentValue, {
       onSuccess: (data) => {
         messageApi.success({
