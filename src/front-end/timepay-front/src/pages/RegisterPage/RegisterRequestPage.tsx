@@ -206,10 +206,13 @@ const RegisterRequestPage = () => {
     console.log('values', values) ;
     console.log(values.startTime) ;
     console.log(values.endTime) ;
+    console.log(selectedStartTime) ;
+      console.log(selectedEndTime) ;
     if (selectedStartTime && selectedEndTime) {
       const startTime = selectedEndTime ;
       const endTime = selectedEndTime ;
       const duration = endTime.diff(startTime, 'minutes');
+      console.log(duration) ;
       setExchangeTimepay(duration);
     } else {
       setExchangeTimepay(30);
