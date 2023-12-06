@@ -202,12 +202,13 @@ const RegisterRequestPage = () => {
   };
 
   const handleOnChangeTime = useCallback((changedValues: any, values: any) => {
-    console.log(values) ;
+    console.log('changedValues', changedValues) ;
+    console.log('values', values) ;
     console.log(values.startTime) ;
     console.log(values.endTime) ;
-    if (values.startTime && values.endTime) {
-      const startTime = values.startTime.clone();
-      const endTime = values.endTime.clone();
+    if (selectedStartTime && selectedEndTime) {
+      const startTime = selectedEndTime ;
+      const endTime = selectedEndTime ;
       const duration = endTime.diff(startTime, 'minutes');
       setExchangeTimepay(duration);
     } else {
