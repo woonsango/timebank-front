@@ -481,7 +481,7 @@ const RegisterRequestPage = () => {
                           console.log('Selected Start Time:', value);
                           setSelectedStartTime(value);
                           console.log('selectedStartTime: ', selectedStartTime) ;
-                          handleOnChangeTime({ startTime: value }, form.getFieldsValue());
+                          handleOnChangeTime({ startTime: value }, value);
                         }
                       }}
                     />
@@ -505,7 +505,7 @@ const RegisterRequestPage = () => {
                           console.log('Selected End Time:', value);
                           setSelectedEndTime(value);
                           console.log('selectedEndTime:', selectedEndTime);
-                          handleOnChangeTime({ endTime: value }, form.getFieldsValue());
+                          handleOnChangeTime({ endTime: value }, value);
                         }
                       }}
                       disabledTime={(now) => {
