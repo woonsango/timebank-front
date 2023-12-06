@@ -207,10 +207,10 @@ const RegisterRequestPage = () => {
     console.log(values.startTime) ;
     console.log(values.endTime) ;
     console.log(selectedStartTime) ;
-      console.log(selectedEndTime) ;
-    if (selectedStartTime && selectedEndTime) {
-      const startTime = selectedEndTime ;
-      const endTime = selectedEndTime ;
+    console.log(selectedEndTime) ;
+    if (changedValues.startTime && changedValues.endTime) {
+      const startTime = changedValues.startTime ;
+      const endTime = changedValues.endTime ;
       const duration = endTime.diff(startTime, 'minutes');
       console.log(duration) ;
       setExchangeTimepay(duration);
@@ -468,6 +468,7 @@ const RegisterRequestPage = () => {
                 </Form.Item>
 
                 <div className="time">
+                  
                   <Form.Item
                     label="활동을 시작할 시간"
                     css={cssPostDateStyle}
@@ -485,7 +486,7 @@ const RegisterRequestPage = () => {
                           console.log('Selected Start Time:', value);
                           setSelectedStartTime(value);
                           console.log('selectedStartTime: ', selectedStartTime) ;
-                          handleOnChangeTime({ startTime: value }, value);
+                          handleOnChangeTime({ startTime: value, endTime:selectedEndTime }, value);
                         }
                       }}
                     />
@@ -509,7 +510,7 @@ const RegisterRequestPage = () => {
                           console.log('Selected End Time:', value);
                           setSelectedEndTime(value);
                           console.log('selectedEndTime:', selectedEndTime);
-                          handleOnChangeTime({ endTime: value }, value);
+                          handleOnChangeTime({ startTime: selectedStartTime, endTime: value }, value);
                         }
                       }}
                       disabledTime={(now) => {
