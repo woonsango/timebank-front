@@ -1,7 +1,7 @@
 # 타임페이 커뮤니티
 
 # 소개 영상    
-(https://www.youtube.com/watch?v=D98UpF8B91U) 
+[![Video Label](https://github.com/woonsango/timebank-front/assets/105338988/61453b22-03cd-4f18-af7d-664c0bc3252f)](https://www.youtube.com/watch?v=D98UpF8B91U) 
 
 ![타임페이 커뮤니티 9조 포스터 (1)-1](https://github.com/kookmin-sw/capstone-2023-09/assets/55117730/f831cdbe-6622-4e54-bfe0-13a2e0ccaf53)
 
