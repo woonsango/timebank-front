@@ -1,4 +1,7 @@
-# 타임페이 커뮤니티 (2023 다학제간캡스톤디자인 9팀)  
+# 타임페이 커뮤니티
+
+# 소개 영상    
+[![Video Label](https://img.youtube.com/vi/1_zx2Ubk0jU/0.jpg)](https://www.youtube.com/watch?v=D98UpF8B91U) 
 
 ![타임페이 커뮤니티 9조 포스터 (1)-1](https://github.com/kookmin-sw/capstone-2023-09/assets/55117730/f831cdbe-6622-4e54-bfe0-13a2e0ccaf53)
 
